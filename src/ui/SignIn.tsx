@@ -2,11 +2,10 @@ import * as React from 'react'
 import { Redirect } from 'react-router-dom'
 import { isValidUser } from '../core/auth/AuthService'
 // import { isValidUser } from './utils/AuthService'
-// import { Redirect } from 'react-router'
 
 interface ISignState {
-  readonly username: string
-  readonly password: string
+  pin: number
+  redirect: boolean
 }
 
 interface ISignProps {
@@ -17,51 +16,47 @@ export class SignIn extends React.Component<ISignProps, ISignState> {
   public constructor(props: ISignProps) {
     super(props)
     this.state = {
-      username: '',
-      password: ''
+      pin: 0,
+      redirect: false
     }
 
-    this.onUsernameChanged = this.onUsernameChanged.bind(this)
-    this.onPasswordChanged = this.onPasswordChanged.bind(this)
+    this.onSubmit = this.onSubmit.bind(this)
+    this.onPinChanged = this.onPinChanged.bind(this)
   }
-  onUsernameChanged = (e: any) => {
-    this.setState({ username: e.target.value })
+  onPinChanged = (e: any) => {
+    this.setState({ pin: e.target.value })
   }
 
-  onPasswordChanged = (e: any) => {
-    this.setState({ password: e.target.value })
-  }
   onSubmit = () => {
-    if (isValidUser(this.state.username, this.state.password)) {
+    if (isValidUser(this.state.pin)) {
       console.log('valid')
-      return <Redirect to = '/'/>
+      this.setState({ redirect: true })
     }
   }
 
   render() {
-    return (
+    if (this.state.redirect) {
+      console.log('im in redirect')
+      return (<Redirect to = '/home'/>)
+    } else {
+      console.log('im don`t')
+      return (
       <div className = 'wrapper'>
-        <form className = 'login-form' onSubmit = {this.onSubmit}>
+        <form className = 'login-form'>
           <div className = 'label'>
             <p>Please enter your login information</p>
           </div>
           <input
             type = 'text'
-            placeholder = 'Login'
-            onChange = {this.onUsernameChanged}
-            value = {this.state.username}
-            />
-          <input
-            type = 'password'
-            placeholder = 'Password'
-            onChange = {this.onPasswordChanged}
-            value = {this.state.password}
+            placeholder = 'Pin'
+            onChange = {this.onPinChanged}
+            value = {this.state.pin}
             />
             <button onClick = {this.onSubmit}>Submit</button>
         </form>
 
       </div>
-    )
+      )
+    }
   }
-
 }
