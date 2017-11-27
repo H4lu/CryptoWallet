@@ -20,7 +20,7 @@ export class TransactionComponent extends React.Component<any, IPayComponentStat
     this.handleClick = this.handleClick.bind(this)
     this.state = {
       paymentAdress: '',
-      transactionFee: 30,
+      transactionFee: 0.01,
       cryptocurrency: 'bitcoin',
       amount: 0
     }
@@ -71,7 +71,7 @@ export class TransactionComponent extends React.Component<any, IPayComponentStat
        <input type = 'number' name = 'amount' placeholder = 'Enter transaction amount' onChange = {this.handleAmountChange}></input>
        <input type = 'number' value = {this.state.transactionFee} min = {0} onChange = { this.handleFeeChange } onScroll = {this.handleByScroll}></input>
        <input type = 'text' name = 'payment address' placeholder = 'Enter payment purpose'
-        onChange = {this.handleAdressChange} style = {{ width: 300 }}></input>
+        onChange = {this.handleAdressChange} style = {{ width: 270 }}></input>
        <button name = 'payButton' onClick = {this.handleClick}>OK</button>
        <div id = 'compay'> Transaction fee {this.state.transactionFee}%	</div>
      </div>

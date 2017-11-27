@@ -47,10 +47,9 @@ export class SignIn extends React.Component<ISignProps, ISignState> {
             <p>Please enter your login information</p>
           </div>
           <input
-            type = 'text'
+            type = 'password'
             placeholder = 'Pin'
             onChange = {this.onPinChanged}
-            value = {this.state.pin}
             />
             <button onClick = {this.onSubmit}>Submit</button>
         </form>

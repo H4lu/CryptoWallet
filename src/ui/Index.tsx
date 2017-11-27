@@ -4,7 +4,7 @@ import * as ReactDOM from 'react-dom'
 
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Routes } from './Routes'
-import { SignIn } from './SignIn';
+import { SignIn } from './SignIn'
 // import { Switch } from 'react-router'
 
 ReactDOM.render(<Router>

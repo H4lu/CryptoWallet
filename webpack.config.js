@@ -1,5 +1,5 @@
 const path = require('path')
-
+const webpack = require('webpack')
 const commonConfig = {
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -20,6 +20,10 @@ const commonConfig = {
         }
       },
       {
+        test: /\.node$/,
+        use: 'node-loader'
+    },
+      {
         test: /\.tsx?$/,
         loader: ['babel-loader', 'ts-loader']
       },
@@ -38,8 +42,14 @@ const commonConfig = {
       }
     ]
   },
+  plugins: [
+    new webpack.NormalModuleReplacementPlugin(
+        /^bindings$/,
+        require.resolve("./bindings")
+    )
+],
   resolve: {
-    extensions: ['.js', '.ts', '.tsx', '.jsx', '.json']
+    extensions: ['.js', '.ts', '.tsx', '.jsx', '.json','.node']
   }
 }
 
@@ -49,7 +59,7 @@ module.exports = Object.assign(
   },
   commonConfig)
 
-  const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = [
     Object.assign(
@@ -68,3 +78,4 @@ module.exports = [
       },
       commonConfig)
   ]
+
