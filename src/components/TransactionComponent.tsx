@@ -1,24 +1,25 @@
 import * as React from 'react'
 import { handle } from '../API/cryptocurrencyAPI/BitCoin'
-/* interface IPayComponentProps {
-  paymentAdress: string
-  transactionFee: number
-  cryptocurrency: string
+
+interface IPayComponentProps {
+  balance: number
 }
-*/
+
 interface IPayComponentState {
   paymentAdress: string
   transactionFee: number
   cryptocurrency: string
   amount: number
+  showPinEnter: boolean
 }
 
-export class TransactionComponent extends React.Component<any, IPayComponentState> {
+export class TransactionComponent extends React.Component<IPayComponentProps, IPayComponentState> {
   constructor(props: any) {
     super(props)
 
     this.handleClick = this.handleClick.bind(this)
     this.state = {
+      showPinEnter: false,
       paymentAdress: '',
       transactionFee: 0.01,
       cryptocurrency: 'bitcoin',

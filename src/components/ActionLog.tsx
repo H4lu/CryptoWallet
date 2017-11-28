@@ -14,6 +14,7 @@ export class ActionLog extends React.Component<any, IActionLogState> {
     }
   }
   componentWillMount() {
+    console.log('component will mount')
     let self = this
     getBalance().then(Response => {
       console.log('JSON data: ' + JSON.parse(Response.content).data)
