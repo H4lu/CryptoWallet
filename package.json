@@ -6,6 +6,7 @@
   "devDependencies": {
     "@types/ffi": "^0.0.19",
     "@types/jest": "^21.1.5",
+    "@types/node-fetch": "^1.6.7",
     "@types/react": "^16.0.22",
     "@types/react-dom": "^16.0.3",
     "@types/react-router": "^4.0.17",
@@ -19,6 +20,7 @@
     "electron-builder": "^19.45.5",
     "jest": "^21.2.1",
     "jest-junit": "^3.1.0",
+    "node-fetch": "^1.7.3",
     "node-gyp": "^3.6.2",
     "node-loader": "^0.6.0",
     "react": "^16.1.0",
@@ -33,6 +35,7 @@
     "tslint-config-standard": "^7.0.0",
     "tslint-loader": "^3.5.3",
     "typescript": "^2.6.1",
+    "web-request": "^1.0.7",
     "webpack": "^3.8.1"
   },
   "scripts": {
