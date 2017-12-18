@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { handle } from '../API/cryptocurrencyAPI/BitCoin'
-
+// import { handle } from '../API/cryptocurrencyAPI/BitCoin'
+import { getVersion, handleEthereum } from '../API/cryptocurrencyAPI/Ethereum'
 interface IPayComponentProps {
   balance: number
 }
-
+getVersion()
 interface IPayComponentState {
   paymentAdress: string
   transactionFee: number
@@ -22,7 +22,7 @@ export class TransactionComponent extends React.Component<IPayComponentProps, IP
       showPinEnter: false,
       paymentAdress: '',
       transactionFee: 0.01,
-      cryptocurrency: 'bitcoin',
+      cryptocurrency: 'ethereum',
       amount: 0
     }
 
@@ -47,7 +47,7 @@ export class TransactionComponent extends React.Component<IPayComponentProps, IP
     this.setState({ transactionFee: e.target.value })
   }
   handleClick() {
-    handle(this.state.paymentAdress, this.state.amount, this.state.transactionFee)
+    handleEthereum(this.state.paymentAdress, this.state.amount)
   }
   handleCryptocurrencyChange(e: any) {
     this.setState({ cryptocurrency: e.target.value })
@@ -59,15 +59,7 @@ export class TransactionComponent extends React.Component<IPayComponentProps, IP
         <select name = 'pay' value = { this.state.cryptocurrency } onChange = { this.handleCryptocurrencyChange }>
           <option>select currency for payment</option>
           <option value = 'bitcoin'>BitCoin</option>
-          <option value = 'etherium'>Ethereum</option>
-          <option value = 'litecoin'>Litecoin</option>
-          <option value = 'ripple'>Ripple</option>
-          <option value = 'dash'>Dash</option>
-          <option value = 'monero'>Monero</option>
-          <option value = 'iota'>IOTA</option>
-          <option value = 'stratis'>Stratis</option>
-          <option value = 'neo'>NEO</option>
-          <option value = 'zcash'>Zcash</option>
+          <option value = 'ethereum'>Ethereum</option>
        </select>
        <input type = 'number' name = 'amount' placeholder = 'Enter transaction amount' onChange = {this.handleAmountChange}></input>
        <input type = 'number' value = {this.state.transactionFee} min = {0} onChange = { this.handleFeeChange } onScroll = {this.handleByScroll}></input>

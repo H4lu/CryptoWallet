@@ -1,5 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
+
+
 const commonConfig = {
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -19,26 +21,34 @@ const commonConfig = {
           emitErrors: true
         }
       },
+      
       {
         test: /\.node$/,
         use: 'node-loader'
     },
       {
         test: /\.tsx?$/,
+        exclude: /node_modules/,
         loader: ['babel-loader', 'ts-loader']
       },
       {
         test: /\.js$/,
         enforce: 'pre',
+        exclude: /node_modules/,
         loader: 'standard-loader',
         options: {
           typeCheck: true,
-          emitErrors: true
+          emitErrors: true,
         }
       },
       {
         test: /\.jsx?$/,
+        exclude: /node_modules/,
         loader: 'babel-loader'
+      },
+      {
+        test: /tar[\\\/].*\.js$/,
+        loader: 'babel-loader!octal-number-loader'
       }
     ]
   },
@@ -46,8 +56,12 @@ const commonConfig = {
     new webpack.NormalModuleReplacementPlugin(
         /^bindings$/,
         require.resolve("./bindings")
+    ),
+    new  webpack.NormalModuleReplacementPlugin(
+      /^any-promise$/,
+      require.resolve('bluebird')
     )
-],
+], 
   resolve: {
     extensions: ['.js', '.ts', '.tsx', '.jsx', '.json','.node']
   }
@@ -55,7 +69,7 @@ const commonConfig = {
 
 module.exports = Object.assign(
   {
-    entry: { main: './src/main.ts' }
+    entry: { main: './src/Main.ts' }
   },
   commonConfig)
 
@@ -65,7 +79,7 @@ module.exports = [
     Object.assign(
       {
         target: 'electron-main',
-        entry: { main: './src/main-process/main.ts' }
+        entry: { main: './src/main-process/Main.ts' }
       },
       commonConfig),
     Object.assign(
@@ -73,9 +87,11 @@ module.exports = [
         target: 'electron-renderer',
         entry: { gui: './src/ui/Index.tsx' },
         plugins: [new HtmlWebpackPlugin( {
+          filename: 'index.html',
           template: './src/ui/index.html'
         })]
       },
       commonConfig)
   ]
+
 
