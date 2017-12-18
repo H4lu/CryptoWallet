@@ -15,10 +15,10 @@ console.log('after set dll')
 const MyLib = ffi.Library(path, { 'get_dataForTransaction': ['int', ['string','int','char*','string','int*']] })
 */
 const pin = Buffer.from('12345678')
-/*const MyLib = ffi.Library('iTokenDLL', { 'get_dataForTransaction': ['int', ['string','int','char*','string','int*']],
-  'getSignEthereumHex': ['int', ['string','int','char*','string','string','string']] })
-*/
-const MyLib = ffi.Library('iTokenDLL', { 'get_dataForTransaction': ['int', ['string','int','char*','string','int*']] })
+const MyLib = ffi.Library('iTokenDLL', { 'get_dataForTransaction': ['int', ['string','int','char*','string','int*']],
+  'getSignEthereumHex': ['int', ['string','int','char*','string','string','byte*']] })
+
+// const MyLib = ffi.Library('iTokenDLL', { 'get_dataForTransaction': ['int', ['string','int','char*','string','int*']] })
 export function getSignature(transactionHash: string, adressNumber: number) {
 
   let unlockingScriptHex = new Buffer(280)
@@ -41,9 +41,9 @@ export function getSignature(transactionHash: string, adressNumber: number) {
 }
 
 export function getEthereumSignature(transactionHash: string, adressNumber: number): string[] {
-  let rValue = new Buffer(64)
-  let sValue = new Buffer(64)
-  let vValue = new Buffer(1)
+  let rValue = new Buffer(32)
+  let sValue = new Buffer(32)
+  let vValue = ref.alloc(ref.refType('byte'))
   let errorCode = MyLib.getSignEthereumHex(transactionHash, adressNumber, pin, rValue, sValue, vValue)
   if (errorCode !== 1) {
     console.log(errorCode)

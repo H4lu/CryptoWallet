@@ -2,9 +2,8 @@ import Web3 from 'web3'
 import Transaction from 'ethereumjs-tx'
 import { getEthereumSignature } from '../hardwareAPI/GetSignature'
 import { PromiEvent, TransactionReceipt } from 'web3/types'
-
 const myAdress = '0x619B30BE614ce453035058736cd2B83c34373Ddd'
-
+import { keccak256 } from 'js-sha3'
 // const web3 = new Web3('https://api.myetherapi.com/rop')
 const gasPriceConst = 25000000000
 const gasLimitConst = 21000
@@ -21,6 +20,7 @@ async function getNonce(adress: string) {
     console.log('Response: ' + response)
     let value = Promise.resolve(response)
     console.log('Promise.resolve: ' + value)
+    return response
   } catch (error) {
     console.log(error)
   }
@@ -43,17 +43,16 @@ function createTransaction (paymentAdress: string, amount: number): void {
       chainId: 3
     }
     let tx = new Transaction(rawtx)
-    let txHash = tx.hash(false)
-    let signature: string[] = getEthereumSignature(txHash.toString('hex'), 1)
-    console.log('Hash without signature:' + tx.hash(false).toString('hex'))
+    console.log('Serialized: ' + tx.serialize().toString('hex') + 'length: ' + tx.serialize().toString('hex').length)
+    let txHash = keccak256(tx.serialize())
+    console.log('Hash without signature:' + txHash)
+    let signature: string[] = getEthereumSignature(txHash, 1)
     console.log('Signature: ' + signature[0] + ' ' + signature[1] + ' ' + signature[2])
-    rawtx.v = signature[2]
-    rawtx.r = signature[0]
-    rawtx.s = signature[1]
-    let sigTx = new Transaction(rawtx)
-    let serTx = sigTx.serialize().toString('hex')
-    let dataToTransfer = sigTx.hash(true).toString('hex')
-    console.log('Signed transaction:' + dataToTransfer)
+    rawtx.v = web3.utils.toHex(signature[2])
+    rawtx.r = web3.utils.toHex(signature[0])
+    rawtx.s = web3.utils.toHex(signature[1])
+    let newtx = new Transaction(rawtx)
+    let serTx = newtx.serialize().toString('hex')
     console.log('Serialized tx: ' + serTx)
     sendTransaction(serTx).on('receipt', console.log)
   }).catch(
@@ -86,6 +85,7 @@ function createTransaction (paymentAdress: string, amount: number): void {
 
 // Вернёт Promise с результатом запроса
 function sendTransaction(transaction: string): PromiEvent<TransactionReceipt> {
+  console.log('in sendtransaction')
   return web3.eth.sendSignedTransaction(transaction)
 }
 
