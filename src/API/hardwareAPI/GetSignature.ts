@@ -16,7 +16,7 @@ const MyLib = ffi.Library(path, { 'get_dataForTransaction': ['int', ['string','i
 */
 const pin = Buffer.from('12345678')
 const MyLib = ffi.Library('iTokenDLL', { 'get_dataForTransaction': ['int', ['string','int','char*','string','int*']],
-  'getSignEthereumHex': ['int', ['string','int','char*','string','string','int*']] })
+  'getSignEthereum': ['int', ['string','int','char*','string','string','int*']] })
 
 // const MyLib = ffi.Library('iTokenDLL', { 'get_dataForTransaction': ['int', ['string','int','char*','string','int*']] })
 export function getSignature(transactionHash: string, adressNumber: number) {
@@ -39,14 +39,14 @@ export function getSignature(transactionHash: string, adressNumber: number) {
   return loweredScriptHex
 }
 
-export function getEthereumSignature(transactionHash: string, adressNumber: number): string[] {
-  let rValue = new Buffer(32)
-  let sValue = new Buffer(32)
+export function getEthereumSignature(transactionHash: string, adressNumber: number): Array<Buffer> {
+  let sValue = new Buffer(64)
+  let sig = new Buffer(64)
   let vValue = ref.alloc('int')
-  let errorCode = MyLib.getSignEthereumHex(transactionHash, adressNumber, pin, rValue, sValue, vValue)
+  let errorCode = MyLib.getSignEthereum(transactionHash, adressNumber, pin, sig, sValue, vValue)
   if (errorCode !== 1) {
     console.log('Error code: ' + errorCode)
   }
-  console.log('r value: ' + rValue.toString('hex') + 's value: ' + sValue.toString('hex') + 'v Value: ' + ref.deref(vValue))
-  return new Array(rValue.toString('hex'),sValue.toString('hex'),vValue.toString('hex'))
+  // console.log('r value: ' + rValue.toString('hex') + 's value: ' + sValue.toString('hex') + 'v Value: ' + ref.deref(vValue))
+  return new Array(sig, sValue)
 }
