@@ -4,13 +4,8 @@ Follow these instructions for set up your project
 
 ### Prerequisites
 
-After cloning repo  install all dependencies via yarn:
+After cloning repo  install all dependencies:
 
-```
-yarn install
-
-```
-or npm:
 
 ```
 npm install
@@ -18,13 +13,7 @@ npm install
 ```
 ### Running project
 
-Just execute:
-
-```
-yarn run start
-
-```
-or through npm:
+After dependencies installed execute command:
 
 ```
 npm run start
