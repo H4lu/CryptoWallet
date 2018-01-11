@@ -1,8 +1,11 @@
 import * as React from 'react'
 import { getBalance } from '../API/cryptocurrencyAPI/BitCoin'
-
+import { getEthereumBalance } from '../API/cryptocurrencyAPI/Ethereum'
+import Web3 from 'web3'
+const web3 = new Web3(new Web3.providers.HttpProvider('https://api.myetherapi.com/rop'))
 interface IActionLogState {
-  balance: number
+  balance: number,
+  ethereumBalance: number
 }
 
 export class ActionLog extends React.Component<any, IActionLogState> {
@@ -10,7 +13,8 @@ export class ActionLog extends React.Component<any, IActionLogState> {
     super(props)
   // Инициализируем начальное состояние как 0
     this.state = {
-      balance: 0
+      balance: 0,
+      ethereumBalance: 0
     }
   }
 
@@ -21,13 +25,17 @@ export class ActionLog extends React.Component<any, IActionLogState> {
       let balance = JSON.parse(Response.content).data.confirmed_balance
       self.setState({ balance: balance })
     })
+    getEthereumBalance().then((value: number) => {
+      self.setState({ ethereumBalance: web3.utils.fromWei(value,'ether') })
+    })
   }
   // Функция рендера
   render() {
     return(
       <div>
         <p>Hello!</p>
-        <p>Your current balance = { this.state.balance } BTC</p>
+        <p>Your current BitCoin balance = { this.state.balance } BTC</p>
+        <p>Also {this.state.ethereumBalance} ETH</p>
       </div>
     )
   }

@@ -63,8 +63,15 @@ export function getEthereumSignature(transactionHash: string, adressNumber: numb
   let vValue = ref.alloc('int')
   let errorCode = MyLib.getSignEthereum(transactionHash, adressNumber, pin, sig, sValue, vValue)
   if (errorCode !== 1) {
-    console.log('Error code: ' + errorCode)
+    switch (errorCode) {
+    case 2: alert('Device is not connected')
+      break
+    case 3: alert('The signature is not correct')
+      break
+    }
   }
+  console.log(typeof(vValue))
+  console.log(vValue.readInt32LE(0))
   // console.log('r value: ' + rValue.toString('hex') + 's value: ' + sValue.toString('hex') + 'v Value: ' + ref.deref(vValue))
-  return new Array(sig, sValue)
+  return new Array(sig, sValue, vValue)
 }

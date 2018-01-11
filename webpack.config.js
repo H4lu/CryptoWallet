@@ -1,5 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 
 const commonConfig = {
@@ -21,7 +22,30 @@ const commonConfig = {
           emitErrors: true
         }
       },
-      
+      {
+        test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 100000,
+          },
+        },
+      },
+      {
+        test: /\.css$/,
+        include: /node_modules/,
+        use: ExtractTextPlugin.extract({
+          fallback: "style-loader",
+          use: [
+            {
+              loader: 'css-loader',
+            },
+            {
+              loader: 'postcss-loader',
+            },
+          ],
+        })
+      },
       {
         test: /\.node$/,
         use: 'node-loader'
@@ -60,7 +84,8 @@ const commonConfig = {
     new  webpack.NormalModuleReplacementPlugin(
       /^any-promise$/,
       require.resolve('bluebird')
-    )
+    ),
+    new ExtractTextPlugin("style.css")
 ], 
   resolve: {
     extensions: ['.js', '.ts', '.tsx', '.jsx', '.json','.node']
