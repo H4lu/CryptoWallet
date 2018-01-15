@@ -21,7 +21,8 @@ const pin = Buffer.from('12345678')
 */
 
 const MyLib = ffi.Library('iTokenDLL', { 'get_dataForTransaction': ['int', ['string','int','char*','string','int*']],
-  'getSignEthereum': ['int', ['string','int','char*','string','string','int*']] })
+  'getSignEthereum': ['int', ['string','int','char*','string','string','int*']],
+  'get_addressLitecoin': ['int', ['int','bool','string','int*']] })
 
 /*  Функция цифровой подписи для Bitcoin
     Принимает на вход хэш неподписанной транзакции и номер адреса
@@ -74,4 +75,13 @@ export function getEthereumSignature(transactionHash: string, adressNumber: numb
   console.log(vValue.readInt32LE(0))
   // console.log('r value: ' + rValue.toString('hex') + 's value: ' + sValue.toString('hex') + 'v Value: ' + ref.deref(vValue))
   return new Array(sig, sValue, vValue)
+}
+
+export function getLitecoinAdress(adressNumber: number, keyType: boolean): string {
+  let adress = new Buffer(64)
+  let length = ref.alloc(ref.types.int)
+  let errorCode = MyLib.get_addressLitecoin(adressNumber, keyType, adress, length)
+  console.log('LTC adress: ' + adress)
+  console.log(errorCode)
+  return adress.toString('hex')
 }

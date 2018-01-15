@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Redirect } from 'react-router-dom'
 import { isValidUser } from '../core/auth/AuthService'
 // import { isValidUser } from './utils/AuthService'
-import { Button, Icon, Input, Form, Label, Grid } from 'semantic-ui-react'
+import { Button, Icon, Input, Form, Header, Grid } from 'semantic-ui-react'
 
 interface ISignState {
   pin: number
@@ -47,7 +47,7 @@ export class SignIn extends React.Component<ISignProps, ISignState> {
         <Grid.Column>
         <Form >
           <div className = 'label'>
-            <Label textAlign = 'center' size = 'massive' style = {{ padding: '10px', margin: '20px' }}>Enter pin:</Label>
+            <Header textAlign = 'center' size = 'huge' style = {{ padding: '10px', margin: '20px' }}>Enter pin:</Header>
           </div>
           <Input
             type = 'password'

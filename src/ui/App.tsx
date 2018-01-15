@@ -7,6 +7,7 @@ import { NavBar } from './NavBar'
 import { Switch, Route } from 'react-router'
 import { ActionLog } from '../components/ActionLog'
 import { TransactionComponent } from '../components/TransactionComponent'
+import { ERC20 } from '../components/ERC20'
 /* import { Routes } from './Routes'
 import { Switch } from 'react-router'
 */
@@ -17,6 +18,7 @@ export class App extends React.Component {
       <Switch>
         <Route exact path = '/home' component = { ActionLog }/>
         <Route path = '/home/transaction' component = { TransactionComponent }/>
+        <Route path = '/home/erc20' component = { ERC20 } />
       </Switch>
       </div>
     )

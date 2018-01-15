@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { getAdress } from '../API/cryptocurrencyAPI/Litecoin'
 import { getBalance } from '../API/cryptocurrencyAPI/BitCoin'
 import { getEthereumBalance } from '../API/cryptocurrencyAPI/Ethereum'
 import Web3 from 'web3'
@@ -28,6 +29,7 @@ export class ActionLog extends React.Component<any, IActionLogState> {
     getEthereumBalance().then((value: number) => {
       self.setState({ ethereumBalance: web3.utils.fromWei(value,'ether') })
     })
+    getAdress()
   }
   // Функция рендера
   render() {

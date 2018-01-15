@@ -8,6 +8,7 @@ const options = [
   { key: 'bitcoin', text: 'BitCoin', value: 'bitcoin' },
   { key: 'ethereum', text: 'Ethereum', value: 'ethereum' }
 ]
+
 interface IPayComponentProps {
   balance: number
 }
@@ -31,7 +32,7 @@ export class TransactionComponent extends React.Component<IPayComponentProps, IP
       showPinEnter: false,
       paymentAdress: '',
       transactionFee: 0.01,
-      cryptocurrency: 'bitcoin',
+      cryptocurrency: 'ethereum',
       amount: 0,
       gasPrice: 30000000000,
       gasLimit: 100000
@@ -99,7 +100,7 @@ export class TransactionComponent extends React.Component<IPayComponentProps, IP
         </div>
         <div>
         <Label>Amount: </Label>
-        <Input type = 'number' name = 'amount' placeholder = 'Enter transaction amount' onChange = {this.handleAmountChange}></Input>
+        <Input type = 'number' name = 'amount' placeholder = 'Enter transaction amount' onChange = {this.handleAmountChange} style = {{ width: '270px' }}></Input>
         {(() => {
           switch (this.state.cryptocurrency) {
           case 'bitcoin':
