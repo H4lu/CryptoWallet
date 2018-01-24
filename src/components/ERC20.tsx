@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Header, Input, Button } from 'semantic-ui-react'
-import { balanceOf, handleEthereum, transferToken, approve, allowance } from '../API/cryptocurrencyAPI/Ethereum'
+import { balanceOf, handleEthereum, transferToken, approve, allowance, transferFrom } from '../API/cryptocurrencyAPI/Ethereum'
 
 interface IERC20State {
   gasPrice: number,
@@ -14,7 +14,10 @@ interface IERC20State {
   adressToApprove: string,
   amountToApprove: number,
   ownerAdressToCheck: string,
-  spenderAdressToCheck: string
+  spenderAdressToCheck: string,
+  addressFrom: string,
+  addressTo: string,
+  amountTransferFrom: number
 }
 
 export class ERC20 extends React.Component <any,IERC20State> {
@@ -32,7 +35,10 @@ export class ERC20 extends React.Component <any,IERC20State> {
       adressToApprove: '',
       amountToApprove: 0,
       ownerAdressToCheck: '',
-      spenderAdressToCheck: ''
+      spenderAdressToCheck: '',
+      addressFrom: '',
+      addressTo: '',
+      amountTransferFrom: 0
     }
 
     this.buyToken = this.buyToken.bind(this)
@@ -50,6 +56,10 @@ export class ERC20 extends React.Component <any,IERC20State> {
     this.handleOwnerAdressToCheckChange = this.handleOwnerAdressToCheckChange.bind(this)
     this.handleSpenderAdressToCheckChange = this.handleSpenderAdressToCheckChange.bind(this)
     this.checkAllowance = this.checkAllowance.bind(this)
+    this.handleAdressFromChange = this.handleAdressFromChange.bind(this)
+    this.handleAdressToChange = this.handleAdressToChange.bind(this)
+    this.handleAmountTransferFromChange = this.handleAmountTransferFromChange.bind(this)
+    this.transferFrom = this.transferFrom.bind(this)
   }
 
   handleTokenAdressChange(e: any, data: any) {
@@ -65,13 +75,16 @@ export class ERC20 extends React.Component <any,IERC20State> {
     this.setState({ amountToBuy: data.value })
     console.log('Amount to buy: ' + this.state.amountToBuy)
   }
-  handleGasPriceChange(data: any) {
+  handleGasPriceChange(e: any, data: any) {
+    console.log(e.target.value)
     this.setState({ gasPrice: data.value })
   }
-  handleGasLimitChange(data: any) {
+  handleGasLimitChange(e: any, data: any) {
+    console.log(e.target.value)
     this.setState({ gasLimit: data.value })
   }
-  handleSpenderAdressChange(data: any) {
+  handleSpenderAdressChange(e: any, data: any) {
+    console.log(e.target.value)
     this.setState({ spenderAdress: data.value })
   }
   handleTransferAmountChange(e: any, data: any) {
@@ -86,6 +99,14 @@ export class ERC20 extends React.Component <any,IERC20State> {
   handleAmountToApproveChange(e: any, data: any) {
     console.log(e.target.value)
     this.setState({ amountToApprove: data.value })
+  }
+  handleAdressFromChange(e: any, data: any) {
+    console.log(e.target.value)
+    this.setState({ addressFrom: data.value })
+  }
+  handleAdressToChange(e: any, data: any) {
+    console.log(e.target.value)
+    this.setState({ addressTo: data.value })
   }
   transfer() {
     transferToken(this.state.tokenAdress, this.state.spenderAdress, this.state.transferAmount)
@@ -107,8 +128,15 @@ export class ERC20 extends React.Component <any,IERC20State> {
     console.log(e.target.value)
     this.setState({ spenderAdressToCheck: data.value })
   }
+  handleAmountTransferFromChange(e: any, data: any) {
+    console.log(e.target.value)
+    this.setState({ amountTransferFrom: data.value })
+  }
   checkAllowance() {
     allowance(this.state.tokenAdress, this.state.ownerAdressToCheck, this.state.spenderAdressToCheck)
+  }
+  transferFrom() {
+    transferFrom(this.state.tokenAdress, this.state.addressFrom, this.state.addressTo,this.state.amountTransferFrom,this.state.gasPrice, this.state.gasLimit)
   }
 
   render() {
@@ -125,8 +153,8 @@ export class ERC20 extends React.Component <any,IERC20State> {
           <div>
             <Header> Buy token</Header>
               <Input type = 'number' placeholder = 'Amount' onChange = {this.handleAmountToBuyChange}></Input>
-              <Input type = 'number' placeholder = 'Gas price' onChange = {this.handleGasPriceChange}></Input>
-              <Input type = 'number' placeholder = 'Gas limit' onChange = {this.handleGasLimitChange}></Input>
+              <Input type = 'number' placeholder = 'Gas price' onChange = {this.handleGasPriceChange} value = {this.state.gasPrice}></Input>
+              <Input type = 'number' placeholder = 'Gas limit' onChange = {this.handleGasLimitChange} value = {this.state.gasLimit}></Input>
               <Button onClick = {this.buyToken}>Buy</Button>
           </div>
           <div>
@@ -151,6 +179,13 @@ export class ERC20 extends React.Component <any,IERC20State> {
             <Input type = 'text' style = {{ width: 370 }} placeholder = 'Owner`s adress' value = {this.state.ownerAdressToCheck} onChange = {this.handleOwnerAdressToCheckChange}></Input>
             <Input type = 'text' style = {{ width: 370 }} placeholder = 'Spender adress' value = {this.state.spenderAdressToCheck} onChange = {this.handleSpenderAdressToCheckChange}></Input>
             <Button onClick = {this.checkAllowance}>Check</Button>
+          </div>
+          <div>
+            <Header>Transfer from</Header>
+            <Input type = 'text' style = {{ width: 370 }} placeholder = 'Adress from' value = {this.state.addressFrom} onChange = {this.handleAdressFromChange}/>
+            <Input type = 'text' style = {{ width: 370 }} placeholder = 'Adress to' value = {this.state.addressTo} onChange = {this.handleAdressToChange}/>
+            <Input type = 'number' style = {{ width: 370 }} placeholder = 'Amount' value = {this.state.amountTransferFrom} onChange = {this.handleAmountTransferFromChange}/>
+            <Button onClick = {this.transferFrom}>Send</Button>
           </div>
         </div>
     )

@@ -3,10 +3,12 @@ import * as React from 'react'
 import { handleEthereum } from '../API/cryptocurrencyAPI/Ethereum'
 import { Input, Button, Dropdown, Label } from 'semantic-ui-react'
 import { handle } from '../API/cryptocurrencyAPI/BitCoin'
+import { handleLitecoin } from '../API/cryptocurrencyAPI/Litecoin'
 
 const options = [
   { key: 'bitcoin', text: 'BitCoin', value: 'bitcoin' },
-  { key: 'ethereum', text: 'Ethereum', value: 'ethereum' }
+  { key: 'ethereum', text: 'Ethereum', value: 'ethereum' },
+  { key: 'litecoin', text: 'Litecoin', value: 'litecoin' }
 ]
 
 interface IPayComponentProps {
@@ -52,22 +54,29 @@ export class TransactionComponent extends React.Component<IPayComponentProps, IP
   handleByScroll(e: any) {
     this.setState({ transactionFee: e.target.value })
   }
-  handleAmountChange(e: any) {
-    this.setState({ amount: e.target.value })
+  handleAmountChange(e: any, data: any) {
+    console.log(e.target.value)
+    this.setState({ amount: data.value })
   }
-  handleAdressChange(e: any) {
-    this.setState({ paymentAdress: e.target.value })
+  handleAdressChange(e: any, data: any) {
+    console.log(e.target.value)
+    this.setState({ paymentAdress: data.value })
   }
-  handleFeeChange(e: any) {
-    this.setState({ transactionFee: e.target.value })
+  handleFeeChange(e: any, data: any) {
+    console.log(e.target.value)
+    this.setState({ transactionFee: data.value })
   }
   handleClick() {
     switch (this.state.cryptocurrency) {
     case 'bitcoin':
+      console.log('in bitcoin')
       handle(this.state.paymentAdress, this.state.amount, this.state.transactionFee)
       break
     case 'ethereum':
       handleEthereum(this.state.paymentAdress, this.state.amount, this.state.gasPrice, this.state.gasLimit)
+      break
+    case 'litecoin':
+      handleLitecoin(this.state.paymentAdress, this.state.amount, this.state.transactionFee)
       break
     }
   }
@@ -88,6 +97,8 @@ export class TransactionComponent extends React.Component<IPayComponentProps, IP
     case 'ethereum':
       return <div><div><Input type = 'number' value = {this.state.gasLimit} onChange = {this.handleGasLimitChange}></Input></div>
         <div><Input type = 'number' value = {this.state.gasPrice} onChange = {this.handleGasPriceChange}></Input></div></div>
+    case 'litecoin':
+      return <div><Input type = 'number' value = {this.state.transactionFee} min = {0} onChange = { this.handleFeeChange } onScroll = {this.handleByScroll}></Input></div>
     }
   }
 
@@ -117,6 +128,8 @@ export class TransactionComponent extends React.Component<IPayComponentProps, IP
          case 'ethereum':
            return <div><div><Label>Gas limit: </Label><Input type = 'number' value = {this.state.gasLimit} onChange = {this.handleGasLimitChange}></Input> wei</div>
               <div><Label>Gas price: </Label><Input type = 'number' value = {this.state.gasPrice} onChange = {this.handleGasPriceChange}></Input> wei</div></div>
+         case 'litecoin':
+           return <div><Label>Transaction fee: </Label><Input type = 'number' value = {this.state.transactionFee} min = {0} onChange = { this.handleFeeChange }></Input> LTC </div>
          }
        })()}
        <div>

@@ -3,7 +3,8 @@ import * as Request from 'request'
 import { getSignature } from '../hardwareAPI/GetSignature'
 import * as webRequest from 'web-request'
 
-const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
+// const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
+const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.testnet
 const NETWORK = 'BTCTEST'
 
@@ -37,6 +38,8 @@ async function getLastTransactionData(): Promise<any> {
   let requestUrl = 'https://chain.so/api/v2/get_tx_unspent/' + NETWORK + '/' + myAddr
   try {
     const response = await webRequest.get(requestUrl)
+    console.log('Raw response: ' + response.content)
+    console.log('Response of last tx: ' + JSON.parse(response.content).data.txs)
     return response
   } catch (error) {
     Promise.reject(error).catch(error => {
@@ -67,25 +70,29 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
   // Добавляем UnlockingScript в транзакцию
   let data = txHex.replace('00000000ff','000000' + unlockingScript + 'ff')
   // Возвращаем готовую к отправке транзакцию
+  console.log(data)
   return data
 }
 
 // Функция отправки транзакции, на вход принимает транзакцию в hex- формате
 function sendTransaction(transactionHex: string) {
+  console.log('url: ' + urlChainSo + NETWORK)
   // формируем запрос
   Request.post({
-    url: urlSmartbit,
+    url: urlChainSo + NETWORK,
     headers: {
       'content-type': 'application/json'
     },
-    body : { 'hex': transactionHex },
+    body : { 'tx_hex': transactionHex },
     json: true
   },
   // Обрабатываем ответ
    (res,err,body) => {
+     console.log(body)
      console.log(res), console.log(err)
-     let bodyStatus = body.success
-     if (bodyStatus.toString() === 'true') {
+     let bodyStatus = body.status
+     console.log(bodyStatus)
+     if (bodyStatus.toString() === 'success') {
        alert('Transaction sended! Hash: ' + body.txid)
      } else {
        console.log(body.error.message)
@@ -95,10 +102,15 @@ function sendTransaction(transactionHex: string) {
 }
 
 export function handle(paymentAdress: string, amount: number, transactionFee: number) {
+  console.log('In handle')
   getLastTransactionData().then(Response => {
     let respData = JSON.parse(Response.content)
+    console.log('RespData: ' + respData.data)
+    console.log('Resp status: ' + respData.status)
     if (respData.status === 'success') {
+      console.log('In success')
       for (let tx in respData.data.txs) {
+        console.log('rspdata: ' + respData.data.txs[tx])
         if (respData.data.txs[tx].value >= amount + amount * transactionFee) {
           console.log('respData: ' + respData.data.txs[tx])
           let prevOutScript: string = respData.data.txs[tx].script_hex

@@ -19,10 +19,11 @@ export class NavBar extends React.Component<IMainLayoutProps, IMainLayoutState> 
   render() {
     return (
       <div>
-      <Menu icon>
+      <Menu icon size = 'large'>
       <Menu.Item as = {Link} to = '/home'><Icon name = 'home'/>Home</Menu.Item>
       <Menu.Item as = {Link} to ='/home/transaction'><Icon name = 'send'/>Send</Menu.Item>
       <Menu.Item as = {Link} to = '/home/erc20'>ERC20</Menu.Item>
+      <Menu.Item as = {Link} to = '/home/exchange'>Exchange</Menu.Item>
       </Menu>
       </div>
     )
