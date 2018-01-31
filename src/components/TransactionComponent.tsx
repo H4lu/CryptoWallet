@@ -67,13 +67,14 @@ export class TransactionComponent extends React.Component<IPayComponentProps, IP
     this.setState({ transactionFee: data.value })
   }
   handleClick() {
+    // sendTransaction(this.state.cryptocurrency, this.state.paymentAdress, this.state.amount, this.state.transactionFee)
     switch (this.state.cryptocurrency) {
     case 'bitcoin':
       console.log('in bitcoin')
       handle(this.state.paymentAdress, this.state.amount, this.state.transactionFee)
       break
     case 'ethereum':
-      handleEthereum(this.state.paymentAdress, this.state.amount, this.state.gasPrice, this.state.gasLimit)
+      handleEthereum(this.state.paymentAdress, this.state.amount, this.state.gasPrice)
       break
     case 'litecoin':
       handleLitecoin(this.state.paymentAdress, this.state.amount, this.state.transactionFee)

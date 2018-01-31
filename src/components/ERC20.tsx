@@ -68,7 +68,7 @@ export class ERC20 extends React.Component <any,IERC20State> {
     this.setState({ tokenAdress: data.value })
   }
   buyToken() {
-    handleEthereum(this.state.tokenAdress, this.state.amountToBuy, this.state.gasPrice, this.state.gasLimit)
+    handleEthereum(this.state.tokenAdress, this.state.amountToBuy, this.state.gasPrice)
   }
   handleAmountToBuyChange(e: any, data: any) {
     console.log(e.target.value)

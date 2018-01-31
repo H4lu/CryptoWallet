@@ -7,8 +7,8 @@ import fs from 'fs'
 const addressNumber = 1
 // const testTokenAdress = '0x583cbBb8a8443B38aBcC0c956beCe47340ea1367'
 // const apiKeyToken = 'MJTK1MQJIR91D82SMCGC6SU61MGICCJQH2'
-// const web3 = new Web3(new Web3.providers.HttpProvider('https://api.myetherapi.com/rop'))
-const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws'))
+const web3 = new Web3(new Web3.providers.HttpProvider('https://api.myetherapi.com/rop'))
+// const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws'))
 const ERC20AbiInterface: string = __dirname + '/../erc20abi.json'
 const abi = JSON.parse(fs.readFileSync(ERC20AbiInterface, 'utf-8'))
 console.log('abi ' + abi)
@@ -27,14 +27,32 @@ export function getEthereumBalance() {
   return resp
 }
 
+async function getGas(tx: any) {
+  try {
+    let response = await web3.eth.estimateGas(tx)
+    return response
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+async function getNonce() {
+  try {
+    let response = await web3.eth.getTransactionCount(myAdress)
+    console.log('Nonce response: ' + response)
+    console.log('Response to string: ' + response.toString())
+    return response
+  } catch (error) {
+    console.log(error)
+  }
+}
 /* Сначала создаёт неподписанную транзакцию, после чего вычисляет её хэш и отправляет на подпись устройству
    После чего получанная подпись вставляется в новую транзакцию, которая отправляется
 */
-function createTransaction (paymentAdress: string, amount: number, gasPrice: number, gasLimit: number): void {
+function createTransaction (paymentAdress: string, amount: number, gasPrice: number) {
+  let nonce = getNonce()
   // Получаем порядковый номер транзакции, т.н nonce
-  web3.eth.getTransactionCount(myAdress).then((value) => {
-    console.log('Got this values: ' + 'gasPrice: ' + gasPrice + ' gasLimit: ' + gasLimit)
-    console.log(value)
+  console.log('Got this values: ' + 'gasPrice: ' + gasPrice)
     /* Создаём неподписанную транзакцию. Она включает в себя:
        nonce - порядковый номер
        gasPrice и gasLimit - константы, использующиеся для подсчёта комиссии
@@ -45,63 +63,45 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
        data - содержит собой код, но т.к у нас обычная транзакция, то это поле пусто
        v,r,s - данные цифровой подписи, согласно EIP155 r и s - 0, v  = chainId
     */
-    let rawtx = {
-      nonce: web3.utils.toHex(value),
-      gasPrice: web3.utils.toHex(Number(gasPrice)),
-      gasLimit: web3.utils.toHex(Number(gasLimit)),
-      value: web3.utils.toHex(web3.utils.toWei(amount, 'ether')),
-      to: paymentAdress,
-      chainId: web3.utils.toHex(3),
-      data: '0x',
-      v: web3.utils.toHex(3),
-      r: 0,
-      s: 0
-    }
+  let rawtx = {
+    nonce: web3.utils.toHex(nonce),
+    gasPrice: web3.utils.toHex(Number(gasPrice)),
+    value: web3.utils.toHex(web3.utils.toWei(amount, 'ether')),
+    to: paymentAdress,
+    chainId: web3.utils.toHex(3),
+    data: '0x',
+    v: web3.utils.toHex(3),
+    r: 0,
+    s: 0
+  }
+  let gas = getGas(rawtx)
     // С помощью ethereumjs-tx создаём объект транзакции
-    let tx = new Transaction(rawtx)
+  let tx = new Transaction(rawtx)
     // Получаем хэш для подписи
-    let txHash = keccak256(tx.serialize())
+  let txHash = keccak256(tx.serialize())
     // Отправляем на подпись
-    let signature: Buffer[] = getEthereumSignature(txHash, addressNumber)
+  let signature: Buffer[] = getEthereumSignature(txHash, addressNumber)
     // создаём объект подписи
-    console.log(web3.utils.toHex(signature[2].readInt32LE(0) + 14))
-    let sig = {
-      v : web3.utils.toHex(signature[2].readInt32LE(0) + 14),
-      r : signature[1].slice(0,32),
-      s : signature[1].slice(32,64)
-    }
+  console.log(web3.utils.toHex(signature[2].readInt32LE(0) + 14))
+  let sig = {
+    gasLimit: web3.utils.toHex(gas),
+    v : web3.utils.toHex(signature[2].readInt32LE(0) + 14),
+    r : signature[1].slice(0,32),
+    s : signature[1].slice(32,64)
+  }
+  Object.assign(rawtx, sig)
+  let gasAfter = getGas(rawtx)
+  gasAfter.then(value => {
+    console.log('Gas after: ' + value)
+  }).catch(error => {
+    console.log(error)
+  })
     // Вставляем подпись в транзакцию
-    Object.assign(tx, sig)
-     // console.log('Signature: ' + 'r: ' + '0x' + signature.slice(0,64) + ' s: ' + '0x' + signature.slice(64,128))
-    /* let testTx: any = {
-      nonce: web3.utils.toHex(value + 1),
-      gasPrice: web3.utils.toHex(gasPriceConst),
-      gasLimit: web3.utils.toHex(gasLimitConst),
-      value: web3.utils.toHex(web3.utils.toWei(amount, 'ether')),
-      to: paymentAdress,
-      chainId: web3.utils.toHex(3),
-      data: '0x',
-      v : '0x2a',
-      r : signature[0].slice(0,32),
-      s : signature[0].slice(32,64)
-    }*/
-    /*rawtx.v = '2a'
-    rawtx.r = signature.slice(0,32)
-    rawtx.s = signature.slice(32,64)*/
-    // let newtx = new Transaction(testTx)
-    // console.log('ChainId: ' + newtx.getChainId())
+  Object.assign(tx, sig)
     // Приводим транзакцию к нужному для отправки виду
-    let serTx = '0x' + tx.serialize().toString('hex')
+  let serTx = '0x' + tx.serialize().toString('hex')
+  return serTx
     // Отправляем
-    sendTransaction(serTx).on('transactionHash', (hash) => {
-      alert('Transaction sended! Hash: ' + hash)
-    }).on('error', error => {
-      alert(error)
-    })
-  }).catch(
-    (err) => console.log(err)
-  )
-
 }
 
 // Вернёт Promise с результатом запроса
@@ -110,8 +110,13 @@ function sendTransaction(transaction: string): PromiEvent<TransactionReceipt> {
   return web3.eth.sendSignedTransaction(transaction)
 }
 
-export function handleEthereum(paymentAdress: string, amount: number, gasPrice: number, gasLimit: number) {
-  let newTx = createTransaction(paymentAdress, amount, gasPrice, gasLimit)
+export function handleEthereum(paymentAdress: string, amount: number, gasPrice: number) {
+  let newTx = createTransaction(paymentAdress, amount, gasPrice)
+  /* sendTransaction(newTx).on('transactionHash', (hash) => {
+    alert('Transaction sended! Hash: ' + hash)
+  }).on('error', error => {
+    alert(error)
+  })*/
   console.log(newTx)
 }
 
