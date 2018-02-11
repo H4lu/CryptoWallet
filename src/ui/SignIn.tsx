@@ -17,7 +17,7 @@ export class SignIn extends React.Component<ISignProps, ISignState> {
   public constructor(props: ISignProps) {
     super(props)
     this.state = {
-      pin: 0,
+      pin: 12345678,
       redirect: false
     }
 

@@ -39,12 +39,15 @@ export function getSignature(transactionHash: string, adressNumber: number) {
   */
   if (errorCode !== 0) {
     switch (errorCode) {
-    case 1: alert('Invalid PIN')
+    case 1: { alert('Invalid PIN')
       break
-    case 2: alert('Device is not connected')
+    }
+    case 2: { alert('Device is not connected')
       break
-    case 3: alert('The signature is not correct')
+    }
+    case 3: { alert('The signature is not correct')
       break
+    }
     }
   }
   // Получаем unlockingScript для транзакции. Он включает в себя подпись в DER формате + публичный ключ + байты, отвечающие за размер

@@ -2,6 +2,7 @@ import { TransactionBuilder, networks, Transaction } from 'bitcoinjs-lib'
 import * as Request from 'request'
 import { getSignature } from '../hardwareAPI/GetSignature'
 import * as webRequest from 'web-request'
+import * as utils from './utils'
 
 // const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
@@ -10,6 +11,15 @@ const NETWORK = 'BTCTEST'
 
 export const myAddr: string = 'mhyUjiGtUvKQc5EuBAYxxE2NTojZywJ7St'
 
+export async function getFee() {
+  const requestUrl = 'https://bitcoinfees.earn.com/api/v1/fees/recommended'
+  try {
+    const response = await webRequest.get(requestUrl)
+    return response.content
+  } catch (error) {
+    console.log(error)
+  }
+}
 // We`re Bob. Bob send`s BTC to Alice
 
 export async function getBalance(): Promise<any> {
@@ -61,10 +71,12 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
   if (change > 0) {
     transaction.addOutput(myAddr, Math.round(change))
   }
+  console.log('Build incomplete: ' + transaction.buildIncomplete().toHex())
   // Вычисляем хэш неподписанной транзакции
   let txHashForSignature = transaction.tx.hashForSignature(0, Buffer.from(prevOutScript.trim(), 'hex'), Transaction.SIGHASH_ALL)
   // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
   let unlockingScript = getSignature(txHashForSignature.toString('hex'), 2)
+  transaction.addOutput('mt5zMAA8C1NpNqdYRudA796Y2NAmdccXbH', transactionAmount)
   // Сериализуем неподписаннуб транзакцию
   let txHex = transaction.tx.toHex()
   // Добавляем UnlockingScript в транзакцию
@@ -107,6 +119,30 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
     let respData = JSON.parse(Response.content)
     console.log('RespData: ' + respData.data)
     console.log('Resp status: ' + respData.status)
+    let utxos = []
+    for (let utxo in respData.data.txs) {
+      utxos.push(utxo)
+    }
+    let targets = {
+      address: paymentAdress,
+      value: toSatoshi(amount)
+    }
+    let { inputs, outputs, fee } = coinSelect(utxos, targets, transactionFee)
+    console.log(fee)
+    if (!inputs || !outputs) return
+    let txb = new TransactionBuilder()
+    // inputs = JSON.parse(inputs)
+    for (let input in inputs) {
+      txb.addInput(Object(input).txid, Object(input).vout)
+    }
+    // outputs = JSON.parse(outputs)
+    for (let output in outputs) {
+      if (!Object(output).address) {
+        Object(output).address = myAddr
+      }
+      txb.addOutput(Object(output).address, Object(output).value)
+    }
+    console.log(txb.buildIncomplete().toHex())
     if (respData.status === 'success') {
       console.log('In success')
       for (let tx in respData.data.txs) {
@@ -130,4 +166,88 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
   }).catch((error) => {
     console.log(error)
   })
+}
+
+function accumulative (utxos: any, outputs: any, feeRate: any) {
+  if (!isFinite(utils.uintOrNaN(feeRate))) return {}
+  let bytesAccum = utils.transactionBytes([], outputs)
+
+  let inAccum = 0
+  let inputs = []
+  let outAccum = utils.sumOrNaN(outputs)
+
+  for (let i = 0; i < utxos.length; ++i) {
+    let utxo = utxos[i]
+    let utxoBytes = utils.inputBytes(utxo)
+    let utxoFee = feeRate * utxoBytes
+    let utxoValue = utils.uintOrNaN(utxo.value)
+
+    // skip detrimental input
+    if (utxoFee > utxo.value) {
+      if (i === utxos.length - 1) return { fee: feeRate * (bytesAccum + utxoBytes) }
+      continue
+    }
+
+    bytesAccum += utxoBytes
+    inAccum += utxoValue
+    inputs.push(utxo)
+
+    let fee = feeRate * bytesAccum
+
+    // go again?
+    if (inAccum < outAccum + fee) continue
+
+    return utils.finalize(inputs, outputs, feeRate)
+  }
+
+  return { fee: feeRate * bytesAccum }
+}
+
+function blackjack (utxos: any, outputs: any, feeRate: any) {
+  if (!isFinite(utils.uintOrNaN(feeRate))) return {}
+
+  let bytesAccum = utils.transactionBytes([], outputs)
+
+  let inAccum = 0
+  let inputs = []
+  let outAccum = utils.sumOrNaN(outputs)
+  let threshold = utils.dustThreshold({}, feeRate)
+
+  for (let i = 0; i < utxos.length; ++i) {
+    let input = utxos[i]
+    let inputBytes = utils.inputBytes(input)
+    let fee = feeRate * (bytesAccum + inputBytes)
+    let inputValue = utils.uintOrNaN(input.value)
+
+    // would it waste value?
+    if ((inAccum + inputValue) > (outAccum + fee + threshold)) continue
+
+    bytesAccum += inputBytes
+    inAccum += inputValue
+    inputs.push(input)
+
+    // go again?
+    if (inAccum < outAccum + fee) continue
+
+    return utils.finalize(inputs, outputs, feeRate)
+  }
+
+  return { fee: feeRate * bytesAccum }
+}
+
+function utxoScore (x: any, feeRate: any) {
+  return x.value - (feeRate * utils.inputBytes(x))
+}
+
+function coinSelect (utxos: any, outputs: any, feeRate: any) {
+  utxos = utxos.concat().sort(function (a: any, b: any) {
+    return utxoScore(b, feeRate) - utxoScore(a, feeRate)
+  })
+
+  // attempt to use the blackjack strategy first (no change output)
+  let base = Object(blackjack(utxos, outputs, feeRate))
+  if (base.inputs) return base
+
+  // else, try the accumulative strategy
+  return Object(accumulative(utxos, outputs, feeRate))
 }

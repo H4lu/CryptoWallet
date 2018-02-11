@@ -1,0 +1,103 @@
+p {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: larger;
+}
+.payment_address {
+  width: 370px;
+}
+.currency_dropdown {
+  margin: 5px;
+}
+
+.currency {
+  height: 80px !important;
+}
+.currency2 {
+  height: 80px;
+}
+.flexcontainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.wrapper {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -50px; /* the bottom margin is the negative value of the footer's height */
+  position: relative
+}
+.footer {
+  clear: both;
+  background-color: aqua;
+  width: 100%;
+}
+.footer-content {
+
+}
+
+.header {
+  width: 100%;
+  background-color: yellow;
+}
+.header-content {
+}
+
+.main{
+  width: 65%;
+  float: left;
+  background-color: chartreuse;
+}
+.sidebar {
+  width: 35%;
+  float: left;
+  border: 1px solid sandybrown;
+  background-color: tomato;
+}
+.main, .sidebar {
+  min-height: 90%;
+}
+.footer, .header {
+  height: 5%
+}
+
+.status {
+  float: left;
+  margin-top: 2px;
+  margin-left: 5px;
+  margin-bottom: 2px;
+}
+.version {
+  float: right;
+  position: relative;
+  margin-top: 2px;
+  margin-left: 5px;
+  margin-bottom: 2px;
+}
+.button-menu {
+  float: right;
+  position: relative;
+}
+.button-refresh {
+  float: right;
+  position: relative;
+}
+.text-header {
+  text-decoration: underline;
+}
+.sidebar-content {
+  margin-top: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+.currency-block {
+  margin-top: 10%;
+  margin-left: 2%;
+}
+.card {
+  box-shadow: 0 4px 8px 0 rgb(26, 24, 24);
+  max-width: 10cm;
+  min-width: 5cm;
+  margin: auto;
+}

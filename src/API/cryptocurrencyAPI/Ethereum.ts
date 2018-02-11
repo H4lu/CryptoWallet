@@ -7,8 +7,8 @@ import fs from 'fs'
 const addressNumber = 1
 // const testTokenAdress = '0x583cbBb8a8443B38aBcC0c956beCe47340ea1367'
 // const apiKeyToken = 'MJTK1MQJIR91D82SMCGC6SU61MGICCJQH2'
-const web3 = new Web3(new Web3.providers.HttpProvider('https://api.myetherapi.com/rop'))
-// const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws'))
+// const web3 = new Web3(new Web3.providers.HttpProvider('https://api.myetherapi.com/rop'))
+const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws'))
 const ERC20AbiInterface: string = __dirname + '/../erc20abi.json'
 const abi = JSON.parse(fs.readFileSync(ERC20AbiInterface, 'utf-8'))
 console.log('abi ' + abi)
@@ -79,6 +79,7 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
   let tx = new Transaction(rawtx)
     // Получаем хэш для подписи
   let txHash = keccak256(tx.serialize())
+  console.log('Serialized: ' + tx.serialize())
     // Отправляем на подпись
   let signature: Buffer[] = getEthereumSignature(txHash, addressNumber)
     // создаём объект подписи

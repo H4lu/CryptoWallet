@@ -1,7 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const commonConfig = {
   output: {
@@ -66,6 +66,18 @@ const commonConfig = {
         }
       },
       {
+        test: /\.css$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'style-loader'
+          },
+          {
+            loader: 'css-loader'
+          }
+        ]
+      },
+      {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
@@ -98,7 +110,6 @@ module.exports = Object.assign(
   },
   commonConfig)
 
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = [
     Object.assign(
@@ -118,5 +129,4 @@ module.exports = [
       },
       commonConfig)
   ]
-
 

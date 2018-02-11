@@ -2,6 +2,7 @@ import * as React from 'react'
 import { getAdress } from '../API/cryptocurrencyAPI/Litecoin'
 import { getBalance } from '../API/cryptocurrencyAPI/BitCoin'
 import { getEthereumBalance } from '../API/cryptocurrencyAPI/Ethereum'
+import './style.css'
 import Web3 from 'web3'
 const web3 = new Web3(new Web3.providers.HttpProvider('https://api.myetherapi.com/rop'))
 interface IActionLogState {
@@ -34,8 +35,9 @@ export class ActionLog extends React.Component<any, IActionLogState> {
   // Функция рендера
   render() {
     return(
-      <div>
+      <div className = 'main'>
         <p>Hello!</p>
+        <p></p>
         <p>Your current BitCoin balance = { this.state.balance } BTC</p>
         <p>Also {this.state.ethereumBalance} ETH</p>
       </div>

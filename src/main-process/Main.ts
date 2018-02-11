@@ -5,8 +5,8 @@ declare var __dirname: string
 let mainWindow: Electron.BrowserWindow
 
 app.on('ready', () => {
-  mainWindow = new BrowserWindow({ show: false })
-  mainWindow.maximize()
+  mainWindow = new BrowserWindow({ width: 1024, height: 720, resizable: false,
+    fullscreen: false })
   mainWindow.once('ready-to-show', () => mainWindow.show())
  // const fileName = 'file:///' + __dirname + '/index.html'
  // mainWindow.loadURL(fileName)

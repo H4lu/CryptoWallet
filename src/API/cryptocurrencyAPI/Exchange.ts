@@ -1,7 +1,7 @@
 import WebRequest from 'web-request'
 // import Request from 'request'
 export async function initialTransaction(withdrawal: string, pair: string, exchangeAmount: number, returnAddress: string) {
-  const requestURL = 'https://shapeshift.io/shift'
+  const requestURL = 'https://shapeshift.io/sendamount'
   console.log(exchangeAmount)
   try {
     const response = await WebRequest.post(requestURL,{headers: {
@@ -9,6 +9,7 @@ export async function initialTransaction(withdrawal: string, pair: string, excha
     },
       json: true,
       body: {
+        'amount': exchangeAmount,
         'withdrawal': withdrawal,
         'pair': pair,
         returnAddress: returnAddress
@@ -58,6 +59,7 @@ export async function getRate(firstCurrency: string, secondCurrency: string) {
 
 export async function getMarketInfo(firstCurrency: string, secondCurrency: string) {
   const request = 'https://shapeshift.io/marketinfo/' + firstCurrency + '_' + secondCurrency
+  console.log('Pairs: ' + firstCurrency + '_' + secondCurrency)
   try {
     const response = await WebRequest.get(request)
     return response
