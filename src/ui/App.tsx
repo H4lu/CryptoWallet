@@ -17,12 +17,13 @@ import '../components/style.css'
 export class App extends React.Component {
   render() {
     return(
-      <div>
+      <div >
       <div className = 'header'>
           <div className = 'header-content'>
             <header>Braitberry</header>
           </div>
       </div>
+      <div className = 'content'>
       <div className = 'main'>
            <button type = 'submit' className = 'button-refresh'>Refresh</button>
            <div className = 'currency-block'>
@@ -35,6 +36,7 @@ export class App extends React.Component {
             <div className = 'sidebar-content'>
               <header className = 'text-header'>Total:</header>
             </div>
+        </div>
         </div>
         <div className = 'footer'>
           <div className = 'footer-content'>

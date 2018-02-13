@@ -55,10 +55,10 @@ p {
   background-color: tomato;
 }
 .main, .sidebar {
-  min-height: 90%;
+ height: 90vh;
 }
 .footer, .header {
-  height: 5%
+  height: 5vh;
 }
 
 .status {
@@ -100,4 +100,15 @@ p {
   max-width: 10cm;
   min-width: 5cm;
   margin: auto;
+}
+.currencies-container {
+  display: flex;
+}
+
+body, html {
+  height: 100vh;
+
+}
+.content {
+  height: 90vh;
 }

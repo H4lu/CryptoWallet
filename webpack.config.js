@@ -1,7 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require("html-webpack-plugin")
 
 const commonConfig = {
   output: {
@@ -97,7 +97,12 @@ const commonConfig = {
       /^any-promise$/,
       require.resolve('bluebird')
     ),
-    new ExtractTextPlugin("style.css")
+    new ExtractTextPlugin("style.css"),
+    new HtmlWebpackPlugin( {
+      filename: 'index.html',
+      template: './src/ui/index.html',
+      inject: 'body'
+    })
 ], 
   resolve: {
     extensions: ['.js', '.ts', '.tsx', '.jsx', '.json','.node']
@@ -121,11 +126,7 @@ module.exports = [
     Object.assign(
       {
         target: 'electron-renderer',
-        entry: { gui: './src/ui/Index.tsx' },
-        plugins: [new HtmlWebpackPlugin( {
-          filename: 'index.html',
-          template: './src/ui/index.html'
-        })]
+        entry: { gui: './src/ui/Index.tsx' }
       },
       commonConfig)
   ]
