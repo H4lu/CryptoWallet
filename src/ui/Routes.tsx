@@ -13,7 +13,7 @@ export class Routes extends React.Component<IRoutesProps, IRoutesState> {
   }
   render() {
     return(<div>
-    <Route path = '/home' component = {App} />
+    <Route path = '/' component = {App} />
     <Route path = '/login' component = { SignIn } />
     </div>
     )

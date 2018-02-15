@@ -29,8 +29,8 @@ p {
 }
 .footer {
   clear: both;
-  background-color: aqua;
   width: 100%;
+  border: 1px solid rgb(240, 9, 163);
 }
 .footer-content {
 
@@ -38,21 +38,20 @@ p {
 
 .header {
   width: 100%;
-  background-color: yellow;
+  border: 1px solid rgb(13, 235, 205);
 }
 .header-content {
 }
 
 .main{
   width: 65%;
-  float: left;
-  background-color: chartreuse;
+  float: right;
+  border: 1px solid rgb(245, 2, 2);
 }
 .sidebar {
   width: 35%;
-  float: left;
+  float: right;
   border: 1px solid sandybrown;
-  background-color: tomato;
 }
 .main, .sidebar {
  height: 90vh;
@@ -98,11 +97,15 @@ p {
 .card {
   box-shadow: 0 4px 8px 0 rgb(26, 24, 24);
   max-width: 10cm;
-  min-width: 5cm;
+  min-width: 2.5cm;
   margin: auto;
+  border-width: 3px;
+  margin-top: 1cm;
 }
 .currencies-container {
   display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 body, html {
@@ -111,4 +114,43 @@ body, html {
 }
 .content {
   height: 90vh;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(56, 55, 55, 0.2);
+}
+.box-link {
+  display: block;
+}
+.nav-buttons-container {
+  display: flex;
+  flex-direction: column;
+}
+.nav-buttons {
+  margin-top: 1cm;
+  width: 100%;
+}
+.info {
+  border: 2px solid rgb(20, 19, 19);
+}
+.footer-status-span {
+  color: rgb(30, 247, 30);
+}
+.currency-content {
+  margin-top: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+.currency-info-container {
+  border: 2px solid rgb(20, 19, 19);
+  margin-left: 5px;
+  margin-top: 10px;
+  width: 100px;
+}
+.currency-address-container {
+  border: 2px solid rgb(20, 19, 19);
+  margin-left: 5px;
+  margin-top: 10px;
+  width: 100%;
 }

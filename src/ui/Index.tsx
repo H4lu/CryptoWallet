@@ -3,9 +3,10 @@ import * as ReactDOM from 'react-dom'
 // import { App } from './App'
 import 'semantic-ui-css/semantic.min.css'
 import { BrowserRouter as Router } from 'react-router-dom'
-import { Routes } from './Routes'
+// import { Routes } from './Routes'
 // import { SignIn } from './SignIn'
 import { App } from './App'
+import { Routes } from './Routes';
 // import { Switch } from 'react-router'
 
 ReactDOM.render(<Router>

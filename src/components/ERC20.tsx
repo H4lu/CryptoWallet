@@ -141,7 +141,7 @@ export class ERC20 extends React.Component <any,IERC20State> {
 
   render() {
     return (
-        <div>
+        <div className = 'main'>
           <div>
             <Header> Enter token contract adress: </Header>
               <Input style = {{ width: 370 }} type = 'text' placeholder = 'Token adress' value = {this.state.tokenAdress} onChange = {this.handleTokenAdressChange}></Input>
