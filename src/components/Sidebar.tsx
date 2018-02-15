@@ -14,9 +14,9 @@ export class Sidebar extends React.Component<any, any> {
           <header className = 'text-header'>123148293648234$:</header>
           <header className = 'text-header'>Additional:</header>
           <div className = 'nav-buttons-container'>
-          <Link to = '/erc20' className = 'box-link'>
-              <button className = 'nav-buttons'>Cryptocurrency exchange</button>
-            </Link>
+          <button className = 'nav-buttons'>
+          <Link to = '/erc20' className = 'box-link'/>
+            </button>
             <Link to = '/send' className = 'box-link'>
               <button className = 'nav-buttons'>Your addresses</button>
             </Link>

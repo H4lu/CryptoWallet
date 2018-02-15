@@ -1,12 +1,12 @@
 import React from 'react'
 import { Currency } from '../components/Currency'
 // import { Switch, Route } from 'react-router'
-import {Route, Switch} from 'react-router'
+import {Route, Redirect} from 'react-router'
 import {Header} from '../components/Header'
 import {Footer} from '../components/Footer'
 import {Sidebar} from '../components/Sidebar'
-import {Main} from '../components/Main'
 import { ERC20 } from '../components/ERC20'
+import {Main} from '../components/Main'
 import { TransactionComponent } from '../components/TransactionComponent'
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
 // import { SignIn } from './signin'
@@ -29,12 +29,11 @@ export class App extends React.Component {
       <div>
         <Header/>
         <Sidebar/>
-        <Main/>
-        <Switch>
+        <Redirect from ='/' to ='/main'/> 
+          <Route path = '/main'  component = {Main}/>
           <Route path = '/currency' component = {Currency}/>
           <Route path = '/erc20' component = {ERC20}/>
           <Route path = '/send' component = {TransactionComponent}/>
-        </Switch>
         <Footer/>
       </div>
     )

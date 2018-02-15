@@ -1,4 +1,5 @@
 import * as React from 'react'
+import {Link} from 'react-router-dom'
 
 export class Currency extends React.Component<any, any> {
   constructor(props: any) {
@@ -7,7 +8,9 @@ export class Currency extends React.Component<any, any> {
   render () {
     return (
       <div className = 'main'>
+      <Link to = '/main'>
         <button type = 'submit' className = 'button-refresh'>Return</button>
+      </Link>
         <div className = 'currency-content'>
           <header className = 'text-header'>Your Bitcoin</header>
           <div className = 'currency-info-container'>
