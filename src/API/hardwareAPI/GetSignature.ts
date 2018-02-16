@@ -30,7 +30,7 @@ const MyLib = ffi.Library('iTokenDLL', { 'get_dataForTransaction': ['int', ['str
 */
 export function getSignature(transactionHash: string, adressNumber: number) {
   // Выделяем участок памяти, куда будет записан UnlocingScript
-  let unlockingScriptHex = new Buffer(280)
+  let unlockingScriptHex = new Buffer(282)
   let unlockingScriptHexLength = ref.alloc('int')
   let errorCode = MyLib.get_dataForTransaction(transactionHash, adressNumber, pin, unlockingScriptHex,
                                               unlockingScriptHexLength)
@@ -39,13 +39,16 @@ export function getSignature(transactionHash: string, adressNumber: number) {
   */
   if (errorCode !== 0) {
     switch (errorCode) {
-    case 1: { alert('Invalid PIN')
+    case 1: { 
+      alert('Invalid PIN')
       break
     }
-    case 2: { alert('Device is not connected')
+    case 2: { 
+      alert('Device is not connected')
       break
     }
-    case 3: { alert('The signature is not correct')
+    case 3: { 
+      alert('The signature is not correct')
       break
     }
     }
@@ -54,7 +57,7 @@ export function getSignature(transactionHash: string, adressNumber: number) {
   let loweredScriptHex = unlockingScriptHex.toString().toLowerCase()
   let scriptLength = ref.deref(unlockingScriptHexLength)
   // Убираем лишние нули, если размер скрипта < 280
-  if (scriptLength < 280) {
+  if (scriptLength < 282) {
     loweredScriptHex = loweredScriptHex.substring(0, scriptLength)
   }
   return loweredScriptHex
@@ -73,7 +76,6 @@ export function getEthereumSignature(transactionHash: string, adressNumber: numb
       break
     }
   }
-  console.log(typeof(vValue))
   console.log(vValue.readInt32LE(0))
   // console.log('r value: ' + rValue.toString('hex') + 's value: ' + sValue.toString('hex') + 'v Value: ' + ref.deref(vValue))
   return new Array(sig, sValue, vValue)

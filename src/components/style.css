@@ -151,11 +151,25 @@ body, html {
   border: 2px solid rgb(20, 19, 19);
   margin-left: 5px;
   margin-top: 10px;
-  width: 100px;
+  width: 120px;
 }
 .currency-address-container {
   border: 2px solid rgb(20, 19, 19);
   margin-left: 5px;
   margin-top: 10px;
   width: 100%;
+}
+.transaction-history {
+  margin-left: 5px;
+  margin-top: 15px;
+  width: 100%;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  height: auto;
+
+}
+table, td, th {
+  border: 1px solid black;
 }

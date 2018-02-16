@@ -72,19 +72,18 @@ extern "C" __declspec(dllexport) int get_addressEthereum(int numberAdres, BYTE *
 (IN) BYTE *messageHex - the message you want to sign 64 bytes
 (IN) int numberAdres - we have two address 1 or 2
 (IN) char * szUserPin - pin code / default "12345678"
-(OUT) BYTE * signEthereumHex1 - signature 128 bytes (r - 64, s - 64)
-(OUT) BYTE * signEthereumHex2 - signature 128 bytes (r - 64, s - 64)
+(OUT) BYTE * signatureBin1 - signature 64 bytes (r - 32, s - 32)
+(OUT) BYTE * signatureBin2 - signature 64 bytes (r - 32, s - 32)
 (OUT) int * v - 27 or 28
 */
-extern "C" __declspec(dllexport) int getSignEthereumHex(BYTE * messageHex, int numberAddress, char * UserPin, BYTE * signEthereumHex1, BYTE * signEthereumHex2, int *v);
+extern "C" __declspec(dllexport) int getSignEthereum(BYTE * messageHex, int numberAddress, char * UserPin, BYTE * signatureBin, int *v);
 
 
 /*
-(IN) BYTE *messageBin - the message you want to sign 32 bytes
+--(OUT_get_addres) unsigned int &error = code error, if error = 0 - ok / error != 0 - ERROR
 (IN) int numberAdres - we have two address 1 or 2
-(IN) char * szUserPin - pin code / default "12345678"
-(OUT) BYTE * signEthereumHex1 - signature 128 bytes (r - 64, s - 64)
-(OUT) BYTE * signEthereumHex2 - signature 128 bytes (r - 64, s - 64)
-(OUT) int * v - 27 or 28
+(IN) bool net  - true: Pubkey hash (P2PKH address) / false: Testnet pubkey hash
+(OUT) BYTE *outBase58checkAddress - Pubkey hash (P2PKH address) Base58chek HEXformat
+(OUT) int &lengthOutBase58checkAddress - length addres
 */
-extern "C" __declspec(dllexport) int getSignEthereumBin(BYTE * messageBin, int numberAddress, char * UserPin, BYTE * signEthereumHex1, BYTE * signEthereumHex2, int *v);
+extern "C" __declspec(dllexport) int get_addressLitecoin(int numberAdres, bool net, BYTE *outBase58checkAddress, int &lengthOutBase58checkAddress);

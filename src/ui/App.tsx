@@ -4,10 +4,11 @@ import { Currency } from '../components/Currency'
 import {Route, Redirect} from 'react-router'
 import {Header} from '../components/Header'
 import {Footer} from '../components/Footer'
-import {Sidebar} from '../components/Sidebar'
+import {SidebarContent} from '../components/SidebarContent'
 import { ERC20 } from '../components/ERC20'
 import {Main} from '../components/Main'
 import { TransactionComponent } from '../components/TransactionComponent'
+import {TransactionWindow} from '../components/TransactionWindow'
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
 // import { SignIn } from './signin'
 // import { MainLayout } from './MainLayout'
@@ -28,12 +29,13 @@ export class App extends React.Component {
     return (
       <div>
         <Header/>
-        <Sidebar/>
-        <Redirect from ='/' to ='/main'/> 
-          <Route path = '/main'  component = {Main}/>
-          <Route path = '/currency' component = {Currency}/>
-          <Route path = '/erc20' component = {ERC20}/>
-          <Route path = '/send' component = {TransactionComponent}/>
+        <Redirect from ='/' to ='/main'/>
+        <Route path = '/transaction-window' component = {TransactionWindow}/>
+        <Route path = '/' component = {SidebarContent}/>
+        <Route path = '/main'  component = {Main}/>
+        <Route path = '/currency' component = {Currency}/>
+        <Route path = '/erc20' component = {ERC20}/>
+        <Route path = '/send' component = {TransactionComponent}/>
         <Footer/>
       </div>
     )

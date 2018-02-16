@@ -21,7 +21,6 @@ export async function getFee() {
   }
 }
 // We`re Bob. Bob send`s BTC to Alice
-
 export async function getBalance(): Promise<any> {
   /* Задаём параметры запроса
     Network - тип сети, testnet или mainnet
