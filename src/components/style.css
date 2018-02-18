@@ -3,7 +3,7 @@ p {
   font-size: larger;
 }
 .payment_address {
-  width: 370px;
+  width: 300x;
 }
 .currency_dropdown {
   margin: 5px;
@@ -130,6 +130,7 @@ body, html {
 .nav-buttons-container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 .nav-buttons {
   margin-top: 1cm;
@@ -172,4 +173,8 @@ table {
 }
 table, td, th {
   border: 1px solid black;
+}
+.main-image {
+  margin-left: auto;
+  margin-right: auto;
 }

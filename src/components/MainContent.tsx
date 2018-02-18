@@ -13,21 +13,21 @@ export class MainContent extends React.Component<any, any> {
       <div className = 'currency-block'>
       <header className = 'text-header'>Available Cryptocurrency: </header>
       <div className = 'currencies-container'>
-        <Link to = '/currency' className = 'card'>
+        <Link to = '/btc-window' className = 'card'>
           <header>Bitcoin</header>
-          <img src = 'https://shapeshift.io/images/coins/bitcoin.png' className = 'currency-img'/>
+          <img src = 'https://shapeshift.io/images/coins/bitcoin.png' className = 'main-image'/>
           <p>1111 BTC</p>
           <p>10000000000$</p>
         </Link>
-        <Link to = '/currency' className = 'card'>
-          <header>Bitcoin</header>
-          <img src = 'https://shapeshift.io/images/coins/ether.png' className = 'currency-img'/>
+        <Link to = '/eth-window' className = 'card'>
+          <header>Ethereum</header>
+          <img src = 'https://shapeshift.io/images/coins/ether.png' className = 'main-image'/>
           <p>1111231 ETH</p>
           <p>10000000000$</p>
         </Link>
-        <Link to = '/currency' className = 'card'>
-          <header>Bitcoin</header>
-          <img src = 'https://shapeshift.io/images/coins/litecoin.png'/>
+        <Link to = '/ltc-window' className = 'card'>
+          <header>Litecoin</header>
+          <img src = 'https://shapeshift.io/images/coins/litecoin.png' className = 'main-image'/>
           <p>111211 LTC</p>
           <p>10000000000$</p>
         </Link>

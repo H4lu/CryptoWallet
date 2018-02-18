@@ -11,13 +11,10 @@ export class SidebarContent extends React.Component<any, any> {
           <header className = 'text-header'>123148293648234$:</header>
           <header className = 'text-header'>Additional:</header>
           <div className = 'nav-buttons-container'>
-            <Link to = '/erc20' className = 'box-link'>
-              <button className = 'nav-buttons'/>
-            </Link>
-            <Link to = '/send' className = 'box-link'>
+            <Link to = '/send'>
               <button className = 'nav-buttons'>Your addresses</button>
             </Link>
-            <Link to = '/somewhere' className = 'box-link'>
+            <Link to = '/erc20'>
               <button className = 'nav-buttons'>ERC20</button>
             </Link>
           </div>

@@ -16,10 +16,10 @@ interface IPayComponentProps {
 }
 
 interface IPayComponentState {
-  paymentAdress: string
-  transactionFee: number
-  cryptocurrency: string
-  amount: number
+  paymentAdress: string,
+  transactionFee: number,
+  cryptocurrency: string,
+  amount: number,
   showPinEnter: boolean,
   gasPrice: number,
   gasLimit: number,

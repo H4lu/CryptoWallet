@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Route, Switch} from 'react-router-dom'
 import {SidebarContent} from '../components/SidebarContent'
-import {TransactionWindow} from '../components/TransactionWindow'
+import {BTCWindow} from '../components/BTCWindow'
 
 export class Sidebar extends React.Component<any, any> {
   constructor(props: any) {
@@ -11,7 +11,7 @@ export class Sidebar extends React.Component<any, any> {
     return (
       <Switch>
         <Route path = '/' component = {SidebarContent}/>
-        <Route exact path = '/transaction-window' component = {TransactionWindow}/>
+        <Route exact path = '/transaction-window' component = {BTCWindow}/>
         </Switch>
     )
   }

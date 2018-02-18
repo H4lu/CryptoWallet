@@ -1,14 +1,18 @@
 import React from 'react'
-import { Currency } from '../components/Currency'
 // import { Switch, Route } from 'react-router'
 import {Route, Redirect} from 'react-router'
 import {Header} from '../components/Header'
 import {Footer} from '../components/Footer'
 import {SidebarContent} from '../components/SidebarContent'
-import { ERC20 } from '../components/ERC20'
-import {Main} from '../components/Main'
-import { TransactionComponent } from '../components/TransactionComponent'
-import {TransactionWindow} from '../components/TransactionWindow'
+// import { ERC20 } from '../components/ERC20'
+// import {Main} from '../components/Main'
+// import { TransactionComponent } from '../components/TransactionComponent'
+import {BTCTransaction} from '../components/BTCTransaction'
+import {LTCTransaction} from '../components/LTCTransaction'
+import {ETHTransaction} from '../components/ETHTransaction'
+import {BTCWindow} from '../components/BTCWindow'
+import {ETHWIndow} from '../components/ETHWindow'
+import {LTCWindow} from '../components/LTCWindow'
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
 // import { SignIn } from './signin'
 // import { MainLayout } from './MainLayout'
@@ -23,19 +27,103 @@ import { Exchange } from '../components/Exchange'
 /* import { Routes } from './Routes'
 import { Switch } from 'react-router'
 */
+const routes = [
+  {
+    path: '/main',
+    exact: true,
+    sidebar: SidebarContent,
+    main: MainContent
+  },
+  {
+    path: '/btc-window',
+    exact: true,
+    sidebar: SidebarContent,
+    main: BTCWindow
+  },
+  {
+    path: '/eth-window',
+    exact: true,
+    sidebar: SidebarContent,
+    main: ETHWIndow
+  },
+  {
+    path: '/ltc-window',
+    exact: true,
+    sidebar: SidebarContent,
+    main: LTCWindow
+  },
+  {
+    path: '/btc-transaction',
+    exact: true,
+    sidebar: BTCTransaction,
+    main: BTCWindow
+  },
+  {
+    path: '/eth-transaction',
+    exact: true,
+    sidebar: ETHTransaction,
+    main: ETHWIndow
+  },
+  {
+    path: '/ltc-transaction',
+    exact: true,
+    sidebar: LTCTransaction,
+    main: LTCWindow
+  }
+]
 import '../components/style.css'
+import { MainContent } from '../components/MainContent';
 export class App extends React.Component {
-  render() {
+  /*render() {
     return (
       <div>
         <Header/>
         <Redirect from ='/' to ='/main'/>
         <Route path = '/transaction-window' component = {TransactionWindow}/>
-        <Route path = '/' component = {SidebarContent}/>
+        <Route  component = {SidebarContent}/>
         <Route path = '/main'  component = {Main}/>
         <Route path = '/currency' component = {Currency}/>
         <Route path = '/erc20' component = {ERC20}/>
         <Route path = '/send' component = {TransactionComponent}/>
+        <Footer/>
+      </div>
+    )
+  }*/
+  render() {
+    return(
+      <div>
+        <Header/>
+        <Redirect from = '/' to = '/main'/>
+         {routes.map((route, index) => (
+          // You can render a <Route> in as many places
+          // as you want in your app. It will render along
+          // with any other <Route>s that also match the URL.
+          // So, a sidebar or breadcrumbs or anything else
+          // that requires you to render multiple things
+          // in multiple places at the same URL is nothing
+          // more than multiple <Route>s.
+          <Route
+            exact = {route.exact}
+            key = {index}
+            path={route.path}
+            component= {route.sidebar}
+          />
+        ))}
+         {routes.map((route, index) => (
+          // You can render a <Route> in as many places
+          // as you want in your app. It will render along
+          // with any other <Route>s that also match the URL.
+          // So, a sidebar or breadcrumbs or anything else
+          // that requires you to render multiple things
+          // in multiple places at the same URL is nothing
+          // more than multiple <Route>s.
+          <Route
+            key = {index}
+            exact = {route.exact}
+            path={route.path}
+            component= {route.main}
+          />
+        ))}
         <Footer/>
       </div>
     )
