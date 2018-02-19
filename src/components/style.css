@@ -123,7 +123,6 @@ body, html {
   height: 90vh;
 }
 
-
 .box-link {
   display: block;
 }
@@ -159,7 +158,22 @@ body, html {
   margin-left: 5px;
   margin-top: 10px;
   width: 100%;
+  overflow: auto;
 }
+.currency-address {
+  display: inline;
+}
+.currency-address img {
+  display: block;
+  float: right;
+  height: 100px;
+  width: 100px;
+  margin-left: auto;
+  margin-right: 15px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
 .transaction-history {
   margin-left: 5px;
   margin-top: 15px;
@@ -177,4 +191,22 @@ table, td, th {
 .main-image {
   margin-left: auto;
   margin-right: auto;
+  display: block;
+}
+.text-confirmed {
+  color: rgba(99, 185, 12, 0.932);
+}
+.text-unconfirmed {
+   color: red;
+}
+.address-with-button p, button{
+  display: inline-block;
+  margin-top: 15px;
+
+}
+.address-with-button {
+  margin-left: 5px;
+}
+.button-copy {
+  margin-left: 10px;
 }

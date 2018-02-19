@@ -39,42 +39,41 @@ export class MainContent extends React.Component<any, any> {
                   <th>Date</th>
                   <th>How much</th>
                   <th>To/from address</th>
-                  <th>Status</th>
+                  <th className = 'text-unconfirmed'>Not confirmed</th>
                 </tr>
                 <tr>
                   <th>2018/02/01</th>
                   <th>0.587 BTC</th>
                   <th>XHRTETFDSWER@erwsd</th>
-                  <th>Not confirmed</th>
+                  <th className = 'text-confirmed'>Confirmed</th>
                 </tr>
                 <tr>
                   <th>2018/02/11</th>
                   <th>0.587 BTC</th>
                   <th>XHRTETFDSWER@erwsd</th>
-                  <th>Confirmed</th>
+                  <th className = 'text-confirmed'>Confirmed</th>
                 </tr>
                 <tr>
                   <th>2018/02/01</th>
                   <th>0.3 BTC</th>
                   <th>XHRTqqTFDSWER@erwsd</th>
-                  <th>Confirmed</th>
+                  <th className = 'text-confirmed'>Confirmed</th>
                 </tr>
                 <tr>
                   <th>2018/02/21</th>
                   <th>0.5187 BTC</th>
                   <th>XHRTqweTFDSWER@erwsd</th>
-                  <th>Confirmed</th>
+                  <th className = 'text-confirmed'>Confirmed</th>
                 </tr>
                 <tr>
                   <th>2018/03/01</th>
                   <th>17 BTC</th>
                   <th>XHRqweDSWER@erwsd</th>
-                  <th>Confirmed</th>
+                  <th className = 'text-confirmed'>Confirmed</th>
                 </tr>
               </table>
           </div>
       </div>
-
       </div>
     )}
 }

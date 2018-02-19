@@ -24,7 +24,7 @@ export class ETHWIndow extends React.Component<any, any> {
           <div className = 'currency-address-container'>
             <header className = 'text-header'>Your Litecoin Address:</header>
             <p>sdfkjwur98fdskfl2rfwhssdf</p>
-            <button type = 'submit'>Copy</button>
+            <button type = 'submit' className = 'button-copy'>Copy</button>
           </div>
           <div className = 'transaction-history'>
             <header className = 'text-header'>Transaction History:</header>
@@ -39,31 +39,31 @@ export class ETHWIndow extends React.Component<any, any> {
                   <th>2018/02/01</th>
                   <th>0.587 ETH</th>
                   <th>sdfsdgsf213eqwerwsd</th>
-                  <th>Not confirmed</th>
+                  <th className = 'text-unconfirmed'>Not confirmed</th>
                 </tr>
                 <tr>
                   <th>2018/02/11</th>
                   <th>0.587 ETH</th>
                   <th>sdfrewwersfdqwwrwsd</th>
-                  <th>Confirmed</th>
+                  <th className = 'text-confirmed'>Confirmed</th>
                 </tr>
                 <tr>
                   <th>2018/02/01</th>
                   <th>0.3 ETH</th>
                   <th>sadadasdqweqeqsdsss</th>
-                  <th>Confirmed</th>
+                  <th className = 'text-confirmed'>Confirmed</th>
                 </tr>
                 <tr>
                   <th>2018/02/21</th>
                   <th>0.5187 ETH</th>
                   <th>XHRTqweTFDSWER@erwsd</th>
-                  <th>Confirmed</th>
+                  <th className = 'text-confirmed'>Confirmed</th>
                 </tr>
                 <tr>
                   <th>2018/03/01</th>
                   <th>17 ETH</th>
                   <th>XHRqweDSWER@erwsd</th>
-                  <th>Confirmed</th>
+                  <th className = 'text-confirmed'>Confirmed</th>
                 </tr>
               </table>
           </div>
