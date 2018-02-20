@@ -4,20 +4,19 @@ import { getEthereumSignature } from '../hardwareAPI/GetSignature'
 import { PromiEvent, TransactionReceipt } from 'web3/types'
 import { keccak256 } from 'js-sha3'
 import fs from 'fs'
-const addressNumber = 1
 // const testTokenAdress = '0x583cbBb8a8443B38aBcC0c956beCe47340ea1367'
 // const apiKeyToken = 'MJTK1MQJIR91D82SMCGC6SU61MGICCJQH2'
 // const web3 = new Web3(new Web3.providers.HttpProvider('https://api.myetherapi.com/rop'))
-const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws'))
+// const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws'))
 const ERC20AbiInterface: string = __dirname + '/../erc20abi.json'
 const abi = JSON.parse(fs.readFileSync(ERC20AbiInterface, 'utf-8'))
 console.log('abi ' + abi)
-const myAdress = '0xC7f0d18EdfF316A9cAA5d98fF26369216b38d9e1'
+const myAdress = '0x30C533986Ed809a312e0CC8e9f6186b68bd62B5e'
 // const myAdress = '0x033baF5BEdc9fFbf2190C800bfd17e073Bf79D18'
 /* const gasPriceConst = 30000000000
 const gasLimitConst = 100000*/
 // const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8546'))
-// const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM'))
+const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM'))
 // const web3 = new Web3('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM')
 // const ERC20Contract = new web3.eth.Contract(JSON.parse(abi), testTokenAdress, { from: myAdress })
 export function getEthereumBalance() {
@@ -65,6 +64,7 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
     */
   let rawtx = {
     nonce: web3.utils.toHex(nonce),
+    gasLimit: web3.utils.toHex(21000),
     gasPrice: web3.utils.toHex(Number(gasPrice)),
     value: web3.utils.toHex(web3.utils.toWei(amount, 'ether')),
     to: paymentAdress,
@@ -74,21 +74,20 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
     r: 0,
     s: 0
   }
-  let gas = getGas(rawtx)
     // С помощью ethereumjs-tx создаём объект транзакции
   let tx = new Transaction(rawtx)
     // Получаем хэш для подписи
   let txHash = keccak256(tx.serialize())
-  console.log('Serialized: ' + tx.serialize())
     // Отправляем на подпись
-  let signature: Buffer[] = getEthereumSignature(txHash, addressNumber)
+  let signature: Buffer = getEthereumSignature(txHash)
+  console.log('Hex: ' + signature[64])
+  console.log('Slice: ' + signature.slice(0,31))
     // создаём объект подписи
-  console.log(web3.utils.toHex(signature[2].readInt32LE(0) + 14))
+  console.log(web3.utils.toHex(signature[64] + 14))
   let sig = {
-    gasLimit: web3.utils.toHex(gas),
-    v : web3.utils.toHex(signature[2].readInt32LE(0) + 14),
-    r : signature[1].slice(0,32),
-    s : signature[1].slice(32,64)
+    v : web3.utils.toHex(signature[64] + 14),
+    r : signature.slice(0,32),
+    s : signature.slice(32,64)
   }
   Object.assign(rawtx, sig)
   let gasAfter = getGas(rawtx)
@@ -108,7 +107,9 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
 // Вернёт Promise с результатом запроса
 function sendTransaction(transaction: string): PromiEvent<TransactionReceipt> {
   console.log('in sendtransaction')
-  return web3.eth.sendSignedTransaction(transaction)
+  return web3.eth.sendSignedTransaction(transaction).on('receipt', console.log).on('transactionHash', function(hash) {
+    console.log('Hash: ' + hash)
+  }).on('error', console.error)
 }
 
 export function handleEthereum(paymentAdress: string, amount: number, gasPrice: number) {
@@ -118,6 +119,7 @@ export function handleEthereum(paymentAdress: string, amount: number, gasPrice: 
   }).on('error', error => {
     alert(error)
   })*/
+  sendTransaction(newTx)
   console.log(newTx)
 }
 
@@ -149,11 +151,13 @@ export function transferToken(tokenAdress: string, spenderAdress: string, amount
     }
     let tx = new Transaction(rawTx)
     let txHash = keccak256(tx.serialize())
-    let signature: Buffer[] = getEthereumSignature(txHash, addressNumber)
+    let signature: Buffer = getEthereumSignature(txHash)
+    // создаём объект подписи
+    console.log(web3.utils.toHex(signature.slice(64,65).readInt32LE(0) + 14))
     let sig = {
-      v : web3.utils.toHex(signature[2].readInt32LE(0) + 14),
-      r : signature[1].slice(0,32),
-      s : signature[1].slice(32,64)
+      v : web3.utils.toHex(signature.slice(64,65).readInt32LE(0) + 14),
+      r : signature.slice(0,32),
+      s : signature.slice(32,64)
     }
     Object.assign(tx, sig)
     console.log('Base fee: ' + tx.getBaseFee())
@@ -211,11 +215,13 @@ export function approve(tokenAdress: string, spenderAdress: string, amount: numb
     }
     let tx = new Transaction(rawTx)
     let txHash = keccak256(tx.serialize())
-    let signature: Buffer[] = getEthereumSignature(txHash, addressNumber)
+    let signature: Buffer = getEthereumSignature(txHash)
+    // создаём объект подписи
+    console.log(web3.utils.toHex(signature.slice(64,65).readInt32LE(0) + 14))
     let sig = {
-      v : web3.utils.toHex(signature[2].readInt32LE(0) + 14),
-      r : signature[1].slice(0,32),
-      s : signature[1].slice(32,64)
+      v : web3.utils.toHex(signature.slice(64,65).readInt32LE(0) + 14),
+      r : signature.slice(0,32),
+      s : signature.slice(32,64)
     }
     Object.assign(tx, sig)
     let serTx = '0x' + tx.serialize().toString('hex')
@@ -269,11 +275,13 @@ export function transferFrom(tokenAdress: string, adressFrom: string, adressTo: 
     }
     let tx = new Transaction(rawTx)
     let txHash = keccak256(tx.serialize())
-    let signature: Buffer[] = getEthereumSignature(txHash, addressNumber)
+    let signature: Buffer = getEthereumSignature(txHash)
+    // создаём объект подписи
+    console.log(web3.utils.toHex(signature.slice(64,65).readInt32LE(0) + 14))
     let sig = {
-      v : web3.utils.toHex(signature[2].readInt32LE(0) + 14),
-      r : signature[1].slice(0,32),
-      s : signature[1].slice(32,64)
+      v : web3.utils.toHex(signature.slice(64,65).readInt32LE(0) + 14),
+      r : signature.slice(0,32),
+      s : signature.slice(32,64)
     }
     Object.assign(tx, sig)
     let serTx = '0x' + tx.serialize().toString('hex')

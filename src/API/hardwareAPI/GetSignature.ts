@@ -63,9 +63,17 @@ export function getSignature(transactionHash: string, adressNumber: number) {
   }
   return loweredScriptHex
 }
+const cryptoLib = ffi.Library('CWAPI',{ 'getSign': ['int', ['int','string','int','int*','string']] })
+const MAX_LENGTH = 282
 
-export function getEthereumSignature(transactionHash: string, adressNumber: number): Array<Buffer> {
-  let sValue = new Buffer(64)
+export function getEthereumSignature(transactionHash: string): Buffer {
+  let id = 1
+  let length = ref.alloc(ref.types.int)
+  let sig = new Buffer(65)
+  let messageLen: number = 64
+  const errorCode = cryptoLib.getSign(messageLen, transactionHash, id, length, sig)
+  console.log(errorCode)
+  /*let sValue = new Buffer(64)
   let sig = new Buffer(64)
   let vValue = ref.alloc('int')
   let errorCode = MyLib.getSignEthereum(transactionHash, adressNumber, pin, sig, sValue, vValue)
@@ -80,6 +88,30 @@ export function getEthereumSignature(transactionHash: string, adressNumber: numb
   console.log(vValue.readInt32LE(0))
   // console.log('r value: ' + rValue.toString('hex') + 's value: ' + sValue.toString('hex') + 'v Value: ' + ref.deref(vValue))
   return new Array(sig, sValue, vValue)
+  */
+  return sig
 }
 
-// const cryptoLib = ffi.Library('CWAPI',{ 'get_CurrencyInfo': ['int', ['int','int*','byte*']] })
+export default function getSign(id: number, message: string) {
+  let length = ref.alloc(ref.types.int)
+  let sig = new Buffer(MAX_LENGTH)
+  let messageLen: number = 64
+  const errorCode = cryptoLib.getSign(messageLen, message, id, length, sig)
+  console.log(errorCode)
+  let lengthValue = ref.deref(length)
+
+  if (id !== 1) {
+    let serializedSig: string
+    if (lengthValue < MAX_LENGTH) {
+      serializedSig = sig.toString('hex').substring(0, lengthValue)
+      console.log(serializedSig)
+      return serializedSig
+    } else {
+      serializedSig = sig.toString('hex')
+      console.log('Serialized sig: ' + serializedSig)
+      return serializedSig
+    }
+  } else {
+    return sig
+  }
+}
