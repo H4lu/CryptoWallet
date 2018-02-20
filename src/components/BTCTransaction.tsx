@@ -7,7 +7,8 @@ import { Link } from 'react-router-dom';
 interface IPayComponentState {
   paymentAdress: string,
   amount: number,
-  fee: Array<any>
+  fee: Array<any>,
+  value: number
 }
 
 export class BTCTransaction extends React.Component<any, IPayComponentState> {
@@ -16,12 +17,15 @@ export class BTCTransaction extends React.Component<any, IPayComponentState> {
     this.state = {
        paymentAdress: '',
        amount: 0,
-       fee : [{
-       }]
+       fee : [],
+       value : 0
     }
 
     this.handleFeeChange = this.handleFeeChange.bind(this)
     this.getBitcoinFees = this.getBitcoinFees.bind(this)
+    this.handleAddressChange = this.handleAddressChange.bind(this)
+    this.handleAmountChange = this.handleAmountChange.bind(this)
+    this.handleClick = this.handleClick.bind(this)
   }
 
 
@@ -30,12 +34,18 @@ export class BTCTransaction extends React.Component<any, IPayComponentState> {
   }
   handleFeeChange(e: any, data: any) {
     console.log(e.target.value)
-    this.setState({ fee: data.value})
+    this.setState({value: data.value})
+    console.log('Current value: ' + this.state.value)
   }
   handleClick() {
-    sendTransaction('bitcoin', this.state.paymentAdress, this.state.amount, this.state.fee[0])
+    sendTransaction('bitcoin', this.state.paymentAdress, this.state.amount, this.state.value)
   }
-
+  handleAddressChange(e: any) {
+    this.setState({ paymentAdress: e.target.value })
+  }
+  handleAmountChange(e: any) {
+    this.setState({ amount: e.target.value })
+  }
   async getBitcoinFees() {
     let get = await getFee()
     if (get !== undefined) {
@@ -44,12 +54,14 @@ export class BTCTransaction extends React.Component<any, IPayComponentState> {
         console.log('First parsed: ' + parsed[fee])
         console.log('Value:' + fee)
         this.state.fee.push({
-          text: fee + ' :' + parsed[fee],
+          key: fee,
+          text: fee + ' : ' + parsed[fee],
           value: parsed[fee]
         })
       }
       for (let elem in this.state.fee) {
         console.log(this.state.fee[elem])
+        console.log('Value of fee: ' + this.state.value)
       }
     }
   }
@@ -61,14 +73,15 @@ export class BTCTransaction extends React.Component<any, IPayComponentState> {
     </Link>
       <div className = 'sidebar-content'>
           <header className = 'text-header'>Send Bitcoin</header>
-          <input type = 'text' className = 'payment_address' placeholder = 'Payment Address'/>
-          <input type = 'text' className = 'payment_address' placeholder = 'Amount'/>
-          <p>Transaction Fee:</p>
-        <div>
+          <div className = 'send-block-container'>
+            <input type = 'text' className = 'payment_address' placeholder = 'Payment Address' onChange = {this.handleAddressChange}/>
+            <input type = 'number' className = 'payment_address' placeholder = 'Amount' onChange = {this.handleAmountChange}/>
+          </div>
+        <div className = 'fee-block'>
           <p>Transaction fee: </p>
-          <Dropdown options = {this.state.fee} value = {this.state.fee} onChange = {this.handleFeeChange} defaultValue = {this.state.fee[0]}/><span>satoshi/byte</span>
+          <Dropdown options = {this.state.fee} onChange = {this.handleFeeChange} placeholder = 'Choose fee'/><span>satoshi/byte</span>
         </div>
-        <button type = 'submit' onClick = {this.handleClick}>Send BTC</button>
+        <button type = 'submit' onClick = {this.handleClick} className = 'send-currency-button'>Send BTC</button>
       </div>
     </div>)
   }

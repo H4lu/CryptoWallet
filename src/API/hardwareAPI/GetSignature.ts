@@ -37,6 +37,7 @@ export function getSignature(transactionHash: string, adressNumber: number) {
   /* При удачном вызове функция вернёт код ошибки 0, если этого не произошло
      то по коду ошибки выясняем причину сбоя и сообщаем об этом пользователю
   */
+
   if (errorCode !== 0) {
     switch (errorCode) {
     case 1: {
@@ -80,3 +81,5 @@ export function getEthereumSignature(transactionHash: string, adressNumber: numb
   // console.log('r value: ' + rValue.toString('hex') + 's value: ' + sValue.toString('hex') + 'v Value: ' + ref.deref(vValue))
   return new Array(sig, sValue, vValue)
 }
+
+// const cryptoLib = ffi.Library('CWAPI',{ 'get_CurrencyInfo': ['int', ['int','int*','byte*']] })

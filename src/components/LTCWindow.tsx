@@ -1,10 +1,27 @@
 import * as React from 'react'
 import {Link} from 'react-router-dom'
+import {getLitecoinAddress} from '../API/hardwareAPI/GetAddress'
+import CreateQR from '../core/CreateQR'
 
-export class LTCWindow extends React.Component<any, any> {
+interface ILTCWindowState {
+  address: string,
+  qrcodeAddress: string
+}
+
+export class LTCWindow extends React.Component<any, ILTCWindowState> {
   constructor(props: any) {
     super (props)
+
+    this.state = {
+      address: getLitecoinAddress(2,false),
+      qrcodeAddress: ''
+    }
   }
+
+  componentWillMount() {
+    this.setState({ qrcodeAddress: CreateQR(this.state.address) })
+  }
+
   render () {
     return (
       <div className = 'main'>
@@ -19,12 +36,17 @@ export class LTCWindow extends React.Component<any, any> {
             <img src = 'https://shapeshift.io/images/coins/litecoin.png'/>
           </div>
           <Link to ='/ltc-transaction'>
-            <button type = 'submit'>Send</button>
+            <button type = 'submit' className = 'button-send'>Send LTC</button>
           </Link>
           <div className = 'currency-address-container'>
-            <header className = 'text-header'>Your Litecoin Address:</header>
-            <p>sdfkjwur98fdskfl2rfwhssdf</p>
-            <button type = 'submit' className = 'button-copy'>Copy</button>
+            <div className = 'currency-address'>
+              <img src = {this.state.qrcodeAddress}/>
+              <div className = 'address-with-button'>
+                <header className = 'text-header'>Your Litecoin Address:</header>
+                <p>{this.state.address}</p>
+                <button type = 'submit' className = 'button-copy'>Copy</button>
+              </div>
+            </div>
           </div>
           <div className = 'transaction-history'>
             <header className = 'text-header'>Transaction History:</header>

@@ -1,9 +1,23 @@
 import * as React from 'react'
 import {Link} from 'react-router-dom'
+import CreateQR from '../core/CreateQR'
+import {getEthereumAddres} from '../API/hardwareAPI/GetAddress'
+interface IBTCWindowState {
+  address: string,
+  qrcodeAddress: string
+}
 
-export class ETHWIndow extends React.Component<any, any> {
+export class ETHWIndow extends React.Component<any, IBTCWindowState> {
   constructor(props: any) {
     super (props)
+
+    this.state = {
+      address: getEthereumAddres(2),
+      qrcodeAddress: ''  
+    }
+  }
+  componentWillMount() {
+    this.setState({ qrcodeAddress: CreateQR(this.state.address) })
   }
   render () {
     return (
@@ -19,12 +33,17 @@ export class ETHWIndow extends React.Component<any, any> {
             <img src = 'https://shapeshift.io/images/coins/ether.png'/>
           </div>
           <Link to ='/eth-transaction'>
-            <button type = 'submit'>Send</button>
+            <button type = 'submit' className = 'button-send'>Send ETH</button>
           </Link>
           <div className = 'currency-address-container'>
-            <header className = 'text-header'>Your Litecoin Address:</header>
-            <p>sdfkjwur98fdskfl2rfwhssdf</p>
-            <button type = 'submit' className = 'button-copy'>Copy</button>
+            <div className = 'currency-address'>
+              <img src = {this.state.qrcodeAddress}/>
+              <div className = 'address-with-button'>
+                <header className = 'text-header'>Your Ethereum Address:</header>
+                <p>{this.state.address}</p>
+                <button type = 'submit' className = 'button-copy'>Copy</button>
+              </div>
+            </div>
           </div>
           <div className = 'transaction-history'>
             <header className = 'text-header'>Transaction History:</header>

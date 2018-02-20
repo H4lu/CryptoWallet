@@ -45,12 +45,11 @@ export class LTCTransaction extends React.Component<any, ILTCTRansactionState> {
         <header className = 'text-header'>Send Bitcoin</header>
         <input type = 'text' className = 'payment_address' placeholder = 'Payment Address' value = {this.state.paymentAddress} onChange = {this.handleFeeChange}/>
         <input type = 'text' className = 'payment_address' placeholder = 'Amount' />
-        <p>Transaction Fee:</p>
       </div>
         <p>Transactioin fee:</p>
         <input type = 'number' value = {this.state.fee} onChange = {this.handleFeeChange}/>  
         <p>Transaction fee {this.state.fee}%</p>
-        <button type = 'submit' onClick = {this.handleClick}>Send LTC</button>
+        <button type = 'submit' onClick = {this.handleClick} className = 'send-currency-button'>Send LTC</button>
     </div>
     )
   }

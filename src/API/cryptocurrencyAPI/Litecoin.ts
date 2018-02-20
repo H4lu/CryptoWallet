@@ -1,11 +1,11 @@
 import { getSignature } from '../hardwareAPI/GetSignature'
-import { getLitecoinAdress } from '../hardwareAPI/GetAddress'
+import { getLitecoinAddress } from '../hardwareAPI/GetAddress'
 import { TransactionBuilder, networks, Transaction } from 'bitcoinjs-lib'
 import * as Request from 'request'
 import * as webRequest from 'web-request'
 // import { Transaction, TransactionBuilder, networks } from 'bitcoinjs-lib'
 
-const address = getLitecoinAdress(2,false)
+const address = getLitecoinAddress(2,false)
 
 export function getAdress() {
   return address

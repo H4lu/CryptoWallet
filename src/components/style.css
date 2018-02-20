@@ -3,7 +3,7 @@ p {
   font-size: larger;
 }
 .payment_address {
-  width: 300x;
+  width: 300px;
 }
 .currency_dropdown {
   margin: 5px;
@@ -32,17 +32,15 @@ p {
   width: 100%;
   border: 1px solid rgb(240, 9, 163);
 }
-.footer-content {
-
-}
 
 .header {
   width: 100%;
   border: 1px solid rgb(13, 235, 205);
 }
-.header-content {
+.main-wrapper {
+  margin-left:15px;
+  margin-right: 15px;
 }
-
 .main{
   width: 65%;
   float: right;
@@ -152,12 +150,16 @@ body, html {
   margin-left: 5px;
   margin-top: 10px;
   width: 120px;
+  float: left;
 }
 .currency-address-container {
   border: 2px solid rgb(20, 19, 19);
-  margin-left: 5px;
-  margin-top: 10px;
-  width: 100%;
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-top: 120px;
+  height: auto;
+  width: auto;
+  clear: both;
   overflow: auto;
 }
 .currency-address {
@@ -175,9 +177,11 @@ body, html {
 }
 
 .transaction-history {
-  margin-left: 5px;
-  margin-top: 15px;
-  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  bottom: 5vh;
+  width: 60%;
+  position: absolute;
 }
 table {
   width: 100%;
@@ -201,7 +205,6 @@ table, td, th {
 }
 .address-with-button p, button{
   display: inline-block;
-  margin-top: 15px;
 
 }
 .address-with-button {
@@ -209,4 +212,25 @@ table, td, th {
 }
 .button-copy {
   margin-left: 10px;
+}
+.send-currency-button {
+  float: right;
+  margin-right: 15px;
+  margin-top: 30px;
+
+}
+.send-block-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.button-send{
+  float: right;
+  margin-right: 15px;
+}
+.fee-block {
+  margin-top: 40px;
+}
+.fee-amount {
+  width: 200px;
 }
