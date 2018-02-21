@@ -26,7 +26,7 @@ export function getEthereumBalance() {
   return resp
 }
 
-async function getGas(tx: any) {
+/*async function getGas(tx: any) {
   try {
     let response = await web3.eth.estimateGas(tx)
     return response
@@ -34,7 +34,7 @@ async function getGas(tx: any) {
     console.log(error)
   }
 }
-
+*/
 async function getNonce() {
   try {
     let response = await web3.eth.getTransactionCount(myAdress)
@@ -48,7 +48,7 @@ async function getNonce() {
 /* Сначала создаёт неподписанную транзакцию, после чего вычисляет её хэш и отправляет на подпись устройству
    После чего получанная подпись вставляется в новую транзакцию, которая отправляется
 */
-function createTransaction (paymentAdress: string, amount: number, gasPrice: number) {
+function createTransaction (paymentAdress: string, amount: number, gasPrice: number, gasLimit: number) {
   let nonce = getNonce()
   // Получаем порядковый номер транзакции, т.н nonce
   console.log('Got this values: ' + 'gasPrice: ' + gasPrice)
@@ -63,13 +63,14 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
        v,r,s - данные цифровой подписи, согласно EIP155 r и s - 0, v  = chainId
     */
   let rawtx = {
-    nonce: web3.utils.toHex(nonce),
-    gasLimit: web3.utils.toHex(21000),
-    gasPrice: web3.utils.toHex(Number(gasPrice)),
     value: web3.utils.toHex(web3.utils.toWei(amount, 'ether')),
+    nonce: web3.utils.toHex(Number(nonce)),
+    from: myAdress,
     to: paymentAdress,
+    gasPrice: web3.utils.toHex(Number(gasPrice)),
+    gasLimit: web3.utils.toHex(Number(gasLimit)),
+    data: '0x0',
     chainId: web3.utils.toHex(3),
-    data: '0x',
     v: web3.utils.toHex(3),
     r: 0,
     s: 0
@@ -81,7 +82,7 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
     // Отправляем на подпись
   let signature: Buffer = getEthereumSignature(txHash)
   console.log('Hex: ' + signature[64])
-  console.log('Slice: ' + signature.slice(0,31))
+  console.log('Slice: ' + signature.slice(0,32).toString('hex'))
     // создаём объект подписи
   console.log(web3.utils.toHex(signature[64] + 14))
   let sig = {
@@ -89,13 +90,6 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
     r : signature.slice(0,32),
     s : signature.slice(32,64)
   }
-  Object.assign(rawtx, sig)
-  let gasAfter = getGas(rawtx)
-  gasAfter.then(value => {
-    console.log('Gas after: ' + value)
-  }).catch(error => {
-    console.log(error)
-  })
     // Вставляем подпись в транзакцию
   Object.assign(tx, sig)
     // Приводим транзакцию к нужному для отправки виду
@@ -112,8 +106,8 @@ function sendTransaction(transaction: string): PromiEvent<TransactionReceipt> {
   }).on('error', console.error)
 }
 
-export function handleEthereum(paymentAdress: string, amount: number, gasPrice: number) {
-  let newTx = createTransaction(paymentAdress, amount, gasPrice)
+export function handleEthereum(paymentAdress: string, amount: number, gasPrice: number, gasLimit: number) {
+  let newTx = createTransaction(paymentAdress, amount, gasPrice, gasLimit)
   /* sendTransaction(newTx).on('transactionHash', (hash) => {
     alert('Transaction sended! Hash: ' + hash)
   }).on('error', error => {

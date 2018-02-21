@@ -110,7 +110,7 @@ export class TransactionComponent extends React.Component<IPayComponentProps, IP
       handle(this.state.paymentAdress, this.state.amount, this.state.transactionFee)
       break
     case 'ethereum':
-      handleEthereum(this.state.paymentAdress, this.state.amount, this.state.gasPrice)
+      handleEthereum(this.state.paymentAdress, this.state.amount, this.state.gasPrice, this.state.gasLimit)
       break
     case 'litecoin':
       handleLitecoin(this.state.paymentAdress, this.state.amount, this.state.transactionFee)
