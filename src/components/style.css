@@ -227,6 +227,7 @@ table, td, th {
 .button-send{
   float: right;
   margin-right: 15px;
+  margin-top: 15px;
 }
 .fee-block {
   margin-top: 40px;

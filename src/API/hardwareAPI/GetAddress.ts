@@ -68,10 +68,9 @@ export default function getAddress(id: number) {
   console.log('Addr utf8: ' + address.toString())
   if (address.toString().length > lengthValue) {
     console.log('cutting')
-    addrString = address.toString().substring(0,lengthValue)
+    addrString = address.toString().substring(4,lengthValue)
   }
-  console.log('BTC address: ' + address.toString())
   console.log(errorCode)
-  console.log('To hex' + address.toString('hex'))
-  console.log('Normal: ' + address.toString())
+  console.log('Address string: ' + addrString)
+  return addrString
 }

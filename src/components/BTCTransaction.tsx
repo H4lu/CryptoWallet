@@ -74,8 +74,8 @@ export class BTCTransaction extends React.Component<any, IPayComponentState> {
       <div className = 'sidebar-content'>
           <header className = 'text-header'>Send Bitcoin</header>
           <div className = 'send-block-container'>
-            <input type = 'text' className = 'payment_address' placeholder = 'Payment Address' onChange = {this.handleAddressChange}/>
-            <input type = 'number' className = 'payment_address' placeholder = 'Amount' onChange = {this.handleAmountChange}/>
+            <input type = 'text' className = 'payment_address' placeholder = 'Payment Address' onChange = {this.handleAddressChange} value = {this.state.paymentAdress}/>
+            <input type = 'number' className = 'payment_address' placeholder = 'Amount' onChange = {this.handleAmountChange} value = {this.state.amount}/>
           </div>
         <div className = 'fee-block'>
           <p>Transaction fee: </p>
@@ -83,6 +83,7 @@ export class BTCTransaction extends React.Component<any, IPayComponentState> {
         </div>
         <button type = 'submit' onClick = {this.handleClick} className = 'send-currency-button'>Send BTC</button>
       </div>
-    </div>)
+    </div>
+    )
   }
 }

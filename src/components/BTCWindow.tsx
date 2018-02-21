@@ -1,7 +1,8 @@
 import * as React from 'react'
 import {Link} from 'react-router-dom'
 import CreateQR from '../core/CreateQR'
-import {getBitCoinAddress} from '../API/hardwareAPI/GetAddress'
+import getAddress from '../API/hardwareAPI/GetAddress'
+import { clipboard } from 'electron'
 
 interface IBTCWindowState {
   address: string,
@@ -11,14 +12,18 @@ interface IBTCWindowState {
 export class BTCWindow extends React.Component<any, IBTCWindowState> { 
   constructor(props: any) {
     super (props)
+    this.handleCopyClick = this.handleCopyClick.bind(this)
 
     this.state = {
-      address: getBitCoinAddress(2,false),
+      address: getAddress(0),
       qrcodeAddress: ''
     }
   }
   componentWillMount() {
     this.setState({ qrcodeAddress: CreateQR(this.state.address) })
+  }
+  handleCopyClick() {
+    clipboard.writeText(this.state.address)
   }
   render () {
     return (
@@ -42,7 +47,7 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
               <div className = 'address-with-button'>
                 <header className = 'text-header'>Your Bitcoin Address:</header>
                 <p>{this.state.address}</p>
-                <button type = 'submit' className =  'button-copy'>Copy</button>
+                <button type = 'submit' className =  'button-copy' onClick = {this.handleCopyClick}>Copy</button>
               </div>
             </div>
           </div>

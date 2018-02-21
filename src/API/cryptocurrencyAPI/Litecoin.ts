@@ -1,11 +1,10 @@
-import { getSignature } from '../hardwareAPI/GetSignature'
-import { getLitecoinAddress } from '../hardwareAPI/GetAddress'
+import getAddress from '../hardwareAPI/GetAddress'
 import { TransactionBuilder, networks, Transaction } from 'bitcoinjs-lib'
 import * as Request from 'request'
 import * as webRequest from 'web-request'
 // import { Transaction, TransactionBuilder, networks } from 'bitcoinjs-lib'
-
-const address = getLitecoinAddress(2,false)
+import getSign from '../hardwareAPI/GetSignature'
+const address = getAddress(2)
 
 export function getAdress() {
   return address
@@ -72,7 +71,7 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
   // Вычисляем хэш неподписанной транзакции
   let txHashForSignature = transaction.tx.hashForSignature(0, Buffer.from(prevOutScript.trim(), 'hex'), Transaction.SIGHASH_ALL)
   // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
-  let unlockingScript = getSignature(txHashForSignature.toString('hex'), 2)
+  let unlockingScript = getSign(2, txHashForSignature.toString('hex'))
   // Сериализуем неподписаннуб транзакцию
   let txHex = transaction.tx.toHex()
   // Добавляем UnlockingScript в транзакцию

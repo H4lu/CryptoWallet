@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {Link} from 'react-router-dom'
-import {getLitecoinAddress} from '../API/hardwareAPI/GetAddress'
 import CreateQR from '../core/CreateQR'
+import getAddress from '../API/hardwareAPI/GetAddress'
 
 interface ILTCWindowState {
   address: string,
@@ -13,7 +13,7 @@ export class LTCWindow extends React.Component<any, ILTCWindowState> {
     super (props)
 
     this.state = {
-      address: getLitecoinAddress(2,false),
+      address: getAddress(2),
       qrcodeAddress: ''
     }
   }

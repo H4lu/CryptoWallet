@@ -103,13 +103,13 @@ export default function getSign(id: number, message: string) {
   if (id !== 1) {
     let serializedSig: string
     if (lengthValue < MAX_LENGTH) {
-      serializedSig = sig.toString('hex').substring(0, lengthValue)
+      serializedSig = sig.toString().substring(0, lengthValue)
       console.log(serializedSig)
-      return serializedSig
+      return serializedSig.toLowerCase()
     } else {
-      serializedSig = sig.toString('hex')
+      serializedSig = sig.toString()
       console.log('Serialized sig: ' + serializedSig)
-      return serializedSig
+      return serializedSig.toLowerCase()
     }
   } else {
     return sig

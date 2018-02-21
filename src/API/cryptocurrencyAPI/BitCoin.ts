@@ -1,15 +1,14 @@
 import { TransactionBuilder, networks, Transaction } from 'bitcoinjs-lib'
 import * as Request from 'request'
-import { getSignature } from '../hardwareAPI/GetSignature'
 import * as webRequest from 'web-request'
-import * as utils from './utils'
-
+import getSign from '../hardwareAPI/GetSignature'
+import getAddress from '../hardwareAPI/GetAddress'
 // const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.testnet
 const NETWORK = 'BTCTEST'
 
-export const myAddr: string = 'mhyUjiGtUvKQc5EuBAYxxE2NTojZywJ7St'
+export const myAddr: string = getAddress(0)
 
 export async function getFee() {
   const requestUrl = 'https://bitcoinfees.earn.com/api/v1/fees/recommended'
@@ -74,8 +73,7 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
   // Вычисляем хэш неподписанной транзакции
   let txHashForSignature = transaction.tx.hashForSignature(0, Buffer.from(prevOutScript.trim(), 'hex'), Transaction.SIGHASH_ALL)
   // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
-  let unlockingScript = getSignature(txHashForSignature.toString('hex'), 2)
-  transaction.addOutput('mt5zMAA8C1NpNqdYRudA796Y2NAmdccXbH', transactionAmount)
+  let unlockingScript = getSign(0, txHashForSignature.toString('hex'))
   // Сериализуем неподписаннуб транзакцию
   let txHex = transaction.tx.toHex()
   // Добавляем UnlockingScript в транзакцию
@@ -101,7 +99,7 @@ function sendTransaction(transactionHex: string) {
    (res,err,body) => {
      console.log(body)
      console.log(res), console.log(err)
-     let bodyStatus = body.status
+     let bodyStatus = JSON.parse(body).status
      console.log(bodyStatus)
      if (bodyStatus.toString() === 'success') {
        alert('Transaction sended! Hash: ' + body.txid)
@@ -113,12 +111,13 @@ function sendTransaction(transactionHex: string) {
 }
 
 export function handle(paymentAdress: string, amount: number, transactionFee: number) {
+  transactionFee = 1
   console.log('In handle')
   getLastTransactionData().then(Response => {
     let respData = JSON.parse(Response.content)
     console.log('RespData: ' + respData.data)
     console.log('Resp status: ' + respData.status)
-    let utxos = []
+    /*let utxos = []
     for (let utxo in respData.data.txs) {
       utxos.push(utxo)
     }
@@ -142,6 +141,7 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
       txb.addOutput(Object(output).address, Object(output).value)
     }
     console.log(txb.buildIncomplete().toHex())
+    */
     if (respData.status === 'success') {
       console.log('In success')
       for (let tx in respData.data.txs) {
@@ -167,7 +167,7 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
   })
 }
 
-function accumulative (utxos: any, outputs: any, feeRate: any) {
+/* function accumulative (utxos: any, outputs: any, feeRate: any) {
   if (!isFinite(utils.uintOrNaN(feeRate))) return {}
   let bytesAccum = utils.transactionBytes([], outputs)
 
@@ -249,4 +249,4 @@ function coinSelect (utxos: any, outputs: any, feeRate: any) {
 
   // else, try the accumulative strategy
   return Object(accumulative(utxos, outputs, feeRate))
-}
+}*/
