@@ -3,6 +3,8 @@ import * as Request from 'request'
 import * as webRequest from 'web-request'
 import getSign from '../hardwareAPI/GetSignature'
 import getAddress from '../hardwareAPI/GetAddress'
+import * as utils from './utils'
+
 // const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.testnet
@@ -111,37 +113,40 @@ function sendTransaction(transactionHex: string) {
 }
 
 export function handle(paymentAdress: string, amount: number, transactionFee: number) {
-  transactionFee = 1
   console.log('In handle')
   getLastTransactionData().then(Response => {
     let respData = JSON.parse(Response.content)
     console.log('RespData: ' + respData.data)
     console.log('Resp status: ' + respData.status)
-    /*let utxos = []
+    let utxos = []
     for (let utxo in respData.data.txs) {
-      utxos.push(utxo)
+      let temp = respData.data.txs[utxo].value
+      respData.data.txs[utxo].value = toSatoshi(temp)
+      console.log('My value: ' + respData.data.txs[utxo].value)
+      utxos.push(respData.data.txs[utxo])
+      console.log('Utxo: ' + utxo)
+      console.log('Utxos: ' + utxos)
     }
     let targets = {
       address: paymentAdress,
-      value: toSatoshi(amount)
+      value: toSatoshi(Number(amount))
     }
-    let { inputs, outputs, fee } = coinSelect(utxos, targets, transactionFee)
+    let { inputs, outputs, fee } = coinSelect(utxos, targets, Number(transactionFee))
     console.log(fee)
+    console.log(inputs)
+    console.log(outputs)
+
     if (!inputs || !outputs) return
     let txb = new TransactionBuilder()
     // inputs = JSON.parse(inputs)
-    for (let input in inputs) {
-      txb.addInput(Object(input).txid, Object(input).vout)
-    }
-    // outputs = JSON.parse(outputs)
-    for (let output in outputs) {
-      if (!Object(output).address) {
-        Object(output).address = myAddr
+    Array(inputs).forEach(input => txb.addInput(input.txid, input.vout))
+    Array(outputs).forEach(output => {
+      if (!output.address) {
+        output.address = myAddr
       }
-      txb.addOutput(Object(output).address, Object(output).value)
-    }
+      txb.addOutput(output.address, output.value)
+    })
     console.log(txb.buildIncomplete().toHex())
-    */
     if (respData.status === 'success') {
       console.log('In success')
       for (let tx in respData.data.txs) {
@@ -167,7 +172,7 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
   })
 }
 
-/* function accumulative (utxos: any, outputs: any, feeRate: any) {
+function accumulative (utxos: any, outputs: any, feeRate: any) {
   if (!isFinite(utils.uintOrNaN(feeRate))) return {}
   let bytesAccum = utils.transactionBytes([], outputs)
 
@@ -179,7 +184,7 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
     let utxo = utxos[i]
     let utxoBytes = utils.inputBytes(utxo)
     let utxoFee = feeRate * utxoBytes
-    let utxoValue = utils.uintOrNaN(utxo.value)
+    let utxoValue = utils.uintOrNaN(Number(utxo.value))
 
     // skip detrimental input
     if (utxoFee > utxo.value) {
@@ -216,7 +221,7 @@ function blackjack (utxos: any, outputs: any, feeRate: any) {
     let input = utxos[i]
     let inputBytes = utils.inputBytes(input)
     let fee = feeRate * (bytesAccum + inputBytes)
-    let inputValue = utils.uintOrNaN(input.value)
+    let inputValue = utils.uintOrNaN(Number(input.value))
 
     // would it waste value?
     if ((inAccum + inputValue) > (outAccum + fee + threshold)) continue
@@ -234,19 +239,12 @@ function blackjack (utxos: any, outputs: any, feeRate: any) {
   return { fee: feeRate * bytesAccum }
 }
 
-function utxoScore (x: any, feeRate: any) {
-  return x.value - (feeRate * utils.inputBytes(x))
-}
-
 function coinSelect (utxos: any, outputs: any, feeRate: any) {
-  utxos = utxos.concat().sort(function (a: any, b: any) {
-    return utxoScore(b, feeRate) - utxoScore(a, feeRate)
-  })
 
   // attempt to use the blackjack strategy first (no change output)
-  let base = Object(blackjack(utxos, outputs, feeRate))
-  if (base.inputs) return base
+  let base = blackjack(utxos, outputs, feeRate)
+  if (Object(base).inputs) return base
 
   // else, try the accumulative strategy
   return Object(accumulative(utxos, outputs, feeRate))
-}*/
+}

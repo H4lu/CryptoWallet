@@ -20,24 +20,24 @@ export function dustThreshold (output: any, feeRate: any) {
 
 export function transactionBytes (inputs: Array<any>, outputs: Array<any>) {
   return TX_EMPTY_SIZE +
-    inputs.reduce(function (a: any, x: any) { return a + inputBytes(x) }, 0) +
-    outputs.reduce(function (a: any, x: any) { return a + outputBytes(x) }, 0)
+    Array(inputs).reduce(function (a: any, x: any) { return a + inputBytes(x) }, 0) +
+    Array(outputs).reduce(function (a: any, x: any) { return a + outputBytes(x) }, 0)
 }
 
 export function uintOrNaN (v: any) {
   if (typeof v !== 'number') return NaN
   if (!isFinite(v)) return NaN
-  if (Math.floor(v) !== v) return NaN
+  // if (Math.floor(v) !== v) return NaN
   if (v < 0) return NaN
   return v
 }
 
 export function sumForgiving (range: Array<any>) {
-  return range.reduce(function (a: any, x: any) { return a + (isFinite(x.value) ? x.value : 0) }, 0)
+  return Array(range).reduce(function (a: any, x: any) { return a + (isFinite(x.value) ? x.value : 0) }, 0)
 }
 
 export function sumOrNaN (range: Array<any>) {
-  return range.reduce(function (a: any, x: any) { return a + uintOrNaN(x.value) }, 0)
+  return Array(range).reduce(function (a: any, x: any) { return a + uintOrNaN(x.value) }, 0)
 }
 
 let BLANK_OUTPUT = outputBytes({})
@@ -49,7 +49,7 @@ export function finalize (inputs: any, outputs: any, feeRate: any) {
 
   // is it worth a change output?
   if (remainderAfterExtraOutput > dustThreshold({}, feeRate)) {
-    outputs = outputs.concat({ value: remainderAfterExtraOutput })
+    outputs = Array(outputs).concat({ value: remainderAfterExtraOutput })
   }
 
   let fee = sumOrNaN(inputs) - sumOrNaN(outputs)
