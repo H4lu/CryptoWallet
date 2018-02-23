@@ -37,22 +37,32 @@ export function sumForgiving (range: Array<any>) {
 }
 
 export function sumOrNaN (range: Array<any>) {
-  return Array(range).reduce(function (a: any, x: any) { return a + uintOrNaN(x.value) }, 0)
+  return Array(range).reduce(function (a: any, x: any) {
+    return a + uintOrNaN(Object(x).value)
+  }, 0)
 }
 
 let BLANK_OUTPUT = outputBytes({})
 
+export function sumOfArray(array: Array<any>) {
+  let sum = 0
+  for (let input in array) {
+    sum += uintOrNaN(Number(array[input].value))
+    console.log(sum)
+  }
+  return sum
+}
 export function finalize (inputs: any, outputs: any, feeRate: any) {
   let bytesAccum = transactionBytes(inputs, outputs)
   let feeAfterExtraOutput = feeRate * (bytesAccum + BLANK_OUTPUT)
-  let remainderAfterExtraOutput = sumOrNaN(inputs) - (sumOrNaN(outputs) + feeAfterExtraOutput)
+  let remainderAfterExtraOutput = sumOfArray(inputs) - (sumOrNaN(outputs) + feeAfterExtraOutput)
 
   // is it worth a change output?
   if (remainderAfterExtraOutput > dustThreshold({}, feeRate)) {
     outputs = Array(outputs).concat({ value: remainderAfterExtraOutput })
   }
 
-  let fee = sumOrNaN(inputs) - sumOrNaN(outputs)
+  let fee = sumOfArray(inputs) - sumOfArray(outputs)
   if (!isFinite(fee)) return { fee: feeRate * bytesAccum }
 
   return {

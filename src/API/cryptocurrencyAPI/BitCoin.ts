@@ -1,4 +1,4 @@
-import { TransactionBuilder, networks, Transaction } from 'bitcoinjs-lib'
+import { TransactionBuilder, networks, Transaction, ECPair } from 'bitcoinjs-lib'
 import * as Request from 'request'
 import * as webRequest from 'web-request'
 import getSign from '../hardwareAPI/GetSignature'
@@ -58,20 +58,44 @@ async function getLastTransactionData(): Promise<any> {
   }
 }
 
-function createTransaction(paymentAdress: string,transactionHash: string, transactionInputAmount: number,
-  transactionAmount: number,transactionFee: number, prevOutScript: string, outNumber: number): string {
+function createTransaction(paymentAdress: string, transactionInputAmount: number,
+  transactionAmount: number,transactionFee: number, prevOutScript: string, outNumber: number, utxos: Array<Object>): string {
+  console.log(transactionInputAmount)
+  console.log(outNumber)
+  let targets = {
+    address: paymentAdress,
+    value: toSatoshi(Number(transactionAmount))
+  }
+  let { inputs, outputs, fee } = coinSelect(utxos, targets, Number(transactionFee))
   // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
+  console.log(fee)
   let transaction = new TransactionBuilder(network)
+  for (let input in inputs) {
+    transaction.addInput(inputs[input].txid, inputs[input].output_no)
+  }
+  for (let out in outputs) {
+    if (!outputs[out].address) {
+      outputs[out].address = myAddr
+    }
+    transaction.addOutput(outputs[out].address, outputs[out].value)
+  }
+  let sig: string = ''
+  transaction.inputs.forEach((input, index) => {
+    console.log(input)
+    let hashForSig = transaction.tx.hashForSignature(index, Buffer.from(Object(utxos[index]).script_hex),Transaction.SIGHASH_ALL)
+    let data = getSign(0, hashForSig.toString('hex'))
+    if (index !== 0) {
+      sig = sig.concat(Object(utxos[index]).script_hex + data.toString() + 'ffffffff')
+      console.log('My signature: ' + sig)
+    } else {
+      sig = sig.concat(data.toString() + 'ffffffff')
+    }
+  })
+  console.log('Final sig: ' + sig)
   // Добавляем вход транзакции в виде хэша предыдущей транзакции и номер выхода с нашим адресом
-  transaction.addInput(transactionHash, outNumber)
   // Добавляем выход транзакции, где указывается адрес и сумма перевода
   transaction.addOutput(paymentAdress, transactionAmount)
-  let change: number = transactionInputAmount - transactionAmount - transactionFee * transactionAmount / 100
   // Добавляем адрес для "сдачи"
-  if (change > 0) {
-    transaction.addOutput(myAddr, Math.round(change))
-  }
-  console.log('Build incomplete: ' + transaction.buildIncomplete().toHex())
   // Вычисляем хэш неподписанной транзакции
   let txHashForSignature = transaction.tx.hashForSignature(0, Buffer.from(prevOutScript.trim(), 'hex'), Transaction.SIGHASH_ALL)
   // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
@@ -137,15 +161,35 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
     console.log(outputs)
 
     if (!inputs || !outputs) return
-    let txb = new TransactionBuilder()
+    let txb = new TransactionBuilder(network)
     // inputs = JSON.parse(inputs)
-    Array(inputs).forEach(input => txb.addInput(input.txid, input.vout))
-    Array(outputs).forEach(output => {
+    for (let input in inputs) {
+      txb.addInput(inputs[input].txid, inputs[input].output_no)
+    }
+    /* Array(inputs).forEach(input => {
+      console.log('My input: ' + input)
+      txb.addInput(Objecttxb(input).txid, Object(input).vout)
+    })*/
+    for (let out in outputs) {
+      console.log('Out address: ' + outputs[out].address)
+      if (!outputs[out].address) {
+        outputs[out].address = myAddr
+        console.log('Added this to change: ' + outputs[out].address)
+      }
+      txb.addOutput(outputs[out].address, outputs[out].value)
+    }
+    /* Array(outputs).forEach(output => {
       if (!output.address) {
         output.address = myAddr
       }
       txb.addOutput(output.address, output.value)
+    })*/
+    const key = ECPair.fromWIF('cT2KsVoG9CxsphtEefRXDvmFnq3aUZ5mvQDNT3HKb3UqhGGrWxiy', network)
+    txb.inputs.forEach(function (input, index) {
+      console.log(input)
+      txb.sign(index, key)
     })
+    console.log('Builder Tx: ' + txb.build().toHex())
     console.log(txb.buildIncomplete().toHex())
     if (respData.status === 'success') {
       console.log('In success')
@@ -158,9 +202,8 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
           let unspentTxAmount: number = respData.data.txs[tx].value
           let outNumber: number = respData.data.txs[tx].output_no
           console.log('Hash: ' + prevHash + 'Amount: ' + unspentTxAmount + 'outScript: ' + prevOutScript + 'out_no: ' + outNumber)
-          console.log('Types:' + typeof(prevHash) + typeof(prevOutScript) + typeof(unspentTxAmount) + typeof(outNumber))
           amount = toSatoshi(amount), unspentTxAmount = toSatoshi(unspentTxAmount)
-          let transaction = createTransaction(paymentAdress, prevHash, unspentTxAmount, amount, transactionFee, prevOutScript, outNumber)
+          let transaction = createTransaction(paymentAdress, unspentTxAmount, amount, transactionFee, prevOutScript, outNumber, respData.data.txs)
           sendTransaction(transaction)
         }
       }
