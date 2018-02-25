@@ -9,6 +9,7 @@ getAddress(2)
 export class MainContent extends React.Component<any, any> {
   constructor(props: any) {
     super(props)
+    console.log('Props: ' + props)
   }
 
   render () {
@@ -21,7 +22,7 @@ export class MainContent extends React.Component<any, any> {
             <Link to = '/btc-window' className = 'card'>
               <header>Bitcoin</header>
               <img src = 'https://shapeshift.io/images/coins/bitcoin.png' className = 'main-image'/>
-              <p>1111 BTC</p>
+              <p>{this.props.btcBalance} BTC</p>
               <p>10000000000$</p>
             </Link>
             <Link to = '/eth-window' className = 'card'>

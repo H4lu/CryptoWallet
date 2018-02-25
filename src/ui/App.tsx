@@ -13,6 +13,22 @@ import {ETHTransaction} from '../components/ETHTransaction'
 import {BTCWindow} from '../components/BTCWindow'
 import {ETHWIndow} from '../components/ETHWindow'
 import {LTCWindow} from '../components/LTCWindow'
+import '../components/style.css'
+import { MainContent } from '../components/MainContent'
+
+import {getBalance} from '../API/cryptocurrencyAPI/BitCoin'
+import {getLitecoinBalance} from '../API/cryptocurrencyAPI/Litecoin'
+import {getEthereumBalance} from '../API/cryptocurrencyAPI/Ethereum'
+import GetCurrencyRate from '../core/GetCurrencyRate'
+interface IAPPState {
+  BTCBalance: number,
+  ETHBalance: number,
+  LTCBalance: number,
+  BTCPrice: number,
+  ETHPrice: number,
+  LTCPrice: number,
+  totalBalance: number
+}
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
 // import { SignIn } from './signin'
 // import { MainLayout } from './MainLayout'
@@ -27,53 +43,54 @@ import { Exchange } from '../components/Exchange'
 /* import { Routes } from './Routes'
 import { Switch } from 'react-router'
 */
-const routes = [
-  {
-    path: '/main',
-    exact: true,
-    sidebar: SidebarContent,
-    main: MainContent
-  },
-  {
-    path: '/btc-window',
-    exact: true,
-    sidebar: SidebarContent,
-    main: BTCWindow
-  },
-  {
-    path: '/eth-window',
-    exact: true,
-    sidebar: SidebarContent,
-    main: ETHWIndow
-  },
-  {
-    path: '/ltc-window',
-    exact: true,
-    sidebar: SidebarContent,
-    main: LTCWindow
-  },
-  {
-    path: '/btc-transaction',
-    exact: true,
-    sidebar: BTCTransaction,
-    main: BTCWindow
-  },
-  {
-    path: '/eth-transaction',
-    exact: true,
-    sidebar: ETHTransaction,
-    main: ETHWIndow
-  },
-  {
-    path: '/ltc-transaction',
-    exact: true,
-    sidebar: LTCTransaction,
-    main: LTCWindow
-  }
-]
-import '../components/style.css'
-import { MainContent } from '../components/MainContent';
-export class App extends React.Component {
+
+
+export class App extends React.Component<any, IAPPState> {
+
+  routes = [
+    {
+      path: '/main',
+      exact: true,
+      sidebar: SidebarContent,
+      main: () => <MainContent btcBalance = {this.state.BTCBalance}/>
+    },
+    {
+      path: '/btc-window',
+      exact: true,
+      sidebar: SidebarContent,
+      main: BTCWindow
+    },
+    {
+      path: '/eth-window',
+      exact: true,
+      sidebar: SidebarContent,
+      main: ETHWIndow
+    },
+    {
+      path: '/ltc-window',
+      exact: true,
+      sidebar: SidebarContent,
+      main: LTCWindow
+    },
+    {
+      path: '/btc-transaction',
+      exact: true,
+      sidebar: BTCTransaction,
+      main: BTCWindow
+    },
+    {
+      path: '/eth-transaction',
+      exact: true,
+      sidebar: ETHTransaction,
+      main: ETHWIndow
+    },
+    {
+      path: '/ltc-transaction',
+      exact: true,
+      sidebar: LTCTransaction,
+      main: LTCWindow
+    }
+  ]
   /*render() {
     return (
       <div>
@@ -89,12 +106,65 @@ export class App extends React.Component {
       </div>
     )
   }*/
+  constructor(props: any) {
+    super(props)
+
+    this.state = {
+      BTCBalance: 0,
+      ETHBalance: 0,
+      LTCBalance: 0,
+      BTCPrice: 0,
+      ETHPrice: 0,
+      LTCPrice: 0,
+      totalBalance: 0
+    }
+    this.getValues = this.getValues.bind(this)
+  }
+  getValues() {
+    Promise.all([getBalance(), getEthereumBalance(), getLitecoinBalance(), GetCurrencyRate()]).then(value => {
+      for (let val in value) {
+        if (typeof(value[val]) == 'object') {
+          if(Number(val) !== value.length-1) {
+            continue
+          } else {
+            console.log(value[val].content)
+            const parsedRate = JSON.parse(value[val].content)
+            console.log(parsedRate)
+            console.log(parsedRate.id)
+            console.log(parsedRate['BTC'])
+          }
+          console.log('Not number: ' + value[val].content)
+          console.log(typeof(value[val]))
+          console.log(JSON.parse(value[val].content).data.confirmed_balance)
+          switch(JSON.parse(value[val].content).data.network) {
+            case 'BTCTEST': {
+              console.log('In BTCTEST')
+              this.setState({ BTCBalance:  JSON.parse(value[val].content).data.confirmed_balance})
+              break
+            }
+            case 'LTCTEST': {
+              this.setState({ LTCBalance: JSON.parse(value[val].content).data.confirmed_balance })
+              break
+            }
+          }
+        } else {
+          console.log('Type in else: ' + typeof(value))
+          console.log('Its number: ' + value[val])
+          this.setState({ ETHBalance: value[val] })
+        }
+      }
+      console.log('Promise all value: ' + value)
+    })
+  }
+  componentWillMount() {
+    this.getValues()
+  }
   render() {
     return(
       <div>
         <Header/>
         <Redirect from = '/' to = '/main'/>
-         {routes.map((route, index) => (
+         {this.routes.map((route, index) => (
           // You can render a <Route> in as many places
           // as you want in your app. It will render along
           // with any other <Route>s that also match the URL.
@@ -109,7 +179,7 @@ export class App extends React.Component {
             component= {route.sidebar}
           />
         ))}
-         {routes.map((route, index) => (
+         {this.routes.map((route, index) => (
           // You can render a <Route> in as many places
           // as you want in your app. It will render along
           // with any other <Route>s that also match the URL.

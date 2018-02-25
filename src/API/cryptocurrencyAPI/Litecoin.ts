@@ -19,7 +19,7 @@ const NETWORK = 'LTCTEST'
 
 // We`re Bob. Bob send`s BTC to Alice
 
-export async function getBalance(): Promise<any> {
+export async function getLitecoinBalance(): Promise<any> {
   /* Задаём параметры запроса
     Network - тип сети, testnet или mainnet
     address - наш адрес
