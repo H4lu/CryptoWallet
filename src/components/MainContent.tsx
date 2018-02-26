@@ -1,21 +1,19 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-import getAddress from '../API/hardwareAPI/GetAddress'
-
-getAddress(0)
-getAddress(1)
-getAddress(2)
 
 export class MainContent extends React.Component<any, any> {
   constructor(props: any) {
     super(props)
-    console.log('Props: ' + props)
-  }
 
+    this.handleClick = this.handleClick.bind(this)
+  }
+  handleClick () {
+    this.props.refresh()
+  }
   render () {
     return (
     <div className = 'main'>
-      <button type = 'submit' className = 'button-refresh'>Refresh</button>
+      <button type = 'submit' className = 'button-refresh' onClick = {this.handleClick}>Refresh</button>
           <div className = 'currency-block'>
             <header className = 'text-header'>Available Cryptocurrency: </header>
           <div className = 'currencies-container'>
@@ -23,19 +21,34 @@ export class MainContent extends React.Component<any, any> {
               <header>Bitcoin</header>
               <img src = 'https://shapeshift.io/images/coins/bitcoin.png' className = 'main-image'/>
               <p>{this.props.btcBalance} BTC</p>
-              <p>10000000000$</p>
+              <p>{this.props.btcPrice}$</p>
+              {(this.props.btcHourChange > 0) ? (
+                <p className = 'positive-percentage'>{this.props.btcHourChange}%</p>
+              ): (
+                <p className = 'negative-percentage'>{this.props.btcHourChange}%</p>
+              )}
             </Link>
             <Link to = '/eth-window' className = 'card'>
               <header>Ethereum</header>
               <img src = 'https://shapeshift.io/images/coins/ether.png' className = 'main-image'/>
-              <p>1111231 ETH</p>
-              <p>10000000000$</p>
+              <p>{this.props.ethBalance} ETH</p>
+              <p>{this.props.ethPrice}$</p>
+              {(this.props.ethHourChange > 0) ? (
+                <p className = 'positive-percentage'>{this.props.ethHourChange}%</p>
+              ): (
+                <p className = 'negative-percentage'>{this.props.ethHourChange}%</p>
+              )}
             </Link>
             <Link to = '/ltc-window' className = 'card'>
               <header>Litecoin</header>
               <img src = 'https://shapeshift.io/images/coins/litecoin.png' className = 'main-image'/>
-              <p>111211 LTC</p>
-              <p>10000000000$</p>
+              <p>{this.props.ltcBalance} LTC</p>
+              <p>{this.props.ltcPrice}$</p>
+              {(this.props.ltcHourChange > 0) ? (
+                <p className = 'positive-percentage'>{this.props.ltcHourChange}%</p>
+              ): (
+                <p className = 'negative-percentage'>{this.props.ltcHourChange}%</p>
+              )}
             </Link>
           </div>
           <div className = 'transaction-history'>

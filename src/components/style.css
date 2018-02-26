@@ -235,3 +235,9 @@ table, td, th {
 .fee-amount {
   width: 200px;
 }
+.positive-percentage {
+  color: rgb(77, 153, 2);
+}
+.negative-percentage {
+  color: rgb(214, 4, 4);
+}

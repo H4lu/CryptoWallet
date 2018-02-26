@@ -15,11 +15,11 @@ import {ETHWIndow} from '../components/ETHWindow'
 import {LTCWindow} from '../components/LTCWindow'
 import '../components/style.css'
 import { MainContent } from '../components/MainContent'
-
 import {getBalance} from '../API/cryptocurrencyAPI/BitCoin'
 import {getLitecoinBalance} from '../API/cryptocurrencyAPI/Litecoin'
-import {getEthereumBalance} from '../API/cryptocurrencyAPI/Ethereum'
+import {getEthereumBalance, convertFromWei} from '../API/cryptocurrencyAPI/Ethereum'
 import GetCurrencyRate from '../core/GetCurrencyRate'
+
 interface IAPPState {
   BTCBalance: number,
   ETHBalance: number,
@@ -27,7 +27,10 @@ interface IAPPState {
   BTCPrice: number,
   ETHPrice: number,
   LTCPrice: number,
-  totalBalance: number
+  totalBalance: number,
+  BTCHourChange: number,
+  ETHHourChange: number,
+  LTCHourChange: number
 }
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
 // import { SignIn } from './signin'
@@ -44,33 +47,34 @@ import { Exchange } from '../components/Exchange'
 import { Switch } from 'react-router'
 */
 
-
 export class App extends React.Component<any, IAPPState> {
 
   routes = [
     {
       path: '/main',
       exact: true,
-      sidebar: SidebarContent,
-      main: () => <MainContent btcBalance = {this.state.BTCBalance}/>
+      sidebar: () => <SidebarContent total = {this.state.totalBalance}/>,
+      main: () => <MainContent btcBalance = {this.state.BTCBalance} ltcBalance = {this.state.LTCBalance} ethBalance = {this.state.ETHBalance}
+      btcPrice = {this.state.BTCPrice} ltcPrice = {this.state.LTCPrice} ethPrice = {this.state.ETHPrice} refresh = {this.getValues} btcHourChange = {this.state.BTCHourChange}
+      ltcHourChange = {this.state.LTCHourChange} ethHourChange = {this.state.ETHHourChange}/>
     },
     {
       path: '/btc-window',
       exact: true,
-      sidebar: SidebarContent,
-      main: BTCWindow
+      sidebar: () => <SidebarContent total = {this.state.totalBalance}/>,
+      main: () => <BTCWindow balance = {this.state.BTCBalance} price = {this.state.BTCPrice} hourChange = {this.state.BTCHourChange}/>
     },
     {
       path: '/eth-window',
       exact: true,
-      sidebar: SidebarContent,
-      main: ETHWIndow
+      sidebar: () => <SidebarContent total = {this.state.totalBalance}/>,
+      main: () => <ETHWIndow balance = {this.state.ETHBalance} price = {this.state.ETHPrice} hourChange = {this.state.ETHHourChange}/>
     },
     {
       path: '/ltc-window',
       exact: true,
-      sidebar: SidebarContent,
-      main: LTCWindow
+      sidebar: () => <SidebarContent total = {this.state.totalBalance}/>,
+      main: () => <LTCWindow balance = {this.state.LTCBalance} price = {this.state.LTCPrice} hourChange = {this.state.LTCHourChange}/>
     },
     {
       path: '/btc-transaction',
@@ -116,7 +120,10 @@ export class App extends React.Component<any, IAPPState> {
       BTCPrice: 0,
       ETHPrice: 0,
       LTCPrice: 0,
-      totalBalance: 0
+      totalBalance: 0,
+      BTCHourChange: 0,
+      LTCHourChange: 0,
+      ETHHourChange: 0
     }
     this.getValues = this.getValues.bind(this)
   }
@@ -125,35 +132,49 @@ export class App extends React.Component<any, IAPPState> {
       for (let val in value) {
         if (typeof(value[val]) == 'object') {
           if(Number(val) !== value.length-1) {
-            continue
+            switch(JSON.parse(value[val].content).data.network) {
+              case 'BTCTEST': {
+                let balance: number = Number(JSON.parse(value[val].content).data.confirmed_balance)
+                this.setState({ BTCBalance:  Number(balance.toFixed(4)) })
+                break
+              }
+              case 'LTCTEST': {
+                let balance: number = Number(JSON.parse(value[val].content).data.confirmed_balance)
+                this.setState({ LTCBalance: Number(balance.toFixed(4)) })
+                break
+              }
+            }
           } else {
-            console.log(value[val].content)
-            const parsedRate = JSON.parse(value[val].content)
-            console.log(parsedRate)
-            console.log(parsedRate.id)
-            console.log(parsedRate['BTC'])
-          }
-          console.log('Not number: ' + value[val].content)
-          console.log(typeof(value[val]))
-          console.log(JSON.parse(value[val].content).data.confirmed_balance)
-          switch(JSON.parse(value[val].content).data.network) {
-            case 'BTCTEST': {
-              console.log('In BTCTEST')
-              this.setState({ BTCBalance:  JSON.parse(value[val].content).data.confirmed_balance})
-              break
-            }
-            case 'LTCTEST': {
-              this.setState({ LTCBalance: JSON.parse(value[val].content).data.confirmed_balance })
-              break
-            }
-          }
+              console.log(value[val].content)
+              const parsedRate = JSON.parse(value[val].content)
+              for (let item in parsedRate) {
+                switch (parsedRate[item].id) {
+                  case 'bitcoin': {
+                    this.setState({ BTCPrice: Number((parsedRate[item].price_usd * this.state.BTCBalance).toFixed(2)),
+                                    BTCHourChange: Number(parsedRate[item].percent_change_1h) })
+                    break
+                  }
+                  case 'ethereum': {
+                    this.setState({ ETHPrice: Number((parsedRate[item].price_usd * this.state.ETHBalance).toFixed(2)),
+                                    ETHHourChange: Number(parsedRate[item].percent_change_1h) })
+                    break
+                  }
+                  case 'litecoin': {
+                    this.setState({ LTCPrice: Number((parsedRate[item].price_usd * this.state.LTCBalance).toFixed(2)),
+                                    LTCHourChange: Number(parsedRate[item].percent_change_1h) })
+                    break
+                  }
+                }
+              }
+          } 
         } else {
-          console.log('Type in else: ' + typeof(value))
-          console.log('Its number: ' + value[val])
-          this.setState({ ETHBalance: value[val] })
+          let balance: number = Number(convertFromWei(value[val]))
+          this.setState({ ETHBalance: Number(balance.toFixed(4)) })
         }
       }
       console.log('Promise all value: ' + value)
+      let total = this.state.BTCPrice +  this.state.ETHPrice + this.state.LTCPrice
+      this.setState({ totalBalance: total})
     })
   }
   componentWillMount() {

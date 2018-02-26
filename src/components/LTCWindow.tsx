@@ -31,8 +31,13 @@ export class LTCWindow extends React.Component<any, ILTCWindowState> {
         <div className = 'currency-content'>
           <header className = 'text-header'>Your Bitcoin</header>
           <div className = 'currency-info-container'>
-            <p>1232 LTC</p>
-            <p>329479186810$</p>
+            <p>{this.props.balance} LTC</p>
+            <p>{this.props.price}$</p>
+            {(this.props.hourChange > 0) ? (
+                <p className = 'positive-percentage'>{this.props.hourChange}%</p>
+              ): (
+                <p className = 'negative-percentage'>{this.props.hourChange}%</p>
+              )}
             <img src = 'https://shapeshift.io/images/coins/litecoin.png'/>
           </div>
           <Link to ='/ltc-transaction'>

@@ -20,13 +20,16 @@ const gasLimitConst = 100000*/
 // const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM'))
 // const web3 = new Web3('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM')
 // const ERC20Contract = new web3.eth.Contract(JSON.parse(abi), testTokenAdress, { from: myAdress })
+
 export function getEthereumBalance() {
-  console.log('Web3 version:' + web3.version)
   let resp = web3.eth.getBalance(myAdress)
   console.log('ETH balance: ' + resp)
   return resp
 }
 
+export function convertFromWei(amount: number) {
+  return web3.utils.fromWei(amount, 'ether')
+}
 /*async function getGas(tx: any) {
   try {
     let response = await web3.eth.estimateGas(tx)
@@ -69,7 +72,7 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
       nonce: web3.utils.toHex(Number(value)),
       from: myAdress,
       to: paymentAdress,
-      gasPrice: web3.utils.toHex(web3.utils.toWei(gasPrice, 'shannon')),
+      gasPrice: web3.utils.toHex(gasPrice * 1000000000),
       gasLimit: web3.utils.toHex(Number(gasLimit)),
       data: '0x0',
       chainId: web3.utils.toHex(3),
@@ -79,12 +82,11 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
     }
       // С помощью ethereumjs-tx создаём объект транзакции
     let tx = new Transaction(rawtx)
+    console.log('Unsigned: ' + tx.serialize().toString('hex'))
       // Получаем хэш для подписи
     let txHash = keccak256(tx.serialize())
       // Отправляем на подпись
     let signature: Buffer = getEthereumSignature(txHash)
-    console.log('Hex: ' + signature[64])
-    console.log('Slice: ' + signature.slice(0,32).toString('hex'))
       // создаём объект подписи
     console.log(web3.utils.toHex(signature[64] + 14))
     let sig = {
@@ -96,6 +98,7 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
     Object.assign(tx, sig)
       // Приводим транзакцию к нужному для отправки виду
     let serTx = '0x' + tx.serialize().toString('hex')
+    console.log(serTx)
     web3.eth.sendSignedTransaction(serTx).on('receipt', console.log).on('transactionHash', function(hash) {
       console.log('Hash: ' + hash)
     }).on('error', console.error).catch(err => console.log(err))

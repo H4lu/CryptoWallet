@@ -8,7 +8,7 @@ export class SidebarContent extends React.Component<any, any> {
       <button type = 'submit' className = 'button-menu'>Menu</button>
         <div className = 'sidebar-content'>
           <header className = 'text-header'>Total:</header>
-          <header className = 'text-header'>123148293648234$:</header>
+          <header className = 'text-header'>{this.props.total}$:</header>
           <header className = 'text-header'>Additional:</header>
           <div className = 'nav-buttons-container'>
             <Link to = '/send'>
