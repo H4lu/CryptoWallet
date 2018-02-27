@@ -19,7 +19,18 @@ import {getBalance} from '../API/cryptocurrencyAPI/BitCoin'
 import {getLitecoinBalance} from '../API/cryptocurrencyAPI/Litecoin'
 import {getEthereumBalance, convertFromWei} from '../API/cryptocurrencyAPI/Ethereum'
 import GetCurrencyRate from '../core/GetCurrencyRate'
-
+import SerialPort from 'serialport'
+const port = new SerialPort('COM18', {
+  baudRate: 115200
+})
+port.on('data', function(data) {
+  console.log('Data: ', data)
+})
+port.on('open', function() {
+  console.log('Port opened!')
+  port.write('c')
+  port.read()
+})
 interface IAPPState {
   BTCBalance: number,
   ETHBalance: number,
@@ -80,19 +91,19 @@ export class App extends React.Component<any, IAPPState> {
       path: '/btc-transaction',
       exact: true,
       sidebar: BTCTransaction,
-      main: BTCWindow
+      main: () => <BTCWindow balance = {this.state.BTCBalance} price = {this.state.BTCPrice} hourChange = {this.state.BTCHourChange}/>
     },
     {
       path: '/eth-transaction',
       exact: true,
       sidebar: ETHTransaction,
-      main: ETHWIndow
+      main: () => <ETHWIndow balance = {this.state.ETHBalance} price = {this.state.ETHPrice} hourChange = {this.state.ETHHourChange}/>
     },
     {
       path: '/ltc-transaction',
       exact: true,
       sidebar: LTCTransaction,
-      main: LTCWindow
+      main: () => <LTCWindow balance = {this.state.LTCBalance} price = {this.state.LTCPrice} hourChange = {this.state.LTCHourChange}/>
     }
   ]
   /*render() {
@@ -145,7 +156,6 @@ export class App extends React.Component<any, IAPPState> {
               }
             }
           } else {
-              console.log(value[val].content)
               const parsedRate = JSON.parse(value[val].content)
               for (let item in parsedRate) {
                 switch (parsedRate[item].id) {

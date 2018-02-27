@@ -58,20 +58,21 @@ async function getLastTransactionData(): Promise<any> {
   }
 }
 
-function createTransaction(paymentAdress: string, transactionInputAmount: number,
-  transactionAmount: number,transactionFee: number, prevOutScript: string, outNumber: number, utxos: Array<Object>): string {
-  console.log(transactionInputAmount)
-  console.log(outNumber)
+function createTransaction(paymentAdress: string, transactionAmount: number,transactionFee: number, utxos: Array<Object>): string {
+  console.log('Tx amount: ' + transactionAmount)
   let targets = {
     address: paymentAdress,
-    value: toSatoshi(Number(transactionAmount))
+    value: transactionAmount
   }
+  console.log('Got this utxos: ' + utxos)
   let { inputs, outputs, fee } = coinSelect(utxos, targets, Number(transactionFee))
+  console.log('Got this inputs: ' + inputs)
   // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
   console.log(fee)
   let transaction = new TransactionBuilder(network)
   for (let input in inputs) {
     transaction.addInput(inputs[input].txid, inputs[input].output_no)
+    console.log('Tx inputs: ' + transaction.inputs)
   }
   for (let out in outputs) {
     if (!outputs[out].address) {
@@ -79,16 +80,28 @@ function createTransaction(paymentAdress: string, transactionInputAmount: number
     }
     transaction.addOutput(outputs[out].address, outputs[out].value)
   }
+  console.log('Unbuilded: ' + transaction.buildIncomplete().toHex())
   let sig: string = ''
-  transaction.inputs.forEach((input, index) => {
+  for (let tx in inputs) {
+    console.log('Index: ' + tx)
+    let hashForSig = transaction.tx.hashForSignature(Number(tx), Buffer.from(Object(utxos[Number(tx)]).script_hex),Transaction.SIGHASH_ALL)
+    console.log('Hash for sig in for: ' + hashForSig.toString('hex'))
+  }
+  transaction.inputs.forEach(function(input, index) {
+    console.log('My index: ' + index)
+    console.log('For each')
     console.log(input)
+    console.log('Utxo script: ' + Object(utxos[index]).script_hex)
     let hashForSig = transaction.tx.hashForSignature(index, Buffer.from(Object(utxos[index]).script_hex),Transaction.SIGHASH_ALL)
+    console.log('My hash type: ' + Transaction.SIGHASH_ALL)
+    console.log('Hash for sig: ' + hashForSig.toString('hex'))
     let data = getSign(0, hashForSig.toString('hex'))
     if (index !== 0) {
       sig = sig.concat(Object(utxos[index]).script_hex + data.toString() + 'ffffffff')
       console.log('My signature: ' + sig)
     } else {
       sig = sig.concat(data.toString() + 'ffffffff')
+      console.log('Concatenate sig: ' + sig)
     }
   })
   console.log('Final sig: ' + sig)
@@ -97,16 +110,11 @@ function createTransaction(paymentAdress: string, transactionInputAmount: number
   transaction.addOutput(paymentAdress, transactionAmount)
   // Добавляем адрес для "сдачи"
   // Вычисляем хэш неподписанной транзакции
-  let txHashForSignature = transaction.tx.hashForSignature(0, Buffer.from(prevOutScript.trim(), 'hex'), Transaction.SIGHASH_ALL)
   // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
-  let unlockingScript = getSign(0, txHashForSignature.toString('hex'))
   // Сериализуем неподписаннуб транзакцию
-  let txHex = transaction.tx.toHex()
   // Добавляем UnlockingScript в транзакцию
-  let data = txHex.replace('00000000ff','000000' + unlockingScript + 'ff')
   // Возвращаем готовую к отправке транзакцию
-  console.log(data)
-  return data
+  return sig
 }
 
 // Функция отправки транзакции, на вход принимает транзакцию в hex- формате
@@ -155,10 +163,13 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
       address: paymentAdress,
       value: toSatoshi(Number(amount))
     }
+    let tx = createTransaction(paymentAdress, toSatoshi(Number(amount)), transactionFee, utxos)
+    sendTransaction(tx)
+    console.log(tx)
     let { inputs, outputs, fee } = coinSelect(utxos, targets, Number(transactionFee))
     console.log(fee)
-    console.log(inputs)
-    console.log(outputs)
+    console.log('Inputs in handle: ' + inputs)
+    console.log('Outputs in handle:' + outputs)
 
     if (!inputs || !outputs) return
     let txb = new TransactionBuilder(network)
@@ -185,31 +196,41 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
       txb.addOutput(output.address, output.value)
     })*/
     const key = ECPair.fromWIF('cT2KsVoG9CxsphtEefRXDvmFnq3aUZ5mvQDNT3HKb3UqhGGrWxiy', network)
+    console.log('Unbuilded in handle: ' + txb.buildIncomplete().toHex())
+    let sig = ''
+    txb.inputs.forEach(function(input, index) {
+      console.log('My index: ' + index)
+      console.log('For each')
+      console.log(input)
+      console.log('Utxo script: ' + Object(inputs[index]).script_hex)
+      let hashForSig = txb.tx.hashForSignature(index, Buffer.from(Object(inputs[index]).script_hex),Transaction.SIGHASH_ALL)
+      console.log('My hash type: ' + Transaction.SIGHASH_ALL)
+      console.log('Hash for sig: ' + hashForSig.toString('hex'))
+      let data = getSign(0, hashForSig.toString('hex'))
+      if (index !== 0) {
+        sig = sig.concat(Object(inputs[index]).script_hex + data.toString() + 'ffffffff')
+        console.log('My signature: ' + sig)
+      } else {
+        sig = sig.concat(data.toString() + 'ffffffff')
+        console.log('Concatenate sig: ' + sig)
+      }
+    })
+    /*0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
+    0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
+    0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
+    0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
+    0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
+    0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
+    0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d5000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888acffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
+    0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c48000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888acffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
+    0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d5000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888acffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
+    0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c48000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888acffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000*/
     txb.inputs.forEach(function (input, index) {
       console.log(input)
       txb.sign(index, key)
     })
     console.log('Builder Tx: ' + txb.build().toHex())
-    console.log(txb.buildIncomplete().toHex())
-    if (respData.status === 'success') {
-      console.log('In success')
-      for (let tx in respData.data.txs) {
-        console.log('rspdata: ' + respData.data.txs[tx])
-        if (respData.data.txs[tx].value >= amount + amount * transactionFee) {
-          console.log('respData: ' + respData.data.txs[tx])
-          let prevOutScript: string = respData.data.txs[tx].script_hex
-          let prevHash: string = respData.data.txs[tx].txid
-          let unspentTxAmount: number = respData.data.txs[tx].value
-          let outNumber: number = respData.data.txs[tx].output_no
-          console.log('Hash: ' + prevHash + 'Amount: ' + unspentTxAmount + 'outScript: ' + prevOutScript + 'out_no: ' + outNumber)
-          amount = toSatoshi(amount), unspentTxAmount = toSatoshi(unspentTxAmount)
-          let transaction = createTransaction(paymentAdress, unspentTxAmount, amount, transactionFee, prevOutScript, outNumber, respData.data.txs)
-          sendTransaction(transaction)
-        }
-      }
-    } else {
-      alert('Error provided by internet connection')
-    }
+
   }).catch((error) => {
     console.log(error)
   })

@@ -23,9 +23,9 @@ export class MainContent extends React.Component<any, any> {
               <p>{this.props.btcBalance} BTC</p>
               <p>{this.props.btcPrice}$</p>
               {(this.props.btcHourChange > 0) ? (
-                <p className = 'positive-percentage'>{this.props.btcHourChange}%</p>
+                <p className = 'positive-percentage text-inline'>{this.props.btcHourChange}%</p>
               ): (
-                <p className = 'negative-percentage'>{this.props.btcHourChange}%</p>
+                <p className = 'negative-percentage text-inline'>{this.props.btcHourChange}%</p>
               )}
             </Link>
             <Link to = '/eth-window' className = 'card'>

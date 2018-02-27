@@ -241,3 +241,7 @@ table, td, th {
 .negative-percentage {
   color: rgb(214, 4, 4);
 }
+.text-inline {
+  clear: both;
+  display: inline;
+}
