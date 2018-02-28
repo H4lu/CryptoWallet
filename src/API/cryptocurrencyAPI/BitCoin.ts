@@ -1,17 +1,27 @@
-import { TransactionBuilder, networks, Transaction, ECPair } from 'bitcoinjs-lib'
+import { TransactionBuilder, networks, Transaction } from 'bitcoinjs-lib'
 import * as Request from 'request'
 import * as webRequest from 'web-request'
 import getSign from '../hardwareAPI/GetSignature'
 import getAddress from '../hardwareAPI/GetAddress'
-import * as utils from './utils'
+// import * as utils from './utils'
 
 // const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.testnet
 const NETWORK = 'BTCTEST'
-
+const rootURL = 'https://chain.so/api/v2'
 export const myAddr: string = getAddress(0)
 
+export async function getBitcoinLastTx(): Promise<any> {
+  try {
+    const requestUrl = rootURL + '/address/' + NETWORK + '/' + myAddr
+    console.log('My req url: ' + requestUrl)
+    let response = await webRequest.get(requestUrl)
+    return response
+  } catch (err) {
+    console.log(err)
+  }
+}
 export async function getFee() {
   const requestUrl = 'https://bitcoinfees.earn.com/api/v1/fees/recommended'
   try {
@@ -28,6 +38,7 @@ export async function getBalance(): Promise<any> {
     myAddr - наш адрес
     0 - количество подтверждений транзакций
   */
+  // rootURL + 'get_address_balance/' + myAddr
   let requestUrl = 'https://chain.so/api/v2/get_address_balance/' + NETWORK + '/' + myAddr + '/' + 0
   try {
     // Делаем запрос и отдаём в виде Promise
@@ -58,7 +69,7 @@ async function getLastTransactionData(): Promise<any> {
   }
 }
 
-function createTransaction(paymentAdress: string, transactionAmount: number,transactionFee: number, utxos: Array<Object>): string {
+/* function createTransaction(paymentAdress: string, transactionAmount: number,transactionFee: number, utxos: Array<Object>): string {
   console.log('Tx amount: ' + transactionAmount)
   let targets = {
     address: paymentAdress,
@@ -116,7 +127,33 @@ function createTransaction(paymentAdress: string, transactionAmount: number,tran
   // Возвращаем готовую к отправке транзакцию
   return sig
 }
-
+*/
+function createTransaction(paymentAdress: string,transactionHash: string, transactionInputAmount: number,
+  transactionAmount: number,transactionFee: number, prevOutScript: string, outNumber: number): string {
+  // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
+  let transaction = new TransactionBuilder(network)
+  // Добавляем вход транзакции в виде хэша предыдущей транзакции и номер выхода с нашим адресом
+  transaction.addInput(transactionHash, outNumber)
+  // Добавляем выход транзакции, где указывается адрес и сумма перевода
+  transaction.addOutput(paymentAdress, transactionAmount)
+  let change: number = transactionInputAmount - transactionAmount - transactionFee * transactionAmount / 100
+  // Добавляем адрес для "сдачи"
+  if (change > 0) {
+    transaction.addOutput(myAddr, Math.round(change))
+  }
+  console.log('Build incomplete: ' + transaction.buildIncomplete().toHex())
+  // Вычисляем хэш неподписанной транзакции
+  let txHashForSignature = transaction.tx.hashForSignature(0, Buffer.from(prevOutScript.trim(), 'hex'), Transaction.SIGHASH_ALL)
+  // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
+  let unlockingScript = getSign(0, txHashForSignature.toString('hex'))
+  // Сериализуем неподписаннуб транзакцию
+  let txHex = transaction.tx.toHex()
+  // Добавляем UnlockingScript в транзакцию
+  let data = txHex.replace('00000000ff','000000' + unlockingScript + 'ff')
+  // Возвращаем готовую к отправке транзакцию
+  console.log(data)
+  return data
+}
 // Функция отправки транзакции, на вход принимает транзакцию в hex- формате
 function sendTransaction(transactionHex: string) {
   console.log('url: ' + urlChainSo + NETWORK)
@@ -143,8 +180,37 @@ function sendTransaction(transactionHex: string) {
      }
    })
 }
-
 export function handle(paymentAdress: string, amount: number, transactionFee: number) {
+  console.log('In handle')
+  getLastTransactionData().then(Response => {
+    let respData = JSON.parse(Response.content)
+    console.log('RespData: ' + respData.data)
+    console.log('Resp status: ' + respData.status)
+    if (respData.status === 'success') {
+      console.log('In success')
+      for (let tx in respData.data.txs) {
+        console.log('rspdata: ' + respData.data.txs[tx])
+        if (respData.data.txs[tx].value >= amount + amount * transactionFee) {
+          console.log('respData: ' + respData.data.txs[tx])
+          let prevOutScript: string = respData.data.txs[tx].script_hex
+          let prevHash: string = respData.data.txs[tx].txid
+          let unspentTxAmount: number = respData.data.txs[tx].value
+          let outNumber: number = respData.data.txs[tx].output_no
+          console.log('Hash: ' + prevHash + 'Amount: ' + unspentTxAmount + 'outScript: ' + prevOutScript + 'out_no: ' + outNumber)
+          console.log('Types:' + typeof(prevHash) + typeof(prevOutScript) + typeof(unspentTxAmount) + typeof(outNumber))
+          amount = toSatoshi(amount), unspentTxAmount = toSatoshi(unspentTxAmount)
+          let transaction = createTransaction(paymentAdress, prevHash, unspentTxAmount, amount, transactionFee, prevOutScript, outNumber)
+          sendTransaction(transaction)
+        }
+      }
+    } else {
+      alert('Error provided by internet connection')
+    }
+  }).catch((error) => {
+    console.log(error)
+  })
+}
+/* export function handle(paymentAdress: string, amount: number, transactionFee: number) {
   console.log('In handle')
   getLastTransactionData().then(Response => {
     let respData = JSON.parse(Response.content)
@@ -180,7 +246,7 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
     /* Array(inputs).forEach(input => {
       console.log('My input: ' + input)
       txb.addInput(Objecttxb(input).txid, Object(input).vout)
-    })*/
+    })
     for (let out in outputs) {
       console.log('Out address: ' + outputs[out].address)
       if (!outputs[out].address) {
@@ -194,7 +260,7 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
         output.address = myAddr
       }
       txb.addOutput(output.address, output.value)
-    })*/
+    })
     const key = ECPair.fromWIF('cT2KsVoG9CxsphtEefRXDvmFnq3aUZ5mvQDNT3HKb3UqhGGrWxiy', network)
     console.log('Unbuilded in handle: ' + txb.buildIncomplete().toHex())
     let sig = ''
@@ -215,7 +281,8 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
         console.log('Concatenate sig: ' + sig)
       }
     })
-    /*0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
+    /*
+    0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
     0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
     0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
     0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
@@ -224,7 +291,7 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
     0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d5000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888acffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
     0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c48000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888acffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
     0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d5000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888acffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
-    0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c48000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888acffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000*/
+    0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c48000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888acffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
     txb.inputs.forEach(function (input, index) {
       console.log(input)
       txb.sign(index, key)
@@ -235,8 +302,8 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
     console.log(error)
   })
 }
-
-function accumulative (utxos: any, outputs: any, feeRate: any) {
+*/
+/* function accumulative (utxos: any, outputs: any, feeRate: any) {
   if (!isFinite(utils.uintOrNaN(feeRate))) return {}
   let bytesAccum = utils.transactionBytes([], outputs)
 
@@ -271,7 +338,7 @@ function accumulative (utxos: any, outputs: any, feeRate: any) {
   return { fee: feeRate * bytesAccum }
 }
 
-function blackjack (utxos: any, outputs: any, feeRate: any) {
+/* function blackjack (utxos: any, outputs: any, feeRate: any) {
   if (!isFinite(utils.uintOrNaN(feeRate))) return {}
 
   let bytesAccum = utils.transactionBytes([], outputs)
@@ -312,3 +379,4 @@ function coinSelect (utxos: any, outputs: any, feeRate: any) {
   // else, try the accumulative strategy
   return Object(accumulative(utxos, outputs, feeRate))
 }
+*/

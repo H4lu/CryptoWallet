@@ -5,7 +5,7 @@ import * as webRequest from 'web-request'
 // import { Transaction, TransactionBuilder, networks } from 'bitcoinjs-lib'
 import getSign from '../hardwareAPI/GetSignature'
 const address = getAddress(2)
-
+const rootURL = 'https://chain.so/api/v2'
 export function getAdress() {
   return address
 }
@@ -18,6 +18,15 @@ const NETWORK = 'LTCTEST'
 // export const address: string = 'mhyUjiGtUvKQc5EuBAYxxE2NTojZywJ7St'
 
 // We`re Bob. Bob send`s BTC to Alice
+export async function getLitecoinLastTx(): Promise<any> {
+  try {
+    const requestUrl = rootURL + '/address/' + NETWORK + '/' + address
+    let response = await webRequest.get(requestUrl)
+    return response
+  } catch (err) {
+    console.log(err)
+  }
+}
 
 export async function getLitecoinBalance(): Promise<any> {
   /* Задаём параметры запроса

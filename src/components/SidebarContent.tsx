@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Link} from 'react-router-dom'
+// import {Link} from 'react-router-dom'
 
 export class SidebarContent extends React.Component<any, any> {
   render() {
@@ -11,12 +11,8 @@ export class SidebarContent extends React.Component<any, any> {
           <header className = 'text-header'>{this.props.total}$:</header>
           <header className = 'text-header'>Additional:</header>
           <div className = 'nav-buttons-container'>
-            <Link to = '/send'>
-              <button className = 'nav-buttons'>Your addresses</button>
-            </Link>
-            <Link to = '/erc20'>
-              <button className = 'nav-buttons'>ERC20</button>
-            </Link>
+            <button className = 'nav-buttons'>Your addresses</button>
+            <button className = 'nav-buttons'>ERC20</button>
           </div>
           <header className = 'text-header'>Your Braitberry:</header>
             <div className = 'info'>

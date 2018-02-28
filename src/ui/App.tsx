@@ -15,22 +15,10 @@ import {ETHWIndow} from '../components/ETHWindow'
 import {LTCWindow} from '../components/LTCWindow'
 import '../components/style.css'
 import { MainContent } from '../components/MainContent'
-import {getBalance} from '../API/cryptocurrencyAPI/BitCoin'
-import {getLitecoinBalance} from '../API/cryptocurrencyAPI/Litecoin'
+import {getBalance, getBitcoinLastTx} from '../API/cryptocurrencyAPI/BitCoin'
+import {getLitecoinBalance, getLitecoinLastTx} from '../API/cryptocurrencyAPI/Litecoin'
 import {getEthereumBalance, convertFromWei} from '../API/cryptocurrencyAPI/Ethereum'
 import GetCurrencyRate from '../core/GetCurrencyRate'
-import SerialPort from 'serialport'
-const port = new SerialPort('COM18', {
-  baudRate: 115200
-})
-port.on('data', function(data) {
-  console.log('Data: ', data)
-})
-port.on('open', function() {
-  console.log('Port opened!')
-  port.write('c')
-  port.read()
-})
 interface IAPPState {
   BTCBalance: number,
   ETHBalance: number,
@@ -41,7 +29,9 @@ interface IAPPState {
   totalBalance: number,
   BTCHourChange: number,
   ETHHourChange: number,
-  LTCHourChange: number
+  LTCHourChange: number,
+  BTCLastTx: Array<any>,
+  LTCLastTx: Array<any>
 }
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
 // import { SignIn } from './signin'
@@ -59,7 +49,6 @@ import { Switch } from 'react-router'
 */
 
 export class App extends React.Component<any, IAPPState> {
-
   routes = [
     {
       path: '/main',
@@ -73,7 +62,7 @@ export class App extends React.Component<any, IAPPState> {
       path: '/btc-window',
       exact: true,
       sidebar: () => <SidebarContent total = {this.state.totalBalance}/>,
-      main: () => <BTCWindow balance = {this.state.BTCBalance} price = {this.state.BTCPrice} hourChange = {this.state.BTCHourChange}/>
+      main: () => <BTCWindow balance = {this.state.BTCBalance} price = {this.state.BTCPrice} hourChange = {this.state.BTCHourChange} lastTx = {this.state.BTCLastTx}/>
     },
     {
       path: '/eth-window',
@@ -85,7 +74,7 @@ export class App extends React.Component<any, IAPPState> {
       path: '/ltc-window',
       exact: true,
       sidebar: () => <SidebarContent total = {this.state.totalBalance}/>,
-      main: () => <LTCWindow balance = {this.state.LTCBalance} price = {this.state.LTCPrice} hourChange = {this.state.LTCHourChange}/>
+      main: () => <LTCWindow balance = {this.state.LTCBalance} price = {this.state.LTCPrice} hourChange = {this.state.LTCHourChange} lastTx = {this.state.LTCLastTx}/>
     },
     {
       path: '/btc-transaction',
@@ -134,9 +123,12 @@ export class App extends React.Component<any, IAPPState> {
       totalBalance: 0,
       BTCHourChange: 0,
       LTCHourChange: 0,
-      ETHHourChange: 0
+      ETHHourChange: 0,
+      LTCLastTx: [],
+      BTCLastTx: []
     }
     this.getValues = this.getValues.bind(this)
+    this.getTransactions = this.getTransactions.bind(this)
   }
   getValues() {
     Promise.all([getBalance(), getEthereumBalance(), getLitecoinBalance(), GetCurrencyRate()]).then(value => {
@@ -189,6 +181,32 @@ export class App extends React.Component<any, IAPPState> {
   }
   componentWillMount() {
     this.getValues()
+    this.getTransactions()
+  }
+  getTransactions() {
+    Promise.all([getBitcoinLastTx(), getLitecoinLastTx()]).then(value => {
+      for (let index in value) {
+          let parsedResponse = JSON.parse(value[index].content).data
+          console.log('Parsed res: ' + JSON.stringify(parsedResponse))
+          for (let tx in parsedResponse.txs) {
+            console.log('NETWORK: ' + parsedResponse.network)
+            switch (parsedResponse.network) {
+              case 'BTCTEST': {
+                this.setState({ BTCLastTx:[...this.state.BTCLastTx, parsedResponse.txs[tx]] })
+                break
+              }
+              case 'LTCTEST': {
+                this.setState({ LTCLastTx: [...this.state.LTCLastTx, parsedResponse.txs[tx]] })
+                console.log('Parsed resp: ' + JSON.stringify(parsedResponse.txs[tx]))
+                console.log('LTCLastTxState: ' + JSON.stringify(this.state.LTCLastTx))
+                break
+              }
+          }
+        }
+      }
+    }).catch(error => {
+      console.log(error)
+    })
   }
   render() {
     return(
@@ -196,13 +214,6 @@ export class App extends React.Component<any, IAPPState> {
         <Header/>
         <Redirect from = '/' to = '/main'/>
          {this.routes.map((route, index) => (
-          // You can render a <Route> in as many places
-          // as you want in your app. It will render along
-          // with any other <Route>s that also match the URL.
-          // So, a sidebar or breadcrumbs or anything else
-          // that requires you to render multiple things
-          // in multiple places at the same URL is nothing
-          // more than multiple <Route>s.
           <Route
             exact = {route.exact}
             key = {index}
@@ -211,13 +222,6 @@ export class App extends React.Component<any, IAPPState> {
           />
         ))}
          {this.routes.map((route, index) => (
-          // You can render a <Route> in as many places
-          // as you want in your app. It will render along
-          // with any other <Route>s that also match the URL.
-          // So, a sidebar or breadcrumbs or anything else
-          // that requires you to render multiple things
-          // in multiple places at the same URL is nothing
-          // more than multiple <Route>s.
           <Route
             key = {index}
             exact = {route.exact}

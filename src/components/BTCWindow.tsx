@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom'
 import CreateQR from '../core/CreateQR'
 import getAddress from '../API/hardwareAPI/GetAddress'
 import { clipboard } from 'electron'
-
+import {Table} from './Table'
 interface IBTCWindowState {
   address: string,
   qrcodeAddress: string
@@ -56,47 +56,7 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
               </div>
             </div>
           </div>
-          <div className = 'transaction-history'>
-            <header className = 'text-header'>Transaction History:</header>
-              <table>
-                <tr>
-                  <th>Date</th>
-                  <th>How much</th>
-                  <th>To/from address</th>
-                  <th>Status</th>
-                </tr>
-                <tr>
-                  <th>2018/02/01</th>
-                  <th>0.587 BTC</th>
-                  <th>sdfsdgsf213eqwerwsd</th>
-                  <th className = 'text-unconfirmed'>Not confirmed</th>
-                </tr>
-                <tr>
-                  <th>2018/02/11</th>
-                  <th>0.587 BTC</th>
-                  <th>sdfrewwersfdqwwrwsd</th>
-                  <th className = 'text-confirmed'>Confirmed</th>
-                </tr>
-                <tr>
-                  <th>2018/02/01</th>
-                  <th>0.3 BTC</th>
-                  <th>sadadasdqweqeqsdsss</th>
-                   <th className = 'text-confirmed'>Confirmed</th>
-                </tr>
-                <tr>
-                  <th>2018/02/21</th>
-                  <th>0.5187 BTC</th>
-                  <th>XHRTqweTFDSWER@erwsd</th>
-                   <th className = 'text-confirmed'>Confirmed</th>
-                </tr>
-                <tr>
-                  <th>2018/03/01</th>
-                  <th>17 BTC</th>
-                  <th>XHRqweDSWER@erwsd</th>
-                  <th className = 'text-confirmed'>Confirmed</th>
-                </tr>
-              </table>
-          </div>
+          <Table data = {this.props.lastTx}/>
         </div>
       </div>
     )
