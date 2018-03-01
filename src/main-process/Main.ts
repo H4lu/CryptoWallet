@@ -6,7 +6,7 @@ let mainWindow: Electron.BrowserWindow
 
 app.on('ready', () => {
   mainWindow = new BrowserWindow({ width: 1024, height: 720, resizable: false,
-    fullscreen: false })
+    fullscreen: false, frame: false })
   mainWindow.once('ready-to-show', () => mainWindow.show())
  // const fileName = 'file:///' + __dirname + '/index.html'
  // mainWindow.loadURL(fileName)

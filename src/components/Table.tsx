@@ -64,6 +64,7 @@ export class Table extends React.Component<any,ITableClass> {
           </thead>
           <tbody>
           {this.state.data.map((data) => {
+            <tbody>
             <tr>
               <td>{data.Date}</td>
               {(data.Type === 'incoming') ? (
@@ -78,6 +79,7 @@ export class Table extends React.Component<any,ITableClass> {
                 <td className = 'text-unconfirmed'>{data.Status}</td>
               )}
             </tr>
+            </tbody>
           })}
           </tbody>
         </table>

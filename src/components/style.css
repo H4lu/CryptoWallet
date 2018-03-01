@@ -1,6 +1,98 @@
-p {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: larger;
+.default-font {
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 14px;
+}
+.info-default-font {
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 12px;
+  color: #7EAEE6;
+}
+.info-header-font {
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 12px;
+  color: #4D6F96;
+}
+.info-amount-font {
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  font-size: 13px;
+  text-align: right;
+  color: #FFFFFF;
+}
+.satus-font {
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 12px;
+  text-align: right;
+  color: #7096C4;
+}
+.cryptocurrency-font {
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 12px;
+
+  color: #4D6F96
+}
+.status-ready-font {
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 12px;
+  text-align: right;
+
+  color: #2CC958;
+}
+.logo-font {
+  font-family: Helvetica;
+  line-height: normal;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #718EA8;
+}
+.total-percent {
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 14px;
+  text-align: right;
+
+  color: #2CC958;
+}
+.total-label {
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 12px;
+
+  color: #4D6F96;
+}
+.total-currency-font {
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  font-size: 30px;
+  text-align: right;
+  color: #FFFFFF;
 }
 .payment_address {
   width: 300px;
@@ -8,7 +100,35 @@ p {
 .currency_dropdown {
   margin: 5px;
 }
+.card-container {
+  display: block;
+  width: 218px;
+  height: 124px;;
+  background: #25384F;
+  box-shadow: 0px 4px 8px rgba(14, 25, 36, 0.25);
+  margin: 5px;
+}
+.card-upper-block {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+}
+hr {
+  opacity: 0.2;
+  box-shadow: 0px 4px 8px rgba(0, 17, 43, 0.25);
+}
+.card-bottom-block {
 
+}
+.header-content {
+  margin-left: 24px;
+  margin-right: 24px;
+}
+.footer-content {
+  margin-left: 24px;
+  margin-left: 24px;
+}
 .currency {
   height: 80px !important;
 }
@@ -18,7 +138,7 @@ p {
 .flexcontainer {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
 }
 .wrapper {
   min-height: 100%;
@@ -30,57 +150,127 @@ p {
 .footer {
   clear: both;
   width: 100%;
-  border: 1px solid rgb(240, 9, 163);
 }
-
+.container {
+  background: linear-gradient(180deg, #21252B 0%, #0F1012 100%);
+}
 .header {
   width: 100%;
-  border: 1px solid rgb(13, 235, 205);
+  -webkit-app-region: drag;
 }
-.main-wrapper {
-  margin-left:15px;
-  margin-right: 15px;
+.main-content {
+  margin-left:5px;
+  margin-right: 5px;
+  margin-top:5px;
 }
 .main{
-  width: 65%;
+  margin-left: 24px;
+  margin-right: 12px;
+  width: 70%;
   float: right;
-  border: 1px solid rgb(245, 2, 2);
 }
 .sidebar {
-  width: 35%;
+  margin-right: 24px;
+  margin-left: 12px;
   float: right;
-  border: 1px solid sandybrown;
+  width: 22%;
 }
-.main, .sidebar {
+ .main, .sidebar {
  height: 90vh;
+ /*background: -webkit-linear-gradient(to bottom, rgba(34, 48, 64, 0.5) 0%, rgba(20, 27, 33, 0.5) 97.24%);
+ background: linear-gradient(to bottom, rgba(34, 48, 64, 0.5) 0%, rgba(20, 27, 33, 0.5) 97.24%);
+ */
+  background: linear-gradient(180deg, rgba(34, 48, 64, 1) 0%, rgba(20, 27, 33, 0.8) 97.24%);
+
+
 }
 .footer, .header {
   height: 5vh;
 }
 
 .status {
-  float: left;
+  float: right;
   margin-top: 2px;
   margin-left: 5px;
   margin-bottom: 2px;
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 12px;
+  text-align: right;
+
+  color: #7096C4;
 }
 .version {
-  float: right;
+  float: left;
   position: relative;
   margin-top: 2px;
   margin-left: 5px;
   margin-bottom: 2px;
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 12px;
+  color: #7096C4;
+}
+.currency-name {
+  margin-left: 5px;
+  flex-grow: 2;
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 14px;
+
+  color: #FFFFFF;
 }
 .button-menu {
   float: right;
   position: relative;
 }
 .button-refresh {
+  margin-top: 5px;
   float: right;
   position: relative;
+  background: #25384F;
+  box-shadow: 0px 4px 8px rgba(14, 25, 36, 0.25);
+  border-radius: 24px;
+  width: 102px;
+  height: 30px;
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 12px;
+  color: #7EAEE6;
 }
 .text-header {
   text-decoration: underline;
+}
+.transaction-history-header {
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 12px;
+
+  color: #4D6F96;
+}
+.refresh-button {
+  background: #25384F;
+  box-shadow: 0px 4px 8px rgba(14, 25, 36, 0.25);
+  border-radius: 24px;
+}
+.currencies-header {
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 12px;
+
+  color: #4D6F96;
 }
 .sidebar-content {
   margin-top: 5px;
@@ -89,11 +279,9 @@ p {
   margin-bottom: 10px;
 }
 .currency-block {
-  margin-top: 10%;
-  margin-left: 2%;
+  margin-top: 10px;
 }
 .card {
-  box-shadow: 0 4px 8px 0 rgba(17, 16, 16, 0.815);
   transition: 0.3s;
   display: block;
   margin-top: 15px;
@@ -101,16 +289,19 @@ p {
   margin-left: 7px;
   flex-grow: 1;
   max-width: 120px;
+  background: #25384F;
+  box-shadow: 0px 4px 8px rgba(14, 25, 36, 0.25);
 
 }
 .card:hover {
   box-shadow: 0 8px 16px 0 rgba(7, 1, 1, 0.986);
 }
 .currencies-container {
+  margin-top: 20px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 body, html {
@@ -130,14 +321,45 @@ body, html {
   justify-content: center;
 }
 .nav-buttons {
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 12px;
+  text-align: center;
+  letter-spacing: 0.02em;
+
+  color: #7EAEE6;
   margin-top: 1cm;
   width: 100%;
+  background: #25384F;
+  box-shadow: 0px 4px 8px rgba(14, 25, 36, 0.25);
+  height: 44px;
 }
-.info {
-  border: 2px solid rgb(20, 19, 19);
+.nav-buttons-text {
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 12px;
+  text-align: center;
+  letter-spacing: 0.02em;
+  color: #7EAEE6;
+}
+button:active.nav-buttons {
+  background: #171F27;
+  border: 0.5px solid #2B394D;
+  box-sizing: border-box;
 }
 .footer-status-span {
-  color: rgb(30, 247, 30);
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 12px;
+  text-align: right;
+
+  color: #2CC958;
 }
 .currency-content {
   margin-top: 5px;
@@ -175,12 +397,16 @@ body, html {
   margin-top: auto;
   margin-bottom: auto;
 }
-
+.crypto-amount-block {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: row;
+}
 .transaction-history {
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 18px;;
+  margin-right: 18px;
   bottom: 5vh;
-  width: 60%;
+  width: 67%;
   position: absolute;
 }
 table {
@@ -189,19 +415,56 @@ table {
   height: auto;
 
 }
-table, td, th {
-  border: 1px solid black;
+.table-header {
+  background: #25384F;
+  box-shadow: 0px 4px 8px rgba(14, 25, 36, 0.25);
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 12px;
+
+  color: #7EAEE5;
 }
+.table-content {
+
+}
+td, th {
+  border: 1px solid #202F45;
+  box-sizing: border-box;
+  background: rgba(47, 70, 105, 0.2);
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 12px;
+
+  color: #7EAEE5;
+}
+
 .main-image {
+  flex-grow: 1;
   margin-left: auto;
   margin-right: auto;
   display: block;
 }
 .text-confirmed {
-  color: rgba(99, 185, 12, 0.932);
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 11px;
+
+  color: #7EAEE5;
 }
 .text-unconfirmed {
-   color: red;
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 11px;
+  
+  color: #4D6F96;
 }
 .address-with-button p, button{
   display: inline-block;
@@ -236,12 +499,71 @@ table, td, th {
   width: 200px;
 }
 .positive-percentage {
-  color: rgb(77, 153, 2);
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 14px;
+  color: #2CC958;
+}
+.currency-short-name {
+  margin-left: auto;
+  margin-right: auto;
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  font-size: 24px;
+  text-align: right;
+
+  color: #4D6F96;
+}
+.currency-amount-crypto {
+  display: inline-block;
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  font-size: 24px;
+  text-align: right;
+
+  color: #FFFFFF;
+}
+.currency-amount-fiat {
+  float: right;
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 14px;
+  text-align: right;
+
+  color: #FFFFFF;
 }
 .negative-percentage {
-  color: rgb(214, 4, 4);
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 14px;
+  color: #FF545E;
 }
 .text-inline {
   clear: both;
   display: inline;
+}
+.button-close {
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACVSURBVHgBbZAxDoMwDEXzHXIfrtKlSy+BOnRFWZGq9hJIiCVX4T4QB4wAJciekv9fnG/j/R0Cx+j/n9dklGp+Y00mtcSRPCobmq6vNQiJA8/w2IVuEyoOaYmPs/MJpYU27Tnhep3BxjmTQ+Kj+OqA5ZxDUlSEcvllLizcg0un3bhlhhZcGxAapA1IskwNkhJNPLK2XQHnbns2Nxu63gAAAABJRU5ErkJggg==")
+}
+.button-hide {
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAABCAYAAADn9T9+AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAQSURBVHgBYyzsW/GfgQgAAGVnAqg9QKOOAAAAAElFTkSuQmCC")
+}
+.button-maximize {
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAoSURBVHgB5dAxEQAACMPAFscYQQcu4XCQncw/xVk9IhF4JgT7CU2HL97aCqlmz/R2AAAAAElFTkSuQmCC")
+}
+.title-bar-buttons {
+  -webkit-app-region: no-drag;
+  position: fixed;
+  top: 0px;
+  right: 6px;
 }

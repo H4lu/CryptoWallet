@@ -19,6 +19,7 @@ import {getBalance, getBitcoinLastTx} from '../API/cryptocurrencyAPI/BitCoin'
 import {getLitecoinBalance, getLitecoinLastTx} from '../API/cryptocurrencyAPI/Litecoin'
 import {getEthereumBalance, convertFromWei} from '../API/cryptocurrencyAPI/Ethereum'
 import GetCurrencyRate from '../core/GetCurrencyRate'
+
 interface IAPPState {
   BTCBalance: number,
   ETHBalance: number,
@@ -33,6 +34,7 @@ interface IAPPState {
   BTCLastTx: Array<any>,
   LTCLastTx: Array<any>
 }
+
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
 // import { SignIn } from './signin'
 // import { MainLayout } from './MainLayout'
@@ -210,7 +212,7 @@ export class App extends React.Component<any, IAPPState> {
   }
   render() {
     return(
-      <div>
+      <div className = 'container'>
         <Header/>
         <Redirect from = '/' to = '/main'/>
          {this.routes.map((route, index) => (

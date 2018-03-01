@@ -9,7 +9,7 @@ export class Footer extends React.Component<any, any> {
     <div className = 'footer'>
     <div className = 'footer-content'>
       <p className = 'status'>Status:<span className = 'footer-status-span'> OK</span></p>
-      <p className = 'version'>Braitberry v 0.1</p>
+      <p className = 'version'>Version 1.1</p>
     </div>
   </div>
    )
