@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { Redirect } from 'react-router-dom'
-import { isValidUser } from '../core/auth/AuthService'
 // import { isValidUser } from './utils/AuthService'
 import { Button, Icon, Input, Form, Header, Grid } from 'semantic-ui-react'
 
@@ -29,10 +28,6 @@ export class SignIn extends React.Component<ISignProps, ISignState> {
   }
 
   onSubmit = () => {
-    if (isValidUser(this.state.pin)) {
-      console.log('valid')
-      this.setState({ redirect: true })
-    }
   }
 
   render() {

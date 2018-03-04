@@ -12,10 +12,12 @@ export class Table extends React.Component<any,ITableClass> {
     }
     this.getData = this.getData.bind(this)
   }
-  componentWillMount() {
+  componentWillReceiveProps() {
+    console.log('PROPS: ' + this.props.data)
     this.getData(this.props.data)
   }
   getData(data: Array<any>) {
+    console.log('GETTING DATA')
     for (let index in data) {
       console.log('Tx type: ' + data[index].incoming)
       if (data[index].outgoing !== undefined) {
@@ -54,17 +56,14 @@ export class Table extends React.Component<any,ITableClass> {
       <div className = 'transaction-history'>
         <header className = 'text-header'>Transaction History:</header>
         <table>
-          <thead>
-          <tr>
-            <th>Date</th>
-            <th>How much</th>
-            <th>To/from address</th>
-            <th>Status</th>
-          </tr>
-          </thead>
           <tbody>
+          <tr>
+            <td>Date</td>
+            <td>How much</td>
+            <td>To/from address</td>
+            <td>Status</td>
+          </tr>
           {this.state.data.map((data) => {
-            <tbody>
             <tr>
               <td>{data.Date}</td>
               {(data.Type === 'incoming') ? (
@@ -79,7 +78,6 @@ export class Table extends React.Component<any,ITableClass> {
                 <td className = 'text-unconfirmed'>{data.Status}</td>
               )}
             </tr>
-            </tbody>
           })}
           </tbody>
         </table>

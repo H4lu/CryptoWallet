@@ -19,6 +19,7 @@ import {getBalance, getBitcoinLastTx} from '../API/cryptocurrencyAPI/BitCoin'
 import {getLitecoinBalance, getLitecoinLastTx} from '../API/cryptocurrencyAPI/Litecoin'
 import {getEthereumBalance, convertFromWei} from '../API/cryptocurrencyAPI/Ethereum'
 import GetCurrencyRate from '../core/GetCurrencyRate'
+import {SidebarNoButtons} from '../components/SidebarNoButtons'
 
 interface IAPPState {
   BTCBalance: number,
@@ -55,27 +56,27 @@ export class App extends React.Component<any, IAPPState> {
     {
       path: '/main',
       exact: true,
-      sidebar: () => <SidebarContent total = {this.state.totalBalance}/>,
+      sidebar: () => <SidebarContent total = {this.state.totalBalance} refresh = {this.getValues}/>,
       main: () => <MainContent btcBalance = {this.state.BTCBalance} ltcBalance = {this.state.LTCBalance} ethBalance = {this.state.ETHBalance}
-      btcPrice = {this.state.BTCPrice} ltcPrice = {this.state.LTCPrice} ethPrice = {this.state.ETHPrice} refresh = {this.getValues} btcHourChange = {this.state.BTCHourChange}
+      btcPrice = {this.state.BTCPrice} ltcPrice = {this.state.LTCPrice} ethPrice = {this.state.ETHPrice} btcHourChange = {this.state.BTCHourChange}
       ltcHourChange = {this.state.LTCHourChange} ethHourChange = {this.state.ETHHourChange}/>
     },
     {
       path: '/btc-window',
       exact: true,
-      sidebar: () => <SidebarContent total = {this.state.totalBalance}/>,
+      sidebar: () => <SidebarNoButtons total = {this.state.totalBalance}/>,
       main: () => <BTCWindow balance = {this.state.BTCBalance} price = {this.state.BTCPrice} hourChange = {this.state.BTCHourChange} lastTx = {this.state.BTCLastTx}/>
     },
     {
       path: '/eth-window',
       exact: true,
-      sidebar: () => <SidebarContent total = {this.state.totalBalance}/>,
+      sidebar: () => <SidebarNoButtons total = {this.state.totalBalance}/>,
       main: () => <ETHWIndow balance = {this.state.ETHBalance} price = {this.state.ETHPrice} hourChange = {this.state.ETHHourChange}/>
     },
     {
       path: '/ltc-window',
       exact: true,
-      sidebar: () => <SidebarContent total = {this.state.totalBalance}/>,
+      sidebar: () => <SidebarNoButtons total = {this.state.totalBalance}/>,
       main: () => <LTCWindow balance = {this.state.LTCBalance} price = {this.state.LTCPrice} hourChange = {this.state.LTCHourChange} lastTx = {this.state.LTCLastTx}/>
     },
     {
@@ -97,21 +98,7 @@ export class App extends React.Component<any, IAPPState> {
       main: () => <LTCWindow balance = {this.state.LTCBalance} price = {this.state.LTCPrice} hourChange = {this.state.LTCHourChange}/>
     }
   ]
-  /*render() {
-    return (
-      <div>
-        <Header/>
-        <Redirect from ='/' to ='/main'/>
-        <Route path = '/transaction-window' component = {TransactionWindow}/>
-        <Route  component = {SidebarContent}/>
-        <Route path = '/main'  component = {Main}/>
-        <Route path = '/currency' component = {Currency}/>
-        <Route path = '/erc20' component = {ERC20}/>
-        <Route path = '/send' component = {TransactionComponent}/>
-        <Footer/>
-      </div>
-    )
-  }*/
+ 
   constructor(props: any) {
     super(props)
 
@@ -178,7 +165,7 @@ export class App extends React.Component<any, IAPPState> {
       }
       console.log('Promise all value: ' + value)
       let total = this.state.BTCPrice +  this.state.ETHPrice + this.state.LTCPrice
-      this.setState({ totalBalance: total})
+      this.setState({ totalBalance: Number((total).toFixed(2))})
     })
   }
   componentWillMount() {
@@ -236,140 +223,4 @@ export class App extends React.Component<any, IAPPState> {
     )
   }
 }
-/* export class App extends React.Component {
-  render() {
-    return(
-      <div >
-        <Switch>
-          <Route path = '/home/currency' component = {Currency}/>
-        </Switch>
-      <div className = 'header'>
-          <div className = 'header-content'>
-            <header>Braitberry</header>
-          </div>
-      </div>
-      <div className = 'content'>
-      <div className = 'main'>
-           <button type = 'submit' className = 'button-refresh'>Refresh</button>
-           <div className = 'currency-block'>
-             <header className = 'text-header'>Available Cryptocurrency: </header>
-             <div className = 'currencies-container'>
-             <div className = 'card'>
-               <Link to  = '/home/currency' className = 'box-link'>
-                 <header>Bitcoin</header>
-                 <img src = 'https://shapeshift.io/images/coins/bitcoin.png'/>
-                 <p>1 BTC </p>
-                 <p>10000000000$</p>
-               </Link>
-               </div>
-               <div className = 'card'>
-               <Link to  = '/home/currency' className = 'box-link'>
-                 <header>Ethereum</header>
-                 <img src = 'https://shapeshift.io/images/coins/ether.png'/>
-                 <p>1 ETH </p>
-                 <p>10000000000$</p>
-               </Link>
-               </div>
-               <div className = 'card'>
-               <Link to  = '/home/currency' className = 'box-link'>
-                 <header>Litecoin</header>
-                 <img src = 'https://shapeshift.io/images/coins/litecoin.png'/>
-                 <p>1 LTC </p>
-                 <p>10000000000$</p>
-               </Link>
-              </div>
-              <div className = 'card'>
-               <Link to  = '/home/currency' className = 'box-link'>
-                 <header>Litecoin</header>
-                 <img src = 'https://shapeshift.io/images/coins/litecoin.png'/>
-                 <p>1 LTC </p>
-                 <p>10000000000$</p>
-               </Link>
-              </div>
-              <div className = 'card'>
-               <Link to  = '/home/currency' className = 'box-link'>
-                 <header>Litecoin</header>
-                 <img src = 'https://shapeshift.io/images/coins/litecoin.png'/>
-                 <p>1 LTC </p>
-                 <p>10000000000$</p>
-               </Link>
-              </div>
-              <div className = 'card'>
-               <Link to  = '/home/currency' className = 'box-link'>
-                 <header>Litecoin</header>
-                 <img src = 'https://shapeshift.io/images/coins/litecoin.png'/>
-                 <p>1 LTC </p>
-                 <p>10000000000$</p>
-               </Link>
-              </div>
-              <div className = 'card'>
-               <Link to  = '/home/currency' className = 'box-link'>
-                 <header>Litecoin</header>
-                 <img src = 'https://shapeshift.io/images/coins/litecoin.png'/>
-                 <p>1 LTC </p>
-                 <p>10000000000$</p>
-               </Link>
-              </div>
-              <div className = 'card'>
-               <Link to  = '/home/currency' className = 'box-link'>
-                 <header>Litecoin</header>
-                 <img src = 'https://shapeshift.io/images/coins/litecoin.png'/>
-                 <p>1 LTC </p>
-                 <p>10000000000$</p>
-               </Link>
-              </div>
 
-             </div>
-            </div>
-
-        </div>
-        <div className = 'sidebar'>
-          <button type = 'submit' className = 'button-menu'>Menu</button>
-            <div className = 'sidebar-content'>
-              <header className = 'text-header'>Total:</header>
-              <header className = 'text-header'>123148293648234$:</header>
-              <header className = 'text-header'>Additional:</header>
-              <div className = 'nav-buttons-container'>
-              <Link to = 'somewhere' className = 'box-link'>
-                  <button className = 'nav-buttons'>Cryptocurrency exchange</button>
-                </Link>
-                <Link to = 'somewhere' className = 'box-link'>
-                  <button className = 'nav-buttons'>Your addresses</button>
-                </Link>
-                <Link to = 'somewhere' className = 'box-link'>
-                  <button className = 'nav-buttons'>ERC20</button>
-                </Link>
-              </div>
-              <header className = 'text-header'>Your Braitberry:</header>
-                <div className = 'info'>
-                 <p>-ID:1337</p>
-                 <p>-8 currency available</p>
-                 <p>-2 currency can add</p>
-                </div>
-            </div>
-        </div>
-
-        </div>
-        <div className = 'footer'>
-          <div className = 'footer-content'>
-            <p className = 'status'>Status:<span className = 'footer-status-span'> OK</span></p>
-            <p className = 'version'>Braitberry v 0.1</p>
-          </div>
-        </div>
-        </div>
-    )
-  }
-}
-/* <div className = 'main'>
-          main content here
-          </div>
-          <div className = 'sidebar'>
-          Sidebar here
-          </div>
-        <div className = 'footer'>
-          <div className = 'footer-content'>
-             Footer
-          </div>
-        </div>
-*/
-// <Route path = '/' component = {MainLayout}/>

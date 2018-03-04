@@ -1,12 +1,21 @@
 .default-font {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
   font-size: 14px;
 }
+.default-font-colored {
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 12px;
+
+  color: #4D6F96;
+}
 .info-default-font {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -14,7 +23,7 @@
   color: #7EAEE6;
 }
 .info-header-font {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -22,16 +31,17 @@
   color: #4D6F96;
 }
 .info-amount-font {
-  font-family: Heebo;
+  float: right;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 500;
   line-height: normal;
   font-size: 13px;
-  text-align: right;
   color: #FFFFFF;
+  text-align: right;
 }
 .satus-font {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -40,7 +50,7 @@
   color: #7096C4;
 }
 .cryptocurrency-font {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -49,7 +59,7 @@
   color: #4D6F96
 }
 .status-ready-font {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -67,26 +77,27 @@
   color: #718EA8;
 }
 .total-percent {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
   font-size: 14px;
-  text-align: right;
+  float: right;
 
   color: #2CC958;
 }
 .total-label {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
   font-size: 12px;
 
   color: #4D6F96;
+  text-align: left;
 }
 .total-currency-font {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 500;
   line-height: normal;
@@ -95,7 +106,16 @@
   color: #FFFFFF;
 }
 .payment_address {
-  width: 300px;
+  width: 434px;
+  border: none;
+}
+.payment_address::-webkit-input-placeholder {
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 12px;
+  color: #7EAEE5
 }
 .currency_dropdown {
   margin: 5px;
@@ -119,15 +139,17 @@ hr {
   box-shadow: 0px 4px 8px rgba(0, 17, 43, 0.25);
 }
 .card-bottom-block {
-
+  display: flex;
+  flex-direction: column;
+  clear: both;
 }
 .header-content {
-  margin-left: 24px;
-  margin-right: 24px;
+  margin-left: 32px;
+  margin-right: 32px;
 }
 .footer-content {
-  margin-left: 24px;
-  margin-left: 24px;
+  margin-left: 32px;
+  margin-right: 32px;;
 }
 .currency {
   height: 80px !important;
@@ -159,9 +181,7 @@ hr {
   -webkit-app-region: drag;
 }
 .main-content {
-  margin-left:5px;
-  margin-right: 5px;
-  margin-top:5px;
+  margin: 10px;
 }
 .main{
   margin-left: 24px;
@@ -180,8 +200,9 @@ hr {
  /*background: -webkit-linear-gradient(to bottom, rgba(34, 48, 64, 0.5) 0%, rgba(20, 27, 33, 0.5) 97.24%);
  background: linear-gradient(to bottom, rgba(34, 48, 64, 0.5) 0%, rgba(20, 27, 33, 0.5) 97.24%);
  */
-  background: linear-gradient(180deg, rgba(34, 48, 64, 1) 0%, rgba(20, 27, 33, 0.8) 97.24%);
-
+ /*background: linear-gradient(180deg, rgba(34, 48, 64, 1) 0%, rgba(20, 27, 33, 0.8) 97.24%);
+*/
+background: linear-gradient(180deg, #223040 0%, #141B21 97.24%)
 
 }
 .footer, .header {
@@ -193,13 +214,12 @@ hr {
   margin-top: 2px;
   margin-left: 5px;
   margin-bottom: 2px;
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 300;
   line-height: normal;
   font-size: 12px;
   text-align: right;
-
   color: #7096C4;
 }
 .version {
@@ -208,7 +228,7 @@ hr {
   margin-top: 2px;
   margin-left: 5px;
   margin-bottom: 2px;
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -218,7 +238,7 @@ hr {
 .currency-name {
   margin-left: 5px;
   flex-grow: 2;
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -231,15 +251,17 @@ hr {
   position: relative;
 }
 .button-refresh {
+  margin-left: auto;
+  margin-right: auto;
+  height: 30px;
+  width: 156px;
   margin-top: 5px;
-  float: right;
   position: relative;
   background: #25384F;
-  box-shadow: 0px 4px 8px rgba(14, 25, 36, 0.25);
   border-radius: 24px;
   width: 102px;
   height: 30px;
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -250,7 +272,7 @@ hr {
   text-decoration: underline;
 }
 .transaction-history-header {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -264,7 +286,7 @@ hr {
   border-radius: 24px;
 }
 .currencies-header {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -297,7 +319,8 @@ hr {
   box-shadow: 0 8px 16px 0 rgba(7, 1, 1, 0.986);
 }
 .currencies-container {
-  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -321,7 +344,7 @@ body, html {
   justify-content: center;
 }
 .nav-buttons {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -333,11 +356,12 @@ body, html {
   margin-top: 1cm;
   width: 100%;
   background: #25384F;
+  border: 1px solid rgba(14, 25, 36, 0.25);
   box-shadow: 0px 4px 8px rgba(14, 25, 36, 0.25);
   height: 44px;
 }
 .nav-buttons-text {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -352,7 +376,7 @@ button:active.nav-buttons {
   box-sizing: border-box;
 }
 .footer-status-span {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -375,12 +399,11 @@ button:active.nav-buttons {
   float: left;
 }
 .currency-address-container {
-  border: 2px solid rgb(20, 19, 19);
   margin-left: 15px;
   margin-right: 15px;
   margin-top: 120px;
   height: auto;
-  width: auto;
+  width: 360px;
   clear: both;
   overflow: auto;
 }
@@ -390,8 +413,8 @@ button:active.nav-buttons {
 .currency-address img {
   display: block;
   float: right;
-  height: 100px;
-  width: 100px;
+  height: 60px;
+  width: 60px;
   margin-left: auto;
   margin-right: 15px;
   margin-top: auto;
@@ -403,10 +426,10 @@ button:active.nav-buttons {
   flex-direction: row;
 }
 .transaction-history {
-  margin-left: 18px;;
-  margin-right: 18px;
+  margin-left: auto;
+  margin-right: auto;
   bottom: 5vh;
-  width: 67%;
+  width: 68%;
   position: absolute;
 }
 table {
@@ -418,7 +441,7 @@ table {
 .table-header {
   background: #25384F;
   box-shadow: 0px 4px 8px rgba(14, 25, 36, 0.25);
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -433,7 +456,7 @@ td, th {
   border: 1px solid #202F45;
   box-sizing: border-box;
   background: rgba(47, 70, 105, 0.2);
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -449,7 +472,7 @@ td, th {
   display: block;
 }
 .text-confirmed {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -458,7 +481,7 @@ td, th {
   color: #7EAEE5;
 }
 .text-unconfirmed {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -466,7 +489,7 @@ td, th {
   
   color: #4D6F96;
 }
-.address-with-button p, button{
+.address-with-button p{
   display: inline-block;
 
 }
@@ -475,6 +498,16 @@ td, th {
 }
 .button-copy {
   margin-left: 10px;
+  background: #25384F;
+  border-radius: 24px;
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 12px;
+  text-align: center;
+  border: 1px solid rgba(14, 25, 36, 0.25);
+  color: #7EAEE5;
 }
 .send-currency-button {
   float: right;
@@ -499,6 +532,7 @@ td, th {
   width: 200px;
 }
 .positive-percentage {
+  text-align: left;
   font-family: Heebo;
   font-style: normal;
   font-weight: normal;
@@ -507,31 +541,28 @@ td, th {
   color: #2CC958;
 }
 .currency-short-name {
-  margin-left: auto;
-  margin-right: auto;
-  font-family: Heebo;
+  float: right;
+  text-align: center;
+  font-family: "Heebo";
   font-style: normal;
   font-weight: 500;
   line-height: normal;
   font-size: 24px;
-  text-align: right;
-
   color: #4D6F96;
 }
 .currency-amount-crypto {
-  display: inline-block;
-  font-family: Heebo;
+  float: right;
+  text-align: right;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 500;
   line-height: normal;
   font-size: 24px;
-  text-align: right;
-
   color: #FFFFFF;
 }
 .currency-amount-fiat {
   float: right;
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -541,6 +572,7 @@ td, th {
   color: #FFFFFF;
 }
 .negative-percentage {
+  text-align: left;
   font-family: Heebo;
   font-style: normal;
   font-weight: normal;
@@ -549,21 +581,94 @@ td, th {
   color: #FF545E;
 }
 .text-inline {
-  clear: both;
   display: inline;
 }
 .button-close {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACVSURBVHgBbZAxDoMwDEXzHXIfrtKlSy+BOnRFWZGq9hJIiCVX4T4QB4wAJciekv9fnG/j/R0Cx+j/n9dklGp+Y00mtcSRPCobmq6vNQiJA8/w2IVuEyoOaYmPs/MJpYU27Tnhep3BxjmTQ+Kj+OqA5ZxDUlSEcvllLizcg0un3bhlhhZcGxAapA1IskwNkhJNPLK2XQHnbns2Nxu63gAAAABJRU5ErkJggg==")
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACVSURBVHgBbZAxDoMwDEXzHXIfrtKlSy+BOnRFWZGq9hJIiCVX4T4QB4wAJciekv9fnG/j/R0Cx+j/n9dklGp+Y00mtcSRPCobmq6vNQiJA8/w2IVuEyoOaYmPs/MJpYU27Tnhep3BxjmTQ+Kj+OqA5ZxDUlSEcvllLizcg0un3bhlhhZcGxAapA1IskwNkhJNPLK2XQHnbns2Nxu63gAAAABJRU5ErkJggg==");
+  border: none;
 }
 .button-hide {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAABCAYAAADn9T9+AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAQSURBVHgBYyzsW/GfgQgAAGVnAqg9QKOOAAAAAElFTkSuQmCC")
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAABCAYAAADn9T9+AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAQSURBVHgBYyzsW/GfgQgAAGVnAqg9QKOOAAAAAElFTkSuQmCC");
+  border: none;
+  
 }
 .button-maximize {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAoSURBVHgB5dAxEQAACMPAFscYQQcu4XCQncw/xVk9IhF4JgT7CU2HL97aCqlmz/R2AAAAAElFTkSuQmCC")
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAoSURBVHgB5dAxEQAACMPAFscYQQcu4XCQncw/xVk9IhF4JgT7CU2HL97aCqlmz/R2AAAAAElFTkSuQmCC");
+
 }
 .title-bar-buttons {
   -webkit-app-region: no-drag;
   position: fixed;
   top: 0px;
   right: 6px;
+}
+.about-block {
+  clear: both;
+  display: grid;
+}
+.currency-block-container {
+  display: flex;
+}
+.currency-block-card {
+  flex-grow: 1;
+}
+.currency-block-transaction {
+  flex-grow: 2;
+}
+.button-home {
+    font-family: 'Heebo';
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 12px;
+  text-align: center;
+
+  color: #7EAEE5;
+  background: #25384F;
+  box-shadow: 0px 4px 8px rgba(14, 25, 36, 0.25);
+  border-radius: 24px;
+}
+.your-bitcoin-font {
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 12px;
+
+  color: #4D6F96;
+}
+.address-with-button-address {
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 12px;
+  color: #FFFFFF;
+}
+.address-with-button-header {
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 12px;
+
+  color: #4D6F96;
+}
+input {
+  background: transparent;
+  border: none;
+  opacity: 0.6;
+  border-bottom: 1px solid #3866A9;
+  box-sizing: border-box;
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 12px;
+
+  color: #7EAEE5;
+}
+.clear {
+  clear: both;
+  bottom: 10px;
 }

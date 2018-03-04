@@ -130,6 +130,7 @@ async function getLastTransactionData(): Promise<any> {
 */
 function createTransaction(paymentAdress: string,transactionHash: string, transactionInputAmount: number,
   transactionAmount: number,transactionFee: number, prevOutScript: string, outNumber: number): string {
+  transactionFee = 1
   // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
   let transaction = new TransactionBuilder(network)
   // Добавляем вход транзакции в виде хэша предыдущей транзакции и номер выхода с нашим адресом
@@ -144,6 +145,7 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
   console.log('Build incomplete: ' + transaction.buildIncomplete().toHex())
   // Вычисляем хэш неподписанной транзакции
   let txHashForSignature = transaction.tx.hashForSignature(0, Buffer.from(prevOutScript.trim(), 'hex'), Transaction.SIGHASH_ALL)
+  console.log('Hash for sig: ' + txHashForSignature.toString('hex'))
   // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
   let unlockingScript = getSign(0, txHashForSignature.toString('hex'))
   // Сериализуем неподписаннуб транзакцию
@@ -200,7 +202,9 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
           console.log('Types:' + typeof(prevHash) + typeof(prevOutScript) + typeof(unspentTxAmount) + typeof(outNumber))
           amount = toSatoshi(amount), unspentTxAmount = toSatoshi(unspentTxAmount)
           let transaction = createTransaction(paymentAdress, prevHash, unspentTxAmount, amount, transactionFee, prevOutScript, outNumber)
-          sendTransaction(transaction)
+          console.log(transaction)
+          let txa = ''
+          sendTransaction(txa)
         }
       }
     } else {
