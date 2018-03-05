@@ -1,5 +1,4 @@
 import React from 'react'
-
 interface ITableClass {
   data: Array<any>
 }
@@ -13,19 +12,20 @@ export class Table extends React.Component<any,ITableClass> {
     this.getData = this.getData.bind(this)
   }
   componentWillReceiveProps() {
-    console.log('PROPS: ' + this.props.data)
+    console.log('PROPS: ' + JSON.stringify(this.props.data))
     this.getData(this.props.data)
   }
   getData(data: Array<any>) {
     console.log('GETTING DATA')
     for (let index in data) {
-      console.log('Tx type: ' + data[index].incoming)
+      console.log('My tx: ' + JSON.stringify(data[index]))
+      console.log('Tx type: ' + JSON.stringify(data[index].incoming))
       if (data[index].outgoing !== undefined) {
         let date = new Date(data[index].time * 1000)
         let amount = data[index].outgoing.value
         let address = data[index].outgoing.outputs[0].address
         let type = 'outgoing'
-        let status = (data[index].confirmations == 0) ? 'uncofirmed': 'confirmed'
+        let status = (data[index].confirmations == 0) ? 'Uncofirmed': 'Confirmed'
         let dataToPass = {
           Date: date,
           Amount: amount,
@@ -33,13 +33,15 @@ export class Table extends React.Component<any,ITableClass> {
           Status: status,
           Type: type
         }
-        this.setState({ data: [...data, dataToPass] })
+        console.log('Data to pass: ' + JSON.stringify(dataToPass))
+        this.setState({ data: [...this.state.data, dataToPass] })
+        console.log('MY DATA: ' + JSON.stringify(this.state.data))
       } else {
         let date = new Date(data[index].time * 1000)
         let amount = data[index].incoming.value
         let address = data[index].incoming.inputs[0].address
         let type = 'incoming'
-        let status = (data[index].confirmations == 0) ? 'uncofirmed': 'confirmed'
+        let status = (data[index].confirmations == 0) ? 'Uncofirmed': 'Confirmed'
         let dataToPass = {
           Date: date,
           Amount: amount,
@@ -47,40 +49,42 @@ export class Table extends React.Component<any,ITableClass> {
           Status: status,
           Type: type
         }
-        this.setState({ data: [...data, dataToPass] })
+        this.setState({ data: [...this.state.data, dataToPass] })
+        console.log('My data: ' + JSON.stringify(this.state.data))
       }
     }
   }
   render() {
     return(
       <div className = 'transaction-history'>
-        <header className = 'text-header'>Transaction History:</header>
+        <p className = 'transaction-history-header'>Transaction History:</p>
         <table>
+          <thead>
+            <th>Date</th>
+            <th></th>
+            <th>Value</th>
+            <th>Address</th>
+            <th>Status</th>
+          </thead>
           <tbody>
-          <tr>
-            <td>Date</td>
-            <td>How much</td>
-            <td>To/from address</td>
-            <td>Status</td>
-          </tr>
-          {this.state.data.map((data) => {
-            <tr>
-              <td>{data.Date}</td>
-              {(data.Type === 'incoming') ? (
-                <td className = 'text-confirmed'>{data.Amount}</td>
+            {this.state.data.map((value )=> {
+              return <tr>
+               <td>{JSON.stringify(value.Date)}</td>
+              {(value.Type === 'incoming') ? (
+                <td className = 'text-confirmed'>{value.Amount}</td>
               ):(
-                <td className = 'text-unconfirmed'>{data.Amount}</td>
+                <td className = 'text-unconfirmed'>{value.Amount}</td>
               )}
-              <td>{data.Address}</td>
-              {(data.Status === 'confirmed') ? (
-                <td className = 'text-confirmed'>{data.Status}</td>
+              <td>{value.Address}</td>
+              {(value.Status === 'confirmed') ? (
+                <td className = 'text-confirmed'>{value.Status}</td>
               ): (
-                <td className = 'text-unconfirmed'>{data.Status}</td>
+                <td className = 'text-unconfirmed'>{value.Status}</td>
               )}
             </tr>
-          })}
+            })}
           </tbody>
-        </table>
+         </table>
       </div>
     )
   }

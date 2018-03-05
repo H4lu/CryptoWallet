@@ -51,7 +51,8 @@ export function getEthereumAddres(addressNumber: number) {
   let errorCode = MyLib.get_addressEthereum(addressNumber, address, pubKeyHex)
   console.log(errorCode)
   console.log('Address output: ' + address.toString('hex'))
-  return '0x' + address.toString('utf-8').toLowerCase()
+  console.log(address.toString('hex'))
+  return '0x' + address.toString().toLowerCase()
 }
 
 const cryptoLib = ffi.Library('CWAPI',{ 'get_CurrencyInfo': ['int', ['int','int*','byte*']] })
@@ -65,7 +66,6 @@ export default function getAddress(id: number) {
   console.log('Address value: ' + address.toString().length)
   let addrString = address.toString()
   console.log('Address string: ' + addrString)
-  console.log('Addr utf8: ' + address.toString())
   if (address.toString().length > lengthValue) {
     console.log('cutting')
     addrString = address.toString().substring(4,lengthValue)

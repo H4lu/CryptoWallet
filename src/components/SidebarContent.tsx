@@ -18,7 +18,7 @@ export class SidebarContent extends React.Component<any, any> {
         <hr/>
         <div>
           <p className = 'total-label text-inline'>Total</p>
-          <p className = 'total-percent text-inline'>+5%:</p>
+          <p className = 'total-percent text-inline'>+5%</p>
         </div>
           <p className = 'total-currency-font'>{this.props.total}$</p>
           <hr/>

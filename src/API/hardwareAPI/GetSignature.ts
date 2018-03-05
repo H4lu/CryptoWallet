@@ -64,7 +64,7 @@ export function getSignature(transactionHash: string, adressNumber: number) {
   return loweredScriptHex
 }
 const cryptoLib = ffi.Library('CWAPI',{ 'getSign': ['int', ['int','string','int','int*','string']] })
-const MAX_LENGTH = 282
+const MAX_LENGTH = 214
 
 export function getEthereumSignature(transactionHash: string): Buffer {
   let id = 1

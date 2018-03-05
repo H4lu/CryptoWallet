@@ -16,9 +16,13 @@ interface IBTCWindowState {
 export class BTCWindow extends React.Component<any, IBTCWindowState> { 
   constructor(props: any) {
     super (props)
+
     this.handleCopyClick = this.handleCopyClick.bind(this)
     this.handleAddressChange = this.handleAddressChange.bind(this)
     this.handleAmountChange = this.handleAmountChange.bind(this)
+    this.handleFeeChange = this.handleFeeChange.bind(this)
+    this.handleClick = this.handleClick.bind(this)
+
     this.state = {
       address: getAddress(0),
       qrcodeAddress: '',
@@ -26,7 +30,6 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
       amount: 0,
       fee: 0
     }
-    
   }
   componentWillMount() {
     this.setState({ qrcodeAddress: CreateQR(this.state.address) })
@@ -42,7 +45,10 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
     this.setState({ amount: e.target.value })
   }
   handleAddressChange(e: any) {
-    this.setState({  paymentAddress: e.target.value })
+    this.setState({ paymentAddress: e.target.value })
+  }
+  handleFeeChange(e: any) {
+    this.setState({ fee: e.target.value })
   }
   render () {
     return (
@@ -58,32 +64,34 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
               </div>
               <hr/>
               <div className = 'card-bottom-block'>
-                <div>
-                <p className = 'currency-short-name '>BTC</p><p className = 'currency-amount-crypto'>{this.props.balance}</p>
-                </div>
-                <div>
-                  {(this.props.btcHourChange > 0) ? (
-                    <p className = 'positive-percentage '>{this.props.hourChange}%</p>
-                  ): (
-                    <p className = 'negative-percentage '>{this.props.hourChange}%</p>
-                    
-                  )}
-                  <p className = 'currency-amount-fiat'>{this.props.price}$</p>
-                </div>
+              <div>
+                   <p className = 'currency-amount-crypto text-inline'>{this.props.balance}</p><p className = 'currency-short-name text-inline'>BTC</p>
+                  </div>
+                  <div className = 'wrap'>
+                    {(this.props.hourChange > 0) ? (
+                      <p className = 'positive-percentage text-inline'>{this.props.hourChange}%</p>
+                    ): (
+                      <p className = 'negative-percentage text-inline'>{this.props.hourChange}%</p>
+                    )}
+                   <p className = 'currency-amount-fiat text-inline'>{this.props.price}$</p>
+                   </div>
               </div>
-              </div>
+            </div>
             </div>
             <div className = 'currency-block-transaction'>
             <header className = 'default-font-colored'>Send Bitcoin</header>
               <input type = 'text' className = 'payment_address' placeholder = 'Payment Address' value = {this.state.paymentAddress} onChange = {this.handleAddressChange}/>
-              <input type = 'text' className = 'payment_address' placeholder = 'Amount' onChange = {this.handleAmountChange} value = {this.state.amount}/>
+              <input type = 'text' className = 'input-amount' placeholder = 'Amount' onChange = {this.handleAmountChange} value = {this.state.amount}/>
+              <input type = 'text' className = 'input-fee-amount' placeholder = 'Fee'/>
+              <button type = 'submit' className = 'button-send' onClick = {this.handleClick}>Send</button>
             </div>
+          </div>
           </div>
           <div className = 'currency-address-container'>
             <div className = 'currency-address'>
+              <p className = 'default-font-colored'>Your Bitcoin Address:</p>
               <img src = {this.state.qrcodeAddress} className = 'address-qrcode'/>
               <div className = 'address-with-button'>
-                <p className = 'default-font-colored'>Your Bitcoin Address:</p>
                 <p className = 'address-with-button-address'>{this.state.address}</p>
                 <button type = 'submit' className =  'button-copy' onClick = {this.handleCopyClick}>Copy</button>
               </div>
@@ -91,7 +99,6 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
           </div>
           <Table data = {this.props.lastTx}/>
         </div>
-      </div>
     )
   }
 }

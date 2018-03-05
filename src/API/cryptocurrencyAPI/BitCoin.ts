@@ -202,9 +202,7 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
           console.log('Types:' + typeof(prevHash) + typeof(prevOutScript) + typeof(unspentTxAmount) + typeof(outNumber))
           amount = toSatoshi(amount), unspentTxAmount = toSatoshi(unspentTxAmount)
           let transaction = createTransaction(paymentAdress, prevHash, unspentTxAmount, amount, transactionFee, prevOutScript, outNumber)
-          console.log(transaction)
-          let txa = ''
-          sendTransaction(txa)
+          sendTransaction(transaction)
         }
       }
     } else {

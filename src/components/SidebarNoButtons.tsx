@@ -11,11 +11,12 @@ export class SidebarNoButtons extends React.Component<any, any> {
               <button type = 'submit' className = 'button-home'>Home</button>
             </Link>
           </div>
+          <hr/>
           <div>
             <p className = 'total-label text-inline'>Total</p>
-            <p className = 'total-percent text-inline'>+5%:</p>
+            <p className = 'total-percent text-inline'>+5%</p>
           </div>
-          <p className = 'total-currency-font'>{this.props.total}%</p>
+          <p className = 'total-currency-font'>{this.props.total}$</p>
           <hr/>
           <header className = 'info-header-font'>Your Braitberry:</header>
             <div className = 'about-block'>

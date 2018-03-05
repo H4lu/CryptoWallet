@@ -1,5 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
+import {Table} from './Table'
 
 export class MainContent extends React.Component<any, any> {
   constructor(props: any) {
@@ -26,9 +27,9 @@ export class MainContent extends React.Component<any, any> {
               <hr/>
               <div className = 'card-bottom-block'>
               <div>
-                   <p className = 'currency-amount-crypto text-inline'>{this.props.btcBalance}</p><p className = 'currency-short-name text-inline'>BTC</p>
+                   <p className = 'currency-amount-crypto text-inline'> {this.props.btcBalance}</p><p className = 'currency-short-name text-inline'>BTC</p>
                   </div>
-                  <div>
+                  <div className = 'wrap'>
                     {(this.props.btcHourChange > 0) ? (
                       <p className = 'positive-percentage text-inline'>{this.props.btcHourChange}%</p>
                     ): (
@@ -45,15 +46,17 @@ export class MainContent extends React.Component<any, any> {
               </div>
               <hr/>
               <div className = 'card-bottom-block'>
-                <p className = 'currency-short-name text-inline'>ETH </p><p className = 'currency-amount-crypto text-inline'>{this.props.ethBalance}</p>
-              <div>
-                <p className = 'currency-amount-fiat'>{this .props.ethPrice}$</p>
-                {(this.props.ethHourChange > 0) ? (
-                  <p className = 'positive-percentage text-inline'>{this.props.ethHourChange}%</p>
-                ): (
-                  <p className = 'negative-percentage text-inline'>{this.props.ethHourChange}%</p>
-                )}
-              </div>
+                <div>
+                  <p className = 'currency-amount-crypto text-inline'> {this.props.ethBalance}</p><p className = 'currency-short-name text-inline'>ETH </p>
+                </div>
+                <div className = 'wrap'>
+                  {(this.props.ethHourChange > 0) ? (
+                    <p className = 'positive-percentage text-inline'>{this.props.ethHourChange}%</p>
+                  ): (
+                    <p className = 'negative-percentage text-inline'>{this.props.ethHourChange}%</p>
+                  )}
+                  <p className = 'currency-amount-fiat text-inline'>{this .props.ethPrice}$</p>
+                </div>
               </div>
             </Link>
             <Link to = '/ltc-window' className = 'card-container'>
@@ -63,63 +66,24 @@ export class MainContent extends React.Component<any, any> {
               </div>
               <hr/>
               <div className = 'card-bottom-block'>
-                <div className = 'crypto-amount-block'>
-                  <p className = 'currency-short-name text-inline'>LTC </p><p className = 'currency-amount-crypto text-inline'>{this.props.ltcBalance}</p>
+                <div>
+                   <p className = 'currency-amount-crypto text-inline'> {this.props.ltcBalance}</p><p className = 'currency-short-name text-inline'>LTC </p>
                 </div>
-                <div className = 'currency-percentage-block'>
-                <p className = 'currency-amount-fiat'>{this.props.ltcPrice}$</p>
+                <div className = 'wrap'>
+
                 {(this.props.ltcHourChange > 0) ? (
                   <p className = 'positive-percentage text-inline'>{this.props.ltcHourChange}%</p>
                 ): (
                   <p className = 'negative-percentage text-inline'>{this.props.ltcHourChange}%</p>
                 )}
+                <p className = 'currency-amount-fiat'>{this.props.ltcPrice}$</p>
                 </div>
                 </div>
             </Link>
            </div>
            <hr/>
           </div>
-          <div className = 'transaction-history'>
-                <header className = 'transaction-history-header'>Transaction History:</header>
-                  <table>
-                    <tr>
-                      <th className = 'table-header'>Date</th>
-                      <th className = 'table-header'>How much</th>
-                      <th className = 'table-header'>Address</th>
-                      <th className = 'table-header'>Status</th>
-                    </tr>
-                    <tr>
-                      <th>2018/02/01</th>
-                      <th>0.587 BTC</th>
-                      <th>XHRTETFDSWER@erwsd</th>
-                      <th className = 'text-unconfirmed'>Not confirmed</th>
-                    </tr>
-                    <tr>
-                      <th>2018/02/11</th>
-                      <th>0.587 BTC</th>
-                      <th>XHRTETFDSWER@erwsd</th>
-                      <th className = 'text-confirmed'>Confirmed</th>
-                    </tr>
-                    <tr>
-                      <th>2018/02/01</th>
-                      <th>0.3 BTC</th>
-                      <th>XHRTqqTFDSWER@erwsd</th>
-                      <th className = 'text-confirmed'>Confirmed</th>
-                    </tr>
-                    <tr>
-                      <th>2018/02/21</th>
-                      <th>0.5187 BTC</th>
-                      <th>XHRTqweTFDSWER@erwsd</th>
-                      <th className = 'text-confirmed'>Confirmed</th>
-                    </tr>
-                    <tr>
-                      <th>2018/03/01</th>
-                      <th>17 BTC</th>
-                      <th>XHRqweDSWER@erwsd</th>
-                      <th className = 'text-confirmed'>Confirmed</th>
-                    </tr>
-                  </table>
-              </div>
+         <Table data = {this.props.btcLastTx}/>
         </div>
       </div>
     )}

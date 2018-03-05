@@ -59,7 +59,7 @@ export class App extends React.Component<any, IAPPState> {
       sidebar: () => <SidebarContent total = {this.state.totalBalance} refresh = {this.getValues}/>,
       main: () => <MainContent btcBalance = {this.state.BTCBalance} ltcBalance = {this.state.LTCBalance} ethBalance = {this.state.ETHBalance}
       btcPrice = {this.state.BTCPrice} ltcPrice = {this.state.LTCPrice} ethPrice = {this.state.ETHPrice} btcHourChange = {this.state.BTCHourChange}
-      ltcHourChange = {this.state.LTCHourChange} ethHourChange = {this.state.ETHHourChange}/>
+      ltcHourChange = {this.state.LTCHourChange} ethHourChange = {this.state.ETHHourChange} btcLastTx = {this.state.BTCLastTx}/>
     },
     {
       path: '/btc-window',
