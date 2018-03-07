@@ -2,8 +2,8 @@ import * as React from 'react'
 import CreateQR from '../core/CreateQR'
 import getAddress from '../API/hardwareAPI/GetAddress'
 import { clipboard } from 'electron'
-import {Table} from './Table'
-import {sendTransaction} from '../core/SendTransaction'
+import { Table } from './Table'
+import { sendTransaction } from '../core/SendTransaction'
 
 interface IBTCWindowState {
   address: string,
@@ -13,9 +13,9 @@ interface IBTCWindowState {
   fee: number
 }
 
-export class BTCWindow extends React.Component<any, IBTCWindowState> { 
+export class BTCWindow extends React.Component<any, IBTCWindowState> {
   constructor(props: any) {
-    super (props)
+    super(props)
 
     this.handleCopyClick = this.handleCopyClick.bind(this)
     this.handleAddressChange = this.handleAddressChange.bind(this)
@@ -33,6 +33,7 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
   }
   componentWillMount() {
     this.setState({ qrcodeAddress: CreateQR(this.state.address) })
+    this.props.transactions()
     console.log('PROPERTY: ' + this.props.lastTx)
   }
   handleCopyClick() {
@@ -70,7 +71,7 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
                   <div className = 'wrap'>
                     {(this.props.hourChange > 0) ? (
                       <p className = 'positive-percentage text-inline'>{this.props.hourChange}%</p>
-                    ): (
+                    ) : (
                       <p className = 'negative-percentage text-inline'>{this.props.hourChange}%</p>
                     )}
                    <p className = 'currency-amount-fiat text-inline'>{this.props.price}$</p>
@@ -93,7 +94,7 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
               <img src = {this.state.qrcodeAddress} className = 'address-qrcode'/>
               <div className = 'address-with-button'>
                 <p className = 'address-with-button-address'>{this.state.address}</p>
-                <button type = 'submit' className =  'button-copy' onClick = {this.handleCopyClick}>Copy</button>
+                <button type = 'submit' className = 'button-copy' onClick = {this.handleCopyClick}>Copy</button>
               </div>
             </div>
           </div>

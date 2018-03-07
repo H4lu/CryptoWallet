@@ -25,7 +25,7 @@ export class Table extends React.Component<any,ITableClass> {
         let amount = data[index].outgoing.value
         let address = data[index].outgoing.outputs[0].address
         let type = 'outgoing'
-        let status = (data[index].confirmations == 0) ? 'Uncofirmed': 'Confirmed'
+        let status = (data[index].confirmations === 0) ? 'Uncofirmed' : 'Confirmed'
         let dataToPass = {
           Date: date,
           Amount: amount,
@@ -41,7 +41,7 @@ export class Table extends React.Component<any,ITableClass> {
         let amount = data[index].incoming.value
         let address = data[index].incoming.inputs[0].address
         let type = 'incoming'
-        let status = (data[index].confirmations == 0) ? 'Uncofirmed': 'Confirmed'
+        let status = (data[index].confirmations === 0) ? 'Uncofirmed' : 'Confirmed'
         let dataToPass = {
           Date: date,
           Amount: amount,
@@ -67,18 +67,18 @@ export class Table extends React.Component<any,ITableClass> {
             <th>Status</th>
           </thead>
           <tbody>
-            {this.state.data.map((value )=> {
+            {this.state.data.map((value) => {
               return <tr>
                <td>{JSON.stringify(value.Date)}</td>
               {(value.Type === 'incoming') ? (
                 <td className = 'text-confirmed'>{value.Amount}</td>
-              ):(
+              ) : (
                 <td className = 'text-unconfirmed'>{value.Amount}</td>
               )}
               <td>{value.Address}</td>
               {(value.Status === 'confirmed') ? (
                 <td className = 'text-confirmed'>{value.Status}</td>
-              ): (
+              ) : (
                 <td className = 'text-unconfirmed'>{value.Status}</td>
               )}
             </tr>
