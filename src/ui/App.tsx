@@ -1,6 +1,6 @@
 import React from 'react'
 // import { Switch, Route } from 'react-router'
-import { Route, Redirect } from 'react-router'
+import { Route } from 'react-router'
 import { Header } from '../components/Header'
 import { Footer } from '../components/Footer'
 import { SidebarContent } from '../components/SidebarContent'
@@ -21,6 +21,47 @@ import { getEthereumBalance, convertFromWei } from '../API/cryptocurrencyAPI/Eth
 import GetCurrencyRate from '../core/GetCurrencyRate'
 import { SidebarNoButtons } from '../components/SidebarNoButtons'
 
+import { MainWindow } from '../components/MainWindow'
+/* import SerialPort from 'serialport'
+SerialPort.list().then(value => {
+  console.log('Serialport list value: ' + JSON.stringify(value))
+})
+let firstBuff = Buffer.from([0x9c,0x9c,0x53,0x00])
+let hashBuff = Buffer.from('8ac74ce78eda742ee94099da1f80ebf34da00dd65e26f65b189fdcfb18efc9bb', 'hex')
+let lastBuff = Buffer.from([0x01,0x9a,0x9a])
+let arr = Buffer.concat([firstBuff, hashBuff, lastBuff])
+let port = new SerialPort('COM15', { autoOpen: false, baudRate: 115200 })
+getSig().then(value => {
+  console.log('FINALLY THIS VALUE: ' + value)
+})
+function getData() {
+  return new Promise((resolve, reject) => {
+    port.write(arr)
+    console.log('Attempt to read')
+    port.on('data', data => {
+      resolve(data)
+    })
+    port.on('error', data => {
+      reject(data)
+    })
+  })
+}
+export async function getSig() {
+  try {
+    port.open(err => {
+      if(err) {
+        return console.log('Error opening port: ' + err.message)
+      }
+      getData().then(value => {
+        console.log('IN PROMISE: ' + value)
+      })
+    })
+  } catch(err) {
+    console.log(err)
+  } 
+}
+
+*/
 interface IAPPState {
   BTCBalance: number,
   ETHBalance: number,
@@ -33,7 +74,9 @@ interface IAPPState {
   ETHHourChange: number,
   LTCHourChange: number,
   BTCLastTx: Array<any>,
-  LTCLastTx: Array<any>
+  LTCLastTx: Array<any>,
+  connection: boolean,
+  status: boolean
 }
 
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
@@ -77,7 +120,7 @@ export class App extends React.Component<any, IAPPState> {
       path: '/ltc-window',
       exact: true,
       sidebar: () => <SidebarNoButtons total = {this.state.totalBalance}/>,
-      main: () => <LTCWindow balance = {this.state.LTCBalance} price = {this.state.LTCPrice} hourChange = {this.state.LTCHourChange} lastTx = {this.state.LTCLastTx}/>
+      main: () => <LTCWindow balance = {this.state.LTCBalance} price = {this.state.LTCPrice} hourChange = {this.state.LTCHourChange} lastTx = {this.state.LTCLastTx} transactions = {this.getTransactions}/>
     },
     {
       path: '/btc-transaction',
@@ -98,7 +141,6 @@ export class App extends React.Component<any, IAPPState> {
       main: () => <LTCWindow balance = {this.state.LTCBalance} price = {this.state.LTCPrice} hourChange = {this.state.LTCHourChange}/>
     }
   ]
-
   constructor(props: any) {
     super(props)
 
@@ -114,14 +156,26 @@ export class App extends React.Component<any, IAPPState> {
       LTCHourChange: 0,
       ETHHourChange: 0,
       LTCLastTx: [],
-      BTCLastTx: []
+      BTCLastTx: [],
+      connection: false,
+      status: false
     }
     this.getValues = this.getValues.bind(this)
     this.getTransactions = this.getTransactions.bind(this)
   }
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({connection: true})
+    },4000)
+    setTimeout(() => {
+      this.setState({ status: true })
+    },8000)
+
+  }
   getValues() {
     Promise.all([getBalance(), getEthereumBalance(), getLitecoinBalance(), GetCurrencyRate()]).then(value => {
       for (let val in value) {
+        console.log('In getvalues')
         if (typeof(value[val]) === 'object') {
           if (Number(val) !== value.length - 1) {
             switch (JSON.parse(value[val].content).data.network) {
@@ -172,13 +226,12 @@ export class App extends React.Component<any, IAPPState> {
     this.getValues()
     this.getTransactions()
   }
+
   getTransactions() {
     Promise.all([getBitcoinLastTx(), getLitecoinLastTx()]).then(value => {
       for (let index in value) {
         let parsedResponse = JSON.parse(value[index].content).data
-        console.log('Parsed res: ' + JSON.stringify(parsedResponse))
         for (let tx in parsedResponse.txs) {
-          console.log('NETWORK: ' + parsedResponse.network)
           switch (parsedResponse.network) {
           case 'BTCTEST': {
             this.setState({ BTCLastTx: [...this.state.BTCLastTx, parsedResponse.txs[tx]] })
@@ -186,8 +239,6 @@ export class App extends React.Component<any, IAPPState> {
           }
           case 'LTCTEST': {
             this.setState({ LTCLastTx: [...this.state.LTCLastTx, parsedResponse.txs[tx]] })
-            console.log('Parsed resp: ' + JSON.stringify(parsedResponse.txs[tx]))
-            console.log('LTCLastTxState: ' + JSON.stringify(this.state.LTCLastTx))
             break
           }
           }
@@ -201,7 +252,7 @@ export class App extends React.Component<any, IAPPState> {
     return(
       <div className = 'container'>
         <Header/>
-        <Redirect from = '/' to = '/main'/>
+        <MainWindow status = {this.state.status} connection = {this.state.connection}/>
          {this.routes.map((route, index) => (
           <Route
             exact = {route.exact}
@@ -218,7 +269,7 @@ export class App extends React.Component<any, IAPPState> {
             component= {route.main}
           />
         ))}
-        <Footer/>
+        <Footer status = {this.state.status} connection = {this.state.connection}/>
       </div>
     )
   }

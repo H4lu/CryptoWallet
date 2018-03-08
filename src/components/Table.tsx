@@ -12,14 +12,10 @@ export class Table extends React.Component<any,ITableClass> {
     this.getData = this.getData.bind(this)
   }
   componentWillReceiveProps() {
-    console.log('PROPS: ' + JSON.stringify(this.props.data))
     this.getData(this.props.data)
   }
   getData(data: Array<any>) {
-    console.log('GETTING DATA')
     for (let index in data) {
-      console.log('My tx: ' + JSON.stringify(data[index]))
-      console.log('Tx type: ' + JSON.stringify(data[index].incoming))
       if (data[index].outgoing !== undefined) {
         let date = new Date(data[index].time * 1000)
         let amount = data[index].outgoing.value
@@ -33,9 +29,7 @@ export class Table extends React.Component<any,ITableClass> {
           Status: status,
           Type: type
         }
-        console.log('Data to pass: ' + JSON.stringify(dataToPass))
         this.setState({ data: [...this.state.data, dataToPass] })
-        console.log('MY DATA: ' + JSON.stringify(this.state.data))
       } else {
         let date = new Date(data[index].time * 1000)
         let amount = data[index].incoming.value
@@ -50,7 +44,6 @@ export class Table extends React.Component<any,ITableClass> {
           Type: type
         }
         this.setState({ data: [...this.state.data, dataToPass] })
-        console.log('My data: ' + JSON.stringify(this.state.data))
       }
     }
   }

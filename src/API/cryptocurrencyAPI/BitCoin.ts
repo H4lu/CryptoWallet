@@ -3,6 +3,7 @@ import * as Request from 'request'
 import * as webRequest from 'web-request'
 import getSign from '../hardwareAPI/GetSignature'
 import getAddress from '../hardwareAPI/GetAddress'
+// import getAddress from '../hardwareAPI/GetAddress'
 // import * as utils from './utils'
 
 // const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'

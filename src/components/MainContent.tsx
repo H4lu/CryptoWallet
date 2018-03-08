@@ -1,6 +1,6 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import { Table } from './Table'
+import {Link} from 'react-router-dom'
+import {Table} from './Table'
 
 export class MainContent extends React.Component<any, any> {
   constructor(props: any) {
@@ -11,9 +11,10 @@ export class MainContent extends React.Component<any, any> {
   handleClick () {
     this.props.refresh()
   }
-  componentWillMount() {
+  componentDidMount() {
     this.props.transactions()
   }
+  
   render () {
     return (
     <div className = 'main'>
@@ -34,7 +35,7 @@ export class MainContent extends React.Component<any, any> {
                   <div className = 'wrap'>
                     {(this.props.btcHourChange > 0) ? (
                       <p className = 'positive-percentage text-inline'>{this.props.btcHourChange}%</p>
-                    ) : (
+                    ): (
                       <p className = 'negative-percentage text-inline'>{this.props.btcHourChange}%</p>
                     )}
                    <p className = 'currency-amount-fiat text-inline'>{this.props.btcPrice}$</p>
@@ -54,7 +55,7 @@ export class MainContent extends React.Component<any, any> {
                 <div className = 'wrap'>
                   {(this.props.ethHourChange > 0) ? (
                     <p className = 'positive-percentage text-inline'>{this.props.ethHourChange}%</p>
-                  ) : (
+                  ): (
                     <p className = 'negative-percentage text-inline'>{this.props.ethHourChange}%</p>
                   )}
                   <p className = 'currency-amount-fiat text-inline'>{this .props.ethPrice}$</p>
@@ -75,7 +76,7 @@ export class MainContent extends React.Component<any, any> {
 
                 {(this.props.ltcHourChange > 0) ? (
                   <p className = 'positive-percentage text-inline'>{this.props.ltcHourChange}%</p>
-                ) : (
+                ): (
                   <p className = 'negative-percentage text-inline'>{this.props.ltcHourChange}%</p>
                 )}
                 <p className = 'currency-amount-fiat'>{this.props.ltcPrice}$</p>
@@ -88,6 +89,5 @@ export class MainContent extends React.Component<any, any> {
          <Table data = {this.props.btcLastTx}/>
         </div>
       </div>
-    )
-  }
+    )}
 }
