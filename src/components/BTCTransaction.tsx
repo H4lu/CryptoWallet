@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { getFee } from '../API/cryptocurrencyAPI/BitCoin'
-import {Dropdown} from 'semantic-ui-react'
-import {sendTransaction} from '../core/SendTransaction'
-import { Link } from 'react-router-dom';
+import { Dropdown } from 'semantic-ui-react'
+import { sendTransaction } from '../core/SendTransaction'
+import { Link } from 'react-router-dom'
 
 interface IPayComponentState {
   paymentAdress: string,
@@ -15,10 +15,10 @@ export class BTCTransaction extends React.Component<any, IPayComponentState> {
   constructor(props: any) {
     super(props)
     this.state = {
-       paymentAdress: '',
-       amount: 0,
-       fee : [],
-       value : 0
+      paymentAdress: '',
+      amount: 0,
+      fee : [],
+      value : 0
     }
 
     this.handleFeeChange = this.handleFeeChange.bind(this)
@@ -28,13 +28,12 @@ export class BTCTransaction extends React.Component<any, IPayComponentState> {
     this.handleClick = this.handleClick.bind(this)
   }
 
-
   componentWillMount() {
     this.getBitcoinFees()
   }
   handleFeeChange(e: any, data: any) {
     console.log(e.target.value)
-    this.setState({value: data.value})
+    this.setState({ value: data.value })
     console.log('Current value: ' + this.state.value)
   }
   handleClick() {

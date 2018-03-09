@@ -4,13 +4,16 @@ import * as Request from 'request'
 import * as webRequest from 'web-request'
 // import { Transaction, TransactionBuilder, networks } from 'bitcoinjs-lib'
 import getSign from '../hardwareAPI/GetSignature'
-const address = getAddress(2)
+let address = ''
 const rootURL = 'https://chain.so/api/v2'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.testnet
 const NETWORK = 'LTCTEST'
 export function getAdress() {
   return address
+}
+export function initLitecoinAddress() {
+  address = getAddress(2)
 }
 export async function getLitecoinLastTx(): Promise<any> {
   try {

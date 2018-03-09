@@ -1,6 +1,6 @@
 import React from 'react'
 // import { Switch, Route } from 'react-router'
-import { Route } from 'react-router'
+import { Route, Redirect } from 'react-router'
 import { Header } from '../components/Header'
 import { Footer } from '../components/Footer'
 import { SidebarContent } from '../components/SidebarContent'
@@ -15,22 +15,28 @@ import { ETHWIndow } from '../components/ETHWindow'
 import { LTCWindow } from '../components/LTCWindow'
 import '../components/style.css'
 import { MainContent } from '../components/MainContent'
-import { getBalance, getBitcoinLastTx } from '../API/cryptocurrencyAPI/BitCoin'
-import { getLitecoinBalance, getLitecoinLastTx } from '../API/cryptocurrencyAPI/Litecoin'
-import { getEthereumBalance, convertFromWei } from '../API/cryptocurrencyAPI/Ethereum'
+import { getBalance, getBitcoinLastTx, initBitcoinAddress } from '../API/cryptocurrencyAPI/BitCoin'
+import { getLitecoinBalance, getLitecoinLastTx, initLitecoinAddress } from '../API/cryptocurrencyAPI/Litecoin'
+import { getEthereumBalance, convertFromWei, initEthereumAddress } from '../API/cryptocurrencyAPI/Ethereum'
 import GetCurrencyRate from '../core/GetCurrencyRate'
 import { SidebarNoButtons } from '../components/SidebarNoButtons'
 
 import { MainWindow } from '../components/MainWindow'
 /* import SerialPort from 'serialport'
+
 SerialPort.list().then(value => {
   console.log('Serialport list value: ' + JSON.stringify(value))
 })
 let firstBuff = Buffer.from([0x9c,0x9c,0x53,0x00])
 let hashBuff = Buffer.from('8ac74ce78eda742ee94099da1f80ebf34da00dd65e26f65b189fdcfb18efc9bb', 'hex')
-let lastBuff = Buffer.from([0x01,0x9a,0x9a])
-let arr = Buffer.concat([firstBuff, hashBuff, lastBuff])
-let port = new SerialPort('COM15', { autoOpen: false, baudRate: 115200 })
+let intBuff = new Buffer(4)
+intBuff.writeInt32LE(1.5 * 100000000, 0)
+console.log('Int buff: ' + Buffer.from(intBuff.readInt32LE(0).toString()))
+let addrBuff = Buffer.from('mgWZCzn4nv7noRwnbThqQ2hD2wT3YAKTJH', 'hex')
+console.log(addrBuff)
+let lastBuff = Buffer.from([0x9a,0x9a])
+let arr = Buffer.concat([firstBuff, hashBuff,intBuff, addrBuff, lastBuff])
+let port = new SerialPort('COM5', { autoOpen: false, baudRate: 115200 })
 getSig().then(value => {
   console.log('FINALLY THIS VALUE: ' + value)
 })
@@ -39,7 +45,7 @@ function getData() {
     port.write(arr)
     console.log('Attempt to read')
     port.on('data', data => {
-      resolve(data)
+      resolve(data.toString('hex'))
     })
     port.on('error', data => {
       reject(data)
@@ -49,18 +55,17 @@ function getData() {
 export async function getSig() {
   try {
     port.open(err => {
-      if(err) {
+      if (err) {
         return console.log('Error opening port: ' + err.message)
       }
       getData().then(value => {
         console.log('IN PROMISE: ' + value)
       })
     })
-  } catch(err) {
+  } catch (err) {
     console.log(err)
-  } 
+  }
 }
-
 */
 interface IAPPState {
   BTCBalance: number,
@@ -76,7 +81,8 @@ interface IAPPState {
   BTCLastTx: Array<any>,
   LTCLastTx: Array<any>,
   connection: boolean,
-  status: boolean
+  status: boolean,
+  redirect: boolean
 }
 
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
@@ -158,19 +164,24 @@ export class App extends React.Component<any, IAPPState> {
       LTCLastTx: [],
       BTCLastTx: [],
       connection: false,
-      status: false
+      status: false,
+      redirect: false
     }
     this.getValues = this.getValues.bind(this)
     this.getTransactions = this.getTransactions.bind(this)
   }
   componentDidMount() {
     setTimeout(() => {
-      this.setState({connection: true})
-    },4000)
+      this.setState({ connection: true })
+      initBitcoinAddress()
+      initEthereumAddress()
+      initLitecoinAddress()
+      this.getValues()
+      this.getTransactions()
+    }, 3000)
     setTimeout(() => {
       this.setState({ status: true })
-    },8000)
-
+    }, 6000)
   }
   getValues() {
     Promise.all([getBalance(), getEthereumBalance(), getLitecoinBalance(), GetCurrencyRate()]).then(value => {
@@ -223,8 +234,8 @@ export class App extends React.Component<any, IAPPState> {
     })
   }
   componentWillMount() {
-    this.getValues()
-    this.getTransactions()
+    this.setState({ redirect: true })
+
   }
 
   getTransactions() {
@@ -252,7 +263,12 @@ export class App extends React.Component<any, IAPPState> {
     return(
       <div className = 'container'>
         <Header/>
-        <MainWindow status = {this.state.status} connection = {this.state.connection}/>
+        {(this.state.redirect) ? (
+          <Redirect to = '/start'/>
+        ) : (
+          null
+        )}
+        <Route path = '/start' component = {() => <MainWindow connection = {this.state.connection} status = {this.state.status}/>}/>
          {this.routes.map((route, index) => (
           <Route
             exact = {route.exact}

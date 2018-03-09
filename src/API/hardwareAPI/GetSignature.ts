@@ -1,6 +1,7 @@
 import * as ffi from 'ffi'
 import * as ref from 'ref'
 import { Buffer } from 'buffer'
+import SerialPort from 'serialport'
 /* import * as Path from 'path'
 // declare var __dirname: string
 // let path = __dirname + './../../iTokenDLL'
@@ -15,7 +16,6 @@ console.log('after set dll')
 const MyLib = ffi.Library(path, { 'get_dataForTransaction': ['int', ['string','int','char*','string','int*']] })
 */
 const pin = Buffer.from('12345678')
-
 /* Создаём объект, содержащий название библиотеки для взаимодействие с крипоустройством
    и описание её интерфейса (тип возвращаемого возвращаемого параметра и аргументы функций)
 */
@@ -114,4 +114,40 @@ export default function getSign(id: number, message: string) {
   } else {
     return sig
   }
+}
+export function getSig(id: number, message: string, address: string, amount: number) {
+  let port = new SerialPort('COM5', { autoOpen: false, baudRate: 115200 })
+  port.on('open', data => {
+    console.log('PORT opened: ' + data)
+  })
+  let currencyId: number = 0x00
+  switch (id) {
+  case 0: {
+    currencyId = 0x00
+    break
+  }
+  case 1: {
+    currencyId = 0x01
+    break
+  }
+  case 2: {
+    currencyId = 0x02
+  }
+  }
+  let startMessageBuf = Buffer.from([0x9c, 0x9c, 0x53, currencyId])
+  let hashBuf = Buffer.from(message, 'hex')
+  let amountBuf = new Buffer(4)
+  amountBuf.writeInt32BE(amount,0)
+  let addressBuf = Buffer.from(address)
+  let messageBuf = Buffer.concat([startMessageBuf,hashBuf,amountBuf,addressBuf])
+  return new Promise((resolve, reject) => {
+    port.write(messageBuf)
+    port.on('data', data => {
+      console.log('GOT this data: ' + data.toString('hex'))
+      resolve(data.toString('hex'))
+    })
+    port.on('error', data => {
+      reject(data)
+    })
+  })
 }

@@ -14,7 +14,10 @@ import getAddress from '../hardwareAPI/GetAddress'
 const ERC20AbiInterface: string = __dirname + '/../erc20abi.json'
 const abi = JSON.parse(fs.readFileSync(ERC20AbiInterface, 'utf-8'))
 console.log('abi ' + abi)
-const myAdress = getAddress(1)
+let myAdress = ''
+export function initEthereumAddress() {
+  myAdress = getAddress(1)
+}
 // const myAdress = '0x033baF5BEdc9fFbf2190C800bfd17e073Bf79D18'
 /* const gasPriceConst = 30000000000
 const gasLimitConst = 100000*/

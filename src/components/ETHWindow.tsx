@@ -1,9 +1,9 @@
 import * as React from 'react'
 import CreateQR from '../core/CreateQR'
-import {getEthereumAddres} from '../API/hardwareAPI/GetAddress'
-import {Table} from '../components/Table'
+import { getEthereumAddres } from '../API/hardwareAPI/GetAddress'
+import { Table } from '../components/Table'
 import { clipboard } from 'electron'
-import {sendTransaction} from '../core/SendTransaction'
+import { sendTransaction } from '../core/SendTransaction'
 
 interface IETHWindowState {
   address: string,
@@ -15,7 +15,7 @@ interface IETHWindowState {
 
 export class ETHWIndow extends React.Component<any, IETHWindowState> {
   constructor(props: any) {
-    super (props)
+    super(props)
 
     this.handleCopyClick = this.handleCopyClick.bind(this)
     this.handleAddressChange = this.handleAddressChange.bind(this)
@@ -28,7 +28,7 @@ export class ETHWIndow extends React.Component<any, IETHWindowState> {
       qrcodeAddress: '',
       paymentAddress: '',
       amount: 0,
-      fee: 0  
+      fee: 0
     }
   }
   componentWillMount() {
@@ -69,7 +69,7 @@ export class ETHWIndow extends React.Component<any, IETHWindowState> {
                   <div className = 'wrap'>
                     {(this.props.hourChange > 0) ? (
                       <p className = 'positive-percentage text-inline'>{this.props.hourChange}%</p>
-                    ): (
+                    ) : (
                       <p className = 'negative-percentage text-inline'>{this.props.hourChange}%</p>
                     )}
                    <p className = 'currency-amount-fiat text-inline'>{this.props.price}$</p>
@@ -92,7 +92,7 @@ export class ETHWIndow extends React.Component<any, IETHWindowState> {
               <img src = {this.state.qrcodeAddress} className = 'address-qrcode'/>
               <div className = 'address-with-button'>
                 <p className = 'address-with-button-address'>{this.state.address}</p>
-                <button type = 'submit' className =  'button-copy' onClick = {this.handleCopyClick}>Copy</button>
+                <button type = 'submit' className = 'button-copy' onClick = {this.handleCopyClick}>Copy</button>
               </div>
             </div>
           </div>

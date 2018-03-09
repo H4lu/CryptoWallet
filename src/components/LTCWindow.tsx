@@ -4,6 +4,7 @@ import getAddress from '../API/hardwareAPI/GetAddress'
 import { sendTransaction } from '../core/SendTransaction'
 import { clipboard } from 'electron'
 import { Table } from './Table'
+
 interface ILTCWindowState {
   address: string,
   qrcodeAddress: string,
@@ -14,7 +15,13 @@ interface ILTCWindowState {
 
 export class LTCWindow extends React.Component<any, ILTCWindowState> {
   constructor(props: any) {
-    super (props)
+    super(props)
+
+    this.handleClick = this.handleClick.bind(this)
+    this.handleCopyClick = this.handleCopyClick.bind(this)
+    this.handleAmountChange = this.handleAmountChange.bind(this)
+    this.handleAddressChange = this.handleAddressChange.bind(this)
+    this.handleFeeChange = this.handleFeeChange.bind(this)
 
     this.state = {
       address: getAddress(2),
@@ -48,56 +55,54 @@ export class LTCWindow extends React.Component<any, ILTCWindowState> {
   render () {
     return (
       <div className = 'main'>
-        <div className = 'currency-content'>
-          <div className = 'currency-block-container'>
-            <div className = 'currency-block-card'>
-            <header className = 'text-header'>Your Bitcoin</header>
-            <div className = 'currency-info-container'>
-              <p className = 'default-font-colored'>Your Litecoin</p>
-              <div className = 'card-container'>
-                <div className = 'card-upper-block'>
-                  <img src = 'data:image/png;base64,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'/>
-                  <p className = 'currency-name'>Litecoin</p>
-                </div>
-                <hr/>
-                <div className = 'card-bottom-block'>
-                <div>   
-                  <p className = 'currency-amount-crypto text-inline'>{this.props.balance} $</p>
-                  <p className = 'currency-short-name text-inline'>{this.props.price}LTC</p>
+      <div className = 'currency-content'>
+        <div className = 'currency-block-container'>
+          <div className = 'currency-block-card'>
+            <p className = 'default-font-colored'>Your Litecoin</p>
+            <div className = 'card-container'>
+            <div className = 'card-upper-block'>
+              <img src = 'data:image/png;base64,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'/>
+              <p className = 'currency-name'> Litecoin</p>
+            </div>
+            <hr/>
+            <div className = 'card-bottom-block'>
+            <div>
+                 <p className = 'currency-amount-crypto text-inline'>{this.props.balance}</p>
+                 <p className = 'currency-short-name text-inline'>LTC</p>
                 </div>
                 <div className = 'wrap'>
                   {(this.props.hourChange > 0) ? (
-                      <p className = 'positive-percentage text-inline'>{this.props.hourChange}%</p>
-                    ): (
-                      <p className = 'negative-percentage text-inline'>{this.props.hourChange}%</p>
-                    )}
-                  <p className = 'currency-amount-fiat text-inline'>{this.props.price}$</p>
-                </div>
-              </div>
-            </div>
-            <div className = 'currency-block-transaction'>
-              <p className = 'default-font-colored'>Send Litecoin</p>
-              <input type = 'text' className = 'payment_address' placeholder = 'Payment Address' value = {this.state.paymentAddress} onChange = {this.handleAddressChange}/>
-              <input type = 'text' className = 'input-amount' placeholder = 'Amount' onChange = {this.handleAmountChange} value = {this.state.amount}/>
-              <input type = 'text' className = 'input-fee-amount' placeholder = 'Fee'/>
-              <button type = 'submit' className = 'button-send' onClick = {this.handleClick}>Send</button>
+                    <p className = 'positive-percentage text-inline'>{this.props.hourChange}%</p>
+                  ) : (
+                    <p className = 'negative-percentage text-inline'>{this.props.hourChange}%</p>
+                  )}
+                 <p className = 'currency-amount-fiat text-inline'>{this.props.price}$</p>
+                 </div>
             </div>
           </div>
-          <div className = 'currency-block-container'>
-            <div className = 'currency-address'>
-              <p className = 'default-font-colored'>Your Litecoin Address:</p>
-              <img src = {this.state.qrcodeAddress} className = 'address-qrcode'/>
-              <div className = 'address-with-button'>
-                <p className = 'address-with-button-address'>{this.state.address}</p>
-                <button type = 'submit' className = 'button-copy' onClick = {this.handleCopyClick}>Copy</button>
-              </div>
-            </div>
           </div>
-          <Table data = {this.props.lastTx}/>
+          <div className = 'currency-block-transaction'>
+          <header className = 'default-font-colored'>Send Bitcoin</header>
+            <input type = 'text' className = 'payment_address' placeholder = 'Payment Address' value = {this.state.paymentAddress} onChange = {this.handleAddressChange}/>
+            <input type = 'text' className = 'input-amount' placeholder = 'Amount' onChange = {this.handleAmountChange} value = {this.state.amount}/>
+            <input type = 'text' className = 'input-fee-amount' placeholder = 'Fee'/>
+            <button type = 'submit' className = 'button-send' onClick = {this.handleClick}>Send</button>
+          </div>
         </div>
+        </div>
+        <div className = 'currency-address-container'>
+          <div className = 'currency-address'>
+            <p className = 'default-font-colored'>Your Litecoin Address:</p>
+            <img src = {this.state.qrcodeAddress} className = 'address-qrcode'/>
+            <div className = 'address-with-button'>
+              <p className = 'address-with-button-address'>{this.state.address}</p>
+              <button type = 'submit' className = 'button-copy' onClick = {this.handleCopyClick}>Copy</button>
+            </div>
+          </div>
+        </div>
+        <Table data = {this.props.lastTx}/>
       </div>
-    </div>
-  </div>
+
     )
   }
 }

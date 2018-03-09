@@ -7,11 +7,11 @@ export class Footer extends React.Component<any, any> {
   render() {
     return (
     <div className = 'footer'>
-    <div className = 'footer-content'>
-      <p className = 'status'>Status:<span className = 'footer-status-span'> OK</span></p>
-      <p className = 'version'>Version 1.1</p>
+      <div className = 'footer-content'>
+        <p className = 'version'>Version 1.1</p>
+        <p className = 'status'>Status:<span className = 'footer-status'> Ready</span></p>
+      </div>
     </div>
-  </div>
-   )
+    )
   }
 }

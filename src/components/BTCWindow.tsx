@@ -22,7 +22,6 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
     this.handleAmountChange = this.handleAmountChange.bind(this)
     this.handleFeeChange = this.handleFeeChange.bind(this)
     this.handleClick = this.handleClick.bind(this)
-
     this.state = {
       address: getAddress(0),
       qrcodeAddress: '',
@@ -66,7 +65,7 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
               <hr/>
               <div className = 'card-bottom-block'>
               <div>
-                   <p className = 'currency-amount-crypto text-inline'>{this.props.balance}$</p>
+                   <p className = 'currency-amount-crypto text-inline'>{this.props.balance}</p>
                    <p className = 'currency-short-name text-inline'>BTC</p>
                   </div>
                   <div className = 'wrap'>
