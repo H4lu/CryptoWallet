@@ -7,5 +7,9 @@ module.exports = exports = function (str) {
     const result = require('./node_modules/ffi/build/Release/ffi_bindings.node')
     result.path = './node_modules/ffi/build/Release/ffi_bindings.node'
     return result
+  } else if (str === 'serialport.node') {
+    const result = require('./node_modules/serialport/build/Release/serialport.node')
+    result.path = './node_modules/serialport/build/Release/serialport.node'
+    return result
   }
 }

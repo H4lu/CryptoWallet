@@ -1,8 +1,9 @@
 import { TransactionBuilder, networks, Transaction } from 'bitcoinjs-lib'
 import * as Request from 'request'
 import * as webRequest from 'web-request'
-import getSign from '../hardwareAPI/GetSignature'
+import { getSig } from '../hardwareAPI/GetSignature'
 import getAddress from '../hardwareAPI/GetAddress'
+// import getAddress from '../hardwareAPI/GetAddress'
 // import * as utils from './utils'
 
 // const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
@@ -10,8 +11,10 @@ const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.testnet
 const NETWORK = 'BTCTEST'
 const rootURL = 'https://chain.so/api/v2'
-export const myAddr: string = getAddress(0)
-
+let myAddr = ''
+export function initBitcoinAddress() {
+  myAddr = getAddress(0)
+}
 export async function getBitcoinLastTx(): Promise<any> {
   try {
     const requestUrl = rootURL + '/address/' + NETWORK + '/' + myAddr
@@ -129,7 +132,8 @@ async function getLastTransactionData(): Promise<any> {
 }
 */
 function createTransaction(paymentAdress: string,transactionHash: string, transactionInputAmount: number,
-  transactionAmount: number,transactionFee: number, prevOutScript: string, outNumber: number): string {
+  transactionAmount: number,transactionFee: number, prevOutScript: string, outNumber: number): void {
+  transactionFee = 1
   // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
   let transaction = new TransactionBuilder(network)
   // Добавляем вход транзакции в виде хэша предыдущей транзакции и номер выхода с нашим адресом
@@ -144,15 +148,20 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
   console.log('Build incomplete: ' + transaction.buildIncomplete().toHex())
   // Вычисляем хэш неподписанной транзакции
   let txHashForSignature = transaction.tx.hashForSignature(0, Buffer.from(prevOutScript.trim(), 'hex'), Transaction.SIGHASH_ALL)
+  console.log('Hash for sig: ' + txHashForSignature.toString('hex'))
+  console.log('Hash for sig length: ' + txHashForSignature.length)
   // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
-  let unlockingScript = getSign(0, txHashForSignature.toString('hex'))
-  // Сериализуем неподписаннуб транзакцию
-  let txHex = transaction.tx.toHex()
-  // Добавляем UnlockingScript в транзакцию
-  let data = txHex.replace('00000000ff','000000' + unlockingScript + 'ff')
-  // Возвращаем готовую к отправке транзакцию
-  console.log(data)
-  return data
+  getSig(0, txHashForSignature.toString('hex'), paymentAdress, transactionAmount).then(value => {
+      // Сериализуем неподписанную транзакцию
+    let txHex = transaction.tx.toHex()
+    // Добавляем UnlockingScript в транзакцию
+    let data = txHex.replace('00000000ff','000000' + value + 'ff')
+    // Возвращаем готовую к отправке транзакцию
+    sendTransaction(data)
+  }).catch(err => {
+    throw(err)
+  })
+
 }
 // Функция отправки транзакции, на вход принимает транзакцию в hex- формате
 function sendTransaction(transactionHex: string) {
@@ -173,7 +182,7 @@ function sendTransaction(transactionHex: string) {
      let bodyStatus = JSON.parse(body).status
      console.log(bodyStatus)
      if (bodyStatus.toString() === 'success') {
-       alert('Transaction sended! Hash: ' + body.txid)
+       alert('Transaction sended! Hash: ' + Object(body).txid)
      } else {
        console.log(body.error.message)
        alert('Error occured: ' + body.error.message)
@@ -199,8 +208,7 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
           console.log('Hash: ' + prevHash + 'Amount: ' + unspentTxAmount + 'outScript: ' + prevOutScript + 'out_no: ' + outNumber)
           console.log('Types:' + typeof(prevHash) + typeof(prevOutScript) + typeof(unspentTxAmount) + typeof(outNumber))
           amount = toSatoshi(amount), unspentTxAmount = toSatoshi(unspentTxAmount)
-          let transaction = createTransaction(paymentAdress, prevHash, unspentTxAmount, amount, transactionFee, prevOutScript, outNumber)
-          sendTransaction(transaction)
+          createTransaction(paymentAdress, prevHash, unspentTxAmount, amount, transactionFee, prevOutScript, outNumber)
         }
       }
     } else {

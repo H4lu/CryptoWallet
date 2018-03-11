@@ -8,6 +8,9 @@ const commonConfig = {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js'
   },
+  externals: {
+    "serialport": "require('serialport')"
+  },
   node: {
     __dirname: false
   },

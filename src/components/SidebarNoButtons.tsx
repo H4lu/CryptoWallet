@@ -1,32 +1,25 @@
 import * as React from 'react'
-// import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
-export class SidebarContent extends React.Component<any, any> {
+export class SidebarNoButtons extends React.Component<any, any> {
   constructor(props: any) {
     super(props)
-
-    this.handleUpdateDataClick = this.handleUpdateDataClick.bind(this)
-  }
-  handleUpdateDataClick() {
-    this.props.refresh()
   }
   render() {
-    return (
+    return(
       <div className = 'sidebar'>
         <div className = 'sidebar-content'>
-        <button type = 'submit' className = 'button-refresh' onClick = {this.handleUpdateDataClick}>Update Data</button>
-        <hr/>
-        <div>
-          <p className = 'total-label text-inline'>Total</p>
-          <p className = 'total-percent text-inline'>+5%</p>
-        </div>
-          <p className = 'total-currency-font'>{this.props.total}$</p>
-          <hr/>
-          <div className = 'nav-buttons-container'>
-            <button className = 'nav-buttons'>Your addresses</button>
-            <button className = 'nav-buttons'>ERC20</button>
-            <button className = 'nav-buttons'>ShapeShift</button>
+          <div>
+            <Link to = '/main'>
+              <button type = 'submit' className = 'button-home'>Home</button>
+            </Link>
           </div>
+          <hr/>
+          <div>
+            <p className = 'total-label text-inline'>Total</p>
+            <p className = 'total-percent text-inline'>+5%</p>
+          </div>
+          <p className = 'total-currency-font'>{this.props.total}$</p>
           <hr/>
           <header className = 'info-header-font'>Your Braitberry:</header>
             <div className = 'about-block'>
@@ -41,6 +34,7 @@ export class SidebarContent extends React.Component<any, any> {
             </div>
             </div>
         </div>
-    </div>
-    )}
+      </div>
+    )
   }
+}

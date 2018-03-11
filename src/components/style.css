@@ -1,12 +1,23 @@
+button {
+  outline: none;
+}
 .default-font {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
   font-size: 14px;
 }
+.default-font-colored {
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 12px;
+  color: #4D6F96;
+}
 .info-default-font {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -14,7 +25,7 @@
   color: #7EAEE6;
 }
 .info-header-font {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -22,16 +33,17 @@
   color: #4D6F96;
 }
 .info-amount-font {
-  font-family: Heebo;
+  float: right;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 500;
   line-height: normal;
   font-size: 13px;
-  text-align: right;
   color: #FFFFFF;
+  text-align: right;
 }
 .satus-font {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -40,7 +52,7 @@
   color: #7096C4;
 }
 .cryptocurrency-font {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -49,7 +61,7 @@
   color: #4D6F96
 }
 .status-ready-font {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -59,34 +71,43 @@
   color: #2CC958;
 }
 .logo-font {
-  font-family: Helvetica;
+  position: absolute;
+  width: 74px;
+  height: 10px;
+  left: 32px;
+  top: 3.5px;
+
+  font-family: 'Helvetica';
   line-height: normal;
   font-size: 10px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+
   color: #718EA8;
 }
 .total-percent {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
   font-size: 14px;
-  text-align: right;
+  float: right;
 
   color: #2CC958;
 }
 .total-label {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
   font-size: 12px;
 
   color: #4D6F96;
+  text-align: left;
 }
 .total-currency-font {
-  font-family: Heebo;
+  clear: both;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 500;
   line-height: normal;
@@ -95,12 +116,23 @@
   color: #FFFFFF;
 }
 .payment_address {
-  width: 300px;
+  width: 434px;
+  margin: 10px;
+}
+.payment_address::-webkit-input-placeholder {
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 12px;
+  color: #7EAEE5
 }
 .currency_dropdown {
   margin: 5px;
 }
 .card-container {
+  flex-grow: 1;
+  min-width: 25%;
   display: block;
   width: 218px;
   height: 124px;;
@@ -109,25 +141,36 @@
   margin: 5px;
 }
 .card-upper-block {
+  margin: 5px;
   display: flex;
   justify-content: center;
   flex-direction: row;
   align-items: center;
 }
 hr {
-  opacity: 0.2;
-  box-shadow: 0px 4px 8px rgba(0, 17, 43, 0.25);
+  height: 1px;
+  border: 0;
+  background-image: linear-gradient(to right,rgba(0,0,0) rgba(0, 17, 43, 0.25));
 }
-.card-bottom-block {
 
+.card-bottom-block {
+  margin: 10px;
+  padding: 0;
+  border: none;
+  display: flex;
+  flex-direction: column;
 }
 .header-content {
-  margin-left: 24px;
-  margin-right: 24px;
+  margin-left: 32px;
+  margin-right: 32px;
 }
 .footer-content {
-  margin-left: 24px;
-  margin-left: 24px;
+  margin-left: 32px;
+  margin-right: 32px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-content: center;
 }
 .currency {
   height: 80px !important;
@@ -159,9 +202,7 @@ hr {
   -webkit-app-region: drag;
 }
 .main-content {
-  margin-left:5px;
-  margin-right: 5px;
-  margin-top:5px;
+  margin: 10px;
 }
 .main{
   margin-left: 24px;
@@ -175,13 +216,14 @@ hr {
   float: right;
   width: 22%;
 }
- .main, .sidebar {
- height: 90vh;
+.main, .sidebar {
+  height: 90vh;
  /*background: -webkit-linear-gradient(to bottom, rgba(34, 48, 64, 0.5) 0%, rgba(20, 27, 33, 0.5) 97.24%);
  background: linear-gradient(to bottom, rgba(34, 48, 64, 0.5) 0%, rgba(20, 27, 33, 0.5) 97.24%);
  */
-  background: linear-gradient(180deg, rgba(34, 48, 64, 1) 0%, rgba(20, 27, 33, 0.8) 97.24%);
-
+ /*background: linear-gradient(180deg, rgba(34, 48, 64, 1) 0%, rgba(20, 27, 33, 0.8) 97.24%);
+*/
+  background: linear-gradient(180deg, rgba(34, 48, 64, 0.7) 20%, rgba(20, 27, 33, 0.8) 90.24%);
 
 }
 .footer, .header {
@@ -189,26 +231,22 @@ hr {
 }
 
 .status {
-  float: right;
   margin-top: 2px;
   margin-left: 5px;
   margin-bottom: 2px;
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 300;
   line-height: normal;
   font-size: 12px;
   text-align: right;
-
   color: #7096C4;
 }
 .version {
-  float: left;
-  position: relative;
   margin-top: 2px;
   margin-left: 5px;
   margin-bottom: 2px;
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -218,7 +256,7 @@ hr {
 .currency-name {
   margin-left: 5px;
   flex-grow: 2;
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -231,26 +269,30 @@ hr {
   position: relative;
 }
 .button-refresh {
+  margin-left: auto;
+  margin-right: auto;
+  height: 30px;
+  width: 156px;
   margin-top: 5px;
-  float: right;
   position: relative;
   background: #25384F;
-  box-shadow: 0px 4px 8px rgba(14, 25, 36, 0.25);
   border-radius: 24px;
   width: 102px;
   height: 30px;
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 300;
   line-height: normal;
   font-size: 12px;
   color: #7EAEE6;
+
+  border: 2px solid rgba(14, 25, 36, 0.25);
 }
 .text-header {
   text-decoration: underline;
 }
 .transaction-history-header {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -264,12 +306,12 @@ hr {
   border-radius: 24px;
 }
 .currencies-header {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
   font-size: 12px;
-
+  margin-left: 5px;
   color: #4D6F96;
 }
 .sidebar-content {
@@ -297,7 +339,8 @@ hr {
   box-shadow: 0 8px 16px 0 rgba(7, 1, 1, 0.986);
 }
 .currencies-container {
-  margin-top: 20px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -321,7 +364,7 @@ body, html {
   justify-content: center;
 }
 .nav-buttons {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -333,11 +376,12 @@ body, html {
   margin-top: 1cm;
   width: 100%;
   background: #25384F;
+  border: 1px solid rgba(14, 25, 36, 0.25);
   box-shadow: 0px 4px 8px rgba(14, 25, 36, 0.25);
   height: 44px;
 }
 .nav-buttons-text {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -346,13 +390,23 @@ body, html {
   letter-spacing: 0.02em;
   color: #7EAEE6;
 }
-button:active.nav-buttons {
+button:focus.nav-buttons {
   background: #171F27;
   border: 0.5px solid #2B394D;
   box-sizing: border-box;
 }
-.footer-status-span {
-  font-family: Heebo;
+/* button:focus {
+  background: #171F27;
+  border: 0.5px solid #2B394D;
+  box-sizing: border-box;
+}*/
+button:active {
+  background: #171F27;
+  border: 0.5px solid #2B394D;
+  box-sizing: border-box;
+}
+.footer-status {
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -375,12 +429,11 @@ button:active.nav-buttons {
   float: left;
 }
 .currency-address-container {
-  border: 2px solid rgb(20, 19, 19);
-  margin-left: 15px;
-  margin-right: 15px;
-  margin-top: 120px;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 20px;
   height: auto;
-  width: auto;
+  width: 360px;
   clear: both;
   overflow: auto;
 }
@@ -390,8 +443,8 @@ button:active.nav-buttons {
 .currency-address img {
   display: block;
   float: right;
-  height: 100px;
-  width: 100px;
+  height: 60px;
+  width: 60px;
   margin-left: auto;
   margin-right: 15px;
   margin-top: auto;
@@ -403,22 +456,27 @@ button:active.nav-buttons {
   flex-direction: row;
 }
 .transaction-history {
-  margin-left: 18px;;
-  margin-right: 18px;
+  height: 300px;
+  overflow: auto;
+  margin-left: auto;
+  margin-right: auto;
   bottom: 5vh;
-  width: 67%;
+  width: 68%;
   position: absolute;
 }
 table {
   width: 100%;
+  height: 100px;
   border-collapse: collapse;
-  height: auto;
-
+}
+tbody {
+  height: 100px;
+  overflow: auto;
 }
 .table-header {
   background: #25384F;
   box-shadow: 0px 4px 8px rgba(14, 25, 36, 0.25);
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -433,7 +491,7 @@ td, th {
   border: 1px solid #202F45;
   box-sizing: border-box;
   background: rgba(47, 70, 105, 0.2);
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -449,7 +507,7 @@ td, th {
   display: block;
 }
 .text-confirmed {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -458,7 +516,7 @@ td, th {
   color: #7EAEE5;
 }
 .text-unconfirmed {
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -466,7 +524,7 @@ td, th {
   
   color: #4D6F96;
 }
-.address-with-button p, button{
+.address-with-button p{
   display: inline-block;
 
 }
@@ -474,7 +532,18 @@ td, th {
   margin-left: 5px;
 }
 .button-copy {
-  margin-left: 10px;
+  width: 94px;
+  height: 30px;
+  background: #25384F;
+  border-radius: 24px;
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 12px;
+  text-align: center;
+  border: 1px solid rgba(14, 25, 36, 1);
+  color: #7EAEE5;
 }
 .send-currency-button {
   float: right;
@@ -487,10 +556,23 @@ td, th {
   flex-direction: column;
   justify-content: space-around;
 }
-.button-send{
+.button-send {
+  margin: 10px;
+  height: 30px;
+  width: 94px;
+  clear: both;
   float: right;
-  margin-right: 15px;
-  margin-top: 15px;
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 12px;
+  text-align: center;
+  background: #25384F;
+  box-shadow: 0px 4px 8px rgba(14, 25, 36, 0.25);
+  border-radius: 24px;
+  border: 1px solid rgba(14, 25, 36, 0.25);
+  color: #7EAEE6
 }
 .fee-block {
   margin-top: 40px;
@@ -499,6 +581,7 @@ td, th {
   width: 200px;
 }
 .positive-percentage {
+  text-align: left;
   font-family: Heebo;
   font-style: normal;
   font-weight: normal;
@@ -507,31 +590,28 @@ td, th {
   color: #2CC958;
 }
 .currency-short-name {
-  margin-left: auto;
-  margin-right: auto;
-  font-family: Heebo;
+  float: right;
+  text-align: center;
+  font-family: "Heebo";
   font-style: normal;
   font-weight: 500;
   line-height: normal;
   font-size: 24px;
-  text-align: right;
-
   color: #4D6F96;
 }
 .currency-amount-crypto {
-  display: inline-block;
-  font-family: Heebo;
+  float: right;
+  text-align: right;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: 500;
   line-height: normal;
   font-size: 24px;
-  text-align: right;
-
   color: #FFFFFF;
 }
 .currency-amount-fiat {
   float: right;
-  font-family: Heebo;
+  font-family: 'Heebo';
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -541,6 +621,7 @@ td, th {
   color: #FFFFFF;
 }
 .negative-percentage {
+  text-align: left;
   font-family: Heebo;
   font-style: normal;
   font-weight: normal;
@@ -549,21 +630,255 @@ td, th {
   color: #FF545E;
 }
 .text-inline {
-  clear: both;
   display: inline;
 }
 .button-close {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACVSURBVHgBbZAxDoMwDEXzHXIfrtKlSy+BOnRFWZGq9hJIiCVX4T4QB4wAJciekv9fnG/j/R0Cx+j/n9dklGp+Y00mtcSRPCobmq6vNQiJA8/w2IVuEyoOaYmPs/MJpYU27Tnhep3BxjmTQ+Kj+OqA5ZxDUlSEcvllLizcg0un3bhlhhZcGxAapA1IskwNkhJNPLK2XQHnbns2Nxu63gAAAABJRU5ErkJggg==")
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACVSURBVHgBbZAxDoMwDEXzHXIfrtKlSy+BOnRFWZGq9hJIiCVX4T4QB4wAJciekv9fnG/j/R0Cx+j/n9dklGp+Y00mtcSRPCobmq6vNQiJA8/w2IVuEyoOaYmPs/MJpYU27Tnhep3BxjmTQ+Kj+OqA5ZxDUlSEcvllLizcg0un3bhlhhZcGxAapA1IskwNkhJNPLK2XQHnbns2Nxu63gAAAABJRU5ErkJggg==");
+  border: none;
+  height: 10px;
 }
 .button-hide {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAABCAYAAADn9T9+AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAQSURBVHgBYyzsW/GfgQgAAGVnAqg9QKOOAAAAAElFTkSuQmCC")
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAABCAYAAADn9T9+AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAQSURBVHgBYyzsW/GfgQgAAGVnAqg9QKOOAAAAAElFTkSuQmCC");
+  border: none;
+  
 }
 .button-maximize {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAoSURBVHgB5dAxEQAACMPAFscYQQcu4XCQncw/xVk9IhF4JgT7CU2HL97aCqlmz/R2AAAAAElFTkSuQmCC")
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAoSURBVHgB5dAxEQAACMPAFscYQQcu4XCQncw/xVk9IhF4JgT7CU2HL97aCqlmz/R2AAAAAElFTkSuQmCC");
+
 }
 .title-bar-buttons {
   -webkit-app-region: no-drag;
   position: fixed;
   top: 0px;
   right: 6px;
+}
+.about-block {
+  clear: both;
+  display: grid;
+}
+.currency-block-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+.currency-block-card {
+  flex-grow: 1;
+}
+.currency-block-transaction {
+  flex-grow: 2;
+  margin: 10px;
+  width: 70%;
+}
+.button-home {
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 12px;
+  text-align: center;
+  width: 156px;
+  height: 30px;
+  color: #7EAEE5;
+  background: #25384F;
+  border: 2px solid rgba(14, 25, 36, 0.25);
+  box-shadow: 0px 4px 8px rgba(14, 25, 36, 0.25);
+  border-radius: 24px;
+}
+.your-bitcoin-font {
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 12px;
+
+  color: #4D6F96;
+}
+.address-with-button-address {
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 12px;
+  color: #FFFFFF;
+}
+.address-with-button-header {
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 12px;
+
+  color: #4D6F96;
+}
+input {
+  outline: none;
+  background: transparent;
+  border: none;
+  opacity: 0.6;
+  border-bottom: 1px solid #3866A9;
+  box-sizing: border-box;
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 12px;
+  color: #7EAEE5;
+}
+.clear {
+  clear: both;
+  bottom: 10px;
+}
+.wrap {
+  clear: both;
+  border: none;
+  padding: 0;
+  margin-top: -20px;
+}
+.input-amount {
+  width: 202px;
+  margin: 10px;
+  float: left;
+}
+.input-fee-amount {
+  width: 202px;
+  margin: 10px;
+  float: right;
+}
+input::-webkit-input-placeholder {
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 12px;
+  color: #7EAEE5
+}
+.window-main {
+  width: 100%;
+  background: linear-gradient(180deg, #21252B 0%, #0F1012 100%);
+  height: 90vh;
+}
+.window-main-header {
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 36px;
+  text-align: center;
+  height: 53px;
+  position: absolute;
+  width: 100%;
+  height: 53px;
+  margin-left: auto;
+  margin-right: auto;
+  top: 200px;
+  color: #718EA8;
+}
+.window-main-text {
+  font-family: 'Helvetica';
+  line-height: normal;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #718EA8;
+  position: absolute;
+  left: 475px;
+  right: 475px;
+  top: 40.6%;
+  bottom: 0%;
+  
+}
+.window-main-ready {
+  position: absolute;
+  width: 303px;
+  height: 24px;
+  left: 361px;
+  top: 440px;
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  font-size: 16px;
+  text-align: center;
+  
+  color: #FFFFFF;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 255px;
+}
+.window-main-not-ready {
+  position: absolute;
+  width: 303px;
+  height: 24px;
+  left: 361px;
+  top: 440px;
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 16px;
+  text-align: center;
+  color: #FF545E;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 255px;
+}
+.footer-not-ready-icon {
+  height: 8px;
+  width: 12px;
+}
+.popup {
+  background: #000000;
+  opacity: 0.5;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+.popup-inner {
+  position: absolute;
+  left: 25%;
+  right: 25%;
+  top: 25%;
+  bottom: 25%;
+  margin: auto;
+  background: linear-gradient(180deg, #223040 0%, #141B21 97.24%);
+}
+.popup-header {
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: 500;
+  line-height: 21px;
+  font-size: 14px;
+  text-align: center;
+}
+.popup-text {
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 21px;
+  font-size: 14px;
+  text-align: center;
+}
+.popup-button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.popup-button {
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  font-size: 12px;
+  text-align: center;
+
+  color: #7EAEE6;
+  background: #25384F;
+  box-shadow: 0px 4px 8px rgba(14, 25, 36, 0.25);
+  border-radius: 24px;
+  border: 1px solid rgba(14, 25, 36, 0.25);
 }

@@ -1,9 +1,8 @@
 import * as React from 'react'
-import {remote} from 'electron'
+import { remote } from 'electron'
 
 let currentWindow = remote.BrowserWindow.getFocusedWindow()
 export class Header extends React.Component<any, any> {
-  
   constructor(props: any) {
     super(props)
 
@@ -17,18 +16,19 @@ export class Header extends React.Component<any, any> {
   hideWindow() {
     currentWindow.minimize()
   }
-  
   render() {
     return (
     <div className = 'header'>
       <div className = 'header-content'>
+        <div>
         <p className = 'logo-font'>Braitberry</p>
+        </div>
         <div className = 'title-bar-buttons'>
           <button className = 'button-hide' onClick = {this.hideWindow}/>
           <button className = 'button-close' onClick = {this.closeWindow}/>
         </div>
       </div>
-    </div>)
+    </div>
+    )
   }
-
 }
