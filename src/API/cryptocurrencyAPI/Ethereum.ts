@@ -1,12 +1,12 @@
 import Web3 from 'web3'
 import Transaction from 'ethereumjs-tx'
-import { getEthereumSignature } from '../hardwareAPI/GetSignature'
+import { getSig, openPort, getEthereumSignature } from '../hardwareAPI/GetSignature'
 import { PromiEvent, TransactionReceipt } from 'web3/types'
 import { keccak256 } from 'js-sha3'
 import fs from 'fs'
 import getAddress from '../hardwareAPI/GetAddress'
 // import getAddress from '../hardwareAPI/GetAddress'
-
+const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM'))
 // const testTokenAdress = '0x583cbBb8a8443B38aBcC0c956beCe47340ea1367'
 // const apiKeyToken = 'MJTK1MQJIR91D82SMCGC6SU61MGICCJQH2'
 // const web3 = new Web3(new Web3.providers.HttpProvider('https://api.myetherapi.com/rop'))
@@ -16,17 +16,22 @@ const abi = JSON.parse(fs.readFileSync(ERC20AbiInterface, 'utf-8'))
 console.log('abi ' + abi)
 let myAdress = ''
 export function initEthereumAddress() {
-  myAdress = getAddress(1)
+  myAdress = web3.utils.toChecksumAddress(getAddress(1))
+  console.log('ETH address: ' + myAdress)
+}
+export function getEthereumAddress() {
+  return myAdress
 }
 // const myAdress = '0x033baF5BEdc9fFbf2190C800bfd17e073Bf79D18'
 /* const gasPriceConst = 30000000000
 const gasLimitConst = 100000*/
 // const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8546'))
-const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM'))
+
 // const web3 = new Web3('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM')
 // const ERC20Contract = new web3.eth.Contract(JSON.parse(abi), testTokenAdress, { from: myAdress })
 
 export function getEthereumBalance() {
+  web3.eth.getGasPrice().then(value => console.log(value)).catch(err => console.log(err))
   let resp = web3.eth.getBalance(myAdress)
   console.log('ETH balance: ' + resp)
   return resp
@@ -61,7 +66,7 @@ export function convertFromWei(amount: number) {
 function createTransaction (paymentAdress: string, amount: number, gasPrice: number, gasLimit: number) {
   web3.eth.getTransactionCount(myAdress).then((value) => {
   // Получаем порядковый номер транзакции, т.н nonce
-    console.log('Got this values: ' + 'gasPrice: ' + gasPrice)
+    console.log('Got this values: ' + 'gasPrice: ' + gasPrice + 'gasLimit: ' + gasLimit)
     /* Создаём неподписанную транзакцию. Она включает в себя:
        nonce - порядковый номер
        gasPrice и gasLimit - константы, использующиеся для подсчёта комиссии
@@ -73,41 +78,62 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
        v,r,s - данные цифровой подписи, согласно EIP155 r и s - 0, v  = chainId
     */
     let rawtx = {
-      value: web3.utils.toHex(web3.utils.toWei(amount, 'ether')),
-      nonce: web3.utils.toHex(Number(value)),
-      from: myAdress,
+      value: web3.utils.toHex(web3.utils.toWei(amount.toString(), 'ether')),
+      nonce: web3.utils.toHex(value.toString()),
       to: paymentAdress,
-      gasPrice: web3.utils.toHex(gasPrice * 1000000000),
-      gasLimit: web3.utils.toHex(Number(gasLimit)),
-      data: '0x0',
+      from: myAdress,
+      gasPrice: web3.utils.toHex(web3.utils.toWei(gasPrice, 'shannon')),
+      gasLimit: web3.utils.toHex(30000),
       chainId: web3.utils.toHex(3),
+      data: '0x00',
       v: web3.utils.toHex(3),
       r: 0,
       s: 0
     }
+    console.log('Gas price: ' + rawtx.gasPrice)
+    console.log('tx value: ' + rawtx.value)
+    web3.eth.estimateGas(rawtx).then(value => {
+      console.log('Estimate gas: ' + value)
+    }).catch(err => console.log(err))
+    for (let item in rawtx) {
+      console.log('item : ' + Object(rawtx)[item])
+    }
+    console.log('With quotes: ' + web3.utils.toHex('40000'))
+    console.log('Without quotes: ' + web3.utils.toHex(40000))
       // С помощью ethereumjs-tx создаём объект транзакции
     let tx = new Transaction(rawtx)
+    let txCost = tx.getUpfrontCost()
+    console.log('Transaction cost: ' + web3.utils.fromWei(txCost, 'ether'))
     console.log('Unsigned: ' + tx.serialize().toString('hex'))
       // Получаем хэш для подписи
     let txHash = keccak256(tx.serialize())
       // Отправляем на подпись
-    let signature: Buffer = getEthereumSignature(txHash)
-      // создаём объект подписи
-    console.log(web3.utils.toHex(signature[64] + 14))
-    let sig = {
-      v : web3.utils.toHex(signature[64] + 14),
-      r : signature.slice(0,32),
-      s : signature.slice(32,64)
-    }
-      // Вставляем подпись в транзакцию
-    Object.assign(tx, sig)
-      // Приводим транзакцию к нужному для отправки виду
-    let serTx = '0x' + tx.serialize().toString('hex')
-    console.log(serTx)
-    web3.eth.sendSignedTransaction(serTx).on('receipt', console.log).on('transactionHash', function(hash) {
-      console.log('Hash: ' + hash)
-    }).on('error', console.error).catch(err => console.log(err))
-      // Отправляем
+    openPort().then(() => {
+      getSig(1,txHash, paymentAdress, amount).then(sign => {
+        console.log('data length: ' + sign.length)
+        console.log(web3.utils.toHex(sign[68] + 14))
+        console.log('r: ' + sign.slice(4,36).toString('hex'))
+        console.log('s: ' + sign.slice(36,68).toString('hex'))
+        console.log('v: ' + sign[68])
+          // создаём объект подписи
+          // cost: 600000130000000
+        let sig = {
+          v : (sign[68] + 14),
+          r : sign.slice(4,36),
+          s : sign.slice(36,68)
+        }
+          // Вставляем подпись в транзакцию
+        Object.assign(tx, sig)
+          // Приводим транзакцию к нужному для отправки виду
+        let serTx = '0x' + tx.serialize().toString('hex')
+        console.log(serTx)
+        web3.eth.sendSignedTransaction(serTx).on('receipt', console.log).on('transactionHash', function(hash) {
+          alert('Transaction mined!' + hash)
+        }).on('error', console.error).catch(err => console.log(err))
+        // Отправляем
+
+      }).catch(err => console.log(err))
+    }).catch(err => console.log(err))
   }).catch(err => console.log(err))
 }
 

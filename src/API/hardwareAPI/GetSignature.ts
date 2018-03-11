@@ -19,7 +19,6 @@ const pin = Buffer.from('12345678')
 /* Создаём объект, содержащий название библиотеки для взаимодействие с крипоустройством
    и описание её интерфейса (тип возвращаемого возвращаемого параметра и аргументы функций)
 */
-
 const MyLib = ffi.Library('iTokenDLL', { 'get_dataForTransaction': ['int', ['string','int','char*','string','int*']],
   'getSignEthereum': ['int', ['string','int','char*','string','string','int*']] })
 
@@ -115,11 +114,30 @@ export default function getSign(id: number, message: string) {
     return sig
   }
 }
-export function getSig(id: number, message: string, address: string, amount: number) {
-  let port = new SerialPort('COM5', { autoOpen: false, baudRate: 115200 })
-  port.on('open', data => {
-    console.log('PORT opened: ' + data)
+let port = new SerialPort('COM15', { autoOpen: false, baudRate: 115200 })
+export function openPort() {
+  port.open()
+  return new Promise((resolve, reject) => {
+    port.on('open', data => {
+      console.log('Port opened! data: ' + data)
+      resolve()
+    })
+    port.on('error', error => {
+      console.log('Error occured while opening: ' + console.log(error))
+      reject(error)
+    })
+    port.on('disconnect',() => {
+      console.log('disconnect detected')
+      port.close(() => {
+        console.log('Port closed by disconnect!')
+      })
+    })
+    port.on('close', () => {
+      console.log('Port closed!')
+    })
   })
+}
+export function getSig(id: number, message: string, address: string, amount: number): Promise<Buffer> {
   let currencyId: number = 0x00
   switch (id) {
   case 0: {
@@ -132,19 +150,26 @@ export function getSig(id: number, message: string, address: string, amount: num
   }
   case 2: {
     currencyId = 0x02
+    break
   }
   }
+  console.log('Currency id:' + currencyId)
   let startMessageBuf = Buffer.from([0x9c, 0x9c, 0x53, currencyId])
   let hashBuf = Buffer.from(message, 'hex')
   let amountBuf = new Buffer(4)
   amountBuf.writeInt32BE(amount,0)
   let addressBuf = Buffer.from(address)
-  let messageBuf = Buffer.concat([startMessageBuf,hashBuf,amountBuf,addressBuf])
+  let endMessageBuf = Buffer.from([0x9a, 0x9a])
+  let messageBuf = Buffer.concat([startMessageBuf,hashBuf,amountBuf,addressBuf,endMessageBuf])
+  console.log('message buf : ' + messageBuf)
   return new Promise((resolve, reject) => {
-    port.write(messageBuf)
+    let writeStatus = port.write(messageBuf)
+    console.log('Write status: ' + writeStatus)
     port.on('data', data => {
       console.log('GOT this data: ' + data.toString('hex'))
-      resolve(data.toString('hex'))
+      resolve(data)
+      port.close()
+      port.removeAllListeners()
     })
     port.on('error', data => {
       reject(data)

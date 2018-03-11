@@ -140,6 +140,14 @@ button {
   box-shadow: 0px 4px 8px rgba(14, 25, 36, 0.25);
   margin: 5px;
 }
+.card-container-second-block {
+  display: block;
+  width: 218px;
+  height: 124px;;
+  background: #25384F;
+  box-shadow: 0px 4px 8px rgba(14, 25, 36, 0.25);
+  margin: 5px;
+}
 .card-upper-block {
   margin: 5px;
   display: flex;
@@ -223,7 +231,7 @@ hr {
  */
  /*background: linear-gradient(180deg, rgba(34, 48, 64, 1) 0%, rgba(20, 27, 33, 0.8) 97.24%);
 */
-  background: linear-gradient(180deg, rgba(34, 48, 64, 0.7) 20%, rgba(20, 27, 33, 0.8) 90.24%);
+  background: linear-gradient(180deg, rgba(34, 48, 64, 0.5) 0%, rgba(20, 27, 33, 0.5) 90.24%);
 
 }
 .footer, .header {
@@ -433,7 +441,7 @@ button:active {
   margin-right: 5px;
   margin-top: 20px;
   height: auto;
-  width: 360px;
+  width: 390px;
   clear: both;
   overflow: auto;
 }
@@ -633,14 +641,23 @@ td, th {
   display: inline;
 }
 .button-close {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACVSURBVHgBbZAxDoMwDEXzHXIfrtKlSy+BOnRFWZGq9hJIiCVX4T4QB4wAJciekv9fnG/j/R0Cx+j/n9dklGp+Y00mtcSRPCobmq6vNQiJA8/w2IVuEyoOaYmPs/MJpYU27Tnhep3BxjmTQ+Kj+OqA5ZxDUlSEcvllLizcg0un3bhlhhZcGxAapA1IskwNkhJNPLK2XQHnbns2Nxu63gAAAABJRU5ErkJggg==");
-  border: none;
-  height: 10px;
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACVSURBVHgBbZAxDoMwDEXzHXIfrtKlSy+BOnRFWZGq9hJIiCVX4T4QB4wAJciekv9fnG/j/R0Cx+j/n9dklGp+Y00mtcSRPCobmq6vNQiJA8/w2IVuEyoOaYmPs/MJpYU27Tnhep3BxjmTQ+Kj+OqA5ZxDUlSEcvllLizcg0un3bhlhhZcGxAapA1IskwNkhJNPLK2XQHnbns2Nxu63gAAAABJRU5ErkJggg==") no-repeat center;
+  border: 0px solid black;
+  height: 20px;
+  width: 20px;
+}
+.button-close:hover {
+  background-color: red;
 }
 .button-hide {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAABCAYAAADn9T9+AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAQSURBVHgBYyzsW/GfgQgAAGVnAqg9QKOOAAAAAElFTkSuQmCC");
-  border: none;
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAABCAYAAADn9T9+AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAQSURBVHgBYyzsW/GfgQgAAGVnAqg9QKOOAAAAAElFTkSuQmCC") no-repeat;
+  border: 0px solid black;
+  height: 20px;
+  width: 20px;
   
+}
+.button-hide:hover {
+  background-color: rgba(187, 179, 179, 0.1);
 }
 .button-maximize {
   background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAoSURBVHgB5dAxEQAACMPAFscYQQcu4XCQncw/xVk9IhF4JgT7CU2HL97aCqlmz/R2AAAAAElFTkSuQmCC");
@@ -658,8 +675,6 @@ td, th {
 }
 .currency-block-container {
   display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
 }
 .currency-block-card {
   flex-grow: 1;
@@ -667,7 +682,6 @@ td, th {
 .currency-block-transaction {
   flex-grow: 2;
   margin: 10px;
-  width: 70%;
 }
 .button-home {
   font-family: 'Heebo';

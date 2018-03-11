@@ -1,7 +1,7 @@
 import { TransactionBuilder, networks, Transaction } from 'bitcoinjs-lib'
 import * as Request from 'request'
 import * as webRequest from 'web-request'
-import { getSig } from '../hardwareAPI/GetSignature'
+import { getSig, openPort } from '../hardwareAPI/GetSignature'
 import getAddress from '../hardwareAPI/GetAddress'
 // import getAddress from '../hardwareAPI/GetAddress'
 // import * as utils from './utils'
@@ -134,6 +134,7 @@ async function getLastTransactionData(): Promise<any> {
 function createTransaction(paymentAdress: string,transactionHash: string, transactionInputAmount: number,
   transactionAmount: number,transactionFee: number, prevOutScript: string, outNumber: number): void {
   transactionFee = 1
+  console.log('Transaction amount: ' + transactionAmount)
   // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
   let transaction = new TransactionBuilder(network)
   // Добавляем вход транзакции в виде хэша предыдущей транзакции и номер выхода с нашим адресом
@@ -151,13 +152,17 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
   console.log('Hash for sig: ' + txHashForSignature.toString('hex'))
   console.log('Hash for sig length: ' + txHashForSignature.length)
   // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
-  getSig(0, txHashForSignature.toString('hex'), paymentAdress, transactionAmount).then(value => {
+  openPort().then(() => {
+    getSig(0, txHashForSignature.toString('hex'), paymentAdress, transactionAmount).then(value => {
       // Сериализуем неподписанную транзакцию
-    let txHex = transaction.tx.toHex()
-    // Добавляем UnlockingScript в транзакцию
-    let data = txHex.replace('00000000ff','000000' + value + 'ff')
-    // Возвращаем готовую к отправке транзакцию
-    sendTransaction(data)
+      let txHex = transaction.tx.toHex()
+      // Добавляем UnlockingScript в транзакцию
+      let data = txHex.replace('00000000ff','000000' + value + 'ff')
+      // Возвращаем готовую к отправке транзакцию
+      sendTransaction(data)
+    }).catch(err => {
+      throw(err)
+    })
   }).catch(err => {
     throw(err)
   })

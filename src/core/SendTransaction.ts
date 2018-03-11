@@ -12,7 +12,7 @@ export function sendTransaction(currency: string, paymentAddress: string, amount
     handleLitecoin(paymentAddress, amount, fee)
     break
   case 'ethereum':
-    handleEthereum(paymentAddress, amount, fee, 100000)
+    handleEthereum(paymentAddress, amount, fee, 21000)
     break
   }
 }
