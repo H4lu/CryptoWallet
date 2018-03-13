@@ -650,7 +650,7 @@ td, th {
   background-color: red;
 }
 .button-hide {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAABCAYAAADn9T9+AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAQSURBVHgBYyzsW/GfgQgAAGVnAqg9QKOOAAAAAElFTkSuQmCC") no-repeat;
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAABCAYAAADn9T9+AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAQSURBVHgBYyzsW/GfgQgAAGVnAqg9QKOOAAAAAElFTkSuQmCC") no-repeat center;
   border: 0px solid black;
   height: 20px;
   width: 20px;

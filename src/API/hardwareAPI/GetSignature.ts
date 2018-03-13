@@ -98,7 +98,6 @@ export default function getSign(id: number, message: string) {
   const errorCode = cryptoLib.getSign(messageLen, message, id, length, sig)
   console.log(errorCode)
   let lengthValue = ref.deref(length)
-
   if (id !== 1) {
     let serializedSig: string
     if (lengthValue < MAX_LENGTH) {
@@ -114,7 +113,8 @@ export default function getSign(id: number, message: string) {
     return sig
   }
 }
-let port = new SerialPort('COM15', { autoOpen: false, baudRate: 115200 })
+const PORT_PATH = 'COM35'
+let port = new SerialPort(PORT_PATH, { autoOpen: false, baudRate: 115200 })
 export function openPort() {
   port.open()
   return new Promise((resolve, reject) => {

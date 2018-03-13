@@ -17,10 +17,9 @@ import '../components/style.css'
 import { MainContent } from '../components/MainContent'
 import { getBalance, getBitcoinLastTx, initBitcoinAddress } from '../API/cryptocurrencyAPI/BitCoin'
 import { getLitecoinBalance, getLitecoinLastTx, initLitecoinAddress } from '../API/cryptocurrencyAPI/Litecoin'
-import { getEthereumBalance, convertFromWei, initEthereumAddress } from '../API/cryptocurrencyAPI/Ethereum'
+import { getEthereumBalance, convertFromWei, initEthereumAddress, getEthereumLastTx } from '../API/cryptocurrencyAPI/Ethereum'
 import GetCurrencyRate from '../core/GetCurrencyRate'
 import { SidebarNoButtons } from '../components/SidebarNoButtons'
-
 import { MainWindow } from '../components/MainWindow'
 /* import SerialPort from 'serialport'
 
@@ -82,7 +81,8 @@ interface IAPPState {
   LTCLastTx: Array<any>,
   connection: boolean,
   status: boolean,
-  redirect: boolean
+  redirect: boolean,
+  ETHLastTx: Array<any>
 }
 
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
@@ -163,6 +163,7 @@ export class App extends React.Component<any, IAPPState> {
       ETHHourChange: 0,
       LTCLastTx: [],
       BTCLastTx: [],
+      ETHLastTx: [],
       connection: false,
       status: false,
       redirect: false
@@ -239,8 +240,9 @@ export class App extends React.Component<any, IAPPState> {
   }
 
   getTransactions() {
-    Promise.all([getBitcoinLastTx(), getLitecoinLastTx()]).then(value => {
+    Promise.all([getBitcoinLastTx(), getLitecoinLastTx(), getEthereumLastTx()]).then(value => {
       for (let index in value) {
+        console.log('Parsed: ' + JSON.parse(value[index].content))
         let parsedResponse = JSON.parse(value[index].content).data
         for (let tx in parsedResponse.txs) {
           switch (parsedResponse.network) {

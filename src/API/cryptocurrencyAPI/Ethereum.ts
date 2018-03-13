@@ -5,6 +5,7 @@ import { PromiEvent, TransactionReceipt } from 'web3/types'
 import { keccak256 } from 'js-sha3'
 import fs from 'fs'
 import getAddress from '../hardwareAPI/GetAddress'
+import * as webRequest from 'web-request'
 // import getAddress from '../hardwareAPI/GetAddress'
 const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM'))
 // const testTokenAdress = '0x583cbBb8a8443B38aBcC0c956beCe47340ea1367'
@@ -21,6 +22,15 @@ export function initEthereumAddress() {
 }
 export function getEthereumAddress() {
   return myAdress
+}
+export async function getEthereumLastTx(): Promise<any> {
+  try {
+    const requestURL = 'https://api.ethplorer.io/getAddressTransactions/' + '0xF6809AcC33FCDd9670814Cb15000f69e93C97215'
+    let response = await webRequest.get(requestURL)
+    return response
+  } catch (err) {
+    console.log(err)
+  }
 }
 // const myAdress = '0x033baF5BEdc9fFbf2190C800bfd17e073Bf79D18'
 /* const gasPriceConst = 30000000000
@@ -79,10 +89,10 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
     */
     let rawtx = {
       value: web3.utils.toHex(web3.utils.toWei(amount.toString(), 'ether')),
-      nonce: web3.utils.toHex(value.toString()),
-      to: paymentAdress,
+      nonce: web3.utils.toHex(value),
       from: myAdress,
-      gasPrice: web3.utils.toHex(web3.utils.toWei(gasPrice, 'shannon')),
+      to: paymentAdress,
+      gasPrice: web3.utils.toHex(web3.utils.toWei(gasPrice.toString(), 'shannon')),
       gasLimit: web3.utils.toHex(30000),
       chainId: web3.utils.toHex(3),
       data: '0x00',
@@ -92,14 +102,9 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
     }
     console.log('Gas price: ' + rawtx.gasPrice)
     console.log('tx value: ' + rawtx.value)
-    web3.eth.estimateGas(rawtx).then(value => {
-      console.log('Estimate gas: ' + value)
-    }).catch(err => console.log(err))
     for (let item in rawtx) {
       console.log('item : ' + Object(rawtx)[item])
     }
-    console.log('With quotes: ' + web3.utils.toHex('40000'))
-    console.log('Without quotes: ' + web3.utils.toHex(40000))
       // С помощью ethereumjs-tx создаём объект транзакции
     let tx = new Transaction(rawtx)
     let txCost = tx.getUpfrontCost()
@@ -107,6 +112,7 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
     console.log('Unsigned: ' + tx.serialize().toString('hex'))
       // Получаем хэш для подписи
     let txHash = keccak256(tx.serialize())
+    console.log('Tx hash: ' + txHash.toString())
       // Отправляем на подпись
     openPort().then(() => {
       getSig(1,txHash, paymentAdress, amount).then(sign => {
@@ -118,10 +124,11 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
           // создаём объект подписи
           // cost: 600000130000000
         let sig = {
-          v : (sign[68] + 14),
+          v : web3.utils.toHex(sign[68] + 14),
           r : sign.slice(4,36),
           s : sign.slice(36,68)
         }
+        console.log('V in sig: ' + sig.v)
           // Вставляем подпись в транзакцию
         Object.assign(tx, sig)
           // Приводим транзакцию к нужному для отправки виду

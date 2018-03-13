@@ -52,6 +52,7 @@ export class ETHWIndow extends React.Component<any, IETHWindowState> {
   render () {
     return (
       <div className = 'main'>
+        <div className = 'main-content'>
         <div className = 'currency-content'>
           <div className = 'currency-block-container'>
             <div className = 'currency-block-card'>
@@ -98,6 +99,7 @@ export class ETHWIndow extends React.Component<any, IETHWindowState> {
           </div>
           <Table data = {this.props.lastTx}/>
       </div>
+    </div>
     )
   }
 }

@@ -8,12 +8,16 @@ import getAddress from '../hardwareAPI/GetAddress'
 
 // const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
+console.log(urlChainSo)
 const network = networks.testnet
 const NETWORK = 'BTCTEST'
 const rootURL = 'https://chain.so/api/v2'
 let myAddr = ''
 export function initBitcoinAddress() {
   myAddr = getAddress(0)
+}
+export default function getBitcoinAddress() {
+  return myAddr
 }
 export async function getBitcoinLastTx(): Promise<any> {
   try {
@@ -133,7 +137,6 @@ async function getLastTransactionData(): Promise<any> {
 */
 function createTransaction(paymentAdress: string,transactionHash: string, transactionInputAmount: number,
   transactionAmount: number,transactionFee: number, prevOutScript: string, outNumber: number): void {
-  transactionFee = 1
   console.log('Transaction amount: ' + transactionAmount)
   // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
   let transaction = new TransactionBuilder(network)
@@ -154,10 +157,12 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
   // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
   openPort().then(() => {
     getSig(0, txHashForSignature.toString('hex'), paymentAdress, transactionAmount).then(value => {
+      console.log('Suppposed to be sig: ' + value.slice(4,value.length).toString('hex'))
       // Сериализуем неподписанную транзакцию
       let txHex = transaction.tx.toHex()
       // Добавляем UnlockingScript в транзакцию
-      let data = txHex.replace('00000000ff','000000' + value + 'ff')
+      let data = txHex.replace('00000000ff','000000' + value.slice(4,value.length).toString('hex') + 'ff')
+      console.log('Final transaction: ' + data)
       // Возвращаем готовую к отправке транзакцию
       sendTransaction(data)
     }).catch(err => {
@@ -169,7 +174,7 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
 
 }
 // Функция отправки транзакции, на вход принимает транзакцию в hex- формате
-function sendTransaction(transactionHex: string) {
+/* function sendTransaction(transactionHex: string) {
   console.log('url: ' + urlChainSo + NETWORK)
   // формируем запрос
   Request.post({
@@ -181,7 +186,7 @@ function sendTransaction(transactionHex: string) {
     json: true
   },
   // Обрабатываем ответ
-   (res,err,body) => {
+   (res, err, body) => {
      console.log(body)
      console.log(res), console.log(err)
      let bodyStatus = JSON.parse(body).status
@@ -193,6 +198,27 @@ function sendTransaction(transactionHex: string) {
        alert('Error occured: ' + body.error.message)
      }
    })
+}
+*/
+const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
+function sendTransaction(transactionHash: string) {
+  Request.post({ url: urlSmartbit,
+    headers: {
+      'content-type': 'application/json'
+    },
+    body : { 'hex': transactionHash },
+    json: true}, (err, res, body) => {
+    console.log(body)
+    console.log(res), console.log(err)
+    let bodyStatus = body.success
+    if (bodyStatus.toString() === 'true') {
+      alert('Transaction sended! Hash: ' + body.txid)
+
+    } else {
+      console.log(body.error.message)
+      alert('Error occured: ' + body.error.message)
+    }
+  })
 }
 export function handle(paymentAdress: string, amount: number, transactionFee: number) {
   console.log('In handle')

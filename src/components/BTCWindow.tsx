@@ -1,6 +1,6 @@
 import * as React from 'react'
 import CreateQR from '../core/CreateQR'
-import getAddress from '../API/hardwareAPI/GetAddress'
+import getBitcoinAddress from '../API/cryptocurrencyAPI/BitCoin'
 import { clipboard } from 'electron'
 import { Table } from './Table'
 import { sendTransaction } from '../core/SendTransaction'
@@ -23,7 +23,7 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
     this.handleFeeChange = this.handleFeeChange.bind(this)
     this.handleClick = this.handleClick.bind(this)
     this.state = {
-      address: getAddress(0),
+      address: getBitcoinAddress(),
       qrcodeAddress: '',
       paymentAddress: '',
       amount: 0,
