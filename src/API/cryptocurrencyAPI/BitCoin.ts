@@ -137,6 +137,7 @@ async function getLastTransactionData(): Promise<any> {
 */
 function createTransaction(paymentAdress: string,transactionHash: string, transactionInputAmount: number,
   transactionAmount: number,transactionFee: number, prevOutScript: string, outNumber: number): void {
+  transactionFee = 1
   console.log('Transaction amount: ' + transactionAmount)
   // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
   let transaction = new TransactionBuilder(network)
@@ -174,7 +175,7 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
 
 }
 // Функция отправки транзакции, на вход принимает транзакцию в hex- формате
-/* function sendTransaction(transactionHex: string) {
+function sendTransaction(transactionHex: string) {
   console.log('url: ' + urlChainSo + NETWORK)
   // формируем запрос
   Request.post({
@@ -189,18 +190,18 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
    (res, err, body) => {
      console.log(body)
      console.log(res), console.log(err)
-     let bodyStatus = JSON.parse(body).status
+     let bodyStatus = body.status
      console.log(bodyStatus)
      if (bodyStatus.toString() === 'success') {
-       alert('Transaction sended! Hash: ' + Object(body).txid)
+       alert('Transaction sended! Hash: ' + Object(body).data.txid)
      } else {
        console.log(body.error.message)
        alert('Error occured: ' + body.error.message)
      }
    })
 }
-*/
-const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
+
+/* const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
 function sendTransaction(transactionHash: string) {
   Request.post({ url: urlSmartbit,
     headers: {
@@ -220,6 +221,7 @@ function sendTransaction(transactionHash: string) {
     }
   })
 }
+*/
 export function handle(paymentAdress: string, amount: number, transactionFee: number) {
   console.log('In handle')
   getLastTransactionData().then(Response => {

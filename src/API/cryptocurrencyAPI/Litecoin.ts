@@ -68,6 +68,7 @@ async function getLastTransactionData(): Promise<any> {
 
 function createTransaction(paymentAdress: string,transactionHash: string, transactionInputAmount: number,
   transactionAmount: number,transactionFee: number, prevOutScript: string, outNumber: number): void {
+  transactionFee = 3
   console.log('Transaction amount: ' + transactionAmount)
   // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
   let transaction = new TransactionBuilder(network)
@@ -87,7 +88,7 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
   console.log('Hash for sig length: ' + txHashForSignature.length)
   // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
   openPort().then(() => {
-    getSig(0, txHashForSignature.toString('hex'), paymentAdress, transactionAmount).then(value => {
+    getSig(2, txHashForSignature.toString('hex'), paymentAdress, transactionAmount).then(value => {
       console.log('Suppposed to be sig: ' + value.slice(4,value.length).toString('hex'))
       // Сериализуем неподписанную транзакцию
       let txHex = transaction.tx.toHex()
@@ -124,7 +125,7 @@ function sendTransaction(transactionHex: string) {
      let bodyStatus = body.status
      console.log(bodyStatus)
      if (bodyStatus.toString() === 'success') {
-       alert('Transaction sended! Hash: ' + body.txid)
+       alert('Transaction sended! Hash: ' + Object(body).data.txid)
      } else {
        console.log(body.error.message)
        alert('Error occured: ' + body.error.message)

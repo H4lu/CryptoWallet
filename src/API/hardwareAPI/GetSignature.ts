@@ -113,7 +113,7 @@ export default function getSign(id: number, message: string) {
     return sig
   }
 }
-const PORT_PATH = 'COM35'
+const PORT_PATH = 'COM25'
 let port = new SerialPort(PORT_PATH, { autoOpen: false, baudRate: 115200 })
 export function openPort() {
   port.open()

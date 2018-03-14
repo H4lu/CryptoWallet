@@ -241,8 +241,10 @@ export class App extends React.Component<any, IAPPState> {
 
   getTransactions() {
     Promise.all([getBitcoinLastTx(), getLitecoinLastTx(), getEthereumLastTx()]).then(value => {
+      JSON.stringify(value)
       for (let index in value) {
         console.log('Parsed: ' + JSON.parse(value[index].content))
+        console.log('Stringify: ' + JSON.stringify(value[index].content))
         let parsedResponse = JSON.parse(value[index].content).data
         for (let tx in parsedResponse.txs) {
           switch (parsedResponse.network) {
