@@ -1,9 +1,9 @@
 import * as React from 'react'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 export class Currency extends React.Component<any, any> {
   constructor(props: any) {
-    super (props)
+    super(props)
   }
   render () {
     return (

@@ -1,9 +1,9 @@
 import Web3 from 'web3'
 import Transaction from 'ethereumjs-tx'
-import { getSig, openPort, getEthereumSignature } from '../hardwareAPI/GetSignature'
-import { PromiEvent, TransactionReceipt } from 'web3/types'
+import { getSig, openPort } from '../hardwareAPI/GetSignature'
+// import { PromiEvent, TransactionReceipt } from 'web3/types'
 import { keccak256 } from 'js-sha3'
-import fs from 'fs'
+// import fs from 'fs'
 import getAddress from '../hardwareAPI/GetAddress'
 import * as webRequest from 'web-request'
 // import getAddress from '../hardwareAPI/GetAddress'
@@ -12,9 +12,10 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io
 // const apiKeyToken = 'MJTK1MQJIR91D82SMCGC6SU61MGICCJQH2'
 // const web3 = new Web3(new Web3.providers.HttpProvider('https://api.myetherapi.com/rop'))
 // const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws'))
-const ERC20AbiInterface: string = __dirname + '/../erc20abi.json'
+/*const ERC20AbiInterface: string = __dirname + '/../erc20abi.json'
 const abi = JSON.parse(fs.readFileSync(ERC20AbiInterface, 'utf-8'))
 console.log('abi ' + abi)
+*/
 let myAdress = ''
 export function initEthereumAddress() {
   myAdress = web3.utils.toChecksumAddress(getAddress(1))
@@ -25,7 +26,7 @@ export function getEthereumAddress() {
 }
 export async function getEthereumLastTx(): Promise<any> {
   try {
-    const requestURL = 'https://api.ethplorer.io/getAddressTransactions/' + '0xF6809AcC33FCDd9670814Cb15000f69e93C97215'
+    const requestURL = 'https://api.ethplorer.io/getAddressTransactions/' + '0xF6809AcC33FCDd9670814Cb15000f69e93C97215' + '?apiKey=freekey'
     let response = await webRequest.get(requestURL)
     return response
   } catch (err) {
@@ -143,25 +144,24 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
     }).catch(err => console.log(err))
   }).catch(err => console.log(err))
 }
-
-// Вернёт Promise с результатом запроса
-function sendTransaction(transaction: string): PromiEvent<TransactionReceipt> {
-  console.log('in sendtransaction')
-  return web3.eth.sendSignedTransaction(transaction).on('receipt', console.log).on('transactionHash', function(hash) {
-    console.log('Hash: ' + hash)
-  }).on('error', console.error)
-}
-
 export function handleEthereum(paymentAdress: string, amount: number, gasPrice: number, gasLimit: number) {
   createTransaction(paymentAdress, amount, gasPrice, gasLimit)
   /* sendTransaction(newTx).on('transactionHash', (hash) => {
     alert('Transaction sended! Hash: ' + hash)
   }).on('error', error => {
     alert(error)
-  })*/
+  })
+  */
+}
+// Вернёт Promise с результатом запроса
+/*function sendTransaction(transaction: string): PromiEvent<TransactionReceipt> {
+  console.log('in sendtransaction')
+  return web3.eth.sendSignedTransaction(transaction).on('receipt', console.log).on('transactionHash', function(hash) {
+    console.log('Hash: ' + hash)
+  }).on('error', console.error)
 }
 
-export async function balanceOf (tokenAdress: string) {
+/* export async function balanceOf (tokenAdress: string) {
   let ERC20Token = new web3.eth.Contract(abi, tokenAdress, { from: myAdress })
   let balance = await ERC20Token.methods.balanceOf(myAdress).call()
   console.log('Balance: ' + balance)
@@ -169,8 +169,8 @@ export async function balanceOf (tokenAdress: string) {
   // return ERC20Token.methods.balanceOf(myAdress).call()
   return balance
 }
-
-export function transferToken(tokenAdress: string, spenderAdress: string, amountToTransfer: number) {
+*/
+/* export function transferToken(tokenAdress: string, spenderAdress: string, amountToTransfer: number) {
   console.log('Amount to transfer: ' + amountToTransfer)
   let ERC20Token = new web3.eth.Contract(abi, tokenAdress, { from: myAdress })
   web3.eth.getTransactionCount(myAdress).then(value => {
@@ -234,7 +234,7 @@ export function totalSupply(tokenAdress: string) {
   let ERC20Token = new web3.eth.Contract(abi, tokenAdress, { from: myAdress })
 }*/
 
-export function approve(tokenAdress: string, spenderAdress: string, amount: number) {
+/* export function approve(tokenAdress: string, spenderAdress: string, amount: number) {
   let ERC20Token = new web3.eth.Contract(abi, tokenAdress, { from: myAdress })
   console.log('Allowed amount:' + amount)
   web3.eth.getTransactionCount(myAdress).then(value => {
@@ -344,3 +344,4 @@ export function transferFrom(tokenAdress: string, adressFrom: string, adressTo: 
     })
   }).catch(error => { console.log(error) })
 }
+*/

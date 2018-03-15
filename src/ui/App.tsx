@@ -7,9 +7,6 @@ import { SidebarContent } from '../components/SidebarContent'
 // import { ERC20 } from '../components/ERC20'
 // import {Main} from '../components/Main'
 // import { TransactionComponent } from '../components/TransactionComponent'
-import { BTCTransaction } from '../components/BTCTransaction'
-import { LTCTransaction } from '../components/LTCTransaction'
-import { ETHTransaction } from '../components/ETHTransaction'
 import { BTCWindow } from '../components/BTCWindow'
 import { ETHWIndow } from '../components/ETHWindow'
 import { LTCWindow } from '../components/LTCWindow'
@@ -21,8 +18,9 @@ import { getEthereumBalance, convertFromWei, initEthereumAddress, getEthereumLas
 import GetCurrencyRate from '../core/GetCurrencyRate'
 import { SidebarNoButtons } from '../components/SidebarNoButtons'
 import { MainWindow } from '../components/MainWindow'
+import { findDevice } from '../API/hardwareAPI/GetWalletInfo'
+// import { wrapper } from '../API/hardwareAPI/GetWalletInfo'
 /* import SerialPort from 'serialport'
-
 SerialPort.list().then(value => {
   console.log('Serialport list value: ' + JSON.stringify(value))
 })
@@ -127,24 +125,6 @@ export class App extends React.Component<any, IAPPState> {
       exact: true,
       sidebar: () => <SidebarNoButtons total = {this.state.totalBalance}/>,
       main: () => <LTCWindow balance = {this.state.LTCBalance} price = {this.state.LTCPrice} hourChange = {this.state.LTCHourChange} lastTx = {this.state.LTCLastTx} transactions = {this.getTransactions}/>
-    },
-    {
-      path: '/btc-transaction',
-      exact: true,
-      sidebar: BTCTransaction,
-      main: () => <BTCWindow balance = {this.state.BTCBalance} price = {this.state.BTCPrice} hourChange = {this.state.BTCHourChange}/>
-    },
-    {
-      path: '/eth-transaction',
-      exact: true,
-      sidebar: ETHTransaction,
-      main: () => <ETHWIndow balance = {this.state.ETHBalance} price = {this.state.ETHPrice} hourChange = {this.state.ETHHourChange}/>
-    },
-    {
-      path: '/ltc-transaction',
-      exact: true,
-      sidebar: LTCTransaction,
-      main: () => <LTCWindow balance = {this.state.LTCBalance} price = {this.state.LTCPrice} hourChange = {this.state.LTCHourChange}/>
     }
   ]
   constructor(props: any) {
@@ -168,12 +148,13 @@ export class App extends React.Component<any, IAPPState> {
       status: false,
       redirect: false
     }
+    this.waitForConnection = this.waitForConnection.bind(this)
     this.getValues = this.getValues.bind(this)
     this.getTransactions = this.getTransactions.bind(this)
   }
   componentDidMount() {
-    setTimeout(() => {
-      this.setState({ connection: true })
+    this.waitForConnection()
+    /* setTimeout(() => {
       initBitcoinAddress()
       initEthereumAddress()
       initLitecoinAddress()
@@ -183,6 +164,24 @@ export class App extends React.Component<any, IAPPState> {
     setTimeout(() => {
       this.setState({ status: true })
     }, 6000)
+    */
+  }
+  waitForConnection() {
+    while (!this.state.connection) {
+      findDevice().then(value => {
+        if (value !== undefined) {
+          console.log(value)
+          console.log('CONNECTED')
+          this.setState({ connection: true })
+          initLitecoinAddress()
+          initBitcoinAddress()
+          initEthereumAddress()
+          return
+        } else {
+          console.log('DISCONNECTED')
+        }
+      })
+    }
   }
   getValues() {
     Promise.all([getBalance(), getEthereumBalance(), getLitecoinBalance(), GetCurrencyRate()]).then(value => {

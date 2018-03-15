@@ -1,4 +1,4 @@
-import * as React from 'react'
+/* import * as React from 'react'
 import { Header, Input, Button } from 'semantic-ui-react'
 import { balanceOf, handleEthereum, transferToken, approve, allowance, transferFrom } from '../API/cryptocurrencyAPI/Ethereum'
 
@@ -192,3 +192,4 @@ export class ERC20 extends React.Component <any,IERC20State> {
 
   }
 }
+*/

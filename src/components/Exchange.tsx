@@ -1,4 +1,4 @@
-import * as React from 'react'
+/* import * as React from 'react'
 import { Header, Input, Button, Dropdown } from 'semantic-ui-react'
 import { initialTransaction, getMarketInfo } from '../API/cryptocurrencyAPI/Exchange'
 import { getBitCoinAddress } from '../API/hardwareAPI/GetAddress'
@@ -91,6 +91,7 @@ export class Exchange extends React.Component<any, IEchangeState> {
     })
   }
 */
+/*
   initialRequest() {
     initialTransaction('0xC7f0d18EdfF316A9cAA5d98fF26369216b38d9e1','btc_eth', 0.001, getBitCoinAddress(1, true))
   }
@@ -112,3 +113,4 @@ export class Exchange extends React.Component<any, IEchangeState> {
     )
   }
 }
+*/
