@@ -1,4 +1,5 @@
 import React from 'react'
+import { TableRow } from './TableRow'
 interface ITableClass {
   data: Array<any>
 }
@@ -10,9 +11,6 @@ export class Table extends React.Component<any,ITableClass> {
       data: []
     }
     this.getData = this.getData.bind(this)
-  }
-  componentWillReceiveProps() {
-    this.getData(this.props.data)
   }
   getData(data: Array<any>) {
     for (let index in data) {
@@ -60,21 +58,8 @@ export class Table extends React.Component<any,ITableClass> {
             <th>Status</th>
           </thead>
           <tbody>
-            {this.state.data.map((value) => {
-              return <tr>
-               <td>{JSON.stringify(value.Date)}</td>
-              {(value.Type === 'incoming') ? (
-                <td className = 'text-confirmed'>{value.Amount}</td>
-              ) : (
-                <td className = 'text-unconfirmed'>{value.Amount}</td>
-              )}
-              <td>{value.Address}</td>
-              {(value.Status === 'confirmed') ? (
-                <td className = 'text-confirmed'>{value.Status}</td>
-              ) : (
-                <td className = 'text-unconfirmed'>{value.Status}</td>
-              )}
-            </tr>
+            {Array(this.props.data).map((value) => {
+              return <TableRow data = {value}/>
             })}
           </tbody>
          </table>

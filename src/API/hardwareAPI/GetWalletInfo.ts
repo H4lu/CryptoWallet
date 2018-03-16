@@ -1,4 +1,5 @@
 import SerialPort from 'serialport'
+import * as ffi from 'ffi'
 
 export async function wrapper(): Promise<any> {
   try {
@@ -8,7 +9,22 @@ export async function wrapper(): Promise<any> {
     throw err
   }
 }
-
+export function waitForConnection() {
+  let connection = false
+  while (!connection) {
+    setTimeout(() => {
+      findDevice().then(value => {
+        if (value !== undefined) {
+          console.log(value)
+          console.log('CONNECTED')
+          connection = true
+        } else {
+          console.log('DISCONNECTED')
+        }
+      }).catch(err => console.log(err))
+    },1000)
+  }
+}
 export async function findDevice(): Promise<any> {
   return new Promise((resolve, reject) => {
     SerialPort.list().then(result => {
@@ -22,4 +38,14 @@ export async function findDevice(): Promise<any> {
   }).catch(error => {
     console.log(error)
   })
+}
+const cryptoLib = ffi.Library('CWAPI',{ 'get_currencyWalletInfo': ['int', []] })
+export function checkPin(): boolean {
+  let errorCode = cryptoLib.get_currencyWalletInfo()
+  console.log(errorCode)
+  if (errorCode === 0) {
+    return true
+  } else {
+    return false
+  }
 }

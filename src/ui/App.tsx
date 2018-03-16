@@ -18,9 +18,10 @@ import { getEthereumBalance, convertFromWei, initEthereumAddress, getEthereumLas
 import GetCurrencyRate from '../core/GetCurrencyRate'
 import { SidebarNoButtons } from '../components/SidebarNoButtons'
 import { MainWindow } from '../components/MainWindow'
-import { findDevice } from '../API/hardwareAPI/GetWalletInfo'
+import { checkPin } from '../API/hardwareAPI/GetWalletInfo'
 // import { wrapper } from '../API/hardwareAPI/GetWalletInfo'
-/* import SerialPort from 'serialport'
+import SerialPort from 'serialport'
+/*
 SerialPort.list().then(value => {
   console.log('Serialport list value: ' + JSON.stringify(value))
 })
@@ -37,6 +38,7 @@ let port = new SerialPort('COM5', { autoOpen: false, baudRate: 115200 })
 getSig().then(value => {
   console.log('FINALLY THIS VALUE: ' + value)
 })
+
 function getData() {
   return new Promise((resolve, reject) => {
     port.write(arr)
@@ -148,40 +150,48 @@ export class App extends React.Component<any, IAPPState> {
       status: false,
       redirect: false
     }
-    this.waitForConnection = this.waitForConnection.bind(this)
+    this.waitForPin = this.waitForPin.bind(this)
+    this.initAll = this.initAll.bind(this)
     this.getValues = this.getValues.bind(this)
     this.getTransactions = this.getTransactions.bind(this)
   }
+
   componentDidMount() {
-    this.waitForConnection()
-    /* setTimeout(() => {
-      initBitcoinAddress()
-      initEthereumAddress()
-      initLitecoinAddress()
-      this.getValues()
-      this.getTransactions()
-    }, 3000)
-    setTimeout(() => {
-      this.setState({ status: true })
-    }, 6000)
-    */
-  }
-  waitForConnection() {
-    while (!this.state.connection) {
-      findDevice().then(value => {
-        if (value !== undefined) {
-          console.log(value)
-          console.log('CONNECTED')
-          this.setState({ connection: true })
-          initLitecoinAddress()
-          initBitcoinAddress()
-          initEthereumAddress()
-          return
-        } else {
-          console.log('DISCONNECTED')
+    setInterval(() => {
+      SerialPort.list().then(value => {
+        for (let item in value) {
+          if (value[item].manufacturer === 'NXP') {
+            if (this.state.connection) {
+              return
+            } else {
+              this.waitForPin()
+              return this.setState({ connection: !this.state.connection })
+            }
+          }
+        }
+        if (this.state.connection) {
+          this.setState({ connection: !this.state.connection })
         }
       })
-    }
+    }, 1000, [])
+  }
+  waitForPin() {
+    console.log('CHECKPIN')
+    let timer = setInterval(() => {
+      console.log('IN INTERVAL')
+      if (checkPin()) {
+        console.log('PIN ENTERED')
+        this.setState({ status: true })
+        clearInterval(timer)
+      }
+    },1000,[])
+  }
+  initAll() {
+    initBitcoinAddress()
+    initEthereumAddress()
+    initLitecoinAddress()
+    this.getValues()
+    this.getTransactions()
   }
   getValues() {
     Promise.all([getBalance(), getEthereumBalance(), getLitecoinBalance(), GetCurrencyRate()]).then(value => {
@@ -190,14 +200,15 @@ export class App extends React.Component<any, IAPPState> {
         if (typeof(value[val]) === 'object') {
           if (Number(val) !== value.length - 1) {
             switch (JSON.parse(value[val].content).data.network) {
-            case 'BTCTEST': {
+            case 'BTC': {
               let balance: number = Number(JSON.parse(value[val].content).data.confirmed_balance)
-              this.setState({ BTCBalance:  Number(balance.toFixed(4)) })
+              this.setState({ BTCBalance:  Number(balance.toFixed(8)) })
               break
             }
-            case 'LTCTEST': {
+            case 'LTC': {
+              console.log(JSON.stringify(value[val].content))
               let balance: number = Number(JSON.parse(value[val].content).data.confirmed_balance)
-              this.setState({ LTCBalance: Number(balance.toFixed(4)) })
+              this.setState({ LTCBalance: Number(balance.toFixed(8)) })
               break
             }
             }
@@ -225,17 +236,16 @@ export class App extends React.Component<any, IAPPState> {
           }
         } else {
           let balance: number = Number(convertFromWei(value[val]))
-          this.setState({ ETHBalance: Number(balance.toFixed(4)) })
+          this.setState({ ETHBalance: Number(balance.toFixed(8)) })
         }
       }
       console.log('Promise all value: ' + value)
       let total = this.state.BTCPrice + this.state.ETHPrice + this.state.LTCPrice
-      this.setState({ totalBalance: Number((total).toFixed(2)) })
+      this.setState({ totalBalance: Number((total).toFixed(8)) })
     })
   }
   componentWillMount() {
     this.setState({ redirect: true })
-
   }
 
   getTransactions() {
@@ -247,11 +257,11 @@ export class App extends React.Component<any, IAPPState> {
         let parsedResponse = JSON.parse(value[index].content).data
         for (let tx in parsedResponse.txs) {
           switch (parsedResponse.network) {
-          case 'BTCTEST': {
+          case 'BTC': {
             this.setState({ BTCLastTx: [...this.state.BTCLastTx, parsedResponse.txs[tx]] })
             break
           }
-          case 'LTCTEST': {
+          case 'LTC': {
             this.setState({ LTCLastTx: [...this.state.LTCLastTx, parsedResponse.txs[tx]] })
             break
           }
@@ -271,7 +281,7 @@ export class App extends React.Component<any, IAPPState> {
         ) : (
           null
         )}
-        <Route path = '/start' component = {() => <MainWindow connection = {this.state.connection} status = {this.state.status}/>}/>
+        <Route path = '/start' component = {() => <MainWindow connection = {this.state.connection} status = {this.state.status} init = {this.initAll}/>}/>
          {this.routes.map((route, index) => (
           <Route
             exact = {route.exact}

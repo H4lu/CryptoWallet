@@ -7,10 +7,11 @@ import { keccak256 } from 'js-sha3'
 import getAddress from '../hardwareAPI/GetAddress'
 import * as webRequest from 'web-request'
 // import getAddress from '../hardwareAPI/GetAddress'
-const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM'))
+// const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM'))
 // const testTokenAdress = '0x583cbBb8a8443B38aBcC0c956beCe47340ea1367'
 // const apiKeyToken = 'MJTK1MQJIR91D82SMCGC6SU61MGICCJQH2'
 // const web3 = new Web3(new Web3.providers.HttpProvider('https://api.myetherapi.com/rop'))
+const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/hgAaKEDG9sIpNHqt8UYM'))
 // const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws'))
 /*const ERC20AbiInterface: string = __dirname + '/../erc20abi.json'
 const abi = JSON.parse(fs.readFileSync(ERC20AbiInterface, 'utf-8'))
@@ -95,9 +96,9 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
       to: paymentAdress,
       gasPrice: web3.utils.toHex(web3.utils.toWei(gasPrice.toString(), 'shannon')),
       gasLimit: web3.utils.toHex(30000),
-      chainId: web3.utils.toHex(3),
+      chainId: web3.utils.toHex(1),
       data: '0x00',
-      v: web3.utils.toHex(3),
+      v: web3.utils.toHex(1),
       r: 0,
       s: 0
     }
@@ -118,14 +119,14 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
     openPort().then(() => {
       getSig(1,txHash, paymentAdress, amount).then(sign => {
         console.log('data length: ' + sign.length)
-        console.log(web3.utils.toHex(sign[68] + 14))
+        console.log(web3.utils.toHex(sign[68]))
         console.log('r: ' + sign.slice(4,36).toString('hex'))
         console.log('s: ' + sign.slice(36,68).toString('hex'))
         console.log('v: ' + sign[68])
           // создаём объект подписи
           // cost: 600000130000000
         let sig = {
-          v : web3.utils.toHex(sign[68] + 14),
+          v : web3.utils.toHex(sign[68] + 10),
           r : sign.slice(4,36),
           s : sign.slice(36,68)
         }

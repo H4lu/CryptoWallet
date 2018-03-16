@@ -13,13 +13,13 @@ export default function getAddress(id: number) {
   console.log('Length value' + lengthValue)
   console.log('Address value: ' + address.toString().length)
   let addrString = address.toString()
-  console.log('Address string: ' + addrString)
+  console.log('Address string:' + addrString)
   if (address.toString().length > lengthValue) {
     console.log('cutting')
     addrString = address.toString().substring(4,lengthValue)
   }
   console.log(errorCode)
-  console.log('Address string: ' + addrString)
+  console.log('Address string:' + addrString)
   return addrString
 }
 let port = new SerialPort('COM5', { autoOpen: false, baudRate: 115200 })

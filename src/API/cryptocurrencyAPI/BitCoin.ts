@@ -9,8 +9,8 @@ import getAddress from '../hardwareAPI/GetAddress'
 // const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 console.log(urlChainSo)
-const network = networks.testnet
-const NETWORK = 'BTCTEST'
+const network = networks.bitcoin
+const NETWORK = 'BTC'
 const rootURL = 'https://chain.so/api/v2'
 let myAddr = ''
 export function initBitcoinAddress() {
@@ -46,7 +46,8 @@ export async function getBalance(): Promise<any> {
     0 - количество подтверждений транзакций
   */
   // rootURL + 'get_address_balance/' + myAddr
-  let requestUrl = 'https://chain.so/api/v2/get_address_balance/' + NETWORK + '/' + myAddr + '/' + 0
+  let requestUrl = 'https://chain.so/api/v2/get_address_balance/' + NETWORK + '/' + myAddr.trim() + '/' + 0
+  console.log(requestUrl)
   try {
     // Делаем запрос и отдаём в виде Promise
     const response = await webRequest.get(requestUrl)
@@ -137,7 +138,7 @@ async function getLastTransactionData(): Promise<any> {
 */
 function createTransaction(paymentAdress: string,transactionHash: string, transactionInputAmount: number,
   transactionAmount: number,transactionFee: number, prevOutScript: string, outNumber: number): void {
-  transactionFee = 1
+  console.log(transactionFee)
   console.log('Transaction amount: ' + transactionAmount)
   // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
   let transaction = new TransactionBuilder(network)
@@ -145,7 +146,7 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
   transaction.addInput(transactionHash, outNumber)
   // Добавляем выход транзакции, где указывается адрес и сумма перевода
   transaction.addOutput(paymentAdress, transactionAmount)
-  let change: number = transactionInputAmount - transactionAmount - transactionFee * transactionAmount / 100
+  let change: number = transactionInputAmount - transactionAmount - 4500
   // Добавляем адрес для "сдачи"
   if (change > 0) {
     transaction.addOutput(myAddr, Math.round(change))
@@ -179,26 +180,26 @@ function sendTransaction(transactionHex: string) {
   console.log('url: ' + urlChainSo + NETWORK)
   // формируем запрос
   Request.post({
-    url: urlChainSo + NETWORK,
+    url: 'https://api.blockcypher.com/v1/btc/main/txs/push',
     headers: {
       'content-type': 'application/json'
     },
-    body : { 'tx_hex': transactionHex },
+    body : { 'tx': transactionHex },
     json: true
   },
-  // Обрабатываем ответ
-   (res, err, body) => {
-     console.log(body)
-     console.log(res), console.log(err)
-     let bodyStatus = body.status
-     console.log(bodyStatus)
-     if (bodyStatus.toString() === 'success') {
-       alert('Transaction sended! Hash: ' + Object(body).data.txid)
-     } else {
-       console.log(body.error.message)
-       alert('Error occured: ' + body.error.message)
-     }
-   })
+      (res,err,body) => {
+        console.log(body)
+        console.log(res), console.log(err)
+        let bodyStatus = body
+        console.log(bodyStatus)
+        try {
+          if (body.tx.hash) {
+            alert('Transaction sended! Hash: ' + Object(body).tx.hash)
+          }
+        } catch (error) {
+          alert('Error occured: ' + Object(body).error)
+        }
+      })
 }
 
 /* const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'

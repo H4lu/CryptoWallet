@@ -7,8 +7,8 @@ import { openPort, getSig } from '../hardwareAPI/GetSignature'
 let address = ''
 const rootURL = 'https://chain.so/api/v2'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
-const network = networks.testnet
-const NETWORK = 'LTCTEST'
+const network = networks.litecoin
+const NETWORK = 'LTC'
 export default function getAddres() {
   return address
 }
@@ -37,6 +37,7 @@ export async function getLitecoinBalance(): Promise<any> {
     0 - количество подтверждений транзакций
   */
   let requestUrl = 'https://chain.so/api/v2/get_address_balance/' + NETWORK + '/' + address + '/' + 0
+  console.log(requestUrl)
   try {
     // Делаем запрос и отдаём в виде Promise
     const response = await webRequest.get(requestUrl)
@@ -68,7 +69,7 @@ async function getLastTransactionData(): Promise<any> {
 
 function createTransaction(paymentAdress: string,transactionHash: string, transactionInputAmount: number,
   transactionAmount: number,transactionFee: number, prevOutScript: string, outNumber: number): void {
-  transactionFee = 3
+  console.log(transactionFee)
   console.log('Transaction amount: ' + transactionAmount)
   // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
   let transaction = new TransactionBuilder(network)
@@ -96,7 +97,7 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
       let data = txHex.replace('00000000ff','000000' + value.slice(4,value.length).toString('hex') + 'ff')
       console.log('Final transaction: ' + data)
       // Возвращаем готовую к отправке транзакцию
-      sendTransaction(data.trim())
+      sendTransaction(data)
     }).catch(err => {
       throw(err)
     })
@@ -110,27 +111,29 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
 function sendTransaction(transactionHex: string) {
   console.log('url: ' + urlChainSo + NETWORK)
   // формируем запрос
+  // Обрабатываем ответ
   Request.post({
-    url: urlChainSo + NETWORK,
+    url: 'https://api.blockcypher.com/v1/ltc/main/txs/push',
     headers: {
       'content-type': 'application/json'
     },
-    body : { 'tx_hex': transactionHex },
+    body : { 'tx': transactionHex },
     json: true
   },
-  // Обрабатываем ответ
-   (res,err,body) => {
-     console.log(body)
-     console.log(res), console.log(err)
-     let bodyStatus = body.status
-     console.log(bodyStatus)
-     if (bodyStatus.toString() === 'success') {
-       alert('Transaction sended! Hash: ' + Object(body).data.txid)
-     } else {
-       console.log(body.error.message)
-       alert('Error occured: ' + body.error.message)
-     }
-   })
+      (res,err,body) => {
+        console.log(body)
+        console.log(res), console.log(err)
+        let bodyStatus = body
+        console.log(bodyStatus)
+        try {
+          if (body.tx.hash) {
+            alert('Transaction sended! Hash: ' + Object(body).tx.hash)
+          }
+        } catch (error) {
+          alert('Error occured: ' + Object(body).error)
+        }
+      })
+
 }
 
 export function handleLitecoin(paymentAdress: string, amount: number, transactionFee: number) {
