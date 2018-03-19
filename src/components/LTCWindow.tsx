@@ -34,7 +34,7 @@ export class LTCWindow extends React.Component<any, ILTCWindowState> {
 
   componentWillMount() {
     this.setState({ qrcodeAddress: CreateQR(this.state.address) })
-    this.props.transactions()
+    // this.props.transactions()
     console.log('PROPERTY: ' + this.props.lastTx)
   }
   handleClick() {

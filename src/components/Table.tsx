@@ -1,15 +1,20 @@
 import React from 'react'
 import { TableRow } from './TableRow'
 interface ITableClass {
-  data: Array<any>
+  dataToRender: Array<any>
 }
-export class Table extends React.Component<any,ITableClass> {
+interface ITableProps {
+  data: Array<Object>
+}
+
+export class Table extends React.Component<ITableProps,ITableClass> {
   constructor(props: any) {
     super(props)
 
     this.state = {
-      data: []
+      dataToRender: []
     }
+    this.renderTable = this.renderTable.bind(this)
     this.getData = this.getData.bind(this)
   }
   getData(data: Array<any>) {
@@ -27,7 +32,7 @@ export class Table extends React.Component<any,ITableClass> {
           Status: status,
           Type: type
         }
-        this.setState({ data: [...this.state.data, dataToPass] })
+        this.setState({ dataToRender: [...this.state.dataToRender, dataToPass] })
       } else {
         let date = new Date(data[index].time * 1000)
         let amount = data[index].incoming.value
@@ -41,10 +46,13 @@ export class Table extends React.Component<any,ITableClass> {
           Status: status,
           Type: type
         }
-        this.setState({ data: [...this.state.data, dataToPass] })
+        this.setState({ dataToRender: [...this.state.dataToRender, dataToPass] })
       }
     }
   }
+  renderTable() {
+  }
+  
   render() {
     return(
       <div className = 'transaction-history'>
@@ -52,15 +60,16 @@ export class Table extends React.Component<any,ITableClass> {
         <table>
           <thead>
             <th>Date</th>
-            <th></th>
+            <th>Currency</th>
             <th>Value</th>
             <th>Address</th>
             <th>Status</th>
           </thead>
           <tbody>
-            {Array(this.props.data).map((value) => {
-              return <TableRow data = {value}/>
-            })}
+            {this.props.data.map((element: any) => {
+               return <TableRow data = {element}/>
+            })
+          }
           </tbody>
          </table>
       </div>

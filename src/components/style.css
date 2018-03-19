@@ -495,8 +495,9 @@ tbody {
 .table-content {
 
 }
-td, th {
+td {
   border: 1px solid #202F45;
+  text-align: center;
   box-sizing: border-box;
   background: rgba(47, 70, 105, 0.2);
   font-family: 'Heebo';
@@ -507,7 +508,19 @@ td, th {
 
   color: #7EAEE5;
 }
-
+th {
+  text-align: center;
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 12px;
+  border: 1px solid #202F45;
+  box-sizing: border-box;
+  background: #25384F;
+  box-shadow: 0px 4px 8px rgba(14, 25, 36, 0.25);
+  color: #7EAEE5;
+}
 .main-image {
   flex-grow: 1;
   margin-left: auto;
@@ -657,7 +670,7 @@ td, th {
   
 }
 .button-hide:hover {
-  background-color: rgba(187, 179, 179, 0.1);
+  background-color: rgba(187, 179, 179, 0.3);
 }
 .button-maximize {
   background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAoSURBVHgB5dAxEQAACMPAFscYQQcu4XCQncw/xVk9IhF4JgT7CU2HL97aCqlmz/R2AAAAAElFTkSuQmCC");

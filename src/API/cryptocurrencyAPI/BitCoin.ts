@@ -9,8 +9,8 @@ import getAddress from '../hardwareAPI/GetAddress'
 // const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 console.log(urlChainSo)
-const network = networks.bitcoin
-const NETWORK = 'BTC'
+const network = networks.testnet
+const NETWORK = 'BTCTEST'
 const rootURL = 'https://chain.so/api/v2'
 let myAddr = ''
 export function initBitcoinAddress() {

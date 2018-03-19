@@ -2,7 +2,7 @@ import * as React from 'react'
 import CreateQR from '../core/CreateQR'
 import getBitcoinAddress from '../API/cryptocurrencyAPI/BitCoin'
 import { clipboard } from 'electron'
-// import { Table } from './Table'
+import { Table } from './Table'
 import { sendTransaction } from '../core/SendTransaction'
 
 interface IBTCWindowState {
@@ -32,7 +32,7 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
   }
   componentWillMount() {
     this.setState({ qrcodeAddress: CreateQR(this.state.address) })
-    this.props.transactions()
+    // this.props.transactions()
     console.log('PROPERTY: ' + this.props.lastTx)
   }
   handleCopyClick() {
@@ -99,6 +99,7 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
               </div>
             </div>
           </div>
+          <Table data = {this.props.lastTx}/>
         </div>
       </div>
     )

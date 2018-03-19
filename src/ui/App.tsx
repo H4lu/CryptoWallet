@@ -13,8 +13,8 @@ import { LTCWindow } from '../components/LTCWindow'
 import '../components/style.css'
 import { MainContent } from '../components/MainContent'
 import { getBalance, getBitcoinLastTx, initBitcoinAddress } from '../API/cryptocurrencyAPI/BitCoin'
-import { getLitecoinBalance, getLitecoinLastTx, initLitecoinAddress } from '../API/cryptocurrencyAPI/Litecoin'
-import { getEthereumBalance, convertFromWei, initEthereumAddress, getEthereumLastTx } from '../API/cryptocurrencyAPI/Ethereum'
+import { getLitecoinBalance, initLitecoinAddress } from '../API/cryptocurrencyAPI/Litecoin'
+import { getEthereumBalance, convertFromWei, initEthereumAddress, getEthereumLastTx, getEthereumAddress } from '../API/cryptocurrencyAPI/Ethereum'
 import GetCurrencyRate from '../core/GetCurrencyRate'
 import { SidebarNoButtons } from '../components/SidebarNoButtons'
 import { MainWindow } from '../components/MainWindow'
@@ -79,10 +79,12 @@ interface IAPPState {
   LTCHourChange: number,
   BTCLastTx: Array<any>,
   LTCLastTx: Array<any>,
+  ETHLastTx: Array<any>,
   connection: boolean,
   status: boolean,
   redirect: boolean,
-  ETHLastTx: Array<any>
+  tempState: Array<any>,
+  allowInit: boolean
 }
 
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
@@ -105,10 +107,10 @@ export class App extends React.Component<any, IAPPState> {
     {
       path: '/main',
       exact: true,
-      sidebar: () => <SidebarContent total = {this.state.totalBalance} refresh = {this.getValues}/>,
+      sidebar: () => <SidebarContent total = {this.state.totalBalance} refresh = {this.updateData}/>,
       main: () => <MainContent btcBalance = {this.state.BTCBalance} ltcBalance = {this.state.LTCBalance} ethBalance = {this.state.ETHBalance}
       btcPrice = {this.state.BTCPrice} ltcPrice = {this.state.LTCPrice} ethPrice = {this.state.ETHPrice} btcHourChange = {this.state.BTCHourChange}
-      ltcHourChange = {this.state.LTCHourChange} ethHourChange = {this.state.ETHHourChange} btcLastTx = {this.state.BTCLastTx} transactions = {this.getTransactions}/>
+      ltcHourChange = {this.state.LTCHourChange} ethHourChange = {this.state.ETHHourChange} lastTx = {this.state.BTCLastTx.concat(this.state.ETHLastTx)} transactions = {this.getTransactions}/>
     },
     {
       path: '/btc-window',
@@ -148,12 +150,19 @@ export class App extends React.Component<any, IAPPState> {
       ETHLastTx: [],
       connection: false,
       status: false,
-      redirect: false
+      redirect: false,
+      tempState: [],
+      allowInit: true
     }
+    this.parseETHTransactions = this.parseETHTransactions.bind(this)
+    this.parseTransactionDataETH = this.parseTransactionDataETH.bind(this)
+    this.parseBTCLikeTransactions = this.parseBTCLikeTransactions.bind(this)
+    this.parseTransactionDataBTC = this.parseTransactionDataBTC.bind(this)
     this.waitForPin = this.waitForPin.bind(this)
     this.initAll = this.initAll.bind(this)
     this.getValues = this.getValues.bind(this)
     this.getTransactions = this.getTransactions.bind(this)
+    this.updateData = this.updateData.bind(this)
   }
 
   componentDidMount() {
@@ -164,12 +173,14 @@ export class App extends React.Component<any, IAPPState> {
             if (this.state.connection) {
               return
             } else {
+              console.log('CALL WAIT FOR PIN')
               this.waitForPin()
               return this.setState({ connection: !this.state.connection })
             }
           }
         }
         if (this.state.connection) {
+          console.log('FLI FLOP')
           this.setState({ connection: !this.state.connection })
         }
       })
@@ -183,15 +194,25 @@ export class App extends React.Component<any, IAPPState> {
         console.log('PIN ENTERED')
         this.setState({ status: true })
         clearInterval(timer)
+        console.log('INTERVAL CLEARED')
       }
     },1000,[])
   }
-  initAll() {
-    initBitcoinAddress()
-    initEthereumAddress()
-    initLitecoinAddress()
-    this.getValues()
+  initAll(from: string) {
+    if (this.state.allowInit) {
+      this.setState({allowInit: false})
+      console.log('Called from: ' + from)
+      initBitcoinAddress()
+      initEthereumAddress()
+      initLitecoinAddress()
+      this.getValues()
+      this.getTransactions()
+    }
+
+  }
+  updateData() {
     this.getTransactions()
+    this.getValues()
   }
   getValues() {
     Promise.all([getBalance(), getEthereumBalance(), getLitecoinBalance(), GetCurrencyRate()]).then(value => {
@@ -200,12 +221,12 @@ export class App extends React.Component<any, IAPPState> {
         if (typeof(value[val]) === 'object') {
           if (Number(val) !== value.length - 1) {
             switch (JSON.parse(value[val].content).data.network) {
-            case 'BTC': {
+            case 'BTCTEST': {
               let balance: number = Number(JSON.parse(value[val].content).data.confirmed_balance)
               this.setState({ BTCBalance:  Number(balance.toFixed(8)) })
               break
             }
-            case 'LTC': {
+            case 'LTCTEST': {
               console.log(JSON.stringify(value[val].content))
               let balance: number = Number(JSON.parse(value[val].content).data.confirmed_balance)
               this.setState({ LTCBalance: Number(balance.toFixed(8)) })
@@ -247,31 +268,99 @@ export class App extends React.Component<any, IAPPState> {
   componentWillMount() {
     this.setState({ redirect: true })
   }
-
   getTransactions() {
-    Promise.all([getBitcoinLastTx(), getLitecoinLastTx(), getEthereumLastTx()]).then(value => {
-      JSON.stringify(value)
+    Promise.all([getBitcoinLastTx(), getEthereumLastTx()]).then(value => {
       for (let index in value) {
-        console.log('Parsed: ' + JSON.parse(value[index].content))
-        console.log('Stringify: ' + JSON.stringify(value[index].content))
-        let parsedResponse = JSON.parse(value[index].content).data
-        for (let tx in parsedResponse.txs) {
-          switch (parsedResponse.network) {
-          case 'BTC': {
-            this.setState({ BTCLastTx: [...this.state.BTCLastTx, parsedResponse.txs[tx]] })
-            break
-          }
-          case 'LTC': {
-            this.setState({ LTCLastTx: [...this.state.LTCLastTx, parsedResponse.txs[tx]] })
-            break
-          }
-          }
+        if (Object.prototype.hasOwnProperty.call(JSON.parse(value[index].content),'data')) {
+          this.parseBTCLikeTransactions(value[index].content)
+        } else {
+          this.parseETHTransactions(value[index].content)
         }
       }
     }).catch(error => {
       console.log(error)
     })
   }
+  parseETHTransactions(value: any) {
+    let parsedTx = this.parseTransactionDataETH(JSON.parse(value), getEthereumAddress())
+    this.setState({ ETHLastTx: [...this.state.ETHLastTx, parsedTx] })
+  }
+  parseBTCLikeTransactions(value: any) {
+        let parsedResponse = JSON.parse(value).data
+        for (let tx in parsedResponse.txs) {
+          switch (parsedResponse.network) {
+          case 'BTCTEST': {
+            let parsedTx = this.parseTransactionDataBTC(parsedResponse.txs[tx], 'BTC')
+            this.setState({ BTCLastTx: [...this.state.BTCLastTx, parsedTx] }) 
+            break
+          }
+          case 'LTCTEST': {
+            let parsedTx = this.parseTransactionDataBTC(parsedResponse.txs[tx], 'LTC')
+            this.setState({ LTCLastTx: [...this.state.LTCLastTx, parsedTx] })
+            break
+          }
+          }
+        }
+  }
+  
+  parseTransactionDataETH(transaction: any, ethAddress: string) {
+
+    let date = new Date(transaction.timestamp * 1000)
+    let dateCell = date.getFullYear() + '/' + date.getMonth() + '/' + date.getDay() + ' ' + date.getHours() + ':' + date.getMinutes()
+    let amount = transaction.value
+    let type = ''
+    {(transaction.from === ethAddress) ? (type = 'outgoing') :(type = 'incoming')}
+    let address = ''
+    {(type === 'outgoing') ? (address = transaction.to) : (address = transaction.from)}
+    let status = transaction.success ? 'Confirmed' : 'Unconfirmed'
+    let returnedObject = {
+      Date: dateCell,
+      Currency: 'ETH',
+      Amount: amount,
+      Address: address,
+      Status: status,
+      Type: type
+    }
+    return returnedObject
+
+  }
+  parseTransactionDataBTC(transaction: any, currency: string) {
+    let returnedObject = {}
+    if (transaction.outgoing !== undefined) {
+      let date = new Date(transaction.time * 1000)
+      let dateCell = date.getFullYear() + '/' + date.getMonth() + '/' + date.getDay() + ' ' + date.getHours() + ':' + date.getMinutes()
+      let amount = transaction.outgoing.outputs[0].value
+      let address = transaction.outgoing.outputs[0].address
+      let type = 'outgoing'
+      let status = (transaction.confirmations === 0) ? 'Uncofirmed' : 'Confirmed'
+      let dataToPass = {
+        Date: dateCell,
+        Currency: currency,
+        Amount: amount,
+        Address: address,
+        Status: status,
+        Type: type
+      }
+      returnedObject = dataToPass
+    } else {
+      let date = new Date(transaction.time * 1000)
+      let dateCell = date.getFullYear() + '/' + date.getMonth() + '/' + date.getDay() + ' ' + date.getHours() + ':' + date.getMinutes()
+      let amount = transaction.incoming.value
+      let address = transaction.incoming.inputs[0].address
+      let type = 'incoming'
+      let status = (transaction.confirmations === 0) ? 'Uncofirmed' : 'Confirmed'
+      let dataToPass = {
+        Date: dateCell,
+        Currency: currency,
+        Amount: amount,
+        Address: address,
+        Status: status,
+        Type: type
+      }
+      returnedObject = dataToPass
+  }
+  return returnedObject
+}
   render() {
     return(
       <div className = 'container'>

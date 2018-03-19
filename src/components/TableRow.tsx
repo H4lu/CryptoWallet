@@ -1,23 +1,29 @@
 import * as React from 'react'
 
-export class TableRow extends React.Component<any, any> {
+interface iTableRowState {
+  statusClassName: string
+}
+export class TableRow extends React.Component<any, iTableRowState> {
   constructor(props: any) {
     super(props)
+    this.state = {
+      statusClassName : 'text-confirmed'
+    }
   }
   render() {
+/* {(this.props.data.Status === 'confirmed') ? (
+          this.setState({statusClassName: 'text-confirmed'})) : (
+          this.setState({statusClassName: 'text-unconfirmed'}))
+        }
+*/
     return(
-      <tr>
+         <tr>
+       
         <td>{this.props.data.Date}</td>
-        {(this.props.data.Type === 'incoming') ? (
-          <td className = 'text-confirmed'>{this.props.data.Amount}</td>
-        ) : (
-          <td className = 'text-unconfirmed'>{this.props.data.Amount}</td>
-        )}
-        <td>{this.props.data.Address}</td>
-        {(this.props.data.Status === 'confirmed') ? (
-          <td className = 'text-confirmed'>{this.props.data.Status}</td>
-        ) : (
-          <td className = 'text-unconfirmed'>{this.props.data.Status}</td>
+        <td>{this.props.data.Currency}</td>
+        <td className = {this.state.statusClassName}>{this.props.data.Amount}</td>
+        <td className = {this.state.statusClassName}>{this.props.data.Address}</td>
+        <td className = {this.state.statusClassName}>{this.props.data.Status}</td>
         )}
       </tr>
     )

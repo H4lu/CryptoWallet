@@ -12,7 +12,6 @@ export class MainContent extends React.Component<any, any> {
     this.props.refresh()
   }
   componentDidMount() {
-    this.props.transactions()
   }
 
   render () {
@@ -86,7 +85,7 @@ export class MainContent extends React.Component<any, any> {
            </div>
            <hr/>
           </div>
-         <Table data = {this.props.btcLastTx}/>
+         <Table data = {this.props.lastTx}/>
         </div>
       </div>
     )
