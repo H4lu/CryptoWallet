@@ -36,7 +36,7 @@ export class MainWindow extends React.Component<any, IMainWindowState> {
             <p className = 'window-main-not-ready'>Your Braitberry is not ready for use</p>
           )
         ) : (
-          null
+          <p className = 'window-main-not-ready'>USB-cable is not connected</p>
         )}
       </div>
     )

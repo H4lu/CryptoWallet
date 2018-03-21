@@ -13,7 +13,7 @@ import { LTCWindow } from '../components/LTCWindow'
 import '../components/style.css'
 import { MainContent } from '../components/MainContent'
 import { getBalance, getBitcoinLastTx, initBitcoinAddress } from '../API/cryptocurrencyAPI/BitCoin'
-import { getLitecoinBalance, initLitecoinAddress } from '../API/cryptocurrencyAPI/Litecoin'
+import { getLitecoinBalance, initLitecoinAddress, getLitecoinLastTx } from '../API/cryptocurrencyAPI/Litecoin'
 import { getEthereumBalance, convertFromWei, initEthereumAddress, getEthereumLastTx, getEthereumAddress } from '../API/cryptocurrencyAPI/Ethereum'
 import GetCurrencyRate from '../core/GetCurrencyRate'
 import { SidebarNoButtons } from '../components/SidebarNoButtons'
@@ -110,7 +110,11 @@ export class App extends React.Component<any, IAPPState> {
       sidebar: () => <SidebarContent total = {this.state.totalBalance} refresh = {this.updateData}/>,
       main: () => <MainContent btcBalance = {this.state.BTCBalance} ltcBalance = {this.state.LTCBalance} ethBalance = {this.state.ETHBalance}
       btcPrice = {this.state.BTCPrice} ltcPrice = {this.state.LTCPrice} ethPrice = {this.state.ETHPrice} btcHourChange = {this.state.BTCHourChange}
-      ltcHourChange = {this.state.LTCHourChange} ethHourChange = {this.state.ETHHourChange} lastTx = {this.state.BTCLastTx.concat(this.state.ETHLastTx)} transactions = {this.getTransactions}/>
+      ltcHourChange = {this.state.LTCHourChange} ethHourChange = {this.state.ETHHourChange} lastTx = {this.state.BTCLastTx.concat(this.state.ETHLastTx, this.state.LTCLastTx).sort((a: any, b: any) => {
+        let c = new Date(a.Date).getTime()
+        let d = new Date(b.Date).getTime()
+        return d - c
+      })} transactions = {this.getTransactions}/>
     },
     {
       path: '/btc-window',
@@ -122,7 +126,7 @@ export class App extends React.Component<any, IAPPState> {
       path: '/eth-window',
       exact: true,
       sidebar: () => <SidebarNoButtons total = {this.state.totalBalance}/>,
-      main: () => <ETHWIndow balance = {this.state.ETHBalance} price = {this.state.ETHPrice} hourChange = {this.state.ETHHourChange}/>
+      main: () => <ETHWIndow balance = {this.state.ETHBalance} price = {this.state.ETHPrice} hourChange = {this.state.ETHHourChange} lastTx = {this.state.ETHLastTx}/>
     },
     {
       path: '/ltc-window',
@@ -269,7 +273,7 @@ export class App extends React.Component<any, IAPPState> {
     this.setState({ redirect: true })
   }
   getTransactions() {
-    Promise.all([getBitcoinLastTx(), getEthereumLastTx()]).then(value => {
+    Promise.all([getBitcoinLastTx(),getLitecoinLastTx(), getEthereumLastTx()]).then(value => {
       for (let index in value) {
         if (Object.prototype.hasOwnProperty.call(JSON.parse(value[index].content),'data')) {
           this.parseBTCLikeTransactions(value[index].content)
@@ -282,19 +286,26 @@ export class App extends React.Component<any, IAPPState> {
     })
   }
   parseETHTransactions(value: any) {
-    let parsedTx = this.parseTransactionDataETH(JSON.parse(value), getEthereumAddress())
-    this.setState({ ETHLastTx: [...this.state.ETHLastTx, parsedTx] })
+    let transactionsObject = JSON.parse(value)
+    transactionsObject.map((value: any) => {
+      console.log('PASS THIS VALUE')
+      let parsedTx = this.parseTransactionDataETH(value, getEthereumAddress())
+      this.setState({ ETHLastTx: [...this.state.ETHLastTx, parsedTx] })
+    })
+
   }
   parseBTCLikeTransactions(value: any) {
         let parsedResponse = JSON.parse(value).data
         for (let tx in parsedResponse.txs) {
           switch (parsedResponse.network) {
           case 'BTCTEST': {
+            console.log('IN BTCTEST')
             let parsedTx = this.parseTransactionDataBTC(parsedResponse.txs[tx], 'BTC')
             this.setState({ BTCLastTx: [...this.state.BTCLastTx, parsedTx] }) 
             break
           }
           case 'LTCTEST': {
+            console.log('IN LTCTEST')
             let parsedTx = this.parseTransactionDataBTC(parsedResponse.txs[tx], 'LTC')
             this.setState({ LTCLastTx: [...this.state.LTCLastTx, parsedTx] })
             break
@@ -304,7 +315,7 @@ export class App extends React.Component<any, IAPPState> {
   }
   
   parseTransactionDataETH(transaction: any, ethAddress: string) {
-
+    console.log('PARSING ETC TX' + JSON.stringify(transaction))
     let date = new Date(transaction.timestamp * 1000)
     let dateCell = date.getFullYear() + '/' + date.getMonth() + '/' + date.getDay() + ' ' + date.getHours() + ':' + date.getMinutes()
     let amount = transaction.value

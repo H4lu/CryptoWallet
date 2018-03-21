@@ -464,7 +464,7 @@ button:active {
   flex-direction: row;
 }
 .transaction-history {
-  height: 300px;
+  height: 450px;
   overflow: auto;
   margin-left: auto;
   margin-right: auto;
