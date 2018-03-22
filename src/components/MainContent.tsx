@@ -85,7 +85,7 @@ export class MainContent extends React.Component<any, any> {
            </div>
            <hr/>
           </div>
-         <Table data = {this.props.lastTx}/>
+         <Table data = {this.props.lastTx} type = 'normal'/>
         </div>
       </div>
     )

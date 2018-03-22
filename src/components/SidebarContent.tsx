@@ -30,13 +30,13 @@ export class SidebarContent extends React.Component<any, any> {
           <hr/>
           <header className = 'info-header-font'>Your Braitberry:</header>
             <div className = 'about-block'>
-            <div>
+            <div className = 'about-block-margin'>
              <p className = 'info-default-font text-inline'>-ID:</p><p className = 'info-amount-font text-inline'>13332</p>
             </div>
-            <div>
+            <div className = 'about-block-margin'>
              <p className = 'info-default-font text-inline'>Currency Available</p><p className ='info-amount-font text-inline'>3</p>
             </div>
-            <div>
+            <div className = 'about-block-margin'>
              <p className = 'info-default-font text-inline'>Currency Can Add</p><p className = 'info-amount-font text-inline'>2</p>
             </div>
             </div>

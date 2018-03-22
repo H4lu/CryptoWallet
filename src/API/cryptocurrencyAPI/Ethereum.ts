@@ -7,11 +7,11 @@ import { keccak256 } from 'js-sha3'
 import getAddress from '../hardwareAPI/GetAddress'
 import * as webRequest from 'web-request'
 // import getAddress from '../hardwareAPI/GetAddress'
-const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM'))
+// const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM'))
 // const testTokenAdress = '0x583cbBb8a8443B38aBcC0c956beCe47340ea1367'
 // const apiKeyToken = 'MJTK1MQJIR91D82SMCGC6SU61MGICCJQH2'
 // const web3 = new Web3(new Web3.providers.HttpProvider('https://api.myetherapi.com/rop'))
-// const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/hgAaKEDG9sIpNHqt8UYM'))
+const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/hgAaKEDG9sIpNHqt8UYM'))
 // const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws'))
 /*const ERC20AbiInterface: string = __dirname + '/../erc20abi.json'
 const abi = JSON.parse(fs.readFileSync(ERC20AbiInterface, 'utf-8'))
@@ -27,7 +27,7 @@ export function getEthereumAddress() {
 }
 export async function getEthereumLastTx(): Promise<any> {
   try {
-    const requestURL = 'https://api.ethplorer.io/getAddressTransactions/' + '0xF6809AcC33FCDd9670814Cb15000f69e93C97215' + '?apiKey=freekey'
+    const requestURL = 'https://api.ethplorer.io/getAddressTransactions/' + myAdress + '?apiKey=freekey'
     let response = await webRequest.get(requestURL)
     return response
   } catch (err) {
@@ -75,7 +75,7 @@ export function convertFromWei(amount: number) {
 /* Сначала создаёт неподписанную транзакцию, после чего вычисляет её хэш и отправляет на подпись устройству
    После чего получанная подпись вставляется в новую транзакцию, которая отправляется
 */
-function createTransaction (paymentAdress: string, amount: number, gasPrice: number, gasLimit: number) {
+function createTransaction (paymentAdress: string, amount: number, gasPrice: number, gasLimit: number, redirect: any) {
   web3.eth.getTransactionCount(myAdress).then((value) => {
   // Получаем порядковый номер транзакции, т.н nonce
     console.log('Got this values: ' + 'gasPrice: ' + gasPrice + 'gasLimit: ' + gasLimit)
@@ -94,7 +94,7 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
       nonce: web3.utils.toHex(value),
       from: myAdress,
       to: paymentAdress,
-      gasPrice: web3.utils.toHex(web3.utils.toWei(gasPrice.toString(), 'shannon')),
+      gasPrice: web3.utils.toHex(web3.utils.toWei('30', 'shannon')),
       gasLimit: web3.utils.toHex(30000),
       chainId: web3.utils.toHex(1),
       data: '0x00',
@@ -119,16 +119,16 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
     openPort().then(() => {
       getSig(1,txHash, paymentAdress, amount).then(sign => {
         console.log('data length: ' + sign.length)
-        console.log(web3.utils.toHex(sign[68]))
-        console.log('r: ' + sign.slice(4,36).toString('hex'))
-        console.log('s: ' + sign.slice(36,68).toString('hex'))
-        console.log('v: ' + sign[68])
+        console.log(web3.utils.toHex(sign[69]))
+        console.log('r: ' + sign.slice(5,37).toString('hex'))
+        console.log('s: ' + sign.slice(37,69).toString('hex'))
+        console.log('v: ' + sign[69])
           // создаём объект подписи
           // cost: 600000130000000
         let sig = {
-          v : web3.utils.toHex(sign[68] + 10),
-          r : sign.slice(4,36),
-          s : sign.slice(36,68)
+          v : web3.utils.toHex(sign[69] + 10),
+          r : sign.slice(5,37),
+          s : sign.slice(37,69)
         }
         console.log('V in sig: ' + sig.v)
           // Вставляем подпись в транзакцию
@@ -137,7 +137,8 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
         let serTx = '0x' + tx.serialize().toString('hex')
         console.log(serTx)
         web3.eth.sendSignedTransaction(serTx).on('receipt', console.log).on('transactionHash', function(hash) {
-          alert('Transaction mined!' + hash)
+          console.log('Transaction sended: ' + hash)
+          redirect()
         }).on('error', console.error).catch(err => console.log(err))
         // Отправляем
 
@@ -145,8 +146,8 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
     }).catch(err => console.log(err))
   }).catch(err => console.log(err))
 }
-export function handleEthereum(paymentAdress: string, amount: number, gasPrice: number, gasLimit: number) {
-  createTransaction(paymentAdress, amount, gasPrice, gasLimit)
+export function handleEthereum(paymentAdress: string, amount: number, gasPrice: number, gasLimit: number,redirect: any) {
+  createTransaction(paymentAdress, amount, gasPrice, gasLimit, redirect)
   /* sendTransaction(newTx).on('transactionHash', (hash) => {
     alert('Transaction sended! Hash: ' + hash)
   }).on('error', error => {

@@ -9,8 +9,8 @@ import getAddress from '../hardwareAPI/GetAddress'
 // const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 console.log(urlChainSo)
-const network = networks.testnet
-const NETWORK = 'BTCTEST'
+const network = networks.bitcoin
+const NETWORK = 'BTC'
 const rootURL = 'https://chain.so/api/v2'
 let myAddr = ''
 export function initBitcoinAddress() {
@@ -137,7 +137,7 @@ async function getLastTransactionData(): Promise<any> {
 }
 */
 function createTransaction(paymentAdress: string,transactionHash: string, transactionInputAmount: number,
-  transactionAmount: number,transactionFee: number, prevOutScript: string, outNumber: number): void {
+  transactionAmount: number,transactionFee: number, prevOutScript: string, outNumber: number, redirect: any): void {
   console.log(transactionFee)
   console.log('Transaction amount: ' + transactionAmount)
   // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
@@ -159,14 +159,14 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
   // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
   openPort().then(() => {
     getSig(0, txHashForSignature.toString('hex'), paymentAdress, transactionAmount).then(value => {
-      console.log('Suppposed to be sig: ' + value.slice(4,value.length).toString('hex'))
+      console.log('Suppposed to be sig: ' + value.slice(5,value.length).toString('hex'))
       // Сериализуем неподписанную транзакцию
       let txHex = transaction.tx.toHex()
       // Добавляем UnlockingScript в транзакцию
-      let data = txHex.replace('00000000ff','000000' + value.slice(4,value.length).toString('hex') + 'ff')
+      let data = txHex.replace('00000000ff','000000' + value.slice(5,value.length).toString('hex') + 'ff')
       console.log('Final transaction: ' + data)
       // Возвращаем готовую к отправке транзакцию
-      sendTransaction(data)
+      sendTransaction(data, redirect)
     }).catch(err => {
       throw(err)
     })
@@ -176,11 +176,11 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
 
 }
 // Функция отправки транзакции, на вход принимает транзакцию в hex- формате
-function sendTransaction(transactionHex: string) {
+function sendTransaction(transactionHex: string, redirect: any) {
   console.log('url: ' + urlChainSo + NETWORK)
   // формируем запрос
   Request.post({
-    url: 'https://api.blockcypher.com/v1/btc/main/txs/push',
+    url: 'https://api.blockcypher.com/v1/btc/test3/txs/push',
     headers: {
       'content-type': 'application/json'
     },
@@ -191,10 +191,11 @@ function sendTransaction(transactionHex: string) {
         console.log(body)
         console.log(res), console.log(err)
         let bodyStatus = body
-        console.log(bodyStatus)
+        console.log(bodyStatus.tx.confirmations)
         try {
-          if (body.tx.hash) {
-            alert('Transaction sended! Hash: ' + Object(body).tx.hash)
+          if (body.tx.confirmations === 0) {
+            // alert('Transaction sended! Hash: ' + Object(body).tx.hash)
+            redirect()
           }
         } catch (error) {
           alert('Error occured: ' + Object(body).error)
@@ -223,7 +224,7 @@ function sendTransaction(transactionHash: string) {
   })
 }
 */
-export function handle(paymentAdress: string, amount: number, transactionFee: number) {
+export function handle(paymentAdress: string, amount: number, transactionFee: number, redirect: any) {
   console.log('In handle')
   getLastTransactionData().then(Response => {
     let respData = JSON.parse(Response.content)
@@ -242,7 +243,7 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
           console.log('Hash: ' + prevHash + 'Amount: ' + unspentTxAmount + 'outScript: ' + prevOutScript + 'out_no: ' + outNumber)
           console.log('Types:' + typeof(prevHash) + typeof(prevOutScript) + typeof(unspentTxAmount) + typeof(outNumber))
           amount = toSatoshi(amount), unspentTxAmount = toSatoshi(unspentTxAmount)
-          createTransaction(paymentAdress, prevHash, unspentTxAmount, amount, transactionFee, prevOutScript, outNumber)
+          createTransaction(paymentAdress, prevHash, unspentTxAmount, amount, transactionFee, prevOutScript, outNumber, redirect)
         }
       }
     } else {

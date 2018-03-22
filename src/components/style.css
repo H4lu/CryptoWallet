@@ -919,3 +919,34 @@ input::-webkit-input-placeholder {
 
   color: #FF545E;
 }
+.text-transaction-completed {
+  margin: 15px;
+  font-family: Heebo;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 16px;
+  text-align: center;
+
+  color: #7EAEE5;
+}
+.transaction-success-img {
+  position: absolute;
+  width: 310px;
+  height: 185px;
+  left: 357px;
+  top: 238px;
+}
+.transaction-history-small {
+  height: 300px;
+  overflow: auto;
+  margin-left: auto;
+  margin-right: auto;
+  bottom: 5vh;
+  width: 68%;
+  position: absolute;
+}
+.about-block-margin {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}

@@ -20,6 +20,7 @@ import { SidebarNoButtons } from '../components/SidebarNoButtons'
 import { MainWindow } from '../components/MainWindow'
 import { checkPin } from '../API/hardwareAPI/GetWalletInfo'
 // import { wrapper } from '../API/hardwareAPI/GetWalletInfo'
+import { TransactionSuccess } from '../components/TransactionSuccess'
 import SerialPort from 'serialport'
 /*
 SerialPort.list().then(value => {
@@ -84,7 +85,9 @@ interface IAPPState {
   status: boolean,
   redirect: boolean,
   tempState: Array<any>,
-  allowInit: boolean
+  allowInit: boolean,
+  redirectToTransactionSuccess: boolean,
+  totalPercentage: number
 }
 
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
@@ -120,19 +123,29 @@ export class App extends React.Component<any, IAPPState> {
       path: '/btc-window',
       exact: true,
       sidebar: () => <SidebarNoButtons total = {this.state.totalBalance}/>,
-      main: () => <BTCWindow balance = {this.state.BTCBalance} price = {this.state.BTCPrice} hourChange = {this.state.BTCHourChange} lastTx = {this.state.BTCLastTx} transactions = {this.getTransactions}/>
+      main: () => <BTCWindow balance = {this.state.BTCBalance} price = {this.state.BTCPrice} hourChange = {this.state.BTCHourChange} lastTx = {this.state.BTCLastTx.sort((a: any, b: any) => {
+        let c = new Date(a.Date).getTime()
+        let d = new Date(b.Date).getTime()
+        return d - c
+      })} transactions = {this.getTransactions} redirect = {this.redirectToTransactionsuccess} reset = {this.resetRedirect}/>
     },
     {
       path: '/eth-window',
       exact: true,
       sidebar: () => <SidebarNoButtons total = {this.state.totalBalance}/>,
-      main: () => <ETHWIndow balance = {this.state.ETHBalance} price = {this.state.ETHPrice} hourChange = {this.state.ETHHourChange} lastTx = {this.state.ETHLastTx}/>
+      main: () => <ETHWIndow balance = {this.state.ETHBalance} price = {this.state.ETHPrice} hourChange = {this.state.ETHHourChange} lastTx = {this.state.ETHLastTx.sort((a: any, b: any) => {
+        let c = new Date(a.Date).getTime()
+        let d = new Date(b.Date).getTime()
+        return d - c})} redirect = {this.redirectToTransactionsuccess} reset = {this.resetRedirect}/>
     },
     {
       path: '/ltc-window',
       exact: true,
       sidebar: () => <SidebarNoButtons total = {this.state.totalBalance}/>,
-      main: () => <LTCWindow balance = {this.state.LTCBalance} price = {this.state.LTCPrice} hourChange = {this.state.LTCHourChange} lastTx = {this.state.LTCLastTx} transactions = {this.getTransactions}/>
+      main: () => <LTCWindow balance = {this.state.LTCBalance} price = {this.state.LTCPrice} hourChange = {this.state.LTCHourChange} lastTx = {this.state.LTCLastTx.sort((a: any, b: any) => {
+        let c = new Date(a.Date).getTime()
+        let d = new Date(b.Date).getTime()
+        return d - c})} transactions = {this.getTransactions} redirect = {this.redirectToTransactionsuccess} reset = {this.resetRedirect}/>
     }
   ]
   constructor(props: any) {
@@ -156,8 +169,12 @@ export class App extends React.Component<any, IAPPState> {
       status: false,
       redirect: false,
       tempState: [],
-      allowInit: true
+      allowInit: true,
+      redirectToTransactionSuccess: false,
+      totalPercentage: 0
     }
+    this.resetRedirect = this.resetRedirect.bind(this)
+    this.redirectToTransactionsuccess = this.redirectToTransactionsuccess.bind(this)
     this.parseETHTransactions = this.parseETHTransactions.bind(this)
     this.parseTransactionDataETH = this.parseTransactionDataETH.bind(this)
     this.parseBTCLikeTransactions = this.parseBTCLikeTransactions.bind(this)
@@ -168,7 +185,13 @@ export class App extends React.Component<any, IAPPState> {
     this.getTransactions = this.getTransactions.bind(this)
     this.updateData = this.updateData.bind(this)
   }
-
+  redirectToTransactionsuccess() {
+    this.resetRedirect()
+    this.setState({ redirectToTransactionSuccess: true})
+  }
+  resetRedirect() {
+    this.setState({ redirectToTransactionSuccess: false })
+  }
   componentDidMount() {
     setInterval(() => {
       SerialPort.list().then(value => {
@@ -225,12 +248,12 @@ export class App extends React.Component<any, IAPPState> {
         if (typeof(value[val]) === 'object') {
           if (Number(val) !== value.length - 1) {
             switch (JSON.parse(value[val].content).data.network) {
-            case 'BTCTEST': {
+            case 'BTC': {
               let balance: number = Number(JSON.parse(value[val].content).data.confirmed_balance)
               this.setState({ BTCBalance:  Number(balance.toFixed(8)) })
               break
             }
-            case 'LTCTEST': {
+            case 'LTC': {
               console.log(JSON.stringify(value[val].content))
               let balance: number = Number(JSON.parse(value[val].content).data.confirmed_balance)
               this.setState({ LTCBalance: Number(balance.toFixed(8)) })
@@ -290,36 +313,74 @@ export class App extends React.Component<any, IAPPState> {
     transactionsObject.map((value: any) => {
       console.log('PASS THIS VALUE')
       let parsedTx = this.parseTransactionDataETH(value, getEthereumAddress())
-      this.setState({ ETHLastTx: [...this.state.ETHLastTx, parsedTx] })
-    })
+      let findResp = this.state.ETHLastTx.find(function (obj) {
+        return obj.Hash === Object(parsedTx).Hash
+      })
+      console.log('FIND RESPONSE: ' + findResp)
+      if (findResp === undefined ) {
+        console.log('SETTING STATE')
+         this.setState({ ETHLastTx: [...this.state.ETHLastTx, parsedTx] }) 
+      } else if (Object(parsedTx).Status !== findResp.Status) {
+        console.log('Changing Status')
+          for (let index in this.state.ETHLastTx) {
+            if (this.state.ETHLastTx[index].Hash === Object(parsedTx).Hash) this.state.ETHLastTx[index].Status = Object(parsedTx).Status
+          }
+    }})
 
   }
+
   parseBTCLikeTransactions(value: any) {
         let parsedResponse = JSON.parse(value).data
         for (let tx in parsedResponse.txs) {
           switch (parsedResponse.network) {
-          case 'BTCTEST': {
-            console.log('IN BTCTEST')
+          case 'BTC': {
+            console.log('IN BTC')
             let parsedTx = this.parseTransactionDataBTC(parsedResponse.txs[tx], 'BTC')
-            this.setState({ BTCLastTx: [...this.state.BTCLastTx, parsedTx] }) 
-            break
+            let findResp = this.state.BTCLastTx.find(function (obj) {
+              return obj.Hash === Object(parsedTx).Hash
+            })
+            if (findResp === undefined ) {
+              this.setState({ BTCLastTx: [...this.state.BTCLastTx, parsedTx] }) 
+            } else if (Object(parsedTx).Status !== findResp.Status) {
+              console.log('Changing Status')
+                for (let index in this.state.BTCLastTx) {
+                  if (this.state.BTCLastTx[index].Hash === Object(parsedTx).Hash) this.state.BTCLastTx[index].Status = Object(parsedTx).Status
+                }
+          } else {
+            console.log('STATUS OF RESP: ' + findResp.Status)
+            console.log('STATUS OF PARSED TX : ' + Object(parsedTx).Status)
+            console.log('STATUS OF OBJECT ' + Object(findResp).Status)
           }
-          case 'LTCTEST': {
-            console.log('IN LTCTEST')
+          break
+        }
+          case 'LTC': {
+            console.log('IN LTC')
             let parsedTx = this.parseTransactionDataBTC(parsedResponse.txs[tx], 'LTC')
-            this.setState({ LTCLastTx: [...this.state.LTCLastTx, parsedTx] })
+            let findResp = this.state.LTCLastTx.find(function (obj) {
+              return obj.Hash === Object(parsedTx).Hash
+            })
+            console.log('FIND RESPONSE: ' + findResp)
+            if (findResp === undefined ) {
+              console.log('SETTING STATE')
+               this.setState({ LTCLastTx: [...this.state.LTCLastTx, parsedTx] }) 
+            } else if (Object(parsedTx).Status !== findResp.Status) {
+              console.log('Changing Status')
+                for (let index in this.state.LTCLastTx) {
+                  if (this.state.LTCLastTx[index].Hash === Object(parsedTx).Hash) this.state.LTCLastTx[index].Status = Object(parsedTx).Status
+                }
+            }
             break
           }
           }
         }
   }
-  
   parseTransactionDataETH(transaction: any, ethAddress: string) {
     console.log('PARSING ETC TX' + JSON.stringify(transaction))
     let date = new Date(transaction.timestamp * 1000)
-    let dateCell = date.getFullYear() + '/' + date.getMonth() + '/' + date.getDay() + ' ' + date.getHours() + ':' + date.getMinutes()
+    let dateCell = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
     let amount = transaction.value
     let type = ''
+    let hash = transaction.hash
     {(transaction.from === ethAddress) ? (type = 'outgoing') :(type = 'incoming')}
     let address = ''
     {(type === 'outgoing') ? (address = transaction.to) : (address = transaction.from)}
@@ -330,43 +391,49 @@ export class App extends React.Component<any, IAPPState> {
       Amount: amount,
       Address: address,
       Status: status,
-      Type: type
+      Type: type,
+      Hash: hash
     }
     return returnedObject
 
   }
-  parseTransactionDataBTC(transaction: any, currency: string) {
+  parseTransactionDataBTC(transaction: any, currency: string): Object {
     let returnedObject = {}
     if (transaction.outgoing !== undefined) {
       let date = new Date(transaction.time * 1000)
-      let dateCell = date.getFullYear() + '/' + date.getMonth() + '/' + date.getDay() + ' ' + date.getHours() + ':' + date.getMinutes()
+      let dateCell = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
       let amount = transaction.outgoing.outputs[0].value
       let address = transaction.outgoing.outputs[0].address
       let type = 'outgoing'
       let status = (transaction.confirmations === 0) ? 'Uncofirmed' : 'Confirmed'
+      console.log('SET THIS STATUS: ' + status)
+      let hash = transaction.txid
       let dataToPass = {
         Date: dateCell,
         Currency: currency,
         Amount: amount,
         Address: address,
         Status: status,
-        Type: type
+        Type: type,
+        Hash: hash
       }
       returnedObject = dataToPass
     } else {
       let date = new Date(transaction.time * 1000)
-      let dateCell = date.getFullYear() + '/' + date.getMonth() + '/' + date.getDay() + ' ' + date.getHours() + ':' + date.getMinutes()
+      let dateCell = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
       let amount = transaction.incoming.value
       let address = transaction.incoming.inputs[0].address
       let type = 'incoming'
       let status = (transaction.confirmations === 0) ? 'Uncofirmed' : 'Confirmed'
+      let hash = transaction.txid
       let dataToPass = {
         Date: dateCell,
         Currency: currency,
         Amount: amount,
         Address: address,
         Status: status,
-        Type: type
+        Type: type,
+        Hash: hash
       }
       returnedObject = dataToPass
   }
@@ -381,6 +448,12 @@ export class App extends React.Component<any, IAPPState> {
         ) : (
           null
         )}
+        {(this.state.redirectToTransactionSuccess) ? (
+          <Redirect to = '/transaction_success'/>
+        ) : (
+          null
+        )}
+        <Route path = '/transaction_success' component = {() =>  <TransactionSuccess refresh = {this.updateData} resetState = {this.redirectToTransactionsuccess}/> }/>
         <Route path = '/start' component = {() => <MainWindow connection = {this.state.connection} status = {this.state.status} init = {this.initAll}/>}/>
          {this.routes.map((route, index) => (
           <Route

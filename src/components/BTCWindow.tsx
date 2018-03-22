@@ -39,7 +39,7 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
     clipboard.writeText(this.state.address)
   }
   handleClick() {
-    sendTransaction('bitcoin', this.state.paymentAddress, this.state.amount, this.state.fee)
+    sendTransaction('bitcoin', this.state.paymentAddress, this.state.amount, this.state.fee, this.props.redirect)
   }
   handleAmountChange(e: any) {
     this.setState({ amount: e.target.value })
@@ -83,8 +83,7 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
             <div className = 'currency-block-transaction'>
             <header className = 'default-font-colored'>Send Bitcoin</header>
               <input type = 'text' className = 'payment_address' placeholder = 'Payment Address' value = {this.state.paymentAddress} onChange = {this.handleAddressChange}/>
-              <input type = 'text' className = 'input-amount' placeholder = 'Amount' onChange = {this.handleAmountChange} value = {this.state.amount}/>
-              <input type = 'text' className = 'input-fee-amount' placeholder = 'Fee'/>
+              <input type = 'text' className = 'payment_address' placeholder = 'Amount' onChange = {this.handleAmountChange} value = {this.state.amount}/>
               <button type = 'submit' className = 'button-send' onClick = {this.handleClick}>Send</button>
             </div>
           </div>
@@ -99,7 +98,7 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
               </div>
             </div>
           </div>
-          <Table data = {this.props.lastTx}/>
+          <Table data = {this.props.lastTx} type = 'small'/>
         </div>
       </div>
     )

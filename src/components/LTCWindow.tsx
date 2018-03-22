@@ -38,7 +38,7 @@ export class LTCWindow extends React.Component<any, ILTCWindowState> {
     console.log('PROPERTY: ' + this.props.lastTx)
   }
   handleClick() {
-    sendTransaction('litecoin', this.state.paymentAddress, this.state.amount, this.state.fee)
+    sendTransaction('litecoin', this.state.paymentAddress, this.state.amount, this.state.fee, this.props.redirect)
   }
   handleCopyClick() {
     clipboard.writeText(this.state.address)
@@ -85,8 +85,7 @@ export class LTCWindow extends React.Component<any, ILTCWindowState> {
               <div className = 'currency-block-transaction'>
               <header className = 'default-font-colored'>Send Bitcoin</header>
                 <input type = 'text' className = 'payment_address' placeholder = 'Payment Address' value = {this.state.paymentAddress} onChange = {this.handleAddressChange}/>
-                <input type = 'text' className = 'input-amount' placeholder = 'Amount' onChange = {this.handleAmountChange} value = {this.state.amount}/>
-                <input type = 'text' className = 'input-fee-amount' placeholder = 'Fee'/>
+                <input type = 'text' className = 'payment_address' placeholder = 'Amount' onChange = {this.handleAmountChange} value = {this.state.amount}/>
                 <button type = 'submit' className = 'button-send' onClick = {this.handleClick}>Send</button>
               </div>
             </div>
@@ -101,7 +100,7 @@ export class LTCWindow extends React.Component<any, ILTCWindowState> {
                 </div>
               </div>
             </div>
-            <Table data = {this.props.lastTx}/>
+            <Table data = {this.props.lastTx} type = 'small'/>
         </div>
       </div>
     )

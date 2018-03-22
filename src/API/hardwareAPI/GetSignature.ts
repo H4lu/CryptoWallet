@@ -81,7 +81,7 @@ export function getSig(id: number, message: string, address: string, amount: num
   }
   }
   console.log('Currency id:' + currencyId)
-  let startMessageBuf = Buffer.from([0x9c, 0x9c, 0x53, currencyId])
+  let startMessageBuf = Buffer.from([0x9c, 0x9c, 0x53, currencyId, 0x01])
   let hashBuf = Buffer.from(message, 'hex')
   let amountBuf = new Buffer(4)
   amountBuf.writeInt32BE(amount,0)

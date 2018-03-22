@@ -6,9 +6,9 @@ import * as webRequest from 'web-request'
 import { openPort, getSig } from '../hardwareAPI/GetSignature'
 let address = ''
 const rootURL = 'https://chain.so/api/v2'
-const urlChainSo = 'https://chain.so/api/v2/send_tx/'
-const network = networks.testnet
-const NETWORK = 'LTCTEST'
+// const urlChainSo = 'https://chain.so/api/v2/send_tx/'
+const network = networks.litecoin
+const NETWORK = 'LTC'
 export default function getAddres() {
   return address
 }
@@ -68,7 +68,7 @@ async function getLastTransactionData(): Promise<any> {
 }
 
 function createTransaction(paymentAdress: string,transactionHash: string, transactionInputAmount: number,
-  transactionAmount: number,transactionFee: number, prevOutScript: string, outNumber: number): void {
+  transactionAmount: number,transactionFee: number, prevOutScript: string, outNumber: number, redirect: any): void {
   console.log(transactionFee)
   console.log('Transaction amount: ' + transactionAmount)
   // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
@@ -77,7 +77,7 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
   transaction.addInput(transactionHash, outNumber)
   // Добавляем выход транзакции, где указывается адрес и сумма перевода
   transaction.addOutput(paymentAdress, transactionAmount)
-  let change: number = transactionInputAmount - transactionAmount - transactionFee * transactionAmount / 100
+  let change: number = transactionInputAmount - transactionAmount - 6000
   // Добавляем адрес для "сдачи"
   if (change > 0) {
     transaction.addOutput(address, Math.round(change))
@@ -90,14 +90,14 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
   // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
   openPort().then(() => {
     getSig(2, txHashForSignature.toString('hex'), paymentAdress, transactionAmount).then(value => {
-      console.log('Suppposed to be sig: ' + value.slice(4,value.length).toString('hex'))
+      console.log('Suppposed to be sig: ' + value.slice(5,value.length).toString('hex'))
       // Сериализуем неподписанную транзакцию
       let txHex = transaction.tx.toHex()
       // Добавляем UnlockingScript в транзакцию
-      let data = txHex.replace('00000000ff','000000' + value.slice(4,value.length).toString('hex') + 'ff')
+      let data = txHex.replace('00000000ff','000000' + value.slice(5,value.length).toString('hex') + 'ff')
       console.log('Final transaction: ' + data)
       // Возвращаем готовую к отправке транзакцию
-      sendTransaction(data)
+      sendTransaction(data, redirect)
     }).catch(err => {
       throw(err)
     })
@@ -108,8 +108,7 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
 }
 
 // Функция отправки транзакции, на вход принимает транзакцию в hex- формате
-function sendTransaction(transactionHex: string) {
-  console.log('url: ' + urlChainSo + NETWORK)
+function sendTransaction(transactionHex: string, redirect: any) {
   // формируем запрос
   // Обрабатываем ответ
   Request.post({
@@ -124,10 +123,11 @@ function sendTransaction(transactionHex: string) {
         console.log(body)
         console.log(res), console.log(err)
         let bodyStatus = body
-        console.log(bodyStatus)
+        console.log(bodyStatus.tx.hash)
         try {
-          if (body.tx.hash) {
-            alert('Transaction sended! Hash: ' + Object(body).tx.hash)
+          if (JSON.parse(body).tx.hash) {
+            redirect()
+            // alert('Transaction sended! Hash: ' + Object(body).tx.hash)
           }
         } catch (error) {
           alert('Error occured: ' + Object(body).error)
@@ -136,7 +136,7 @@ function sendTransaction(transactionHex: string) {
 
 }
 
-export function handleLitecoin(paymentAdress: string, amount: number, transactionFee: number) {
+export function handleLitecoin(paymentAdress: string, amount: number, transactionFee: number, redirect: any) {
   console.log('In handle')
   getLastTransactionData().then(Response => {
     let respData = JSON.parse(Response.content)
@@ -155,7 +155,7 @@ export function handleLitecoin(paymentAdress: string, amount: number, transactio
           console.log('Hash: ' + prevHash + 'Amount: ' + unspentTxAmount + 'outScript: ' + prevOutScript + 'out_no: ' + outNumber)
           console.log('Types:' + typeof(prevHash) + typeof(prevOutScript) + typeof(unspentTxAmount) + typeof(outNumber))
           amount = toSatoshi(amount), unspentTxAmount = toSatoshi(unspentTxAmount)
-          createTransaction(paymentAdress, prevHash, unspentTxAmount, amount, transactionFee, prevOutScript, outNumber)
+          createTransaction(paymentAdress, prevHash, unspentTxAmount, amount, transactionFee, prevOutScript, outNumber, redirect)
         }
       }
     } else {

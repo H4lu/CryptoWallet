@@ -20,7 +20,7 @@ export class MainWindow extends React.Component<any, IMainWindowState> {
         this.setState({ redirect: true })
 
         console.log('TIMEOUT CLEARED')
-      }, 2000,[])
+      }, 3000,[])
     }
     if (this.state.redirect) {
       return <Redirect from = '/' to = '/main'/>
@@ -33,7 +33,7 @@ export class MainWindow extends React.Component<any, IMainWindowState> {
           (this.props.status) ? (
             <p className = 'window-main-ready'>Your Braitberry is ready for use</p>
           ) : (
-            <p className = 'window-main-not-ready'>Your Braitberry is not ready for use</p>
+            <p className = 'window-main-not-ready'>Enter PIN</p>
           )
         ) : (
           <p className = 'window-main-not-ready'>USB-cable is not connected</p>
