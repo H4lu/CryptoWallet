@@ -6,8 +6,10 @@ import { BrowserRouter as Router } from 'react-router-dom'
 // import { Routes } from './Routes'
 // import { SignIn } from './SignIn'
 import { App } from './App'
+import { Provider } from 'react-redux'
+import store from '../core/store/configureStore'
 // import { Switch } from 'react-router'
-ReactDOM.render(
+ReactDOM.render(<Provider store = {store}>
                <Router>
                     <App/>
-                </Router>, document.getElementById('container'))
+                </Router></Provider>, document.getElementById('container'))

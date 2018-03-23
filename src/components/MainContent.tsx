@@ -1,15 +1,25 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Table } from './Table'
-
-export class MainContent extends React.Component<any, any> {
+import { connect } from 'react-redux'
+interface IMainContentProps {
+  btcBalance: number,
+  ltcBalance: number,
+  ethBalance: number,
+  transactions: Function,
+  ltcHourChange: number,
+  btcHourChange: number,
+  ethHourChange: number,
+  balance: number,
+  btcLastTx: Array<any>,
+  ltcPrice: number,
+  btcPrice: number,
+  ethPrice: number
+}
+class MainContent extends React.Component<IMainContentProps, any> {
   constructor(props: any) {
     super(props)
 
-    this.handleClick = this.handleClick.bind(this)
-  }
-  handleClick () {
-    this.props.refresh()
   }
   componentDidMount() {
     this.props.transactions()
@@ -30,7 +40,7 @@ export class MainContent extends React.Component<any, any> {
               <hr/>
               <div className = 'card-bottom-block'>
               <div>
-                   <p className = 'currency-amount-crypto text-inline'> {this.props.btcBalance}</p><p className = 'currency-short-name text-inline'>BTC</p>
+                   <p className = 'currency-amount-crypto text-inline'> {this.props.balance}</p><p className = 'currency-short-name text-inline'>BTC</p>
                   </div>
                   <div className = 'wrap'>
                     {(this.props.btcHourChange > 0) ? (
@@ -92,3 +102,11 @@ export class MainContent extends React.Component<any, any> {
     )
   }
 }
+
+function mapStateToProps(state: any) {
+  return {
+    balance: state.balance
+  }
+}
+
+export default connect(mapStateToProps)(MainContent)
