@@ -125,7 +125,7 @@ function sendTransaction(transactionHex: string, redirect: any) {
         let bodyStatus = body
         console.log(bodyStatus.tx.hash)
         try {
-          if (JSON.parse(body).tx.hash) {
+          if (body.tx.confirmations === 0) {
             redirect()
             // alert('Transaction sended! Hash: ' + Object(body).tx.hash)
           }
@@ -133,7 +133,28 @@ function sendTransaction(transactionHex: string, redirect: any) {
           alert('Error occured: ' + Object(body).error)
         }
       })
-
+  /* Request.post({
+    url: urlChainSo + NETWORK,
+    headers: {
+      'content-type': 'application/json'
+    },
+    body : { 'tx_hex': transactionHex },
+    json: true
+  },
+  // Обрабатываем ответ
+   (res,err,body) => {
+     console.log(body)
+     console.log(res), console.log(err)
+     let bodyStatus = body.status
+     console.log(bodyStatus)
+     if (bodyStatus.toString() === 'success') {
+       redirect()
+     } else {
+       console.log(body.error.message)
+       alert('Error occured: ' + body.error.message)
+     }
+   })
+*/
 }
 
 export function handleLitecoin(paymentAdress: string, amount: number, transactionFee: number, redirect: any) {

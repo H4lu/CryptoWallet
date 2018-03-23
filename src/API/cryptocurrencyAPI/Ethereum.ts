@@ -94,8 +94,8 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
       nonce: web3.utils.toHex(value),
       from: myAdress,
       to: paymentAdress,
-      gasPrice: web3.utils.toHex(web3.utils.toWei('30', 'shannon')),
-      gasLimit: web3.utils.toHex(30000),
+      gasPrice: web3.utils.toHex(web3.utils.toWei('20', 'shannon')),
+      gasLimit: web3.utils.toHex(25000),
       chainId: web3.utils.toHex(1),
       data: '0x00',
       v: web3.utils.toHex(1),
@@ -117,7 +117,9 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
     console.log('Tx hash: ' + txHash.toString())
       // Отправляем на подпись
     openPort().then(() => {
-      getSig(1,txHash, paymentAdress, amount).then(sign => {
+      console.log('Pass this to amount: ' + amount)
+      console.log('Amount type: ' + typeof(amount))
+      getSig(1,txHash, paymentAdress, Number(amount) * 100000000).then(sign => {
         console.log('data length: ' + sign.length)
         console.log(web3.utils.toHex(sign[69]))
         console.log('r: ' + sign.slice(5,37).toString('hex'))

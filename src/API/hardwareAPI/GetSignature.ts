@@ -84,7 +84,7 @@ export function getSig(id: number, message: string, address: string, amount: num
   let startMessageBuf = Buffer.from([0x9c, 0x9c, 0x53, currencyId, 0x01])
   let hashBuf = Buffer.from(message, 'hex')
   let amountBuf = new Buffer(4)
-  amountBuf.writeInt32BE(amount,0)
+  amountBuf.writeInt32BE(Number(amount),0)
   let addressBuf = Buffer.from(address)
   let endMessageBuf = Buffer.from([0x9a, 0x9a])
   let messageBuf = Buffer.concat([startMessageBuf,hashBuf,amountBuf,addressBuf,endMessageBuf])

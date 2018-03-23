@@ -179,7 +179,7 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
 function sendTransaction(transactionHex: string, redirect: any) {
   console.log('url: ' + urlChainSo + NETWORK)
   // формируем запрос
-  Request.post({
+  /* Request.post({
     url: 'https://api.blockcypher.com/v1/btc/test3/txs/push',
     headers: {
       'content-type': 'application/json'
@@ -201,6 +201,28 @@ function sendTransaction(transactionHex: string, redirect: any) {
           alert('Error occured: ' + Object(body).error)
         }
       })
+      */
+  Request.post({
+    url: urlChainSo + NETWORK,
+    headers: {
+      'content-type': 'application/json'
+    },
+    body : { 'tx_hex': transactionHex },
+    json: true
+  },
+  // Обрабатываем ответ
+   (res,err,body) => {
+     console.log(body)
+     console.log(res), console.log(err)
+     let bodyStatus = body.status
+     console.log(bodyStatus)
+     if (bodyStatus.toString() === 'success') {
+       redirect()
+     } else {
+       console.log(body.error.message)
+       alert('Error occured: ' + body.error.message)
+     }
+   })
 }
 
 /* const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'

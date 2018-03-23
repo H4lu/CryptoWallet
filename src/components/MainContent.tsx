@@ -11,8 +11,6 @@ export class MainContent extends React.Component<any, any> {
   handleClick () {
     this.props.refresh()
   }
-  componentDidMount() {
-  }
 
   render () {
     return (

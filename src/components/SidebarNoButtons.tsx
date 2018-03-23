@@ -17,7 +17,7 @@ export class SidebarNoButtons extends React.Component<any, any> {
           <hr/>
           <div>
             <p className = 'total-label text-inline'>Total</p>
-            <p className = 'total-percent text-inline'>+5%</p>
+            {(this.props.totalPercent > 0) ? (<p className = 'total-percent text-inline'>{this.props.totalPercent}%</p>) : (<p className = 'total-percent text-inline negative-percentage'>{this.props.totalPercent}%</p>)}
           </div>
           <p className = 'total-currency-font'>{this.props.total}$</p>
           <hr/>
