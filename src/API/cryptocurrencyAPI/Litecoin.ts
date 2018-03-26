@@ -89,7 +89,7 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
   console.log('Hash for sig length: ' + txHashForSignature.length)
   // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
   openPort().then(() => {
-    getSig(2, txHashForSignature.toString('hex'), paymentAdress, transactionAmount).then(value => {
+    getSig(2, txHashForSignature, paymentAdress, transactionAmount, 1).then(value => {
       console.log('Suppposed to be sig: ' + value.slice(5,value.length).toString('hex'))
       // Сериализуем неподписанную транзакцию
       let txHex = transaction.tx.toHex()
@@ -97,7 +97,7 @@ function createTransaction(paymentAdress: string,transactionHash: string, transa
       let data = txHex.replace('00000000ff','000000' + value.slice(5,value.length).toString('hex') + 'ff')
       console.log('Final transaction: ' + data)
       // Возвращаем готовую к отправке транзакцию
-      sendTransaction(data, redirect)
+      sendTransaction('', redirect)
     }).catch(err => {
       throw(err)
     })

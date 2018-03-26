@@ -64,7 +64,8 @@ export function openPort() {
     })
   })
 }
-export function getSig(id: number, message: string, address: string, amount: number): Promise<Buffer> {
+export function getSig(id: number, message: Buffer, address: string, amount: number, numberOfInputs: number): Promise<Buffer> {
+  console.log(numberOfInputs)
   let currencyId: number = 0x00
   switch (id) {
   case 0: {
@@ -81,13 +82,12 @@ export function getSig(id: number, message: string, address: string, amount: num
   }
   }
   console.log('Currency id:' + currencyId)
-  let startMessageBuf = Buffer.from([0x9c, 0x9c, 0x53, currencyId, 0x01])
-  let hashBuf = Buffer.from(message, 'hex')
+  let startMessageBuf = Buffer.from([0x9c, 0x9c, 0x53, currencyId, Number('0x' + numberOfInputs)])
   let amountBuf = new Buffer(4)
   amountBuf.writeInt32BE(Number(amount),0)
   let addressBuf = Buffer.from(address)
   let endMessageBuf = Buffer.from([0x9a, 0x9a])
-  let messageBuf = Buffer.concat([startMessageBuf,hashBuf,amountBuf,addressBuf,endMessageBuf])
+  let messageBuf = Buffer.concat([startMessageBuf,message,amountBuf,addressBuf,endMessageBuf])
   console.log('message buf : ' + messageBuf)
   return new Promise((resolve, reject) => {
     let writeStatus = port.write(messageBuf)

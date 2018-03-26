@@ -250,7 +250,7 @@ export class App extends React.Component<any, IAPPState> {
         if (typeof(value[val]) === 'object') {
           if (Number(val) !== value.length - 1) {
             switch (JSON.parse(value[val].content).data.network) {
-            case 'BTC': {
+            case 'BTCTEST': {
               let balance: number = Number(JSON.parse(value[val].content).data.confirmed_balance)
               this.setState({ BTCBalance:  Number(balance.toFixed(8)) })
               break
@@ -316,17 +316,14 @@ export class App extends React.Component<any, IAPPState> {
   parseETHTransactions(value: any) {
     let transactionsObject = JSON.parse(value)
     transactionsObject.map((value: any) => {
-      console.log('PASS THIS VALUE')
       let parsedTx = this.parseTransactionDataETH(value, getEthereumAddress())
       let findResp = this.state.ETHLastTx.find(function (obj) {
         return obj.Hash === Object(parsedTx).Hash
       })
       console.log('FIND RESPONSE: ' + findResp)
       if (findResp === undefined) {
-        console.log('SETTING STATE')
         this.setState({ ETHLastTx: [...this.state.ETHLastTx, parsedTx] })
       } else if (Object(parsedTx).Status !== findResp.Status) {
-        console.log('Changing Status')
         for (let index in this.state.ETHLastTx) {
           if (this.state.ETHLastTx[index].Hash === Object(parsedTx).Hash) this.state.ETHLastTx[index].Status = Object(parsedTx).Status
         }
@@ -339,8 +336,7 @@ export class App extends React.Component<any, IAPPState> {
     let parsedResponse = JSON.parse(value).data
     for (let tx in parsedResponse.txs) {
       switch (parsedResponse.network) {
-      case 'BTC': {
-        console.log('IN BTC')
+      case 'BTCTEST': {
         let parsedTx = this.parseTransactionDataBTC(parsedResponse.txs[tx], 'BTC')
         let findResp = this.state.BTCLastTx.find(function (obj) {
           return obj.Hash === Object(parsedTx).Hash
@@ -348,14 +344,9 @@ export class App extends React.Component<any, IAPPState> {
         if (findResp === undefined) {
           this.setState({ BTCLastTx: [...this.state.BTCLastTx, parsedTx] })
         } else if (Object(parsedTx).Status !== findResp.Status) {
-          console.log('Changing Status')
           for (let index in this.state.BTCLastTx) {
             if (this.state.BTCLastTx[index].Hash === Object(parsedTx).Hash) this.state.BTCLastTx[index].Status = Object(parsedTx).Status
           }
-        } else {
-          console.log('STATUS OF RESP: ' + findResp.Status)
-          console.log('STATUS OF PARSED TX : ' + Object(parsedTx).Status)
-          console.log('STATUS OF OBJECT ' + Object(findResp).Status)
         }
         break
       }
@@ -365,12 +356,9 @@ export class App extends React.Component<any, IAPPState> {
         let findResp = this.state.LTCLastTx.find(function (obj) {
           return obj.Hash === Object(parsedTx).Hash
         })
-        console.log('FIND RESPONSE: ' + findResp)
         if (findResp === undefined) {
-          console.log('SETTING STATE')
           this.setState({ LTCLastTx: [...this.state.LTCLastTx, parsedTx] })
         } else if (Object(parsedTx).Status !== findResp.Status) {
-          console.log('Changing Status')
           for (let index in this.state.LTCLastTx) {
             if (this.state.LTCLastTx[index].Hash === Object(parsedTx).Hash) this.state.LTCLastTx[index].Status = Object(parsedTx).Status
           }
@@ -387,8 +375,6 @@ export class App extends React.Component<any, IAPPState> {
     let amount = transaction.value
     let type = ''
     let hash = transaction.hash
-    console.log('TRANSACTION FROM: ' + transaction.from)
-    console.log('MY ADDRESS: ' + ethAddress)
     { (transaction.from === ethAddress.toLowerCase()) ? (type = 'outgoing') : (type = 'incoming') }
     let address = ''
     { (type === 'outgoing') ? (address = transaction.to) : (address = transaction.from) }
@@ -414,7 +400,6 @@ export class App extends React.Component<any, IAPPState> {
       let address = transaction.outgoing.outputs[0].address
       let type = 'outgoing'
       let status = (transaction.confirmations === 0) ? 'Uncofirmed' : 'Confirmed'
-      console.log('SET THIS STATUS: ' + status)
       let hash = transaction.txid
       let dataToPass = {
         Date: dateCell,

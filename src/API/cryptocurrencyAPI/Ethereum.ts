@@ -7,11 +7,11 @@ import { keccak256 } from 'js-sha3'
 import getAddress from '../hardwareAPI/GetAddress'
 import * as webRequest from 'web-request'
 // import getAddress from '../hardwareAPI/GetAddress'
-// const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM'))
+const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM'))
 // const testTokenAdress = '0x583cbBb8a8443B38aBcC0c956beCe47340ea1367'
 // const apiKeyToken = 'MJTK1MQJIR91D82SMCGC6SU61MGICCJQH2'
 // const web3 = new Web3(new Web3.providers.HttpProvider('https://api.myetherapi.com/rop'))
-const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/hgAaKEDG9sIpNHqt8UYM'))
+// const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/hgAaKEDG9sIpNHqt8UYM'))
 // const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws'))
 /*const ERC20AbiInterface: string = __dirname + '/../erc20abi.json'
 const abi = JSON.parse(fs.readFileSync(ERC20AbiInterface, 'utf-8'))
@@ -27,7 +27,7 @@ export function getEthereumAddress() {
 }
 export async function getEthereumLastTx(): Promise<any> {
   try {
-    const requestURL = 'https://api.ethplorer.io/getAddressTransactions/' + myAdress + '?apiKey=freekey'
+    const requestURL = 'https://api.ethplorer.io/getAddressTransactions/' + myAdress + '?apiKey=freekey&limit=50'
     let response = await webRequest.get(requestURL)
     return response
   } catch (err) {
@@ -119,7 +119,7 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
     openPort().then(() => {
       console.log('Pass this to amount: ' + amount)
       console.log('Amount type: ' + typeof(amount))
-      getSig(1,txHash, paymentAdress, Number(amount) * 100000000).then(sign => {
+      getSig(1,Buffer.from(txHash, 'hex'), paymentAdress, Number(amount) * 100000000, 1).then(sign => {
         console.log('data length: ' + sign.length)
         console.log(web3.utils.toHex(sign[69]))
         console.log('r: ' + sign.slice(5,37).toString('hex'))
