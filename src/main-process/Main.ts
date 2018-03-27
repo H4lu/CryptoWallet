@@ -3,7 +3,6 @@ import { app, BrowserWindow, Menu } from 'electron'
 import * as path from 'path'*/
 declare var __dirname: string
 let mainWindow: Electron.BrowserWindow
-
 app.on('ready', () => {
   mainWindow = new BrowserWindow({ width: 1024, height: 720, resizable: false,
     fullscreen: false, frame: false })
@@ -20,31 +19,14 @@ app.on('ready', () => {
     console.log(e)
     const selectionMenu = Menu.buildFromTemplate([
       { role: 'copy' },
-      { type: 'separator' },
-      { role: 'selectall' }
+      { type: 'separator' }
     ])
     const InputMenu = Menu.buildFromTemplate([{
-      label: 'Undo',
-      role: 'undo'
-    }, {
-      label: 'Redo',
-      role: 'redo'
-    }, {
-      type: 'separator'
-    }, {
-      label: 'Cut',
-      role: 'cut'
-    }, {
       label: 'Copy',
       role: 'copy'
     }, {
       label: 'Paste',
       role: 'paste'
-    }, {
-      type: 'separator'
-    }, {
-      label: 'Select all',
-      role: 'selectall'
     }
     ])
     const { inputFieldType, selectionText } = props

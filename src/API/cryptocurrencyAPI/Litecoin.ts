@@ -7,13 +7,14 @@ import { openPort, getSig } from '../hardwareAPI/GetSignature'
 let address = ''
 const rootURL = 'https://chain.so/api/v2'
 // const urlChainSo = 'https://chain.so/api/v2/send_tx/'
-const network = networks.litecoin
-const NETWORK = 'LTC'
+const network = networks.testnet
+const NETWORK = 'LTCTEST'
 export default function getAddres() {
   return address
 }
 export function initLitecoinAddress() {
   address = getAddress(2)
+  address = 'mvLpZMU3cavwLbUMKocpSWcjP9LF62BQMd'
 }
 export async function getLitecoinLastTx(): Promise<any> {
   try {

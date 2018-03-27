@@ -1,4 +1,4 @@
-import { TransactionBuilder, networks, Transaction } from 'bitcoinjs-lib'
+import { TransactionBuilder, networks, Transaction, ECPair } from 'bitcoinjs-lib'
 import * as Request from 'request'
 import * as webRequest from 'web-request'
 import { getSig, openPort } from '../hardwareAPI/GetSignature'
@@ -77,11 +77,16 @@ async function getLastTransactionData(): Promise<any> {
     })
   }
 }
+
 function ReplaceAt(input: any, search: any, replace: any, start: any, end: any) {
+  console.log('FIRST SLICE:' + input.slice(0, start))
+  console.log('SECOND SLICE ' + input.slice(start, end).replace(search, replace))
+  console.log('THIRD SLICE: ' + input.slice(end))
   return input.slice(0, start)
       + input.slice(start, end).replace(search, replace)
       + input.slice(end)
 }
+
 function createTransaction(paymentAdress: string,
     transactionAmount: number,transactionFee: number, redirect: any, utxos: Array<any>): void {
   console.log(redirect)
@@ -92,19 +97,22 @@ function createTransaction(paymentAdress: string,
     value: transactionAmount
   }
   console.log('Got this utxos: ' + utxos)
-  let { inputs, outputs, fee } = coinSelect(utxos, targets, Number(transactionFee))
+  let { inputs, outputs, fee } = coinSelect(utxos, targets, 20)
   console.log('Got this inputs: ' + inputs)
       // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
   console.log(fee)
   let transaction = new TransactionBuilder(network)
+  let testTx = new TransactionBuilder(network)
   for (let input in inputs) {
     transaction.addInput(inputs[input].txid, inputs[input].output_no)
+    testTx.addInput(inputs[input].txid, inputs[input].output_no)
     console.log('Tx inputs: ' + transaction.inputs)
   }
   for (let out in outputs) {
     if (!outputs[out].address) {
       outputs[out].address = myAddr
     }
+    testTx.addOutput(outputs[out].address, outputs[out].value)
     transaction.addOutput(outputs[out].address, outputs[out].value)
   }
   let unbuildedTx = transaction.buildIncomplete().toHex()
@@ -127,33 +135,44 @@ function createTransaction(paymentAdress: string,
     let lastIndex = 0
     hashArray = []
     transaction.inputs.forEach(function(input, index) {
+      const key = ECPair.fromWIF('cT2KsVoG9CxsphtEefRXDvmFnq3aUZ5mvQDNT3HKb3UqhGGrWxiy', network)
+      testTx.sign(index, key)
       console.log('My index: ' + index)
       console.log('For each')
       console.log(input)
       console.log('Utxo script: ' + Object(utxos[index]).script_hex)
-      let dataForHash = ReplaceAt(unbuildedTx, '00000000ff', Object(utxos[index]).script_hex, unbuildedTx.indexOf('00000000ff', lastIndex) + 7, unbuildedTx.indexOf('00000000ff', lastIndex) + 8)
+      let dataForHash = ReplaceAt(unbuildedTx + '01000000', '00000000ff', '00000019' + Object(utxos[index]).script_hex + 'ff', unbuildedTx.indexOf('00000000ff', lastIndex), unbuildedTx.indexOf('00000000ff', lastIndex) + 50)
       console.log('DATA FOR HASH: ' + dataForHash)
+      let firstHash = crypto.createHash('sha256').update(Buffer.from(dataForHash, 'hex')).digest('hex')
+      let secondHash = crypto.createHash('sha256').update(Buffer.from(firstHash, 'hex')).digest('hex')
+      console.log('SECOND HASH: ' + secondHash)
+      console.log('HASH OF first buffer: ' + crypto.createHash('sha256').update(Buffer.from(dataForHash, 'hex')).digest('hex'))
+      console.log('HASH WITH BUFFER: ' + crypto.createHash('sha256').update(crypto.createHash('sha256').update(Buffer.from(dataForHash, 'hex')).digest('hex')))
       let hash = crypto.createHash('sha256').update(crypto.createHash('sha256').update(dataForHash).digest('hex')).digest('hex')
       console.log('HASH: ' + hash)
       console.log('GOT THIS HASH' + crypto.createHash('sha256').update(crypto.createHash('sha256').update('sdfsdf').digest('hex')).digest('hex'))
       let sigIndex = unbuildedTx.indexOf('00000000ff', lastIndex)
       console.log(sigIndex)
-      lastIndex += 70
+      lastIndex += 90
       // let hashForSig = transaction.tx.hashForSignature(index, Buffer.from(Object(utxos[index]).script_hex),Transaction.SIGHASH_ALL)
-      hashArray.push(hash)
+      hashArray.push(Buffer.from(secondHash,'hex'))
     })
+    let hashBuffer = Buffer.concat(hashArray)
+    console.log('HASHBUFFER: ' + hashBuffer + 'LENGTH: ' + hashBuffer.length)
     console.log('HASHARRAY: ' + hashArray)
-
-    let data = await getSig(0, Buffer.from(hashArray), paymentAdress, transactionAmount, transaction.tx.ins.length)
+    console.log('WORKING TX : ' + testTx.build().toHex())
+    let data = await getSig(0, hashBuffer, paymentAdress, transactionAmount, transaction.tx.ins.length)
     let startIndex = 5
     let shift = data[4] + 5
-    console.log('BYTES: ' + data[4] + ' ' + data[5] + ' ' + data[6] + ' ' + data[3])
     transaction.inputs.forEach(() => {
-
-      // unbuildedTx = unbuildedTx.replace('00000000ff','000000' + data.slice(startIndex, shift).toString('hex') + 'ff')
+      unbuildedTx = unbuildedTx.replace('00000000ff','000000' + data.slice(startIndex, shift).toString('hex') + 'ff')
       console.log('INSERT THIS: ' + data.slice(startIndex, shift).toString('hex'))
+      console.log('STARTINDEX: ' + data[startIndex] + 2)
+      console.log('DATA OF : ' + data[startIndex])
       startIndex += (data[startIndex] + 2)
-      shift += data[4]
+      shift += data[startIndex] + 2
+      console.log('SHIFT VALUE: ' + shift)
+      console.log('DATA OF SHIFT: ' + data[shift])
       console.log('START INDEX: ' + startIndex)
       console.log('SHIFT: ' + shift)
     })

@@ -13,13 +13,10 @@ export class MainWindow extends React.Component<any, IMainWindowState> {
   }
   render() {
     if (this.props.connection && this.props.status) {
-      console.log('TRUE CONDITION')
       let timeout = setTimeout(() => {
         clearTimeout(timeout)
         this.props.init('FROM TIMEOUT')
         this.setState({ redirect: true })
-
-        console.log('TIMEOUT CLEARED')
       }, 3000,[])
     }
     if (this.state.redirect) {

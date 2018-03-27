@@ -82,13 +82,16 @@ export function getSig(id: number, message: Buffer, address: string, amount: num
   }
   }
   console.log('Currency id:' + currencyId)
-  let startMessageBuf = Buffer.from([0x9c, 0x9c, 0x53, currencyId, Number('0x' + numberOfInputs)])
+  let numberOfIns = Number('0x' + numberOfInputs)
+  console.log('NUMBER OF INPUTS: ' + numberOfIns)
+  let startMessageBuf = Buffer.from([0x9c, 0x9c, 0x53, currencyId, numberOfIns])
   let amountBuf = new Buffer(4)
   amountBuf.writeInt32BE(Number(amount),0)
   let addressBuf = Buffer.from(address)
   let endMessageBuf = Buffer.from([0x9a, 0x9a])
   let messageBuf = Buffer.concat([startMessageBuf,message,amountBuf,addressBuf,endMessageBuf])
   console.log('message buf : ' + messageBuf)
+  console.log('LENGTH OF MESSAGE BUF: ' + messageBuf.length)
   return new Promise((resolve, reject) => {
     let writeStatus = port.write(messageBuf)
     console.log('Write status: ' + writeStatus)
