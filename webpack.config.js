@@ -10,13 +10,14 @@ const commonConfig = {
   },
   externals: {
     "serialport": "require('serialport')",
-    "keccak": "require('serialport')"
+    "keccak": "require('serialport')",
   },
   node: {
     __dirname: false
   },
   resolve: {
   alias: {
+    '7zip': path.resolve(__dirname, 'node_modules/win-7zip/index.js'), 
     sha3: path.join(__dirname,'node_modules/sha3/build/Release/sha3.node'),
     keccak: path.join(__dirname,'node_modules/keccak/build/Release/keccak.node'),
   },

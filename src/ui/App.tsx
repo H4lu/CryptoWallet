@@ -1,4 +1,5 @@
 import React from 'react'
+
 // import { Switch, Route } from 'react-router'
 import { Route, Redirect } from 'react-router'
 import { Header } from '../components/Header'
@@ -11,8 +12,8 @@ import { BTCWindow } from '../components/BTCWindow'
 import { ETHWIndow } from '../components/ETHWindow'
 import { LTCWindow } from '../components/LTCWindow'
 import '../components/style.css'
-import { MainContent } from '../components/MainContent'
-import { getBalance, getBitcoinLastTx, initBitcoinAddress } from '../API/cryptocurrencyAPI/BitCoin'
+import MainContent from '../components/MainContent'
+import { getBitcoinLastTx, initBitcoinAddress } from '../API/cryptocurrencyAPI/BitCoin'
 import { getLitecoinBalance, initLitecoinAddress, getLitecoinLastTx } from '../API/cryptocurrencyAPI/Litecoin'
 import { getEthereumBalance, convertFromWei, initEthereumAddress, getEthereumLastTx, getEthereumAddress } from '../API/cryptocurrencyAPI/Ethereum'
 import GetCurrencyRate from '../core/GetCurrencyRate'
@@ -22,6 +23,8 @@ import { checkPin } from '../API/hardwareAPI/GetWalletInfo'
 // import { wrapper } from '../API/hardwareAPI/GetWalletInfo'
 import { TransactionSuccess } from '../components/TransactionSuccess'
 import SerialPort from 'serialport'
+import { loadBitcoinBalance } from '../core/actions/load'
+import { connect } from 'react-redux'
 /*
 SerialPort.list().then(value => {
   console.log('Serialport list value: ' + JSON.stringify(value))
@@ -67,6 +70,9 @@ export async function getSig() {
   }
 }
 */
+interface IAppProps {
+  store: any
+}
 interface IAPPState {
   BTCBalance: number,
   ETHBalance: number,
@@ -105,13 +111,13 @@ import { Exchange } from '../components/Exchange'
 import { Switch } from 'react-router'
 */
 
-export class App extends React.Component<any, IAPPState> {
+class App extends React.Component<any, IAPPState> {
   routes = [
     {
       path: '/main',
       exact: true,
       sidebar: () => <SidebarContent total = {this.state.totalBalance} refresh = {this.updateData} totalPercent = {this.state.totalPercentage}/>,
-      main: () => <MainContent btcBalance = {this.state.BTCBalance} ltcBalance = {this.state.LTCBalance} ethBalance = {this.state.ETHBalance}
+      main: () => <MainContent btcBalance = {this.props.balance} ltcBalance = {this.state.LTCBalance} ethBalance = {this.state.ETHBalance}
       btcPrice = {this.state.BTCPrice} ltcPrice = {this.state.LTCPrice} ethPrice = {this.state.ETHPrice} btcHourChange = {this.state.BTCHourChange}
       ltcHourChange = {this.state.LTCHourChange} ethHourChange = {this.state.ETHHourChange} lastTx = {this.state.BTCLastTx.concat(this.state.ETHLastTx, this.state.LTCLastTx).sort((a: any, b: any) => {
         let c = new Date(a.Date).getTime()
@@ -123,7 +129,7 @@ export class App extends React.Component<any, IAPPState> {
       path: '/btc-window',
       exact: true,
       sidebar: () => <SidebarNoButtons total = {this.state.totalBalance} totalPercent = {this.state.totalPercentage}/>,
-      main: () => <BTCWindow balance = {this.state.BTCBalance} price = {this.state.BTCPrice} hourChange = {this.state.BTCHourChange} lastTx = {this.state.BTCLastTx.sort((a: any, b: any) => {
+      main: () => <BTCWindow balance = {this.props.balance} price = {this.state.BTCPrice} hourChange = {this.state.BTCHourChange} lastTx = {this.state.BTCLastTx.sort((a: any, b: any) => {
         let c = new Date(a.Date).getTime()
         let d = new Date(b.Date).getTime()
         return d - c
@@ -202,7 +208,6 @@ export class App extends React.Component<any, IAPPState> {
             if (this.state.connection) {
               return
             } else {
-              console.log('CALL WAIT FOR PIN')
               this.waitForPin()
               return this.setState({ connection: !this.state.connection })
             }
@@ -216,24 +221,20 @@ export class App extends React.Component<any, IAPPState> {
     }, 1000, [])
   }
   waitForPin() {
-    console.log('CHECKPIN')
     let timer = setInterval(() => {
-      console.log('IN INTERVAL')
       if (checkPin()) {
-        console.log('PIN ENTERED')
         this.setState({ status: true })
         clearInterval(timer)
-        console.log('INTERVAL CLEARED')
       }
     },1000,[])
   }
-  initAll(from: string) {
+  initAll() {
     if (this.state.allowInit) {
       this.setState({ allowInit: false })
-      console.log('Called from: ' + from)
       initBitcoinAddress()
       initEthereumAddress()
       initLitecoinAddress()
+      this.props.store.dispatch(loadBitcoinBalance())
       this.getValues()
       this.getTransactions()
     }
@@ -244,9 +245,8 @@ export class App extends React.Component<any, IAPPState> {
     this.getValues()
   }
   getValues() {
-    Promise.all([getBalance(), getEthereumBalance(), getLitecoinBalance(), GetCurrencyRate()]).then(value => {
+    Promise.all([getEthereumBalance(), getLitecoinBalance(), GetCurrencyRate()]).then(value => {
       for (let val in value) {
-        console.log('In getvalues')
         if (typeof(value[val]) === 'object') {
           if (Number(val) !== value.length - 1) {
             switch (JSON.parse(value[val].content).data.network) {
@@ -255,8 +255,7 @@ export class App extends React.Component<any, IAPPState> {
               this.setState({ BTCBalance:  Number(balance.toFixed(8)) })
               break
             }
-            case 'LTC': {
-              console.log(JSON.stringify(value[val].content))
+            case 'LTCTEST': {
               let balance: number = Number(JSON.parse(value[val].content).data.confirmed_balance)
               this.setState({ LTCBalance: Number(balance.toFixed(8)) })
               break
@@ -289,11 +288,9 @@ export class App extends React.Component<any, IAPPState> {
           this.setState({ ETHBalance: Number(balance.toFixed(8)) })
         }
       }
-      console.log('Promise all value: ' + value)
       let total = this.state.BTCPrice + this.state.ETHPrice + this.state.LTCPrice
       this.setState({ totalBalance: Number((total).toFixed(8)) })
       let totalPercentage = this.state.BTCHourChange + this.state.ETHHourChange + this.state.LTCHourChange
-      console.log('TOTAL PERECENTAGE: ' + totalPercentage)
       this.setState({ totalPercentage: Number((totalPercentage).toFixed(2)) })
     })
   }
@@ -320,7 +317,6 @@ export class App extends React.Component<any, IAPPState> {
       let findResp = this.state.ETHLastTx.find(function (obj) {
         return obj.Hash === Object(parsedTx).Hash
       })
-      console.log('FIND RESPONSE: ' + findResp)
       if (findResp === undefined) {
         this.setState({ ETHLastTx: [...this.state.ETHLastTx, parsedTx] })
       } else if (Object(parsedTx).Status !== findResp.Status) {
@@ -350,7 +346,7 @@ export class App extends React.Component<any, IAPPState> {
         }
         break
       }
-      case 'LTC': {
+      case 'LTCTEST': {
         console.log('IN LTC')
         let parsedTx = this.parseTransactionDataBTC(parsedResponse.txs[tx], 'LTC')
         let findResp = this.state.LTCLastTx.find(function (obj) {
@@ -369,7 +365,6 @@ export class App extends React.Component<any, IAPPState> {
     }
   }
   parseTransactionDataETH(transaction: any, ethAddress: string) {
-    console.log('PARSING ETC TX' + JSON.stringify(transaction))
     let date = new Date(transaction.timestamp * 1000)
     let dateCell = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
     let amount = transaction.value
@@ -469,3 +464,10 @@ export class App extends React.Component<any, IAPPState> {
     )
   }
 }
+function mapStateToProps(state: any, IAppProps) {
+  console.log(IAppProps)
+  return {
+    balance: state.getBalance
+  }
+}
+export default connect(mapStateToProps)(App)

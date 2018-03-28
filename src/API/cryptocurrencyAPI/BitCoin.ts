@@ -47,7 +47,7 @@ export async function getBalance(): Promise<any> {
     0 - количество подтверждений транзакций
   */
   // rootURL + 'get_address_balance/' + myAddr
-  let requestUrl = 'https://chain.so/api/v2/get_address_balance/' + NETWORK + '/' + myAddr.trim() + '/' + 0
+  let requestUrl = 'https://chain.so/api/v2/get_address_balance/' + NETWORK + '/' + myAddr + '/' + 0
   console.log(requestUrl)
   try {
     // Делаем запрос и отдаём в виде Promise
