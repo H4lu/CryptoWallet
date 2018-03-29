@@ -11,7 +11,7 @@ app.on('ready', () => {
   mainWindow.once('ready-to-show', () => mainWindow.show())
  // const fileName = 'file:///' + __dirname + '/index.html'
  // mainWindow.loadURL(fileName)
- /* mainWindow.loadURL(url.format({
+  /* mainWindow.loadURL(url.format({
     pathname: path.join(__dirname, 'index.html'),
     protocol: 'file:',
     slashes: true

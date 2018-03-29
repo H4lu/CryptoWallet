@@ -1,6 +1,6 @@
 import * as React from 'react'
 // import {Link} from 'react-router-dom'
-
+import { REFRESH_BUTTON_PATH } from '../core/paths'
 export class SidebarContent extends React.Component<any, any> {
   constructor(props: any) {
     super(props)
@@ -14,7 +14,7 @@ export class SidebarContent extends React.Component<any, any> {
     return (
       <div className = 'sidebar'>
         <div className = 'sidebar-content'>
-        <button type = 'submit' className = 'button-refresh' onClick = {this.handleUpdateDataClick}>Update Data</button>
+        <button type = 'submit' className = 'button-refresh' onClick = {this.handleUpdateDataClick}><img src = {REFRESH_BUTTON_PATH}/>Update Data</button>
         <hr/>
         <div>
           <p className = 'total-label text-inline'>Total</p>

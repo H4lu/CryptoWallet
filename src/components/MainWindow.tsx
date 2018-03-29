@@ -1,5 +1,6 @@
 import React from 'react'
 import { Redirect } from 'react-router'
+import { LOGO_PATH } from '../core/paths'
 
 interface IMainWindowState {
   redirect: boolean
@@ -22,9 +23,11 @@ export class MainWindow extends React.Component<any, IMainWindowState> {
     if (this.state.redirect) {
       return <Redirect from = '/' to = '/main'/>
     }
+    // <img src = '../static/logo.svg'/>
     return(
         <div className = 'window-main'>
         <p className = 'window-main-header'>Your Safest Wallet</p>
+        <img src = {LOGO_PATH} className = 'logo'/>
         <p className = 'window-main-text'>Braitberry</p>
         {(this.props.connection) ? (
           (this.props.status) ? (

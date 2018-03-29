@@ -74,7 +74,7 @@ button {
   position: absolute;
   width: 74px;
   height: 10px;
-  left: 32px;
+  left: 50px;
   top: 3.5px;
 
   font-family: 'Helvetica';
@@ -949,4 +949,14 @@ input::-webkit-input-placeholder {
 .about-block-margin {
   margin-top: 5px;
   margin-bottom: 5px;
+}
+.logo {
+  position: absolute;
+  left: 478px;
+  right: 478px;
+  top: 280px;
+  bottom: 440px;
+}
+.usb-connection-status {
+  display: inline-block;
 }

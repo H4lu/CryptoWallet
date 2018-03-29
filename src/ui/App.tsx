@@ -24,7 +24,7 @@ import { checkPin } from '../API/hardwareAPI/GetWalletInfo'
 import { TransactionSuccess } from '../components/TransactionSuccess'
 import SerialPort from 'serialport'
 import { loadBitcoinBalance } from '../core/actions/load'
-import { connect } from 'react-redux'
+// import { connect } from 'react-redux'
 /*
 SerialPort.list().then(value => {
   console.log('Serialport list value: ' + JSON.stringify(value))
@@ -70,9 +70,30 @@ export async function getSig() {
   }
 }
 */
-interface IAppProps {
-  store: any
+/* interface IAppProps {
+  store: any,
+  BTCBalance: number,
+  ETHBalance: number,
+  LTCBalance: number,
+  BTCPrice: number,
+  ETHPrice: number,
+  LTCPrice: number,
+  totalBalance: number,
+  BTCHourChange: number,
+  ETHHourChange: number,
+  LTCHourChange: number,
+  BTCLastTx: Array<any>,
+  LTCLastTx: Array<any>,
+  ETHLastTx: Array<any>,
+  connection: boolean,
+  status: boolean,
+  redirect: boolean,
+  tempState: Array<any>,
+  allowInit: boolean,
+  redirectToTransactionSuccess: boolean,
+  totalPercentage: number
 }
+*/
 interface IAPPState {
   BTCBalance: number,
   ETHBalance: number,
@@ -111,7 +132,7 @@ import { Exchange } from '../components/Exchange'
 import { Switch } from 'react-router'
 */
 
-class App extends React.Component<any, IAPPState> {
+export default class App extends React.Component<any, IAPPState> {
   routes = [
     {
       path: '/main',
@@ -295,6 +316,7 @@ class App extends React.Component<any, IAPPState> {
     })
   }
   componentWillMount() {
+    console.log('SETTING REDIRECT')
     this.setState({ redirect: true })
   }
   getTransactions() {
@@ -464,10 +486,12 @@ class App extends React.Component<any, IAPPState> {
     )
   }
 }
-function mapStateToProps(state: any, IAppProps) {
-  console.log(IAppProps)
+/* function mapStateToProps(state: any, store: any) {
+  console.log(store)
   return {
     balance: state.getBalance
   }
 }
+
 export default connect(mapStateToProps)(App)
+*/

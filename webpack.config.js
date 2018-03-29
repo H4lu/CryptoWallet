@@ -39,6 +39,7 @@ const commonConfig = {
           loader: 'url-loader',
           options: {
             limit: 100000,
+
           },
         },
       },

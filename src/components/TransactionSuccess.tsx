@@ -1,5 +1,6 @@
 import React from 'react'
 import { Redirect } from 'react-router'
+import { TRANSACTION_SUCCESS } from '../core/paths'
 interface ITransactionsuccessState {
   redirect: boolean
 }
@@ -22,7 +23,7 @@ export class TransactionSuccess extends React.Component<any, ITransactionsuccess
     if (this.state.redirect) return <Redirect from = '/transaction_success' to = '/main'/>
     return(
       <div className = 'window-main'>
-        <img src = 'file:///C:/Users/Denis/Desktop/CryptoWallet/CryptoWallet/static/icons/Group5.png' className = 'transaction-success-img'/>
+        <img src = {TRANSACTION_SUCCESS} className = 'transaction-success-img'/>
       </div>
     )
   }
