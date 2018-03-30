@@ -26,6 +26,7 @@ export class MainWindow extends React.Component<any, IMainWindowState> {
     // <img src = '../static/logo.svg'/>
     return(
         <div className = 'window-main'>
+        <div className = 'main-window-flex-container'>
         <p className = 'window-main-header'>Your Safest Wallet</p>
         <img src = {LOGO_PATH} className = 'logo'/>
         <p className = 'window-main-text'>Braitberry</p>
@@ -38,6 +39,7 @@ export class MainWindow extends React.Component<any, IMainWindowState> {
         ) : (
           <p className = 'window-main-not-ready'>USB-cable is not connected</p>
         )}
+        </div>
       </div>
     )
   }

@@ -8,10 +8,10 @@ export class Footer extends React.Component<any, any> {
     this.renderStatusErr = this.renderStatusErr.bind(this)
   }
   renderStatusOK() {
-    return <div><img src = {USB_ON_PATH} className = 'usb-connection-status'/><p className = 'status'>Status:<span className = 'footer-connected'>Connected</span></p></div>
+    return <div className = 'footer-content-container'><img src = {USB_ON_PATH}/><p className = 'status'>Status:<span className = 'footer-connected'>Connected</span></p></div>
   }
   renderStatusErr() {
-    return <div><img src = {USB_OFF_PATH} className = 'usb-connection-status'/><p className = 'status'>Status:<span className = 'footer-not-connected'> Not Connected</span></p></div>
+    return <div className = 'footer-content-container'><img src = {USB_OFF_PATH}/><p className = 'status'>Status:<span className = 'footer-not-connected'> Not Connected</span></p></div>
   }
   render() {
     return (

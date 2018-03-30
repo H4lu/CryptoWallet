@@ -1,5 +1,5 @@
 import React from 'react'
-
+import pcsclite from 'pcsclite'
 // import { Switch, Route } from 'react-router'
 import { Route, Redirect } from 'react-router'
 import { Header } from '../components/Header'
@@ -19,11 +19,13 @@ import { getEthereumBalance, convertFromWei, initEthereumAddress, getEthereumLas
 import GetCurrencyRate from '../core/GetCurrencyRate'
 import { SidebarNoButtons } from '../components/SidebarNoButtons'
 import { MainWindow } from '../components/MainWindow'
-import { checkPin } from '../API/hardwareAPI/GetWalletInfo'
+// import { checkPin } from '../API/hardwareAPI/GetWalletInfo'
 // import { wrapper } from '../API/hardwareAPI/GetWalletInfo'
 import { TransactionSuccess } from '../components/TransactionSuccess'
-import SerialPort from 'serialport'
+// import SerialPort from 'serialport'
 import { loadBitcoinBalance } from '../core/actions/load'
+let pcsc = new pcsclite()
+
 // import { connect } from 'react-redux'
 /*
 SerialPort.list().then(value => {
@@ -208,11 +210,13 @@ export default class App extends React.Component<any, IAPPState> {
     this.parseTransactionDataETH = this.parseTransactionDataETH.bind(this)
     this.parseBTCLikeTransactions = this.parseBTCLikeTransactions.bind(this)
     this.parseTransactionDataBTC = this.parseTransactionDataBTC.bind(this)
-    this.waitForPin = this.waitForPin.bind(this)
+    // this.waitForPin = this.waitForPin.bind(this)
     this.initAll = this.initAll.bind(this)
     this.getValues = this.getValues.bind(this)
     this.getTransactions = this.getTransactions.bind(this)
     this.updateData = this.updateData.bind(this)
+    this.connectionERROR = this.connectionERROR.bind(this)
+    this.connectionOK = this.connectionOK.bind(this)
   }
   redirectToTransactionsuccess() {
     this.resetRedirect()
@@ -221,7 +225,14 @@ export default class App extends React.Component<any, IAPPState> {
   resetRedirect() {
     this.setState({ redirectToTransactionSuccess: false })
   }
+  connectionOK() {
+    this.setState({ connection: true })
+  }
+  connectionERROR() {
+    this.setState({ connection: false })
+  }
   componentDidMount() {
+    /*
     setInterval(() => {
       SerialPort.list().then(value => {
         for (let item in value) {
@@ -248,6 +259,52 @@ export default class App extends React.Component<any, IAPPState> {
         clearInterval(timer)
       }
     },1000,[])
+  */
+    pcsc.on('reader', (reader) => {
+
+      console.log('New reader detected', reader.name)
+
+      reader.on('error', function(err) {
+        console.log('Error(', this.name, '):', err.message)
+      })
+
+      reader.on('status', (status) => {
+        console.log('Status(', status.name, '):', status)
+          /* check what has changed */
+        const changes = reader.state ^ status.state
+        if (changes) {
+          if ((changes & reader.SCARD_STATE_EMPTY) && (status.state & reader.SCARD_STATE_EMPTY)) {
+            console.log('card removed')/* card removed */
+            this.connectionERROR()
+            reader.disconnect(reader.SCARD_LEAVE_CARD, function(err) {
+              if (err) {
+                console.log(err)
+              } else {
+                console.log('Disconnected')
+              }
+            })
+          } else if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
+            console.log('card inserted')/* card inserted */
+            this.connectionOK()
+            reader.connect({ share_mode : reader.SCARD_SHARE_SHARED }, function(err, protocol) {
+              if (err) {
+                console.log(err)
+              } else {
+                console.log('Protocol(', reader.name, '):', protocol)
+              }
+            })
+          }
+        }
+      })
+
+      reader.on('end', function() {
+        console.log('Reader', this.name, 'removed')
+      })
+    })
+
+    pcsc.on('error', function(err) {
+      console.log('PCSC error', err.message)
+    })
   }
   initAll() {
     if (this.state.allowInit) {

@@ -20,8 +20,8 @@ export class Header extends React.Component<any, any> {
     return (
     <div className = 'header'>
       <div className = 'header-content'>
-        <div>
-        <img src = {LOGO_SMALL}/><p className = 'logo-font'>Braitberry</p>
+        <div className = 'header-flex-container'>
+        <img src = {LOGO_SMALL} /><p className = 'logo-font'>Braitberry</p>
         </div>
         <div className = 'title-bar-buttons'>
           <button className = 'button-hide' onClick = {this.hideWindow}/>

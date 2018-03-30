@@ -15,6 +15,7 @@ export class SidebarContent extends React.Component<any, any> {
       <div className = 'sidebar'>
         <div className = 'sidebar-content'>
         <button type = 'submit' className = 'button-refresh' onClick = {this.handleUpdateDataClick}><img src = {REFRESH_BUTTON_PATH}/>Update Data</button>
+        <button className = 'button-menu'/>
         <hr/>
         <div>
           <p className = 'total-label text-inline'>Total</p>

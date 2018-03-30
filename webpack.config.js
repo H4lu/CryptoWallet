@@ -10,13 +10,14 @@ const commonConfig = {
   },
   externals: {
     "serialport": "require('serialport')",
-    "keccak": "require('serialport')",
+    "keccak": "require('keccak')",
   },
   node: {
     __dirname: false
   },
   resolve: {
   alias: {
+    pcsclite: path.resolve(__dirname, 'node_modules/pcsclite/lib/pcsclite.js'),
     '7zip': path.resolve(__dirname, 'node_modules/win-7zip/index.js'), 
     sha3: path.join(__dirname,'node_modules/sha3/build/Release/sha3.node'),
     keccak: path.join(__dirname,'node_modules/keccak/build/Release/keccak.node'),
@@ -60,7 +61,7 @@ const commonConfig = {
       },
       {
         test: /\.node$/,
-        use: 'node-loader'
+        use: 'native-ext-loader'
     },
       {
         test: /\.tsx?$/,
