@@ -1,6 +1,6 @@
 import * as React from 'react'
 // import {Link} from 'react-router-dom'
-import { REFRESH_BUTTON_PATH } from '../core/paths'
+import { REFRESH_BUTTON_PATH, BTN_MENU_PATH } from '../core/paths'
 export class SidebarContent extends React.Component<any, any> {
   constructor(props: any) {
     super(props)
@@ -14,12 +14,16 @@ export class SidebarContent extends React.Component<any, any> {
     return (
       <div className = 'sidebar'>
         <div className = 'sidebar-content'>
-        <button type = 'submit' className = 'button-refresh' onClick = {this.handleUpdateDataClick}><img src = {REFRESH_BUTTON_PATH}/>Update Data</button>
-        <button className = 'button-menu'/>
+        <div className = 'sidebar-buttons'>
+          <button type = 'submit' className = 'button-refresh' onClick = {this.handleUpdateDataClick}><img src = {REFRESH_BUTTON_PATH}/>Update Data</button>
+          <button className = 'button-menu'><img src = {BTN_MENU_PATH}/></button>
+        </div>
         <hr/>
         <div>
           <p className = 'total-label text-inline'>Total</p>
-          {(this.props.totalPercent > 0) ? (<p className = 'total-percent text-inline'>{this.props.totalPercent}%</p>) : (<p className = 'total-percent text-inline negative-percentage'>{this.props.totalPercent}%</p>)}
+          {(this.props.totalPercent > 0) ? (
+          <p className = 'total-percent text-inline'>{this.props.totalPercent}%</p>) : (
+          <p className = 'total-percent text-inline negative-percentage'>{this.props.totalPercent}%</p>)}
         </div>
           <p className = 'total-currency-font'>{this.props.total}$</p>
           <hr/>

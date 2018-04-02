@@ -1,5 +1,4 @@
 import React from 'react'
-import pcsclite from 'pcsclite'
 // import { Switch, Route } from 'react-router'
 import { Route, Redirect } from 'react-router'
 import { Header } from '../components/Header'
@@ -24,6 +23,7 @@ import { MainWindow } from '../components/MainWindow'
 import { TransactionSuccess } from '../components/TransactionSuccess'
 // import SerialPort from 'serialport'
 import { loadBitcoinBalance } from '../core/actions/load'
+import pcsclite from 'pcsclite'
 let pcsc = new pcsclite()
 
 // import { connect } from 'react-redux'
@@ -259,7 +259,9 @@ export default class App extends React.Component<any, IAPPState> {
         clearInterval(timer)
       }
     },1000,[])
-  */
+ */
+    console.log('APP PROPS:', this.props)
+    console.log('APP:', App)
     pcsc.on('reader', (reader) => {
 
       console.log('New reader detected', reader.name)
@@ -270,12 +272,11 @@ export default class App extends React.Component<any, IAPPState> {
 
       reader.on('status', (status) => {
         console.log('Status(', status.name, '):', status)
-          /* check what has changed */
         const changes = reader.state ^ status.state
         if (changes) {
           if ((changes & reader.SCARD_STATE_EMPTY) && (status.state & reader.SCARD_STATE_EMPTY)) {
-            console.log('card removed')/* card removed */
-            this.connectionERROR()
+            console.log('card removed')
+            this.setState({ connection: false })
             reader.disconnect(reader.SCARD_LEAVE_CARD, function(err) {
               if (err) {
                 console.log(err)
@@ -284,8 +285,11 @@ export default class App extends React.Component<any, IAPPState> {
               }
             })
           } else if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
-            console.log('card inserted')/* card inserted */
-            this.connectionOK()
+            console.log('card inserted')
+            this.setState({ connection: true })
+            setTimeout(() => {
+              this.setState({ status: true })
+            }, 2000)
             reader.connect({ share_mode : reader.SCARD_SHARE_SHARED }, function(err, protocol) {
               if (err) {
                 console.log(err)
@@ -297,14 +301,16 @@ export default class App extends React.Component<any, IAPPState> {
         }
       })
 
-      reader.on('end', function() {
-        console.log('Reader', this.name, 'removed')
+      reader.on('end', () => {
+        console.log('Reader', reader.name, 'removed')
+        this.setState({ connection: false })
       })
     })
 
     pcsc.on('error', function(err) {
       console.log('PCSC error', err.message)
     })
+
   }
   initAll() {
     if (this.state.allowInit) {
@@ -316,7 +322,6 @@ export default class App extends React.Component<any, IAPPState> {
       this.getValues()
       this.getTransactions()
     }
-
   }
   updateData() {
     this.getTransactions()

@@ -1,4 +1,4 @@
-import { TransactionBuilder, networks, Transaction, ECPair } from 'bitcoinjs-lib'
+import { TransactionBuilder, networks, Transaction } from 'bitcoinjs-lib'
 import * as Request from 'request'
 import * as webRequest from 'web-request'
 import { getSig, openPort } from '../hardwareAPI/GetSignature'
@@ -6,6 +6,9 @@ import getAddress from '../hardwareAPI/GetAddress'
 // import getAddress from '../hardwareAPI/GetAddress'
 import * as utils from './utils'
 import * as crypto from 'crypto'
+import Container from '../../ui/Index'
+import * as satoshi from 'satoshi-bitcoin'
+console.log(Container)
 // const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 console.log(urlChainSo)
@@ -61,7 +64,7 @@ export async function getBalance(): Promise<any> {
 }
 
 function toSatoshi(BTC: number): number {
-  return Number(BTC * 100000000)
+  return satoshi.toSatoshi(BTC)
 }
 
 async function getLastTransactionData(): Promise<any> {
@@ -102,17 +105,14 @@ function createTransaction(paymentAdress: string,
       // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
   console.log(fee)
   let transaction = new TransactionBuilder(network)
-  let testTx = new TransactionBuilder(network)
   for (let input in inputs) {
     transaction.addInput(inputs[input].txid, inputs[input].output_no)
-    testTx.addInput(inputs[input].txid, inputs[input].output_no)
     console.log('Tx inputs: ' + transaction.inputs)
   }
   for (let out in outputs) {
     if (!outputs[out].address) {
       outputs[out].address = myAddr
     }
-    testTx.addOutput(outputs[out].address, outputs[out].value)
     transaction.addOutput(outputs[out].address, outputs[out].value)
   }
   let unbuildedTx = transaction.buildIncomplete().toHex()
@@ -135,8 +135,6 @@ function createTransaction(paymentAdress: string,
     let lastIndex = 0
     hashArray = []
     transaction.inputs.forEach(function(input, index) {
-      const key = ECPair.fromWIF('cT2KsVoG9CxsphtEefRXDvmFnq3aUZ5mvQDNT3HKb3UqhGGrWxiy', network)
-      testTx.sign(index, key)
       console.log('My index: ' + index)
       console.log('For each')
       console.log(input)
@@ -146,10 +144,6 @@ function createTransaction(paymentAdress: string,
       let firstHash = crypto.createHash('sha256').update(Buffer.from(dataForHash, 'hex')).digest('hex')
       let secondHash = crypto.createHash('sha256').update(Buffer.from(firstHash, 'hex')).digest('hex')
       console.log('SECOND HASH: ' + secondHash)
-      console.log('HASH OF first buffer: ' + crypto.createHash('sha256').update(Buffer.from(dataForHash, 'hex')).digest('hex'))
-      console.log('HASH WITH BUFFER: ' + crypto.createHash('sha256').update(crypto.createHash('sha256').update(Buffer.from(dataForHash, 'hex')).digest('hex')))
-      let hash = crypto.createHash('sha256').update(crypto.createHash('sha256').update(dataForHash).digest('hex')).digest('hex')
-      console.log('HASH: ' + hash)
       console.log('GOT THIS HASH' + crypto.createHash('sha256').update(crypto.createHash('sha256').update('sdfsdf').digest('hex')).digest('hex'))
       let sigIndex = unbuildedTx.indexOf('00000000ff', lastIndex)
       console.log(sigIndex)
@@ -160,7 +154,6 @@ function createTransaction(paymentAdress: string,
     let hashBuffer = Buffer.concat(hashArray)
     console.log('HASHBUFFER: ' + hashBuffer + 'LENGTH: ' + hashBuffer.length)
     console.log('HASHARRAY: ' + hashArray)
-    console.log('WORKING TX : ' + testTx.build().toHex())
     let data = await getSig(0, hashBuffer, paymentAdress, transactionAmount, transaction.tx.ins.length)
     let startIndex = 5
     let shift = data[4] + 5

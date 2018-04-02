@@ -158,7 +158,7 @@ button {
 hr { 
   border : 0;
   height: 1px; 
-  background-image: linear-gradient(to right, rgba(45, 119, 189, 0.336), rgba(95, 129, 179, 0.473),rgba(45, 119, 189, 0.336)); 
+  background-image: linear-gradient(to right, rgba(87, 103, 117, 0.336), rgba(80, 121, 184, 0.568),rgba(87, 103, 117, 0.336)); 
 }
 
 .card-bottom-block {
@@ -272,10 +272,7 @@ hr {
 
   color: #FFFFFF;
 }
-.button-menu {
-  float: right;
-  position: relative;
-}
+
 .button-refresh {
   margin-left: auto;
   margin-right: auto;
@@ -967,5 +964,36 @@ input::-webkit-input-placeholder {
   align-items: center;
 }
 .button-menu {
-  background-image: url('/../static/btn-menu.svg')
+  float: right;
+  position: relative;
+  border: none;
+  background-color: inherit;
+}
+::-webkit-scrollbar {
+  width: 3px;
+
+}
+::-webkit-scrollbar-button {
+  width: 3px;
+}
+::-webkit-scrollbar-thumb {
+  background: #2B4059;
+}
+
+.transaction-success-text {
+  position: absolute;
+  font-family: 'Heebo';
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 16px;
+  text-align: center;
+  color: #7EAEE5;
+  width: 100%;
+  top: 60%;
+}
+.sidebar-buttons {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
 }

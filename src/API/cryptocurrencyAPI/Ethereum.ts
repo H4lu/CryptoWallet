@@ -4,7 +4,7 @@ import { getSig, openPort } from '../hardwareAPI/GetSignature'
 // import { PromiEvent, TransactionReceipt } from 'web3/types'
 import { keccak256 } from 'js-sha3'
 // import fs from 'fs'
-import getAddress from '../hardwareAPI/GetAddress'
+// import getAddress from '../hardwareAPI/GetAddress'
 import * as webRequest from 'web-request'
 // import getAddress from '../hardwareAPI/GetAddress'
 const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM'))
@@ -19,7 +19,8 @@ console.log('abi ' + abi)
 */
 let myAdress = ''
 export function initEthereumAddress() {
-  myAdress = web3.utils.toChecksumAddress(getAddress(1))
+  // myAdress = web3.utils.toChecksumAddress(getAddress(1))
+  myAdress = '0x30C533986Ed809a312e0CC8e9f6186b68bd62B5e'
   console.log('ETH address: ' + myAdress)
 }
 export function getEthereumAddress() {
@@ -95,10 +96,10 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
       from: myAdress,
       to: paymentAdress,
       gasPrice: web3.utils.toHex(web3.utils.toWei('5', 'shannon')),
-      gasLimit: web3.utils.toHex(21000),
-      chainId: web3.utils.toHex(1),
+      gasLimit: web3.utils.toHex(24000),
+      chainId: web3.utils.toHex(3),
       data: '0x00',
-      v: web3.utils.toHex(1),
+      v: web3.utils.toHex(3),
       r: 0,
       s: 0
     }
@@ -128,7 +129,7 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
           // создаём объект подписи
           // cost: 600000130000000
         let sig = {
-          v : web3.utils.toHex(sign[69] + 10),
+          v : web3.utils.toHex(sign[69] + 14),
           r : sign.slice(5,37),
           s : sign.slice(37,69)
         }
