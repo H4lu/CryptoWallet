@@ -10,14 +10,12 @@ import { Provider } from 'react-redux'
 import configureStore from '../core/store/configureStore'
 const store = configureStore()
 // import { Switch } from 'react-router'
-let ContainerObject = React.createElement(App, { store })
-console.log('App Object:', ContainerObject)
 
 let reactDOM = ReactDOM.render(<Provider store = {store}>
                <Router>
-                    {ContainerObject}
+                  <App/>
                 </Router>
                 </Provider>, document.getElementById('container'))
-console.log('REACT DOM:', reactDOM)
-const Container = ContainerObject.type.prototype
+
+const Container = Object(reactDOM).props.children.props.children.type.prototype.constructor.prototype
 export default Container

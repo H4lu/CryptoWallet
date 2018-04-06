@@ -20,9 +20,11 @@ export function initLitecoinAddress() {
   address = 'mvLpZMU3cavwLbUMKocpSWcjP9LF62BQMd'
 }
 export async function getLitecoinLastTx(): Promise<any> {
+  console.log('CALLING LTC')
   try {
     const requestUrl = rootURL + '/address/' + NETWORK + '/' + address
     let response = await webRequest.get(requestUrl)
+    console.log('GOT THIS',response)
     return response
   } catch (err) {
     console.log(err)

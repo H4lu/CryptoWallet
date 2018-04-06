@@ -14,9 +14,9 @@ export class MainWindow extends React.Component<any, IMainWindowState> {
   }
   render() {
     if (this.props.connection && this.props.status) {
+      this.props.init('FROM TIMEOUT')
       let timeout = setTimeout(() => {
         clearTimeout(timeout)
-        this.props.init('FROM TIMEOUT')
         this.setState({ redirect: true })
       }, 3000,[])
     }

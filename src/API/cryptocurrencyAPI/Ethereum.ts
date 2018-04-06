@@ -17,6 +17,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io
 const abi = JSON.parse(fs.readFileSync(ERC20AbiInterface, 'utf-8'))
 console.log('abi ' + abi)
 */
+import Container from '../../ui/Index'
 let myAdress = ''
 export function initEthereumAddress() {
   // myAdress = web3.utils.toChecksumAddress(getAddress(1))
@@ -27,9 +28,11 @@ export function getEthereumAddress() {
   return myAdress
 }
 export async function getEthereumLastTx(): Promise<any> {
+  console.log('GETTING ETH')
   try {
     const requestURL = 'https://api.ethplorer.io/getAddressTransactions/' + myAdress + '?apiKey=freekey&limit=50'
     let response = await webRequest.get(requestURL)
+    console.log('GOT THIS',response)
     return response
   } catch (err) {
     console.log(err)
@@ -77,6 +80,7 @@ export function convertFromWei(amount: number) {
    После чего получанная подпись вставляется в новую транзакцию, которая отправляется
 */
 function createTransaction (paymentAdress: string, amount: number, gasPrice: number, gasLimit: number, redirect: any) {
+  console.log(redirect)
   web3.eth.getTransactionCount(myAdress).then((value) => {
   // Получаем порядковый номер транзакции, т.н nonce
     console.log('Got this values: ' + 'gasPrice: ' + gasPrice + 'gasLimit: ' + gasLimit)
@@ -141,7 +145,10 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
         console.log(serTx)
         web3.eth.sendSignedTransaction(serTx).on('receipt', console.log).on('transactionHash', function(hash) {
           console.log('Transaction sended: ' + hash)
-          redirect()
+          console.log('CONTAINER', Container)
+          Container.redirectToTransactionsuccess()
+
+          Container.addUnconfirmedTx('ETH', amount, myAdress, hash)
         }).on('error', console.error).catch(err => console.log(err))
         // Отправляем
 

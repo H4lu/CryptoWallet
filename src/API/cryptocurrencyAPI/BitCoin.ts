@@ -24,10 +24,12 @@ export default function getBitcoinAddress() {
   return myAddr
 }
 export async function getBitcoinLastTx(): Promise<any> {
+  console.log('CALLING BTC')
   try {
     const requestUrl = rootURL + '/address/' + NETWORK + '/' + myAddr
     console.log('My req url: ' + requestUrl)
     let response = await webRequest.get(requestUrl)
+    console.log('GOT THIS RESPONSE',response)
     return response
   } catch (err) {
     console.log(err)

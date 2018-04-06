@@ -12,10 +12,11 @@ export class TransactionSuccess extends React.Component<any, ITransactionsuccess
       redirect: false
     }
   }
-
+  componentDidMount() {
+    this.props.refresh()
+  }
   render() {
     setTimeout(() => {
-      this.props.refresh()
       this.setState({ redirect: true })
     },3000,[])
     if (this.state.redirect) return <Redirect from = '/transaction_success' to = '/main'/>

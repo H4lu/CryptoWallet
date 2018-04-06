@@ -178,7 +178,7 @@ hr {
   display: flex;
   justify-content: space-between;
   flex-direction: row;
-  align-content: center;
+  align-items: center;
 }
 .currency {
   height: 80px !important;
@@ -278,7 +278,6 @@ hr {
   margin-right: auto;
   height: 30px;
   width: 156px;
-  margin-top: 5px;
   position: relative;
   background: #25384F;
   border-radius: 24px;
@@ -458,6 +457,15 @@ button:active {
 }
 .transaction-history {
   height: 450px;
+  overflow: scroll;
+  margin-left: auto;
+  margin-right: auto;
+  bottom: 5vh;
+  width: 68%;
+  position: absolute;
+}
+.transaction-history-small {
+  height: 300px;
   overflow: auto;
   margin-left: auto;
   margin-right: auto;
@@ -929,15 +937,7 @@ input::-webkit-input-placeholder {
   left: 357px;
   top: 238px;
 }
-.transaction-history-small {
-  height: 300px;
-  overflow: auto;
-  margin-left: auto;
-  margin-right: auto;
-  bottom: 5vh;
-  width: 68%;
-  position: absolute;
-}
+
 .about-block-margin {
   margin-top: 5px;
   margin-bottom: 5px;
@@ -969,16 +969,37 @@ input::-webkit-input-placeholder {
   border: none;
   background-color: inherit;
 }
-::-webkit-scrollbar {
+.transaction-history::-webkit-scrollbar {
   width: 3px;
 
 }
-::-webkit-scrollbar-button {
+.transaction-history::-webkit-scrollbar-corner {
+  background: inherit;
+}
+/*.transaction-history::-webkit-scrollbar-button {
   width: 3px;
 }
-::-webkit-scrollbar-thumb {
-  background: #2B4059;
+*/
+.transaction-history::-webkit-scrollbar-thumb {
+  background-color: #2B4059;
 }
+.transaction-history-small::-webkit-scrollbar {
+  width: 3px;
+
+}
+.transaction-history-small::-webkit-scrollbar-corner {
+  background: inherit;
+}
+
+/*.transaction-history-small::-webkit-scrollbar-button {
+  width: 3px;
+}
+*/
+.transaction-history-small::-webkit-scrollbar-thumb {
+  background-color: #2B4059;
+}
+
+
 
 .transaction-success-text {
   position: absolute;

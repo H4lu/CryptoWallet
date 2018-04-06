@@ -28,7 +28,7 @@ class MainContent extends React.Component<any, any> {
               <hr/>
               <div className = 'card-bottom-block'>
               <div>
-                   <p className = 'currency-amount-crypto text-inline'> {this.props.balance}</p><p className = 'currency-short-name text-inline'>BTC</p>
+                   <p className = 'currency-amount-crypto text-inline'> {this.props.btcBalance}</p><p className = 'currency-short-name text-inline'>BTC</p>
                   </div>
                   <div className = 'wrap'>
                     {(this.props.btcHourChange > 0) ? (
@@ -90,6 +90,7 @@ class MainContent extends React.Component<any, any> {
     )
   }
 }
+
 function mapStateToProps(state: any, IMainContentProps) {
   console.log('MY STATE: ' + state)
   console.log(state)
@@ -100,4 +101,5 @@ function mapStateToProps(state: any, IMainContentProps) {
     balance: state.getBalance
   }
 }
+
 export default connect(mapStateToProps)(MainContent)
