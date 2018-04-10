@@ -42,12 +42,13 @@ export default function getSign(id: number, message: string) {
 }
 const PORT_PATH = 'COM13'
 let port = new SerialPort(PORT_PATH, { autoOpen: false, baudRate: 115200 })
-export function openPort() {
+export function openPort(): Promise<SerialPort> {
   port.open()
   return new Promise((resolve, reject) => {
     port.on('open', data => {
       console.log('Port opened! data: ' + data)
-      resolve()
+      console.log('RESOLVING T?HIS PORT:', port)
+      resolve(port)
     })
     port.on('error', error => {
       console.log('Error occured while opening: ' + console.log(error))
@@ -85,8 +86,8 @@ export function getSig(id: number, message: Buffer, address: string, amount: num
   let numberOfIns = Number('0x' + numberOfInputs)
   console.log('NUMBER OF INPUTS: ' + numberOfIns)
   let startMessageBuf = Buffer.from([0x9c, 0x9c, 0x53, currencyId, numberOfIns])
-  let amountBuf = new Buffer(4)
-  amountBuf.writeInt32BE(Number(amount),0)
+  let amountBuf = new Buffer(16)
+  amountBuf.write(amount.toString(),0,amount.toString().length, 'ascii')
   let addressBuf = Buffer.from(address)
   let endMessageBuf = Buffer.from([0x9a, 0x9a])
   let messageBuf = Buffer.concat([startMessageBuf,message,amountBuf,addressBuf,endMessageBuf])

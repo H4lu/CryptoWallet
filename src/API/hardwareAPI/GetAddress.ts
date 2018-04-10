@@ -56,3 +56,43 @@ export function getAddr(id: number) {
     console.log('Error: ' + error)
   })
 }
+export function getAddressByCOM(port: SerialPort, id: number): Promise<string> {
+  let currencyId: number = 0x00
+  switch (id) {
+  case 0: {
+    currencyId = 0x00
+    break
+  }
+  case 1: {
+    currencyId = 0x01
+    break
+  }
+  case 2: {
+    currencyId = 0x02
+    break
+  }
+  }
+  let startMessage = Buffer.from([0x9c, 0x9c])
+  let endMessage = Buffer.from([0x9a, 0x9a])
+  let messageBody = Buffer.from([0x43, currencyId])
+  let message = Buffer.concat([startMessage,messageBody, endMessage])
+  port.write(message)
+  console.log('PORT WRITED')
+  return new Promise((resolve, reject) => {
+    port.on('data', (data) => {
+      console.log('TYPEOF DATA: ' + typeof(data))
+      console.log('SLICE: ' + data.slice(7, data.length))
+      console.log('GOT THIS DATA IN GET ADDRESS BY COM:',data.toString())
+      port.close()
+      port.removeAllListeners()
+      resolve(data.toString().substring(7, data.length))
+    })
+    port.on('error', error => {
+      console.log('GOT THIS ERROR IN GET ADDRESS BY COM:', error)
+      port.close()
+      port.removeAllListeners()
+      reject(error)
+    })
+  })
+
+}

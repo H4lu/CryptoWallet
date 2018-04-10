@@ -4,8 +4,8 @@ import { getSig, openPort } from '../hardwareAPI/GetSignature'
 // import { PromiEvent, TransactionReceipt } from 'web3/types'
 import { keccak256 } from 'js-sha3'
 // import fs from 'fs'
-// import getAddress from '../hardwareAPI/GetAddress'
 import * as webRequest from 'web-request'
+import { getAddressByCOM } from '../hardwareAPI/GetAddress'
 // import getAddress from '../hardwareAPI/GetAddress'
 const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM'))
 // const testTokenAdress = '0x583cbBb8a8443B38aBcC0c956beCe47340ea1367'
@@ -19,11 +19,20 @@ console.log('abi ' + abi)
 */
 import Container from '../../ui/Index'
 let myAdress = ''
-export function initEthereumAddress() {
-  // myAdress = web3.utils.toChecksumAddress(getAddress(1))
-  myAdress = '0x30C533986Ed809a312e0CC8e9f6186b68bd62B5e'
-  console.log('ETH address: ' + myAdress)
+export async function initEthereumAddress() {
+  let port = await openPort()
+  myAdress = await getAddressByCOM(port, 1)
+  let buf = myAdress
+  myAdress = '0x' + Buffer.from(buf,'ascii').toString('hex')
+  console.log('ANOTHER ONE:' + Buffer.from(buf.toString(),'utf8').toString('hex'))
+  console.log('SF' + Buffer.from(buf, 'utf8').toString('utf8'))
+  console.log('THIRD:' + Buffer.from(buf.toString()).toString('ascii'))
+  console.log('Fourth: ' + Buffer.from(buf.toString(),'hex').toString())
+  console.log('FIFTH: ' + Buffer.from(buf.toString(),'ascii').toString('ascii'))
+  console.log('DSFS:' + Buffer.from(buf,'binary').toString('hex'))
+  console.log(Buffer.from(buf,'binary').toString())
 }
+
 export function getEthereumAddress() {
   return myAdress
 }

@@ -2,7 +2,7 @@ import { TransactionBuilder, networks, Transaction } from 'bitcoinjs-lib'
 import * as Request from 'request'
 import * as webRequest from 'web-request'
 import { getSig, openPort } from '../hardwareAPI/GetSignature'
-import getAddress from '../hardwareAPI/GetAddress'
+import { getAddressByCOM } from '../hardwareAPI/GetAddress'
 // import getAddress from '../hardwareAPI/GetAddress'
 import * as utils from './utils'
 import * as crypto from 'crypto'
@@ -16,9 +16,13 @@ const network = networks.testnet
 const NETWORK = 'BTCTEST'
 const rootURL = 'https://chain.so/api/v2'
 let myAddr = ''
-export function initBitcoinAddress() {
-  myAddr = getAddress(0)
-  myAddr = 'mgWZCzn4nv7noRwnbThqQ2hD2wT3YAKTJH'
+export async function initBitcoinAddress() {
+  console.log('OPENING PORT')
+  let port = await openPort()
+  console.log('PORT IN AWAIT', port)
+  myAddr = await getAddressByCOM(port, 0)
+  if (myAddr.length > 1) return 1
+  console.log('MY ADDRESS BITCOIN: ' + myAddr)
 }
 export default function getBitcoinAddress() {
   return myAddr

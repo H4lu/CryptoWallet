@@ -1,9 +1,10 @@
-import getAddress from '../hardwareAPI/GetAddress'
+
 import { TransactionBuilder, networks, Transaction } from 'bitcoinjs-lib'
 import * as Request from 'request'
 import * as webRequest from 'web-request'
 import * as utils from './utils'
 import * as crypto from 'crypto'
+import { getAddressByCOM } from '../hardwareAPI/GetAddress'
 // import { Transaction, TransactionBuilder, networks } from 'bitcoinjs-lib'
 import { openPort, getSig } from '../hardwareAPI/GetSignature'
 import * as satoshi from 'satoshi-bitcoin'
@@ -15,9 +16,9 @@ const NETWORK = 'LTCTEST'
 export default function getAddres() {
   return address
 }
-export function initLitecoinAddress() {
-  address = getAddress(2)
-  address = 'mvLpZMU3cavwLbUMKocpSWcjP9LF62BQMd'
+export async function initLitecoinAddress() {
+  let port = await openPort()
+  address = await getAddressByCOM(port, 2)
 }
 export async function getLitecoinLastTx(): Promise<any> {
   console.log('CALLING LTC')

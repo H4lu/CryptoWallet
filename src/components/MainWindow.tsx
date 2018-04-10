@@ -14,12 +14,14 @@ export class MainWindow extends React.Component<any, IMainWindowState> {
   }
   render() {
     if (this.props.connection && this.props.status) {
-      this.props.init('FROM TIMEOUT')
       let timeout = setTimeout(() => {
-        clearTimeout(timeout)
         this.setState({ redirect: true })
+        clearTimeout(timeout)
       }, 3000,[])
+    } else if (this.props.connection) {
+      this.props.init('FROM TIMEOUT')
     }
+
     if (this.state.redirect) {
       return <Redirect from = '/' to = '/main'/>
     }

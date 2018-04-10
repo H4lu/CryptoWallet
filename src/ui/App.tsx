@@ -21,6 +21,8 @@ import { MainWindow } from '../components/MainWindow'
 // import { checkPin } from '../API/hardwareAPI/GetWalletInfo'
 // import { wrapper } from '../API/hardwareAPI/GetWalletInfo'
 import { TransactionSuccess } from '../components/TransactionSuccess'
+import { UpdateHWStatus } from '../API/hardwareAPI/UpdateHWStatus'
+import { openPort } from '../API/hardwareAPI/GetSignature'
 // import SerialPort from 'serialport'
 // import { loadBitcoinBalance } from '../core/actions/load'
 import pcsclite from 'pcsclite'
@@ -221,9 +223,8 @@ export default class App extends React.Component<any, IAPPState> {
     this.changeBalance = this.changeBalance.bind(this)
   }
   redirectToTransactionsuccess() {
-    let self = this
-    self.resetRedirect()
-    self.setState({ redirectToTransactionSuccess: true })
+    this.resetRedirect()
+    this.setState({ redirectToTransactionSuccess: true })
   }
   resetRedirect() {
     this.setState({ redirectToTransactionSuccess: false })
@@ -290,9 +291,6 @@ export default class App extends React.Component<any, IAPPState> {
           } else if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
             console.log('card inserted')
             this.setState({ connection: true })
-            setTimeout(() => {
-              this.setState({ status: true })
-            }, 2000)
             reader.connect({ share_mode : reader.SCARD_SHARE_SHARED }, function(err, protocol) {
               if (err) {
                 console.log(err)
@@ -318,24 +316,23 @@ export default class App extends React.Component<any, IAPPState> {
   initAll() {
     if (this.state.allowInit) {
       this.setState({ allowInit: false })
-      initBitcoinAddress()
-      initEthereumAddress()
-      initLitecoinAddress()
-      this.getValues()
-      this.getTransactions()
+      console.log('START INIT')
+      initBitcoinAddress().then(() => initEthereumAddress()).then(() => initLitecoinAddress()).then(() => this.setState({ status: true }))
+      .then(() => this.getValues()).then(() => this.getTransactions()).then(() => openPort())
+      .then(port => UpdateHWStatus(port, this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice))
     }
   }
   updateData() {
     console.log('REFRESHING')
-    this.getTransactions()
-    setTimeout(() => {
-      this.getValues()
-    }, 1000)
-
+    this.getTransactions().then(() => this.getValues()).then(() => {
+      openPort().then(port => {
+        UpdateHWStatus(port, this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)
+      })
+    })
   }
   changeBalance(currency: string, amount: number) {
     switch (currency) {
-    case 'BTC': {
+    case 'BTCTEST': {
       this.setState({ BTCBalance: (this.state.BTCBalance - amount) })
       break
     }
@@ -343,7 +340,7 @@ export default class App extends React.Component<any, IAPPState> {
       this.setState({ ETHBalance: (this.state.ETHBalance - amount) })
       break
     }
-    case 'LTC': {
+    case 'LTCTEST': {
       this.setState({ LTCBalance: (this.state.LTCBalance - amount) })
     }
     }
@@ -360,7 +357,7 @@ export default class App extends React.Component<any, IAPPState> {
       Hash: hash
     }
     switch (currency) {
-    case 'BTC' : {
+    case 'BTCTEST' : {
       this.setState({ BTCLastTx: [...this.state.BTCLastTx, tx] })
       break
     }
@@ -368,7 +365,7 @@ export default class App extends React.Component<any, IAPPState> {
       this.setState({ ETHLastTx: [...this.state.ETHLastTx, tx] })
       break
     }
-    case 'LTC': {
+    case 'LTCTEST': {
       this.setState({ LTCLastTx: [...this.state.LTCLastTx, tx] })
       break
     }
@@ -376,7 +373,7 @@ export default class App extends React.Component<any, IAPPState> {
   }
 
   getValues() {
-    Promise.all([getBalance(),getEthereumBalance(), getLitecoinBalance(), GetCurrencyRate()]).then(value => {
+    return Promise.all([getBalance(),getEthereumBalance(), getLitecoinBalance(), GetCurrencyRate()]).then(value => {
       for (let val in value) {
         if (typeof(value[val]) === 'object') {
           if (Number(val) !== value.length - 1) {
@@ -431,7 +428,7 @@ export default class App extends React.Component<any, IAPPState> {
     this.setState({ redirect: true })
   }
   getTransactions() {
-    Promise.all([getBitcoinLastTx(),getLitecoinLastTx(), getEthereumLastTx()]).then(value => {
+    return Promise.all([getBitcoinLastTx(),getLitecoinLastTx(), getEthereumLastTx()]).then(value => {
       console.log('PROMISE ALL VALUE',value)
       for (let index in value) {
         if (Object.prototype.hasOwnProperty.call(JSON.parse(value[index].content),'data')) {
