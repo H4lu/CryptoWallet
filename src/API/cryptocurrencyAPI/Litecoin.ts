@@ -6,7 +6,7 @@ import * as utils from './utils'
 import * as crypto from 'crypto'
 import { getAddressByCOM } from '../hardwareAPI/GetAddress'
 // import { Transaction, TransactionBuilder, networks } from 'bitcoinjs-lib'
-import { openPort, getSig } from '../hardwareAPI/GetSignature'
+import { getSig } from '../hardwareAPI/GetSignature'
 import * as satoshi from 'satoshi-bitcoin'
 let address = ''
 const rootURL = 'https://chain.so/api/v2'
@@ -17,8 +17,7 @@ export default function getAddres() {
   return address
 }
 export async function initLitecoinAddress() {
-  let port = await openPort()
-  address = await getAddressByCOM(port, 2)
+  address = await getAddressByCOM(2)
 }
 export async function getLitecoinLastTx(): Promise<any> {
   console.log('CALLING LTC')
@@ -83,8 +82,8 @@ function ReplaceAt(input: any, search: any, replace: any, start: any, end: any) 
       + input.slice(end)
 }
 
-function createTransaction(paymentAdress: string,
-    transactionAmount: number,transactionFee: number, redirect: any, utxos: Array<any>): void {
+async function createTransaction(paymentAdress: string,
+    transactionAmount: number,transactionFee: number, redirect: any, utxos: Array<any>) {
   console.log(redirect)
   console.log('Tx amount: ' + transactionAmount)
   console.log(transactionFee)
@@ -93,7 +92,7 @@ function createTransaction(paymentAdress: string,
     value: transactionAmount
   }
   console.log('Got this utxos: ' + utxos)
-  let { inputs, outputs, fee } = coinSelect(utxos, targets, 20)
+  let { inputs, outputs, fee } = coinSelect(utxos, targets, 10)
   console.log('Got this inputs: ' + inputs)
       // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
   console.log(fee)
@@ -123,49 +122,45 @@ function createTransaction(paymentAdress: string,
     console.log('PROBABLY TX INPUT: ' + JSON.stringify(value))
   })
 
-  openPort().then(async () => {
-    let hashArray: Array<any>
-    let lastIndex = 0
-    hashArray = []
-    transaction.inputs.forEach(function(input, index) {
-      console.log(input)
-      let dataForHash = ReplaceAt(unbuildedTx + '01000000', '00000000ff', '00000019' + Object(utxos[index]).script_hex + 'ff', unbuildedTx.indexOf('00000000ff', lastIndex), unbuildedTx.indexOf('00000000ff', lastIndex) + 50)
-      console.log('DATA FOR HASH: ' + dataForHash)
-      let firstHash = crypto.createHash('sha256').update(Buffer.from(dataForHash, 'hex')).digest('hex')
-      let secondHash = crypto.createHash('sha256').update(Buffer.from(firstHash, 'hex')).digest('hex')
-      console.log('SECOND HASH: ' + secondHash)
-      console.log('HASH OF first buffer: ' + crypto.createHash('sha256').update(Buffer.from(dataForHash, 'hex')).digest('hex'))
-      console.log('HASH WITH BUFFER: ' + crypto.createHash('sha256').update(crypto.createHash('sha256').update(Buffer.from(dataForHash, 'hex')).digest('hex')))
-      let sigIndex = unbuildedTx.indexOf('00000000ff', lastIndex)
-      console.log(sigIndex)
-      lastIndex += 90
+  let hashArray: Array<any>
+  let lastIndex = 0
+  hashArray = []
+  transaction.inputs.forEach(function(input, index) {
+    console.log(input)
+    let dataForHash = ReplaceAt(unbuildedTx + '01000000', '00000000ff', '00000019' + Object(utxos[index]).script_hex + 'ff', unbuildedTx.indexOf('00000000ff', lastIndex), unbuildedTx.indexOf('00000000ff', lastIndex) + 50)
+    console.log('DATA FOR HASH: ' + dataForHash)
+    let firstHash = crypto.createHash('sha256').update(Buffer.from(dataForHash, 'hex')).digest('hex')
+    let secondHash = crypto.createHash('sha256').update(Buffer.from(firstHash, 'hex')).digest('hex')
+    console.log('SECOND HASH: ' + secondHash)
+    console.log('HASH OF first buffer: ' + crypto.createHash('sha256').update(Buffer.from(dataForHash, 'hex')).digest('hex'))
+    console.log('HASH WITH BUFFER: ' + crypto.createHash('sha256').update(crypto.createHash('sha256').update(Buffer.from(dataForHash, 'hex')).digest('hex')))
+    let sigIndex = unbuildedTx.indexOf('00000000ff', lastIndex)
+    console.log(sigIndex)
+    lastIndex += 90
       // let hashForSig = transaction.tx.hashForSignature(index, Buffer.from(Object(utxos[index]).script_hex),Transaction.SIGHASH_ALL)
-      hashArray.push(Buffer.from(secondHash,'hex'))
-    })
-    let hashBuffer = Buffer.concat(hashArray)
-    console.log('HASHBUFFER: ' + hashBuffer + 'LENGTH: ' + hashBuffer.length)
-    console.log('HASHARRAY: ' + hashArray)
-    let data = await getSig(2, hashBuffer, paymentAdress, transactionAmount, transaction.tx.ins.length)
-    let startIndex = 5
-    let shift = data[4] + 5
-    transaction.inputs.forEach(() => {
-      unbuildedTx = unbuildedTx.replace('00000000ff','000000' + data.slice(startIndex, shift).toString('hex') + 'ff')
-      console.log('INSERT THIS: ' + data.slice(startIndex, shift).toString('hex'))
-      console.log('STARTINDEX: ' + data[startIndex] + 2)
-      console.log('DATA OF : ' + data[startIndex])
-      startIndex += (data[startIndex] + 2)
-      shift += data[startIndex] + 2
-      console.log('SHIFT VALUE: ' + shift)
-      console.log('DATA OF SHIFT: ' + data[shift])
-      console.log('START INDEX: ' + startIndex)
-      console.log('SHIFT: ' + shift)
-    })
-    console.log('UNBUILDED TX: ' + unbuildedTx)
-    console.log('DATA: ' + data)
-    sendTransaction(unbuildedTx, redirect)
-  }).catch((error: any) => {
-    console.log(error)
+    hashArray.push(Buffer.from(secondHash,'hex'))
   })
+  let hashBuffer = Buffer.concat(hashArray)
+  console.log('HASHBUFFER: ' + hashBuffer + 'LENGTH: ' + hashBuffer.length)
+  console.log('HASHARRAY: ' + hashArray)
+  let data = await getSig(2, hashBuffer, paymentAdress, transactionAmount, transaction.tx.ins.length)
+  let startIndex = 5
+  let shift = data[4] + 5
+  transaction.inputs.forEach(() => {
+    unbuildedTx = unbuildedTx.replace('00000000ff','000000' + data.slice(startIndex, shift).toString('hex') + 'ff')
+    console.log('INSERT THIS: ' + data.slice(startIndex, shift).toString('hex'))
+    console.log('STARTINDEX: ' + data[startIndex] + 2)
+    console.log('DATA OF : ' + data[startIndex])
+    startIndex += (data[startIndex] + 2)
+    shift += data[startIndex] + 2
+    console.log('SHIFT VALUE: ' + shift)
+    console.log('DATA OF SHIFT: ' + data[shift])
+    console.log('START INDEX: ' + startIndex)
+    console.log('SHIFT: ' + shift)
+  })
+  console.log('UNBUILDED TX: ' + unbuildedTx)
+  console.log('DATA: ' + data)
+  sendTransaction(unbuildedTx, redirect)
   console.log('Final sig: ' + sig)
   // Добавляем вход транзакции в виде хэша предыдущей транзакции и номер выхода с нашим адресом
   // Добавляем выход транзакции, где указывается адрес и сумма перевода
@@ -244,7 +239,9 @@ export function handleLitecoin(paymentAdress: string, amount: number, transactio
         console.log('Utxos: ' + utxos)
       }
       amount = toSatoshi(amount)
-      createTransaction(paymentAdress, amount, transactionFee, redirect, utxos)
+      createTransaction(paymentAdress, amount, transactionFee, redirect, utxos).catch(err => {
+        console.log(err)
+      })
     } else {
       alert('Error provided by internet connection')
     }

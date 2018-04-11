@@ -1,6 +1,6 @@
 import Web3 from 'web3'
 import Transaction from 'ethereumjs-tx'
-import { getSig, openPort } from '../hardwareAPI/GetSignature'
+import { getSig } from '../hardwareAPI/GetSignature'
 // import { PromiEvent, TransactionReceipt } from 'web3/types'
 import { keccak256 } from 'js-sha3'
 // import fs from 'fs'
@@ -20,17 +20,8 @@ console.log('abi ' + abi)
 import Container from '../../ui/Index'
 let myAdress = ''
 export async function initEthereumAddress() {
-  let port = await openPort()
-  myAdress = await getAddressByCOM(port, 1)
-  let buf = myAdress
-  myAdress = '0x' + Buffer.from(buf,'ascii').toString('hex')
-  console.log('ANOTHER ONE:' + Buffer.from(buf.toString(),'utf8').toString('hex'))
-  console.log('SF' + Buffer.from(buf, 'utf8').toString('utf8'))
-  console.log('THIRD:' + Buffer.from(buf.toString()).toString('ascii'))
-  console.log('Fourth: ' + Buffer.from(buf.toString(),'hex').toString())
-  console.log('FIFTH: ' + Buffer.from(buf.toString(),'ascii').toString('ascii'))
-  console.log('DSFS:' + Buffer.from(buf,'binary').toString('hex'))
-  console.log(Buffer.from(buf,'binary').toString())
+  myAdress = await getAddressByCOM(1)
+  myAdress = web3.utils.toChecksumAddress('0x' + myAdress.toString())
 }
 
 export function getEthereumAddress() {
@@ -130,38 +121,36 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
     let txHash = keccak256(tx.serialize())
     console.log('Tx hash: ' + txHash.toString())
       // Отправляем на подпись
-    openPort().then(() => {
-      console.log('Pass this to amount: ' + amount)
-      console.log('Amount type: ' + typeof(amount))
-      getSig(1,Buffer.from(txHash, 'hex'), paymentAdress, Number(amount) * 100000000, 1).then(sign => {
-        console.log('data length: ' + sign.length)
-        console.log(web3.utils.toHex(sign[69]))
-        console.log('r: ' + sign.slice(5,37).toString('hex'))
-        console.log('s: ' + sign.slice(37,69).toString('hex'))
-        console.log('v: ' + sign[69])
+    console.log('Pass this to amount: ' + amount)
+    console.log('Amount type: ' + typeof(amount))
+    getSig(1,Buffer.from(txHash, 'hex'), paymentAdress, Number(amount) * 100000000, 1).then(sign => {
+      console.log('data length: ' + sign.length)
+      console.log(web3.utils.toHex(sign[69]))
+      console.log('r: ' + sign.slice(5,37).toString('hex'))
+      console.log('s: ' + sign.slice(37,69).toString('hex'))
+      console.log('v: ' + sign[69])
           // создаём объект подписи
           // cost: 600000130000000
-        let sig = {
-          v : web3.utils.toHex(sign[69] + 14),
-          r : sign.slice(5,37),
-          s : sign.slice(37,69)
-        }
-        console.log('V in sig: ' + sig.v)
+      let sig = {
+        v : web3.utils.toHex(sign[69] + 14),
+        r : sign.slice(5,37),
+        s : sign.slice(37,69)
+      }
+      console.log('V in sig: ' + sig.v)
           // Вставляем подпись в транзакцию
-        Object.assign(tx, sig)
+      Object.assign(tx, sig)
           // Приводим транзакцию к нужному для отправки виду
-        let serTx = '0x' + tx.serialize().toString('hex')
-        console.log(serTx)
-        web3.eth.sendSignedTransaction(serTx).on('receipt', console.log).on('transactionHash', function(hash) {
-          console.log('Transaction sended: ' + hash)
-          console.log('CONTAINER', Container)
-          Container.redirectToTransactionsuccess()
+      let serTx = '0x' + tx.serialize().toString('hex')
+      console.log(serTx)
+      web3.eth.sendSignedTransaction(serTx).on('receipt', console.log).on('transactionHash', function(hash) {
+        console.log('Transaction sended: ' + hash)
+        console.log('CONTAINER', Container)
+        Container.redirectToTransactionsuccess()
 
-          Container.addUnconfirmedTx('ETH', amount, myAdress, hash)
-        }).on('error', console.error).catch(err => console.log(err))
+        Container.addUnconfirmedTx('ETH', amount, myAdress, hash)
+      }).on('error', console.error).catch(err => console.log(err))
         // Отправляем
 
-      }).catch(err => console.log(err))
     }).catch(err => console.log(err))
   }).catch(err => console.log(err))
 }

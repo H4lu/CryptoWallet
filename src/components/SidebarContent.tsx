@@ -27,11 +27,11 @@ export class SidebarContent extends React.Component<any, any> {
         </div>
           <p className = 'total-currency-font'>{this.props.total}$</p>
           <hr/>
-          <div className = 'nav-buttons-container'>
-            <button className = 'nav-buttons'>Your addresses</button>
-            <button className = 'nav-buttons'>ERC20</button>
-            <button className = 'nav-buttons'>ShapeShift</button>
-          </div>
+        <div className = 'nav-buttons-container'>
+          <button className = 'nav-buttons'>Your addresses</button>
+          <button className = 'nav-buttons'>ERC20</button>
+          <button className = 'nav-buttons'>ShapeShift</button>
+        </div>
           <hr/>
           <header className = 'info-header-font'>Your Braitberry:</header>
             <div className = 'about-block'>

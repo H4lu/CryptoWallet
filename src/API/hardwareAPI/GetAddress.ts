@@ -1,8 +1,7 @@
 import * as ffi from 'ffi'
 import * as ref from 'ref'
 import { Buffer } from 'buffer'
-import SerialPort from 'serialport'
-
+import { port } from './OpenPort'
 const cryptoLib = ffi.Library('CWAPI',{ 'get_CurrencyInfo': ['int', ['int','int*','byte*']] })
 
 export default function getAddress(id: number) {
@@ -22,7 +21,6 @@ export default function getAddress(id: number) {
   console.log('Address string:' + addrString)
   return addrString
 }
-let port = new SerialPort('COM5', { autoOpen: false, baudRate: 115200 })
 export function getAddr(id: number) {
   port.open()
   port.on('open', data => {
@@ -56,7 +54,7 @@ export function getAddr(id: number) {
     console.log('Error: ' + error)
   })
 }
-export function getAddressByCOM(port: SerialPort, id: number): Promise<string> {
+export function getAddressByCOM(id: number): Promise<string> {
   let currencyId: number = 0x00
   switch (id) {
   case 0: {
@@ -78,20 +76,12 @@ export function getAddressByCOM(port: SerialPort, id: number): Promise<string> {
   let message = Buffer.concat([startMessage,messageBody, endMessage])
   port.write(message)
   console.log('PORT WRITED')
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     port.on('data', (data) => {
-      console.log('TYPEOF DATA: ' + typeof(data))
-      console.log('SLICE: ' + data.slice(7, data.length))
+      console.log('PORT IN ADDRESS:',port)
       console.log('GOT THIS DATA IN GET ADDRESS BY COM:',data.toString())
-      port.close()
-      port.removeAllListeners()
+      port.removeAllListeners('data')
       resolve(data.toString().substring(7, data.length))
-    })
-    port.on('error', error => {
-      console.log('GOT THIS ERROR IN GET ADDRESS BY COM:', error)
-      port.close()
-      port.removeAllListeners()
-      reject(error)
     })
   })
 

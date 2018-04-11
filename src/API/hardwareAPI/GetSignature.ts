@@ -1,7 +1,5 @@
-import * as ffi from 'ffi'
-import * as ref from 'ref'
 import { Buffer } from 'buffer'
-import SerialPort from 'serialport'
+import { port } from './OpenPort'
 /* import * as Path from 'path'
 // declare var __dirname: string
 // let path = __dirname + './../../iTokenDLL'
@@ -15,34 +13,10 @@ kernel.SetDllDirectoryW(Path.join(__dirname, '../..','mtoken_stb.dll'))
 console.log('after set dll')
 const MyLib = ffi.Library(path, { 'get_dataForTransaction': ['int', ['string','int','char*','string','int*']] })
 */
-
-const cryptoLib = ffi.Library('CWAPI',{ 'getSign': ['int', ['int','string','int','int*','string']] })
-const MAX_LENGTH = 214
-export default function getSign(id: number, message: string) {
-  let length = ref.alloc(ref.types.int)
-  let sig = new Buffer(MAX_LENGTH)
-  let messageLen: number = 64
-  const errorCode = cryptoLib.getSign(messageLen, message, id, length, sig)
-  console.log(errorCode)
-  let lengthValue = ref.deref(length)
-  if (id !== 1) {
-    let serializedSig: string
-    if (lengthValue < MAX_LENGTH) {
-      serializedSig = sig.toString().substring(0, lengthValue)
-      console.log(serializedSig)
-      return serializedSig.toLowerCase()
-    } else {
-      serializedSig = sig.toString()
-      console.log('Serialized sig: ' + serializedSig)
-      return serializedSig.toLowerCase()
-    }
-  } else {
-    return sig
-  }
-}
-const PORT_PATH = 'COM13'
-let port = new SerialPort(PORT_PATH, { autoOpen: false, baudRate: 115200 })
-export function openPort(): Promise<SerialPort> {
+/*let port: SerialPort
+export function openPort(portName: string): Promise<SerialPort> {
+  port = new SerialPort(portName, { autoOpen: false, baudRate: 115200 })
+  console.log(portName)
   port.open()
   return new Promise((resolve, reject) => {
     port.on('open', data => {
@@ -65,6 +39,7 @@ export function openPort(): Promise<SerialPort> {
     })
   })
 }
+*/
 export function getSig(id: number, message: Buffer, address: string, amount: number, numberOfInputs: number): Promise<Buffer> {
   console.log(numberOfInputs)
   let currencyId: number = 0x00
@@ -91,19 +66,15 @@ export function getSig(id: number, message: Buffer, address: string, amount: num
   let addressBuf = Buffer.from(address)
   let endMessageBuf = Buffer.from([0x9a, 0x9a])
   let messageBuf = Buffer.concat([startMessageBuf,message,amountBuf,addressBuf,endMessageBuf])
-  console.log('message buf : ' + messageBuf)
+  console.log('message buf : ', messageBuf)
   console.log('LENGTH OF MESSAGE BUF: ' + messageBuf.length)
-  return new Promise((resolve, reject) => {
-    let writeStatus = port.write(messageBuf)
-    console.log('Write status: ' + writeStatus)
+  return new Promise((resolve) => {
+    console.log('PORT IN GET SIGNATURE',port)
+    port.write(messageBuf)
     port.on('data', data => {
       console.log('GOT this data: ' + data.toString('hex'))
+      port.removeAllListeners('data')
       resolve(data)
-      port.close()
-      port.removeAllListeners()
-    })
-    port.on('error', data => {
-      reject(data)
     })
   })
 }

@@ -1,4 +1,6 @@
-export function UpdateHWStatus (port, ...data) {
+import { port } from './OpenPort'
+
+export function UpdateHWStatus (...data) {
   let startMessage = Buffer.from([ 0x9c,0x9c,0x42 ])
   let endMessage = Buffer.from([ 0x9a,0x9a ])
   let message = new Buffer([])
@@ -13,6 +15,6 @@ export function UpdateHWStatus (port, ...data) {
   port.write(dataToSend)
   port.on('data', (data) => {
     console.log('GOT THIS DATA: ' + data.toString('hex'))
-    port.close()
+    port.removeAllListeners('data')
   })
 }
