@@ -156,7 +156,7 @@ async function createTransaction(paymentAdress: string,
   let hashBuffer = Buffer.concat(hashArray)
   console.log('HASHBUFFER: ' + hashBuffer + 'LENGTH: ' + hashBuffer.length)
   console.log('HASHARRAY: ' + hashArray)
-  let data = await getSig(0, hashBuffer, paymentAdress, transactionAmount, transaction.tx.ins.length)
+  let data = await getSig(0, hashBuffer, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.tx.ins.length)
   let startIndex = 5
   let shift = data[4] + 5
   transaction.inputs.forEach(() => {

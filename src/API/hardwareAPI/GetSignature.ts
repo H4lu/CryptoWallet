@@ -62,6 +62,7 @@ export function getSig(id: number, message: Buffer, address: string, amount: num
   console.log('NUMBER OF INPUTS: ' + numberOfIns)
   let startMessageBuf = Buffer.from([0x9c, 0x9c, 0x53, currencyId, numberOfIns])
   let amountBuf = new Buffer(16)
+  console.log('WRITE THIS AMOUNT: ' + amount)
   amountBuf.write(amount.toString(),0,amount.toString().length, 'ascii')
   let addressBuf = Buffer.from(address)
   let endMessageBuf = Buffer.from([0x9a, 0x9a])

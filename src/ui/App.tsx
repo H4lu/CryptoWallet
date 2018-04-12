@@ -243,6 +243,7 @@ export default class App extends React.Component<any, IAPPState> {
     let interval = setInterval(async () => {
       console.log('CALLING GETWALLETSTATS')
       let answer = await getWalletStatus()
+      console.log('GOT THIS ANSWER: ' + answer)
       if (answer === 0) {
         clearInterval(interval)
         this.setState({ isInitialized: true })

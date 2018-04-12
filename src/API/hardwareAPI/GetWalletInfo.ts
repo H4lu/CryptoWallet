@@ -1,5 +1,4 @@
 import SerialPort from 'serialport'
-import * as ffi from 'ffi'
 import { port } from './OpenPort'
 export async function wrapper(): Promise<any> {
   try {
@@ -38,16 +37,6 @@ export async function findDevice(): Promise<any> {
   }).catch(error => {
     console.log(error)
   })
-}
-const cryptoLib = ffi.Library('CWAPI',{ 'get_currencyWalletInfo': ['int', []] })
-export function checkPin(): boolean {
-  let errorCode = cryptoLib.get_currencyWalletInfo()
-  console.log(errorCode)
-  if (errorCode === 0) {
-    return true
-  } else {
-    return false
-  }
 }
 
 export async function getWalletStatus() {

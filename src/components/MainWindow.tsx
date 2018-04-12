@@ -17,7 +17,7 @@ export class MainWindow extends React.Component<any, IMainWindowState> {
       let timeout = setTimeout(() => {
         this.setState({ redirect: true })
         clearTimeout(timeout)
-      }, 2000,[])
+      }, 3000,[])
     }
     if (this.state.redirect) {
       return <Redirect from = '/' to = '/main'/>

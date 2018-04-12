@@ -231,7 +231,9 @@ hr {
  */
  /*background: linear-gradient(180deg, rgba(34, 48, 64, 1) 0%, rgba(20, 27, 33, 0.8) 97.24%);
 */
-  background: linear-gradient(180deg, rgba(34, 48, 64, 0.5) 0%, rgba(20, 27, 33, 0.5) 90.24%);
+/*background: linear-gradient(100deg, rgba(41, 62, 85, 0.5) 0%, rgba(20,27,33,0.5) 92%),linear-gradient(180deg, rgba(34,48,64,0.5) 0%, rgba(20,27,33,0.5) 92%),linear-gradient(120deg, rgba(34,48,64,0.5) 0%, rgba(20,27,33,0.5) 92%);
+*/
+background: linear-gradient(140deg, rgba(41, 62, 85, 0.4) 0%, rgba(20,27,33,0.5) 92%),linear-gradient(130deg, rgba(41, 62, 85, 0.3) 0%, rgba(20,27,33,0.8) 92%),linear-gradient(270deg, rgba(41, 62, 85, 0.6) 0%, rgba(20,27,33,0.6) 92%);
 
 }
 .footer, .header {
@@ -463,6 +465,7 @@ button:active {
   bottom: 5vh;
   width: 68%;
   position: absolute;
+  background: inherit;
 }
 .transaction-history-small {
   height: 300px;
@@ -472,15 +475,20 @@ button:active {
   bottom: 5vh;
   width: 68%;
   position: absolute;
+  background: inherit;
 }
 table {
   width: 100%;
   height: 100px;
   border-collapse: collapse;
+  background: inherit;
 }
 tbody {
   height: 100px;
   overflow: auto;
+}
+tbody, thead, tr, th, td {
+  background: inherit;
 }
 .table-header {
   background: #25384F;

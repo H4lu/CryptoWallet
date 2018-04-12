@@ -123,7 +123,7 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
       // Отправляем на подпись
     console.log('Pass this to amount: ' + amount)
     console.log('Amount type: ' + typeof(amount))
-    getSig(1,Buffer.from(txHash, 'hex'), paymentAdress, Number(amount) * 100000000, 1).then(sign => {
+    getSig(1,Buffer.from(txHash, 'hex'), paymentAdress, amount, 1).then(sign => {
       console.log('data length: ' + sign.length)
       console.log(web3.utils.toHex(sign[69]))
       console.log('r: ' + sign.slice(5,37).toString('hex'))

@@ -1,26 +1,6 @@
-import * as ffi from 'ffi'
-import * as ref from 'ref'
+
 import { Buffer } from 'buffer'
 import { port } from './OpenPort'
-const cryptoLib = ffi.Library('CWAPI',{ 'get_CurrencyInfo': ['int', ['int','int*','byte*']] })
-
-export default function getAddress(id: number) {
-  let length = ref.alloc(ref.types.int)
-  let address = new Buffer(50)
-  let errorCode = cryptoLib.get_CurrencyInfo(id,length,address)
-  let lengthValue = ref.deref(length)
-  console.log('Length value' + lengthValue)
-  console.log('Address value: ' + address.toString().length)
-  let addrString = address.toString()
-  console.log('Address string:' + addrString)
-  if (address.toString().length > lengthValue) {
-    console.log('cutting')
-    addrString = address.toString().substring(4,lengthValue)
-  }
-  console.log(errorCode)
-  console.log('Address string:' + addrString)
-  return addrString
-}
 export function getAddr(id: number) {
   port.open()
   port.on('open', data => {
