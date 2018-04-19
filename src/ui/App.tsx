@@ -21,12 +21,10 @@ import { MainWindow } from '../components/MainWindow'
 // import { checkPin } from '../API/hardwareAPI/GetWalletInfo'
 // import { wrapper } from '../API/hardwareAPI/GetWalletInfo'
 import { TransactionSuccess } from '../components/TransactionSuccess'
-import { UpdateHWStatus } from '../API/hardwareAPI/UpdateHWStatus'
-// import { openPort } from '../API/hardwareAPI/OpenPort'
 // import SerialPort from 'serialport'
 // import { loadBitcoinBalance } from '../core/actions/load'
 import pcsclite from 'pcsclite'
-import { getWalletStatus } from '../API/hardwareAPI/GetWalletInfo'
+import { setReader } from '../API/hardwareAPI/Reader'
 let pcsc = new pcsclite()
 
 // import { connect } from 'react-redux'
@@ -119,8 +117,7 @@ interface IAPPState {
   tempState: Array<any>,
   allowInit: boolean,
   redirectToTransactionSuccess: boolean,
-  totalPercentage: number,
-  isInitialized: boolean
+  totalPercentage: number
 }
 
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
@@ -206,8 +203,7 @@ export default class App extends React.Component<any, IAPPState> {
       tempState: [],
       allowInit: true,
       redirectToTransactionSuccess: false,
-      totalPercentage: 0,
-      isInitialized: false
+      totalPercentage: 0
     }
     this.resetRedirect = this.resetRedirect.bind(this)
     this.redirectToTransactionsuccess = this.redirectToTransactionsuccess.bind(this)
@@ -215,7 +211,7 @@ export default class App extends React.Component<any, IAPPState> {
     this.parseTransactionDataETH = this.parseTransactionDataETH.bind(this)
     this.parseBTCLikeTransactions = this.parseBTCLikeTransactions.bind(this)
     this.parseTransactionDataBTC = this.parseTransactionDataBTC.bind(this)
-    this.waitForPin = this.waitForPin.bind(this)
+    // this.waitForPin = this.waitForPin.bind(this)
     this.initAll = this.initAll.bind(this)
     this.getValues = this.getValues.bind(this)
     this.getTransactions = this.getTransactions.bind(this)
@@ -226,8 +222,9 @@ export default class App extends React.Component<any, IAPPState> {
     this.changeBalance = this.changeBalance.bind(this)
   }
   redirectToTransactionsuccess() {
-    this.resetRedirect()
-    this.setState({ redirectToTransactionSuccess: true })
+    let self = this
+    self.resetRedirect()
+    self.setState({ redirectToTransactionSuccess: true })
   }
   resetRedirect() {
     this.setState({ redirectToTransactionSuccess: false })
@@ -238,22 +235,6 @@ export default class App extends React.Component<any, IAPPState> {
   connectionERROR() {
     this.setState({ connection: false })
   }
-  async waitForPin() {
-    this.setState({ isInitialized: false })
-    let interval = setInterval(async () => {
-      console.log('CALLING GETWALLETSTATS')
-      let answer = await getWalletStatus()
-      console.log('GOT THIS ANSWER: ' + answer)
-      if (answer === 0) {
-        clearInterval(interval)
-        this.setState({ isInitialized: true })
-        this.setState({ status: true })
-        return this.initAll()
-      } else {
-        this.setState({ isInitialized: true })
-      }
-    }, 500)
-  }
   componentDidMount() {
     /*
     setInterval(() => {
@@ -263,7 +244,7 @@ export default class App extends React.Component<any, IAPPState> {
             if (this.state.connection) {
               return
             } else {
-              openPort(value[item].comName).then(() => this.waitForPin())
+              this.waitForPin()
               return this.setState({ connection: !this.state.connection })
             }
           }
@@ -273,13 +254,22 @@ export default class App extends React.Component<any, IAPPState> {
           this.setState({ connection: !this.state.connection })
         }
       })
-    }, 500, [])
+    }, 1000, [])
   }
-  */
+  waitForPin() {
+    let timer = setInterval(() => {
+      if (checkPin()) {
+        this.setState({ status: true })
+        clearInterval(timer)
+      }
+    },1000,[])
+ */
     console.log('APP PROPS:', this.props)
     console.log('APP:', App)
     pcsc.on('reader', (reader) => {
-
+      if (reader.name.include('NXP READER CCID')) {
+         setReader(reader)
+      }
       console.log('New reader detected', reader.name)
 
       reader.on('error', function(err) {
@@ -303,7 +293,9 @@ export default class App extends React.Component<any, IAPPState> {
           } else if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
             console.log('card inserted')
             this.setState({ connection: true })
-            this.waitForPin()
+            setTimeout(() => {
+              this.setState({ status: true })
+            }, 2000)
             reader.connect({ share_mode : reader.SCARD_SHARE_SHARED }, function(err, protocol) {
               if (err) {
                 console.log(err)
@@ -326,26 +318,28 @@ export default class App extends React.Component<any, IAPPState> {
     })
 
   }
-
   initAll() {
     if (this.state.allowInit) {
       this.setState({ allowInit: false })
       initBitcoinAddress()
-      .then(() => initEthereumAddress()).then(() => initLitecoinAddress()).then(() => this.setState({ status: true }))
-      .then(() => this.getValues()).then(() => this.getTransactions())
-      .then(() => UpdateHWStatus(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice))
+      initEthereumAddress()
+      initLitecoinAddress()
+      this.getValues()
+      this.getTransactions()
+
     }
   }
   updateData() {
     console.log('REFRESHING')
-    this.getTransactions().then(() => this.getValues())
-    .then(() => UpdateHWStatus(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)
-    )
+    this.getTransactions()
+    setTimeout(() => {
+      this.getValues()
+    }, 1000)
 
   }
   changeBalance(currency: string, amount: number) {
     switch (currency) {
-    case 'BTCTEST': {
+    case 'BTC': {
       this.setState({ BTCBalance: (this.state.BTCBalance - amount) })
       break
     }
@@ -353,7 +347,7 @@ export default class App extends React.Component<any, IAPPState> {
       this.setState({ ETHBalance: (this.state.ETHBalance - amount) })
       break
     }
-    case 'LTCTEST': {
+    case 'LTC': {
       this.setState({ LTCBalance: (this.state.LTCBalance - amount) })
     }
     }
@@ -370,7 +364,7 @@ export default class App extends React.Component<any, IAPPState> {
       Hash: hash
     }
     switch (currency) {
-    case 'BTCTEST' : {
+    case 'BTC' : {
       this.setState({ BTCLastTx: [...this.state.BTCLastTx, tx] })
       break
     }
@@ -378,7 +372,7 @@ export default class App extends React.Component<any, IAPPState> {
       this.setState({ ETHLastTx: [...this.state.ETHLastTx, tx] })
       break
     }
-    case 'LTCTEST': {
+    case 'LTC': {
       this.setState({ LTCLastTx: [...this.state.LTCLastTx, tx] })
       break
     }
@@ -386,7 +380,7 @@ export default class App extends React.Component<any, IAPPState> {
   }
 
   getValues() {
-    return Promise.all([getBalance(),getEthereumBalance(), getLitecoinBalance(), GetCurrencyRate()]).then(value => {
+    Promise.all([getBalance(),getEthereumBalance(), getLitecoinBalance(), GetCurrencyRate()]).then(value => {
       for (let val in value) {
         if (typeof(value[val]) === 'object') {
           if (Number(val) !== value.length - 1) {
@@ -441,7 +435,7 @@ export default class App extends React.Component<any, IAPPState> {
     this.setState({ redirect: true })
   }
   getTransactions() {
-    return Promise.all([getBitcoinLastTx(),getLitecoinLastTx(), getEthereumLastTx()]).then(value => {
+    Promise.all([getBitcoinLastTx(),getLitecoinLastTx(), getEthereumLastTx()]).then(value => {
       console.log('PROMISE ALL VALUE',value)
       for (let index in value) {
         if (Object.prototype.hasOwnProperty.call(JSON.parse(value[index].content),'data')) {
@@ -588,7 +582,7 @@ export default class App extends React.Component<any, IAPPState> {
           null
         )}
         <Route path = '/transaction_success' component = {() => <TransactionSuccess refresh = {this.updateData} resetState = {this.redirectToTransactionsuccess}/> }/>
-        <Route path = '/start' component = {() => <MainWindow connection = {this.state.connection} status = {this.state.status} init = {this.initAll} isInitialized = {this.state.isInitialized}/>}/>
+        <Route path = '/start' component = {() => <MainWindow connection = {this.state.connection} status = {this.state.status} init = {this.initAll}/>}/>
          {this.routes.map((route, index) => (
           <Route
             exact = {route.exact}

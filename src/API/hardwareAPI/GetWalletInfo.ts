@@ -1,5 +1,6 @@
 import SerialPort from 'serialport'
 import { port } from './OpenPort'
+import { reader } from './Reader'
 export async function wrapper(): Promise<any> {
   try {
     const res = await Promise.resolve()
@@ -7,6 +8,23 @@ export async function wrapper(): Promise<any> {
   } catch (err) {
     throw err
   }
+}
+export function getInfoPCSC() {
+  reader.connect((err, protocol) => {
+    if (err) {
+      console.log(err)
+    } else {
+      reader.transmit(Buffer.from([0xB1,0x10,0x00,0x00,0x00]),4,protocol, (err, data) => {
+        if (err) {
+          console.log(err)
+        } else {
+          console.log('DATA RECEIVED:',data)
+          reader.close()
+        }
+      })
+    }
+  })
+
 }
 export function waitForConnection() {
   let connection = false
