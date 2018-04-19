@@ -10,7 +10,6 @@ import { Provider } from 'react-redux'
 import configureStore from '../core/store/configureStore'
 const store = configureStore()
 // import { Switch } from 'react-router'
-
 let reactDOM = ReactDOM.render(<Provider store = {store}>
                <Router>
                   <App/>

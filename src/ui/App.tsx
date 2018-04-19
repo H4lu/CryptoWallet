@@ -22,12 +22,12 @@ import { MainWindow } from '../components/MainWindow'
 // import { wrapper } from '../API/hardwareAPI/GetWalletInfo'
 import { TransactionSuccess } from '../components/TransactionSuccess'
 import { UpdateHWStatus } from '../API/hardwareAPI/UpdateHWStatus'
-import { openPort } from '../API/hardwareAPI/OpenPort'
-import SerialPort from 'serialport'
+// import { openPort } from '../API/hardwareAPI/OpenPort'
+// import SerialPort from 'serialport'
 // import { loadBitcoinBalance } from '../core/actions/load'
-// import pcsclite from 'pcsclite'
+import pcsclite from 'pcsclite'
 import { getWalletStatus } from '../API/hardwareAPI/GetWalletInfo'
-// let pcsc = new pcsclite()
+let pcsc = new pcsclite()
 
 // import { connect } from 'react-redux'
 /*
@@ -255,6 +255,7 @@ export default class App extends React.Component<any, IAPPState> {
     }, 500)
   }
   componentDidMount() {
+    /*
     setInterval(() => {
       SerialPort.list().then(value => {
         for (let item in value) {
@@ -274,7 +275,7 @@ export default class App extends React.Component<any, IAPPState> {
       })
     }, 500, [])
   }
-  /*
+  */
     console.log('APP PROPS:', this.props)
     console.log('APP:', App)
     pcsc.on('reader', (reader) => {
@@ -325,7 +326,7 @@ export default class App extends React.Component<any, IAPPState> {
     })
 
   }
-  */
+
   initAll() {
     if (this.state.allowInit) {
       this.setState({ allowInit: false })
