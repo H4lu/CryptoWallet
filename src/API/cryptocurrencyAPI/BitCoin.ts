@@ -1,14 +1,12 @@
 import { TransactionBuilder, networks, Transaction } from 'bitcoinjs-lib'
 import * as Request from 'request'
 import * as webRequest from 'web-request'
-import { getSig } from '../hardwareAPI/GetSignature'
-import { getAddressByCOM } from '../hardwareAPI/GetAddress'
+import { getSignaturePCSC } from '../hardwareAPI/GetSignature'
+import { getAddressPCSC } from '../hardwareAPI/GetAddress'
 // import getAddress from '../hardwareAPI/GetAddress'
 import * as utils from './utils'
 import * as crypto from 'crypto'
-import Container from '../../ui/Index'
 import * as satoshi from 'satoshi-bitcoin'
-console.log(Container)
 // const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 console.log(urlChainSo)
@@ -17,7 +15,8 @@ const NETWORK = 'BTCTEST'
 const rootURL = 'https://chain.so/api/v2'
 let myAddr = ''
 export async function initBitcoinAddress() {
-  myAddr = await getAddressByCOM(0)
+  myAddr = await getAddressPCSC(0)
+  myAddr = 'mgWZCzn4nv7noRwnbThqQ2hD2wT3YAKTJH'
   if (myAddr.length < 2) return Promise.reject('ADDRESS IS EMPTY')
   console.log('MY ADDRESS BITCOIN: ' + myAddr)
 }
@@ -156,7 +155,7 @@ async function createTransaction(paymentAdress: string,
   let hashBuffer = Buffer.concat(hashArray)
   console.log('HASHBUFFER: ' + hashBuffer + 'LENGTH: ' + hashBuffer.length)
   console.log('HASHARRAY: ' + hashArray)
-  let data = await getSig(0, hashBuffer, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.tx.ins.length)
+  let data = await getSignaturePCSC(0, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.tx.ins.length)
   let startIndex = 5
   let shift = data[4] + 5
   transaction.inputs.forEach(() => {

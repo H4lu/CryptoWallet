@@ -1,5 +1,7 @@
 import { Buffer } from 'buffer'
 import { port } from './OpenPort'
+import { reader } from '../hardwareAPI/Reader'
+
 /* import * as Path from 'path'
 // declare var __dirname: string
 // let path = __dirname + './../../iTokenDLL'
@@ -40,6 +42,61 @@ export function openPort(portName: string): Promise<SerialPort> {
   })
 }
 */
+export function getSignaturePCSC(id: number, message: Array<Buffer>, address: string, amount: number, numberOfInputs: number): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    console.log('LENGTH OF MESSAGE:' + message.length)
+    let currencyId: number = 0x00
+    switch (id) {
+    case 0: {
+      currencyId = 0x00
+      break
+    }
+    case 1: {
+      currencyId = 0x01
+      break
+    }
+    case 2: {
+      currencyId = 0x02
+      break
+    }
+    }
+    console.log('LENGTH OF MESSAGE', message.length)
+    let amountBuf = new Buffer(16)
+    amountBuf.write(amount.toString(),0,amount.toString().length, 'ascii')
+    reader.transmit(Buffer.from([0xb1,0x40,Number('0x' + numberOfInputs),currencyId,message.length,amountBuf,Buffer.from(address)]), 4, 2, async (err, data) => {
+      if (err) {
+        console.log('ERROR IN FIRST MMESSAGE',err)
+        reject(err)
+      } else {
+        let sigArray = [ ]
+        console.log(data)
+        for (let i = 0; i < numberOfInputs; i++) {
+          let answer = await sendDataMessage(Number('0x' + i), currencyId, message[i])
+          sigArray.push(answer)
+        }
+        resolve(Buffer.concat(sigArray))
+      }
+    })
+  })
+}
+
+function sendDataMessage(inputNumber: number, currencyId: number, hash: Buffer) {
+  console.log('GOT THIS INPUT NUMBER: ' + inputNumber)
+  console.log('GOT THIS CURRENCY ID: ' + currencyId)
+  return new Promise((resolve, reject) => {
+    reader.transmit(Buffer.from([0xb1,0x41,inputNumber, currencyId,0x20,hash]), 110, 2, (err, data) => {
+      if (err) {
+        console.log('ERROR IN SEND HASH',err)
+        reject(err)
+      } else {
+        console.log('GOT THIS DATA',data)
+        console.log('TO STRING',data.toString('hex'))
+        resolve(data)
+      }
+    })
+  })
+}
+
 export function getSig(id: number, message: Buffer, address: string, amount: number, numberOfInputs: number): Promise<Buffer> {
   console.log(numberOfInputs)
   let currencyId: number = 0x00

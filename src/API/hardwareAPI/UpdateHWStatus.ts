@@ -1,4 +1,5 @@
 import { port } from './OpenPort'
+import { reader } from './Reader'
 
 export function UpdateHWStatus (...data) {
   let startMessage = Buffer.from([ 0x9c,0x9c,0x42 ])
@@ -16,5 +17,20 @@ export function UpdateHWStatus (...data) {
   port.on('data', (data) => {
     console.log('GOT THIS DATA: ' + data.toString('hex'))
     port.removeAllListeners('data')
+  })
+}
+
+export function UpdateHWStatusPCSC(...data) {
+  let message = new Buffer([])
+  for (let item in data) {
+    let tempBuffer = new Buffer(16)
+    tempBuffer.write(data[item].toString(),0,data[item].length, 'ascii')
+    console.log('TEMP BUFFER: ',tempBuffer)
+    message = Buffer.concat([message, tempBuffer])
+    console.log('MESSAGE BUFFER: ',message)
+  }
+  reader.transmit(Buffer.from([0xb1,0x50,0x00,0x00,0x60,message]),4,2, (err, data) => {
+    console.log(err)
+    console.log(data)
   })
 }

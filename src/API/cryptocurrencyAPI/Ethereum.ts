@@ -1,11 +1,11 @@
 import Web3 from 'web3'
 import Transaction from 'ethereumjs-tx'
-import { getSig } from '../hardwareAPI/GetSignature'
+import { getSignaturePCSC } from '../hardwareAPI/GetSignature'
 // import { PromiEvent, TransactionReceipt } from 'web3/types'
 import { keccak256 } from 'js-sha3'
 // import fs from 'fs'
 import * as webRequest from 'web-request'
-import { getAddressByCOM } from '../hardwareAPI/GetAddress'
+// import { getAddressPCSC } from '../hardwareAPI/GetAddress'
 // import getAddress from '../hardwareAPI/GetAddress'
 const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM'))
 // const testTokenAdress = '0x583cbBb8a8443B38aBcC0c956beCe47340ea1367'
@@ -20,8 +20,10 @@ console.log('abi ' + abi)
 import Container from '../../ui/Index'
 let myAdress = ''
 export async function initEthereumAddress() {
-  myAdress = await getAddressByCOM(1)
+  /*myAdress = await getAddressPCSC(1)
   myAdress = web3.utils.toChecksumAddress('0x' + myAdress.toString())
+  */
+  myAdress = '0x6963Cc97D5348E0f031E9379A2a7911c11806413'
 }
 
 export function getEthereumAddress() {
@@ -123,7 +125,9 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
       // Отправляем на подпись
     console.log('Pass this to amount: ' + amount)
     console.log('Amount type: ' + typeof(amount))
-    getSig(1,Buffer.from(txHash, 'hex'), paymentAdress, amount, 1).then(sign => {
+    let hash = Buffer.from(txHash, 'hex')
+    let arr = [hash]
+    getSignaturePCSC(1,arr, paymentAdress, amount, 1).then(sign => {
       console.log('data length: ' + sign.length)
       console.log(web3.utils.toHex(sign[69]))
       console.log('r: ' + sign.slice(5,37).toString('hex'))

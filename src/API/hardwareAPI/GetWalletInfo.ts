@@ -1,6 +1,7 @@
 import SerialPort from 'serialport'
 import { port } from './OpenPort'
 import { reader } from './Reader'
+
 export async function wrapper(): Promise<any> {
   try {
     const res = await Promise.resolve()
@@ -10,22 +11,42 @@ export async function wrapper(): Promise<any> {
   }
 }
 export function getInfoPCSC() {
-  reader.connect((err, protocol) => {
-    if (err) {
-      console.log(err)
-    } else {
-      reader.transmit(Buffer.from([0xB1,0x10,0x00,0x00,0x00]),4,protocol, (err, data) => {
-        if (err) {
-          console.log(err)
-        } else {
-          console.log('DATA RECEIVED:',data)
-          reader.close()
+  console.log('TRANSMITTING')
+  return new Promise((resolve, reject) => {
+    reader.transmit(Buffer.from([0xB1,0x10,0x00,0x00,0x00]),4,2, (err, data) => {
+      if (err) {
+        console.log(err)
+        reject(err)
+      } else {
+        console.log('DATA RECEIVED:',data.toString('hex'))
+        switch (data.toString('hex')) {
+        case '9000': {
+          resolve(0)
+          break
         }
-      })
-    }
-  })
+        case '6b80': {
+          resolve(1)
+          break
+        }
+        case '6b81': {
+          resolve(2)
+          break
+        }
+        case '6b82': {
+          resolve(3)
+          break
+        }
+        case '6b83': {
+          resolve(4)
+          break
+        }
 
+        }
+      }
+    })
+  })
 }
+
 export function waitForConnection() {
   let connection = false
   while (!connection) {

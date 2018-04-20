@@ -26,7 +26,8 @@ import { TransactionSuccess } from '../components/TransactionSuccess'
 import pcsclite from 'pcsclite'
 import { setReader } from '../API/hardwareAPI/Reader'
 let pcsc = new pcsclite()
-
+// import { getInfoPCSC } from '../API/hardwareAPI/GetWalletInfo'
+import { UpdateHWStatusPCSC } from '../API/hardwareAPI/UpdateHWStatus'
 // import { connect } from 'react-redux'
 /*
 SerialPort.list().then(value => {
@@ -117,7 +118,8 @@ interface IAPPState {
   tempState: Array<any>,
   allowInit: boolean,
   redirectToTransactionSuccess: boolean,
-  totalPercentage: number
+  totalPercentage: number,
+  isInitialized: boolean
 }
 
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
@@ -203,7 +205,8 @@ export default class App extends React.Component<any, IAPPState> {
       tempState: [],
       allowInit: true,
       redirectToTransactionSuccess: false,
-      totalPercentage: 0
+      totalPercentage: 0,
+      isInitialized: false
     }
     this.resetRedirect = this.resetRedirect.bind(this)
     this.redirectToTransactionsuccess = this.redirectToTransactionsuccess.bind(this)
@@ -266,9 +269,29 @@ export default class App extends React.Component<any, IAPPState> {
  */
     console.log('APP PROPS:', this.props)
     console.log('APP:', App)
-    pcsc.on('reader', (reader) => {
-      if (reader.name.include('NXP READER CCID')) {
-         setReader(reader)
+    pcsc.on('reader', async (reader) => {
+      if (reader.name.includes('ACS CCID USB Reader')) {
+        console.log('setting')
+        setReader(reader)
+        this.setState({ connection: true })
+        reader.connect(async (err, protocol) => {
+          if (err) {
+            console.log('GOT ERROR',err)
+          } else {
+            this.setState({ status: true })
+            console.log('RESOLVING PROTOCOL', protocol)
+          }
+          /*let interval = setInterval(async () => {
+            let data = await getInfoPCSC()
+            if (data === 0) {
+              this.setState({ status: true })
+              clearInterval(interval)
+            }
+            console.log('DATA ASYNC AWAIT' + data)
+          },500,[])
+*/
+        })
+
       }
       console.log('New reader detected', reader.name)
 
@@ -276,13 +299,12 @@ export default class App extends React.Component<any, IAPPState> {
         console.log('Error(', this.name, '):', err.message)
       })
 
-      reader.on('status', (status) => {
+      /*reader.on('status', (status) => {
         console.log('Status(', status.name, '):', status)
         const changes = reader.state ^ status.state
         if (changes) {
           if ((changes & reader.SCARD_STATE_EMPTY) && (status.state & reader.SCARD_STATE_EMPTY)) {
             console.log('card removed')
-            this.setState({ connection: false })
             reader.disconnect(reader.SCARD_LEAVE_CARD, function(err) {
               if (err) {
                 console.log(err)
@@ -292,7 +314,6 @@ export default class App extends React.Component<any, IAPPState> {
             })
           } else if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
             console.log('card inserted')
-            this.setState({ connection: true })
             setTimeout(() => {
               this.setState({ status: true })
             }, 2000)
@@ -306,7 +327,7 @@ export default class App extends React.Component<any, IAPPState> {
           }
         }
       })
-
+      */
       reader.on('end', () => {
         console.log('Reader', reader.name, 'removed')
         this.setState({ connection: false })
@@ -322,19 +343,16 @@ export default class App extends React.Component<any, IAPPState> {
     if (this.state.allowInit) {
       this.setState({ allowInit: false })
       initBitcoinAddress()
-      initEthereumAddress()
-      initLitecoinAddress()
-      this.getValues()
-      this.getTransactions()
-
+      .then(() => initEthereumAddress()).then(() => initLitecoinAddress()).then(() => this.setState({ status: true }))
+      .then(() => this.getValues()).then(() => this.getTransactions())
+      .then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice))
     }
   }
   updateData() {
     console.log('REFRESHING')
-    this.getTransactions()
-    setTimeout(() => {
-      this.getValues()
-    }, 1000)
+    this.getTransactions().then(() => this.getValues())
+    .then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)
+    )
 
   }
   changeBalance(currency: string, amount: number) {
@@ -380,7 +398,7 @@ export default class App extends React.Component<any, IAPPState> {
   }
 
   getValues() {
-    Promise.all([getBalance(),getEthereumBalance(), getLitecoinBalance(), GetCurrencyRate()]).then(value => {
+    return Promise.all([getBalance(),getEthereumBalance(), getLitecoinBalance(), GetCurrencyRate()]).then(value => {
       for (let val in value) {
         if (typeof(value[val]) === 'object') {
           if (Number(val) !== value.length - 1) {
@@ -435,7 +453,7 @@ export default class App extends React.Component<any, IAPPState> {
     this.setState({ redirect: true })
   }
   getTransactions() {
-    Promise.all([getBitcoinLastTx(),getLitecoinLastTx(), getEthereumLastTx()]).then(value => {
+    return Promise.all([getBitcoinLastTx(),getLitecoinLastTx(), getEthereumLastTx()]).then(value => {
       console.log('PROMISE ALL VALUE',value)
       for (let index in value) {
         if (Object.prototype.hasOwnProperty.call(JSON.parse(value[index].content),'data')) {
@@ -582,7 +600,7 @@ export default class App extends React.Component<any, IAPPState> {
           null
         )}
         <Route path = '/transaction_success' component = {() => <TransactionSuccess refresh = {this.updateData} resetState = {this.redirectToTransactionsuccess}/> }/>
-        <Route path = '/start' component = {() => <MainWindow connection = {this.state.connection} status = {this.state.status} init = {this.initAll}/>}/>
+        <Route path = '/start' component = {() => <MainWindow connection = {this.state.connection} status = {this.state.status} init = {this.initAll} isInitialized = {this.state.isInitialized}/>}/>
          {this.routes.map((route, index) => (
           <Route
             exact = {route.exact}

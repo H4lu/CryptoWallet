@@ -1,12 +1,11 @@
-
 import { TransactionBuilder, networks, Transaction } from 'bitcoinjs-lib'
 import * as Request from 'request'
 import * as webRequest from 'web-request'
 import * as utils from './utils'
 import * as crypto from 'crypto'
-import { getAddressByCOM } from '../hardwareAPI/GetAddress'
+import { getAddressPCSC } from '../hardwareAPI/GetAddress'
 // import { Transaction, TransactionBuilder, networks } from 'bitcoinjs-lib'
-import { getSig } from '../hardwareAPI/GetSignature'
+import { getSignaturePCSC } from '../hardwareAPI/GetSignature'
 import * as satoshi from 'satoshi-bitcoin'
 let address = ''
 const rootURL = 'https://chain.so/api/v2'
@@ -17,7 +16,8 @@ export default function getAddres() {
   return address
 }
 export async function initLitecoinAddress() {
-  address = await getAddressByCOM(2)
+  address = await getAddressPCSC(2)
+  address = 'mvLpZMU3cavwLbUMKocpSWcjP9LF62BQMd'
 }
 export async function getLitecoinLastTx(): Promise<any> {
   console.log('CALLING LTC')
@@ -132,8 +132,6 @@ async function createTransaction(paymentAdress: string,
     let firstHash = crypto.createHash('sha256').update(Buffer.from(dataForHash, 'hex')).digest('hex')
     let secondHash = crypto.createHash('sha256').update(Buffer.from(firstHash, 'hex')).digest('hex')
     console.log('SECOND HASH: ' + secondHash)
-    console.log('HASH OF first buffer: ' + crypto.createHash('sha256').update(Buffer.from(dataForHash, 'hex')).digest('hex'))
-    console.log('HASH WITH BUFFER: ' + crypto.createHash('sha256').update(crypto.createHash('sha256').update(Buffer.from(dataForHash, 'hex')).digest('hex')))
     let sigIndex = unbuildedTx.indexOf('00000000ff', lastIndex)
     console.log(sigIndex)
     lastIndex += 90
@@ -143,7 +141,7 @@ async function createTransaction(paymentAdress: string,
   let hashBuffer = Buffer.concat(hashArray)
   console.log('HASHBUFFER: ' + hashBuffer + 'LENGTH: ' + hashBuffer.length)
   console.log('HASHARRAY: ' + hashArray)
-  let data = await getSig(2, hashBuffer, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.tx.ins.length)
+  let data = await getSignaturePCSC(2, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.tx.ins.length)
   let startIndex = 5
   let shift = data[4] + 5
   transaction.inputs.forEach(() => {

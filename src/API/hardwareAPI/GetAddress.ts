@@ -1,6 +1,36 @@
 
 import { Buffer } from 'buffer'
 import { port } from './OpenPort'
+import { reader } from './Reader'
+
+export function getAddressPCSC(id: number): Promise<string> {
+  return new Promise((resolve, reject) => {
+    let currencyId: number = 0x00
+    switch (id) {
+    case 0: {
+      currencyId = 0x00
+      break
+    }
+    case 1: {
+      currencyId = 0x01
+      break
+    }
+    case 2: {
+      currencyId = 0x02
+      break
+    }
+    }
+    reader.transmit(Buffer.from([0xB1,0x30,0x00,currencyId,0x00]),60,2,(err,data) => {
+      if (err) {
+        reject(err)
+      } else {
+        console.log('GOT THIS ANSWER',data.toString('hex'))
+        resolve(data.toString('hex').substring(7, data.length))
+      }
+    })
+  })
+
+}
 export function getAddr(id: number) {
   port.open()
   port.on('open', data => {
