@@ -1,5 +1,5 @@
 import { Buffer } from 'buffer'
-import { port } from './OpenPort'
+// import { port } from './OpenPort'
 import { reader } from '../hardwareAPI/Reader'
 
 /* import * as Path from 'path'
@@ -97,7 +97,7 @@ function sendDataMessage(inputNumber: number, currencyId: number, hash: Buffer) 
   })
 }
 
-export function getSig(id: number, message: Buffer, address: string, amount: number, numberOfInputs: number): Promise<Buffer> {
+/* export function getSig(id: number, message: Buffer, address: string, amount: number, numberOfInputs: number): Promise<Buffer> {
   console.log(numberOfInputs)
   let currencyId: number = 0x00
   switch (id) {
@@ -135,4 +135,4 @@ export function getSig(id: number, message: Buffer, address: string, amount: num
       resolve(data)
     })
   })
-}
+}*/

@@ -9,18 +9,20 @@ const commonConfig = {
     filename: '[name].js'
   },
   externals: {
-    "serialport": "require('serialport')",
-    "keccak": "require('keccak')",
+    "keccak": "require('keccak')"
   },
   node: {
     __dirname: false
   },
   resolve: {
   alias: {
-    pcsclite: path.resolve(__dirname, 'node_modules/pcsclite/lib/pcsclite.js'),
+    validation: path.resolve(__dirname, 'node_modules/validation/build/Release/validation.node'),
+    bufferutil: path.resolve(__dirname, 'node_modules/bufferutil/build/Release/bufferutil.node'),
+    scrypt: path.resolve(__dirname, 'node_modules/scrypt/build/Release/scrypt.node'),
+    // pcsclite: path.resolve(__dirname, 'node_modules/pcsclite/build/Release/pcsclite.node'),
     '7zip': path.resolve(__dirname, 'node_modules/win-7zip/index.js'), 
     sha3: path.join(__dirname,'node_modules/sha3/build/Release/sha3.node'),
-    keccak: path.join(__dirname,'node_modules/keccak/build/Release/keccak.node'),
+    keccak: path.join(__dirname,'node_modules/keccak/build/Release/keccak.node')
   },
 },
   module: {

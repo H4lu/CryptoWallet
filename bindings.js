@@ -1,4 +1,5 @@
-module.exports = exports = function (str) {
+// import path from 'path'
+/* module.exports = exports = function (str) {
   if (str === 'binding') {
     const result = require('./node_modules/ref/build/Release/binding.node')
     result.path = './node_modules/ref/build/Release/binding.node'
@@ -13,3 +14,12 @@ module.exports = exports = function (str) {
     return result
   }
 }
+*/
+/*module.exports = exports = function (str) {
+  if (str === 'pcsclite.node') {
+    const result = require('./node_modules/pcsclite/build/Release/pcsclite.node')
+    result.path = path.resolve(__dirname, 'node_modules/pcsclite/build/Release/pcsclite.node')
+    return result
+  }
+}
+*/

@@ -1,7 +1,7 @@
-import { port } from './OpenPort'
+// import { port } from './OpenPort'
 import { reader } from './Reader'
 
-export function UpdateHWStatus (...data) {
+/* export function UpdateHWStatus (...data) {
   let startMessage = Buffer.from([ 0x9c,0x9c,0x42 ])
   let endMessage = Buffer.from([ 0x9a,0x9a ])
   let message = new Buffer([])
@@ -19,6 +19,7 @@ export function UpdateHWStatus (...data) {
     port.removeAllListeners('data')
   })
 }
+*/
 
 export function UpdateHWStatusPCSC(...data) {
   let message = new Buffer([])

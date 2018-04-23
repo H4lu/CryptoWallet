@@ -8,6 +8,8 @@ let mainWindow: BrowserWindow
 app.on('ready', () => {
   mainWindow = new BrowserWindow({ width: 1024, height: 720, resizable: false,
     fullscreen: false, frame: false })
+  mainWindow.loadURL(`file:///${__dirname}/index.html`)
+  mainWindow.webContents.toggleDevTools()
   mainWindow.once('ready-to-show', () => mainWindow.show())
  // const fileName = 'file:///' + __dirname + '/index.html'
  // mainWindow.loadURL(fileName)
@@ -16,7 +18,7 @@ app.on('ready', () => {
     protocol: 'file:',
     slashes: true
   }))*/
-  mainWindow.loadURL(`file:///${__dirname}/index.html`)
+
   /*installExtension(REACT_DEVELOPER_TOOLS).then((name => console.log(`Added Extension:  ${name}`))).catch((err) => console.log('An error occurred: ', err))
   installExtension(REDUX_DEVTOOLS).then((name => console.log(`Added Extension:  ${name}`))).catch((err) => console.log('An error occurred: ', err))
   */

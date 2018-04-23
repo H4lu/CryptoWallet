@@ -3,6 +3,7 @@ import { handleEthereum } from '../API/cryptocurrencyAPI/Ethereum'
 import { handleLitecoin } from '../API/cryptocurrencyAPI/Litecoin'
 
 export function sendTransaction(currency: string, paymentAddress: string, amount: number, fee: number, redirect: any) {
+  console.log('GOT THIS AMOUNT')
   switch (currency) {
   case 'bitcoin':
     console.log('BTC fee: ' + fee)

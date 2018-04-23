@@ -1,5 +1,5 @@
-import SerialPort from 'serialport'
-import { port } from './OpenPort'
+// import SerialPort from 'serialport'
+// import { port } from './OpenPort'
 import { reader } from './Reader'
 
 export async function wrapper(): Promise<any> {
@@ -10,13 +10,13 @@ export async function wrapper(): Promise<any> {
     throw err
   }
 }
-export function getInfoPCSC() {
+export function getInfoPCSC(): Promise<Number> {
   console.log('TRANSMITTING')
   return new Promise((resolve, reject) => {
     reader.transmit(Buffer.from([0xB1,0x10,0x00,0x00,0x00]),4,2, (err, data) => {
       if (err) {
         console.log(err)
-        reject(err)
+        reject(new Error(err))
       } else {
         console.log('DATA RECEIVED:',data.toString('hex'))
         switch (data.toString('hex')) {
@@ -47,7 +47,7 @@ export function getInfoPCSC() {
   })
 }
 
-export function waitForConnection() {
+/* export function waitForConnection() {
   let connection = false
   while (!connection) {
     setTimeout(() => {
@@ -63,7 +63,8 @@ export function waitForConnection() {
     },1000)
   }
 }
-export async function findDevice(): Promise<any> {
+*/
+/* export async function findDevice(): Promise<any> {
   return new Promise((resolve, reject) => {
     SerialPort.list().then(result => {
       console.log(result.find())
@@ -77,8 +78,8 @@ export async function findDevice(): Promise<any> {
     console.log(error)
   })
 }
-
-export async function getWalletStatus() {
+*/
+/*export async function getWalletStatus() {
   let startMessage = Buffer.from([0x9c,0x9c])
   let bodyMessage = Buffer.from([0x50,0x00])
   let endMessage = Buffer.from([0x9a,0x9a])
@@ -119,3 +120,4 @@ export async function getWalletStatus() {
   })
 
 }
+*/

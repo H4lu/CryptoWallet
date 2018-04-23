@@ -1,6 +1,6 @@
 
 import { Buffer } from 'buffer'
-import { port } from './OpenPort'
+// import { port } from './OpenPort'
 import { reader } from './Reader'
 
 export function getAddressPCSC(id: number): Promise<string> {
@@ -31,7 +31,7 @@ export function getAddressPCSC(id: number): Promise<string> {
   })
 
 }
-export function getAddr(id: number) {
+/* export function getAddr(id: number) {
   port.open()
   port.on('open', data => {
     console.log('Port opened!' + data)
@@ -96,3 +96,4 @@ export function getAddressByCOM(id: number): Promise<string> {
   })
 
 }
+*/

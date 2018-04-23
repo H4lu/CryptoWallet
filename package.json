@@ -58,7 +58,9 @@
     "webpack-cli": "^2.0.12",
     "webpack-dev-server": "^2.9.7",
     "websocket": "^1.0.25",
-    "win-7zip": "^0.1.1"
+    "win-7zip": "^0.1.1",
+    "electron": "^1.8.3",
+    "electron-rebuild": "^1.7.3"
   },
   "scripts": {
     "build": "webpack --config webpack.config.js",
@@ -86,10 +88,7 @@
     "babel-preset-stage-2": "^6.24.1",
     "binary-loader": "0.0.1",
     "bitcoinjs-lib": "^3.3.0",
-    "electron": "^1.8.3",
-    "electron-rebuild": "^1.7.3",
     "ethereumjs-tx": "^1.3.3",
-    "ffi": "^2.2.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.0.6",
     "keccak": "^1.4.0",
@@ -101,14 +100,11 @@
     "react-router-redux": "^5.0.0-alpha.9",
     "react-table": "^6.8.0",
     "react-transition-group": "^2.3.0",
-    "ref": "^1.3.5",
     "ref-array": "^1.2.0",
     "rlp": "^2.0.0",
     "satoshi-bitcoin": "^1.0.4",
     "semantic-ui-react": "^0.78.3",
-    "serialport": "^6.1.1",
     "tapable": "^1.0.0",
-    "ts-pcsclite": "^1.0.4",
     "web3": "^1.0.0-beta.30",
     "webpack": "^3.8.1"
   },
@@ -116,6 +112,19 @@
   "optionalDependencies": {
     "bufferutil": "^3.0.3",
     "utf-8-validate": "^4.0.0"
+  },
+  "build": {
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
+}
   },
   "repository": {
     "type": "git",

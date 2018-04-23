@@ -1,4 +1,4 @@
-import SerialPort from 'serialport'
+/*import SerialPort from 'serialport'
 export let port: SerialPort
 export function openPort(portName: string): Promise<SerialPort> {
   port = new SerialPort(portName, { autoOpen: false, baudRate: 115200 })
@@ -24,3 +24,4 @@ export function openPort(portName: string): Promise<SerialPort> {
     })
   })
 }
+*/

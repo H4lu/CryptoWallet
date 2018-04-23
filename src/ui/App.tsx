@@ -26,7 +26,7 @@ import { TransactionSuccess } from '../components/TransactionSuccess'
 import pcsclite from 'pcsclite'
 import { setReader } from '../API/hardwareAPI/Reader'
 let pcsc = new pcsclite()
-// import { getInfoPCSC } from '../API/hardwareAPI/GetWalletInfo'
+import { getInfoPCSC } from '../API/hardwareAPI/GetWalletInfo'
 import { UpdateHWStatusPCSC } from '../API/hardwareAPI/UpdateHWStatus'
 // import { connect } from 'react-redux'
 /*
@@ -119,7 +119,8 @@ interface IAPPState {
   allowInit: boolean,
   redirectToTransactionSuccess: boolean,
   totalPercentage: number,
-  isInitialized: boolean
+  isInitialized: boolean,
+  walletStatus: number
 }
 
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
@@ -206,7 +207,8 @@ export default class App extends React.Component<any, IAPPState> {
       allowInit: true,
       redirectToTransactionSuccess: false,
       totalPercentage: 0,
-      isInitialized: false
+      isInitialized: false,
+      walletStatus: 3
     }
     this.resetRedirect = this.resetRedirect.bind(this)
     this.redirectToTransactionsuccess = this.redirectToTransactionsuccess.bind(this)
@@ -223,6 +225,7 @@ export default class App extends React.Component<any, IAPPState> {
     this.connectionOK = this.connectionOK.bind(this)
     this.addUnconfirmedTx = this.addUnconfirmedTx.bind(this)
     this.changeBalance = this.changeBalance.bind(this)
+    this.getWalletInfo = this.getWalletInfo.bind(this)
   }
   redirectToTransactionsuccess() {
     let self = this
@@ -237,6 +240,41 @@ export default class App extends React.Component<any, IAPPState> {
   }
   connectionERROR() {
     this.setState({ connection: false })
+  }
+  getWalletInfo() {
+    let interval = setInterval(async () => {
+      try {
+        let data = await getInfoPCSC()
+        console.log('GOT THIS DATA',data)
+        switch (data) {
+        case 0: {
+          clearInterval(interval)
+          this.setState({ walletStatus: 0 })
+          break
+        }
+        case 1: {
+          this.setState({ walletStatus: 1 })
+          break
+        }
+        case 2: {
+          this.setState({ walletStatus: 2 })
+          break
+        }
+        case 3: {
+          this.setState({ walletStatus: 3 })
+          break
+        }
+        case 4: {
+          this.setState({ walletStatus: 4 })
+          break
+        }
+        }
+        console.log('DATA ASYNC AWAIT' + data)
+      } catch (error) {
+        console.log('GOT ERROR',error)
+        clearInterval(interval)
+      }
+    },500,[])
   }
   componentDidMount() {
     /*
@@ -270,34 +308,45 @@ export default class App extends React.Component<any, IAPPState> {
     console.log('APP PROPS:', this.props)
     console.log('APP:', App)
     pcsc.on('reader', async (reader) => {
-      if (reader.name.includes('ACS CCID USB Reader')) {
+      if (reader.name.includes('PN7462AU')) {
         console.log('setting')
         setReader(reader)
         this.setState({ connection: true })
-        reader.connect(async (err, protocol) => {
-          if (err) {
-            console.log('GOT ERROR',err)
-          } else {
-            this.setState({ status: true })
-            console.log('RESOLVING PROTOCOL', protocol)
-          }
-          /*let interval = setInterval(async () => {
-            let data = await getInfoPCSC()
-            if (data === 0) {
-              this.setState({ status: true })
-              clearInterval(interval)
+        reader.on('status', (status) => {
+          console.log('READER STATE', reader.state)
+          let changes = reader.state ^ status.state
+          if (changes) {
+            if ((changes & reader.SCARD_STATE_EMPTY) && (status.state & reader.SCARD_STATE_EMPTY)) {
+              console.log('card removed')
+              reader.disconnect(reader.SCARD_LEAVE_CARD, (err) => {
+                if (err) {
+                  console.log(err)
+                } else {
+                  console.log('Disconnected')
+                }
+              })
+            } else if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
+              console.log('card inserted')
+              reader.connect({ share_mode : reader.SCARD_SHARE_SHARED }, (err, protocol) => {
+                if (err) {
+                  console.log(err)
+                } else {
+                  this.getWalletInfo()
+                  console.log('Protocol(', reader.name, '):', protocol)
+                }
+              })
             }
-            console.log('DATA ASYNC AWAIT' + data)
-          },500,[])
-*/
+          }
         })
-
       }
-      console.log('New reader detected', reader.name)
-
       reader.on('error', function(err) {
         console.log('Error(', this.name, '):', err.message)
       })
+      reader.on('end', () => {
+        console.log('Reader', reader.name, 'removed')
+        this.setState({ connection: false })
+      })
+    })
 
       /*reader.on('status', (status) => {
         console.log('Status(', status.name, '):', status)
@@ -328,16 +377,10 @@ export default class App extends React.Component<any, IAPPState> {
         }
       })
       */
-      reader.on('end', () => {
-        console.log('Reader', reader.name, 'removed')
-        this.setState({ connection: false })
-      })
-    })
 
     pcsc.on('error', function(err) {
       console.log('PCSC error', err.message)
     })
-
   }
   initAll() {
     if (this.state.allowInit) {
@@ -600,7 +643,7 @@ export default class App extends React.Component<any, IAPPState> {
           null
         )}
         <Route path = '/transaction_success' component = {() => <TransactionSuccess refresh = {this.updateData} resetState = {this.redirectToTransactionsuccess}/> }/>
-        <Route path = '/start' component = {() => <MainWindow connection = {this.state.connection} status = {this.state.status} init = {this.initAll} isInitialized = {this.state.isInitialized}/>}/>
+        <Route path = '/start' component = {() => <MainWindow connection = {this.state.connection} status = {this.state.status} init = {this.initAll} isInitialized = {this.state.isInitialized} walletStatus = {this.state.walletStatus}/> }/>
          {this.routes.map((route, index) => (
           <Route
             exact = {route.exact}
