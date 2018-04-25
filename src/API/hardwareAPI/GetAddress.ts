@@ -3,9 +3,38 @@ import { Buffer } from 'buffer'
 // import { port } from './OpenPort'
 import { reader } from './Reader'
 
+export function get() {
+  return new Promise((resolve,reject) => {
+    reader.transmit(Buffer.from([0xb1,0x20,0x00,0x00,0x01]), 4, 2, (err,data) => {
+      if (err) {
+        console.log(err)
+        reject(err)
+      } else {
+        console.log('GOT THIS DATA',data.toString('hex'))
+        resolve(data.toString('hex'))
+      }
+    })
+  })
+
+}
+export function getREALSTATUS() {
+  return new Promise((resolve,reject) => {
+    reader.transmit(Buffer.from([0xB0,0x10,0x00,0x00,0x00]), 255,2,(err,data) => {
+      if (err) {
+        console.log('ERROR IN REALSTATUS', err)
+        reject(err)
+      } else {
+        console.log('REALSTATUS', data.toString('hex'))
+        resolve(data)
+      }
+    })
+  })
+}
+
 export function getAddressPCSC(id: number): Promise<string> {
   return new Promise((resolve, reject) => {
     let currencyId: number = 0x00
+    console.log(currencyId)
     switch (id) {
     case 0: {
       currencyId = 0x00
@@ -20,12 +49,12 @@ export function getAddressPCSC(id: number): Promise<string> {
       break
     }
     }
-    reader.transmit(Buffer.from([0xB1,0x30,0x00,currencyId,0x00]),60,2,(err,data) => {
+    reader.transmit(Buffer.from([0xB1,0x30,0x00,0x00,0x00]),60,2,(err,data) => {
       if (err) {
         reject(err)
       } else {
-        console.log('GOT THIS ANSWER',data.toString('hex'))
-        resolve(data.toString('hex').substring(7, data.length))
+        console.log('ADDRESS ANSWER', data.toString('hex'))
+        resolve(data.toString('hex').substring(0, data.indexOf('9000', 30)))
       }
     })
   })

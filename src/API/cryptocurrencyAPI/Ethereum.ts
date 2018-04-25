@@ -5,7 +5,7 @@ import { getSignaturePCSC } from '../hardwareAPI/GetSignature'
 import { keccak256 } from 'js-sha3'
 // import fs from 'fs'
 import * as webRequest from 'web-request'
-// import { getAddressPCSC } from '../hardwareAPI/GetAddress'
+import { getAddressPCSC } from '../hardwareAPI/GetAddress'
 // import getAddress from '../hardwareAPI/GetAddress'
 const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM'))
 // const testTokenAdress = '0x583cbBb8a8443B38aBcC0c956beCe47340ea1367'
@@ -20,10 +20,8 @@ console.log('abi ' + abi)
 import Container from '../../ui/Index'
 let myAdress = ''
 export async function initEthereumAddress() {
-  /*myAdress = await getAddressPCSC(1)
+  myAdress = await getAddressPCSC(1)
   myAdress = web3.utils.toChecksumAddress('0x' + myAdress.toString())
-  */
-  myAdress = '0x6963Cc97D5348E0f031E9379A2a7911c11806413'
 }
 
 export function getEthereumAddress() {
@@ -127,12 +125,16 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
     console.log('Amount type: ' + typeof(amount))
     let hash = Buffer.from(txHash, 'hex')
     let arr = [hash]
-    getSignaturePCSC(1,arr, paymentAdress, amount, 1).then(sign => {
+    getSignaturePCSC(1,arr, paymentAdress, amount, 1).then(data => {
+      let sign = data[0]
+      console.log('SIGN IN ETH', sign.toString('hex'))
+      /*
       console.log('data length: ' + sign.length)
       console.log(web3.utils.toHex(sign[69]))
       console.log('r: ' + sign.slice(5,37).toString('hex'))
       console.log('s: ' + sign.slice(37,69).toString('hex'))
       console.log('v: ' + sign[69])
+      */
           // создаём объект подписи
           // cost: 600000130000000
       let sig = {

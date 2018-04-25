@@ -3,22 +3,23 @@ button {
   outline: none;
 }
 .default-font {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
   font-size: 14px;
 }
 .default-font-colored {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
   font-size: 12px;
   color: #4D6F96;
+  margin: 10px;
 }
 .info-default-font {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -26,7 +27,7 @@ button {
   color: #7EAEE6;
 }
 .info-header-font {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -35,7 +36,7 @@ button {
 }
 .info-amount-font {
   float: right;
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
@@ -44,7 +45,7 @@ button {
   text-align: right;
 }
 .satus-font {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -53,7 +54,7 @@ button {
   color: #7096C4;
 }
 .cryptocurrency-font {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -62,7 +63,7 @@ button {
   color: #4D6F96
 }
 .status-ready-font {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -86,7 +87,7 @@ button {
   color: #718EA8;
 }
 .total-percent {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -96,7 +97,7 @@ button {
   color: #2CC958;
 }
 .total-label {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -107,7 +108,7 @@ button {
 }
 .total-currency-font {
   clear: both;
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
@@ -120,7 +121,7 @@ button {
   margin: 10px;
 }
 .payment_address::-webkit-input-placeholder {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -244,7 +245,7 @@ background: linear-gradient(140deg, rgba(41, 62, 85, 0.4) 0%, rgba(20,27,33,0.5)
   margin-top: 2px;
   margin-left: 5px;
   margin-bottom: 2px;
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -256,7 +257,7 @@ background: linear-gradient(140deg, rgba(41, 62, 85, 0.4) 0%, rgba(20,27,33,0.5)
   margin-top: 2px;
   margin-left: 5px;
   margin-bottom: 2px;
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -266,7 +267,7 @@ background: linear-gradient(140deg, rgba(41, 62, 85, 0.4) 0%, rgba(20,27,33,0.5)
 .currency-name {
   margin-left: 5px;
   flex-grow: 2;
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -285,7 +286,7 @@ background: linear-gradient(140deg, rgba(41, 62, 85, 0.4) 0%, rgba(20,27,33,0.5)
   border-radius: 24px;
   width: 156px;
   height: 30px;
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -298,7 +299,7 @@ background: linear-gradient(140deg, rgba(41, 62, 85, 0.4) 0%, rgba(20,27,33,0.5)
   text-decoration: underline;
 }
 .transaction-history-header {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -312,7 +313,7 @@ background: linear-gradient(140deg, rgba(41, 62, 85, 0.4) 0%, rgba(20,27,33,0.5)
   border-radius: 24px;
 }
 .currencies-header {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -370,7 +371,7 @@ body, html {
   justify-content: center;
 }
 .nav-buttons {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -387,7 +388,7 @@ body, html {
   height: 44px;
 }
 .nav-buttons-text {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -412,7 +413,7 @@ button:active {
   box-sizing: border-box;
 }
 .footer-connected {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -493,7 +494,7 @@ tbody, thead, tr, th, td {
 .table-header {
   background: #25384F;
   box-shadow: 0px 4px 8px rgba(14, 25, 36, 0.25);
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -509,7 +510,7 @@ td {
   text-align: center;
   box-sizing: border-box;
   background: rgba(47, 70, 105, 0.2);
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -519,7 +520,7 @@ td {
 }
 th {
   text-align: center;
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -537,7 +538,7 @@ th {
   display: block;
 }
 .text-confirmed {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -546,7 +547,7 @@ th {
   color: #7EAEE5;
 }
 .text-unconfirmed {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -566,13 +567,13 @@ th {
   height: 30px;
   background: #25384F;
   border-radius: 24px;
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 300;
   line-height: normal;
   font-size: 12px;
   text-align: center;
-  border: 1px solid rgba(14, 25, 36, 1);
+  border: none;
   color: #7EAEE5;
 }
 .send-currency-button {
@@ -592,7 +593,7 @@ th {
   width: 94px;
   clear: both;
   float: right;
-  font-family: Heebo;
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -612,7 +613,7 @@ th {
 }
 .positive-percentage {
   text-align: left;
-  font-family: Heebo;
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -622,7 +623,7 @@ th {
 .currency-short-name {
   float: right;
   text-align: center;
-  font-family: "Heebo";
+  font-family: "Heebo",Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
@@ -632,7 +633,7 @@ th {
 .currency-amount-crypto {
   float: right;
   text-align: right;
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
@@ -641,7 +642,7 @@ th {
 }
 .currency-amount-fiat {
   float: right;
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -652,7 +653,7 @@ th {
 }
 .negative-percentage {
   text-align: left;
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -706,7 +707,7 @@ th {
   margin: 10px;
 }
 .button-home {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -721,7 +722,7 @@ th {
   border-radius: 24px;
 }
 .your-bitcoin-font {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -730,7 +731,7 @@ th {
   color: #4D6F96;
 }
 .address-with-button-address {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -738,7 +739,7 @@ th {
   color: #FFFFFF;
 }
 .address-with-button-header {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -753,7 +754,7 @@ input {
   opacity: 0.6;
   border-bottom: 1px solid #3866A9;
   box-sizing: border-box;
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -781,7 +782,7 @@ input {
   float: right;
 }
 input::-webkit-input-placeholder {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -794,7 +795,7 @@ input::-webkit-input-placeholder {
   height: 90vh;
 }
 .window-main-header {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -834,7 +835,7 @@ input::-webkit-input-placeholder {
   height: 24px;
   text-align: center;
   top: 440px;
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
@@ -849,7 +850,7 @@ input::-webkit-input-placeholder {
   height: 24px;
   text-align: center;
   top: 440px;
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -883,7 +884,7 @@ input::-webkit-input-placeholder {
   background: linear-gradient(180deg, #223040 0%, #141B21 97.24%);
 }
 .popup-header {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 500;
   line-height: 21px;
@@ -891,7 +892,7 @@ input::-webkit-input-placeholder {
   text-align: center;
 }
 .popup-text {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: 21px;
@@ -904,7 +905,7 @@ input::-webkit-input-placeholder {
   justify-content: space-between;
 }
 .popup-button {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -918,7 +919,7 @@ input::-webkit-input-placeholder {
   border: 1px solid rgba(14, 25, 36, 0.25);
 }
 .footer-not-connected {
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: 300;
   line-height: normal;
@@ -929,7 +930,7 @@ input::-webkit-input-placeholder {
 }
 .text-transaction-completed {
   margin: 15px;
-  font-family: Heebo;
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -1009,7 +1010,7 @@ input::-webkit-input-placeholder {
 
 .transaction-success-text {
   position: absolute;
-  font-family: 'Heebo';
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: normal;

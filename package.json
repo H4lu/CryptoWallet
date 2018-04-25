@@ -19,8 +19,11 @@
     "babel-preset-react": "^6.24.1",
     "bindings": "^1.3.0",
     "css-loader": "^0.28.8",
+    "electron": "^1.8.3",
     "electron-builder": "^19.45.5",
     "electron-devtools-installer": "^2.2.3",
+    "electron-log": "^2.2.14",
+    "electron-rebuild": "^1.7.3",
     "electron-wix-msi": "^1.3.0",
     "ethereumjs-util": "^5.1.5",
     "extract-text-webpack-plugin": "^3.0.2",
@@ -58,9 +61,7 @@
     "webpack-cli": "^2.0.12",
     "webpack-dev-server": "^2.9.7",
     "websocket": "^1.0.25",
-    "win-7zip": "^0.1.1",
-    "electron": "^1.8.3",
-    "electron-rebuild": "^1.7.3"
+    "win-7zip": "^0.1.1"
   },
   "scripts": {
     "build": "webpack --config webpack.config.js",
@@ -124,7 +125,7 @@
           ]
         }
       ]
-}
+    }
   },
   "repository": {
     "type": "git",

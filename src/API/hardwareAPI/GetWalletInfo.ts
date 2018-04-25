@@ -13,15 +13,26 @@ export async function wrapper(): Promise<any> {
 export function getInfoPCSC(): Promise<Number> {
   console.log('TRANSMITTING')
   return new Promise((resolve, reject) => {
-    reader.transmit(Buffer.from([0xB1,0x10,0x00,0x00,0x00]),4,2, (err, data) => {
+    reader.transmit(Buffer.from([0xB1,0x10,0x00,0x00,0x00]),4,2, async(err, data) => {
       if (err) {
         console.log(err)
         reject(new Error(err))
       } else {
-        console.log('DATA RECEIVED:',data.toString('hex'))
+        console.log('STATUS DATA:',data.toString('hex'))
         switch (data.toString('hex')) {
         case '9000': {
-          resolve(0)
+          try {
+            let realStatus = await getRealState()
+            if (realStatus === '6e00') {
+              resolve(3)
+              console.log('resolve 3', realStatus)
+            } else {
+              console.log('resolve 0', realStatus)
+              resolve(0)
+            }
+          } catch (err) {
+            console.log('ERROR IN GETINFO', err)
+          }
           break
         }
         case '6b80': {
@@ -46,7 +57,19 @@ export function getInfoPCSC(): Promise<Number> {
     })
   })
 }
-
+function getRealState() {
+  return new Promise((resolve, reject) => {
+    reader.transmit(Buffer.from([0xB0,0x10,0x00,0x00,0x00]), 255,2,(err,data) => {
+      if (err) {
+        console.log('ERROR IN REALSTATUS', err)
+        reject(err)
+      } else {
+        console.log('REALSTATUS', data.toString('hex'))
+        resolve(data)
+      }
+    })
+  })
+}
 /* export function waitForConnection() {
   let connection = false
   while (!connection) {

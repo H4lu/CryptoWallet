@@ -30,8 +30,8 @@ export function UpdateHWStatusPCSC(...data) {
     message = Buffer.concat([message, tempBuffer])
     console.log('MESSAGE BUFFER: ',message)
   }
-  reader.transmit(Buffer.from([0xb1,0x50,0x00,0x00,0x60,message]),4,2, (err, data) => {
-    console.log(err)
-    console.log(data)
+  reader.transmit(Buffer.from([0xB1,0x50,0x00,0x00,0x60,message]),4,2, (err, data) => {
+    console.log('ERROR IN UPDATEHW',err)
+    console.log('DAA IN UPDATE HW',data)
   })
 }

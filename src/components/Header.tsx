@@ -1,25 +1,21 @@
 import * as React from 'react'
-import { remote } from 'electron'
+import { ipcRenderer } from 'electron'
 import { LOGO_SMALL } from '../core/paths'
 // let currentWindow = remote.BrowserWindow.getFocusedWindow()
-interface IHeaderState {
-  currentWindow: Electron.BrowserWindow
-}
-export class Header extends React.Component<any, IHeaderState> {
+
+export class Header extends React.Component<any, any> {
   constructor(props: any) {
     super(props)
-    this.state = {
-      currentWindow : remote.BrowserWindow.getFocusedWindow()
-    }
     this.closeWindow = this.closeWindow.bind(this)
     this.hideWindow = this.hideWindow.bind(this)
   }
 
   closeWindow() {
-    this.state.currentWindow.close()
+    ipcRenderer.send('close',[])
   }
+
   hideWindow() {
-    this.state.currentWindow.minimize()
+    ipcRenderer.send('hide',[])
   }
 
   render() {

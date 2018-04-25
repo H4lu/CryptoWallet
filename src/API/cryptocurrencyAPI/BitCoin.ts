@@ -16,7 +16,6 @@ const rootURL = 'https://chain.so/api/v2'
 let myAddr = ''
 export async function initBitcoinAddress() {
   myAddr = await getAddressPCSC(0)
-  myAddr = 'mgWZCzn4nv7noRwnbThqQ2hD2wT3YAKTJH'
   if (myAddr.length < 2) return Promise.reject('ADDRESS IS EMPTY')
   console.log('MY ADDRESS BITCOIN: ' + myAddr)
 }
@@ -156,9 +155,19 @@ async function createTransaction(paymentAdress: string,
   console.log('HASHBUFFER: ' + hashBuffer + 'LENGTH: ' + hashBuffer.length)
   console.log('HASHARRAY: ' + hashArray)
   let data = await getSignaturePCSC(0, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.tx.ins.length)
-  let startIndex = 5
+  /* let startIndex = 5
   let shift = data[4] + 5
-  transaction.inputs.forEach(() => {
+  */
+  transaction.inputs.forEach((input, index) => {
+    console.log('Input', input)
+    console.log('Index', index)
+    console.log('SIGNATURE DATA', data[index].toString('hex'))
+    unbuildedTx = unbuildedTx.replace('00000000ff','000000' + data[index].toString('hex') + 'ff')
+    console.log('Unbuilded step',index, 'tx', unbuildedTx)
+    /*
+    console.log('Input', input)
+    console.log('Index', index)
+    console.log('Sig of index', data[index].toString('hex'))
     unbuildedTx = unbuildedTx.replace('00000000ff','000000' + data.slice(startIndex, shift).toString('hex') + 'ff')
     console.log('INSERT THIS: ' + data.slice(startIndex, shift).toString('hex'))
     console.log('STARTINDEX: ' + data[startIndex] + 2)
@@ -169,6 +178,7 @@ async function createTransaction(paymentAdress: string,
     console.log('DATA OF SHIFT: ' + data[shift])
     console.log('START INDEX: ' + startIndex)
     console.log('SHIFT: ' + shift)
+    */
   })
   console.log('UNBUILDED TX: ' + unbuildedTx)
   console.log('DATA: ' + data)
@@ -225,6 +235,7 @@ async function createTransaction(paymentAdress: string,
 }
 */
 // Функция отправки транзакции, на вход принимает транзакцию в hex- формате
+
 function sendTransaction(transactionHex: string, redirect: any) {
   console.log('url: ' + urlChainSo + NETWORK)
   // формируем запрос

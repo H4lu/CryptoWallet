@@ -17,7 +17,6 @@ export default function getAddres() {
 }
 export async function initLitecoinAddress() {
   address = await getAddressPCSC(2)
-  address = 'mvLpZMU3cavwLbUMKocpSWcjP9LF62BQMd'
 }
 export async function getLitecoinLastTx(): Promise<any> {
   console.log('CALLING LTC')
@@ -142,9 +141,17 @@ async function createTransaction(paymentAdress: string,
   console.log('HASHBUFFER: ' + hashBuffer + 'LENGTH: ' + hashBuffer.length)
   console.log('HASHARRAY: ' + hashArray)
   let data = await getSignaturePCSC(2, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.tx.ins.length)
+  /*
   let startIndex = 5
   let shift = data[4] + 5
-  transaction.inputs.forEach(() => {
+  */
+  transaction.inputs.forEach((input, index) => {
+    console.log('Input', input)
+    console.log('Index', index)
+    console.log('SIGNATURE DATA', data[index].toString('hex'))
+    unbuildedTx = unbuildedTx.replace('00000000ff','000000' + data[index].toString('hex') + 'ff')
+    console.log('Unbuilded step', index, 'tx:', unbuildedTx)
+    /*
     unbuildedTx = unbuildedTx.replace('00000000ff','000000' + data.slice(startIndex, shift).toString('hex') + 'ff')
     console.log('INSERT THIS: ' + data.slice(startIndex, shift).toString('hex'))
     console.log('STARTINDEX: ' + data[startIndex] + 2)
@@ -155,6 +162,7 @@ async function createTransaction(paymentAdress: string,
     console.log('DATA OF SHIFT: ' + data[shift])
     console.log('START INDEX: ' + startIndex)
     console.log('SHIFT: ' + shift)
+    */
   })
   console.log('UNBUILDED TX: ' + unbuildedTx)
   console.log('DATA: ' + data)

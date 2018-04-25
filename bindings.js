@@ -14,8 +14,7 @@
     return result
   }
 }
-*/
-/*module.exports = exports = function (str) {
+module.exports = exports = function (str) {
   if (str === 'pcsclite.node') {
     const result = require('./node_modules/pcsclite/build/Release/pcsclite.node')
     result.path = path.resolve(__dirname, 'node_modules/pcsclite/build/Release/pcsclite.node')

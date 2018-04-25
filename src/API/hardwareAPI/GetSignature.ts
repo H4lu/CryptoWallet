@@ -42,9 +42,8 @@ export function openPort(portName: string): Promise<SerialPort> {
   })
 }
 */
-export function getSignaturePCSC(id: number, message: Array<Buffer>, address: string, amount: number, numberOfInputs: number): Promise<Buffer> {
+export function getSignaturePCSC(id: number, message: Array<Buffer>, address: string, amount: number, numberOfInputs: number): Promise<Array<Buffer>> {
   return new Promise((resolve, reject) => {
-    console.log('LENGTH OF MESSAGE:' + message.length)
     let currencyId: number = 0x00
     switch (id) {
     case 0: {
@@ -63,24 +62,26 @@ export function getSignaturePCSC(id: number, message: Array<Buffer>, address: st
     console.log('LENGTH OF MESSAGE', message.length)
     let amountBuf = new Buffer(16)
     amountBuf.write(amount.toString(),0,amount.toString().length, 'ascii')
+    console.log('Number of inputs:', Number('0x' + numberOfInputs))
     reader.transmit(Buffer.from([0xb1,0x40,Number('0x' + numberOfInputs),currencyId,message.length,amountBuf,Buffer.from(address)]), 4, 2, async (err, data) => {
       if (err) {
         console.log('ERROR IN FIRST MMESSAGE',err)
         reject(err)
       } else {
-        let sigArray = [ ]
+        console.log('DATA IN FIRST MESSAGE', data.toString('hex'))
+        let sigArray: Array<Buffer> = []
         console.log(data)
         for (let i = 0; i < numberOfInputs; i++) {
           let answer = await sendDataMessage(Number('0x' + i), currencyId, message[i])
           sigArray.push(answer)
         }
-        resolve(Buffer.concat(sigArray))
+        resolve(sigArray)
       }
     })
   })
 }
 
-function sendDataMessage(inputNumber: number, currencyId: number, hash: Buffer) {
+function sendDataMessage(inputNumber: number, currencyId: number, hash: Buffer): Promise<Buffer> {
   console.log('GOT THIS INPUT NUMBER: ' + inputNumber)
   console.log('GOT THIS CURRENCY ID: ' + currencyId)
   return new Promise((resolve, reject) => {

@@ -1,8 +1,8 @@
-import { app, BrowserWindow, Menu } from 'electron'
+import { app, BrowserWindow, Menu, ipcMain } from 'electron'
 // import installExtension , { REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } from 'electron-devtools-installer'
 /*import * as url from 'url'
 import * as path from 'path'*/
-
+import { log } from 'electron-log'
 declare var __dirname: string
 let mainWindow: BrowserWindow
 app.on('ready', () => {
@@ -22,8 +22,16 @@ app.on('ready', () => {
   /*installExtension(REACT_DEVELOPER_TOOLS).then((name => console.log(`Added Extension:  ${name}`))).catch((err) => console.log('An error occurred: ', err))
   installExtension(REDUX_DEVTOOLS).then((name => console.log(`Added Extension:  ${name}`))).catch((err) => console.log('An error occurred: ', err))
   */
+  ipcMain.once('close', () => {
+    console.log('CLOSE HAPPENED')
+    mainWindow.close()
+  })
+  ipcMain.on('hide', () => {
+    console.log('HIDE HAPPENED')
+    mainWindow.minimize()
+  })
   mainWindow.webContents.on('context-menu', (e, props) => {
-    console.log(e)
+    log(e)
     const selectionMenu = Menu.buildFromTemplate([
       { role: 'copy' },
       { type: 'separator' }
@@ -51,6 +59,7 @@ app.on('ready', () => {
 app.on('window-all-closed', () => {
   app.quit()
 })
+
 /*app.on('before-quit', () => {
   mainWindow.removeAllListeners('close')
   mainWindow.close()

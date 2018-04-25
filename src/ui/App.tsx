@@ -1,4 +1,6 @@
+import { log, error } from 'electron-log'
 import React from 'react'
+import { get } from '../API/hardwareAPI/GetAddress'
 // import { Switch, Route } from 'react-router'
 import { Route, Redirect } from 'react-router'
 import { Header } from '../components/Header'
@@ -31,26 +33,26 @@ import { UpdateHWStatusPCSC } from '../API/hardwareAPI/UpdateHWStatus'
 // import { connect } from 'react-redux'
 /*
 SerialPort.list().then(value => {
-  console.log('Serialport list value: ' + JSON.stringify(value))
+  log('Serialport list value: ' + JSON.stringify(value))
 })
 let firstBuff = Buffer.from([0x9c,0x9c,0x53,0x00])
 let hashBuff = Buffer.from('8ac74ce78eda742ee94099da1f80ebf34da00dd65e26f65b189fdcfb18efc9bb', 'hex')
 let intBuff = new Buffer(4)
 intBuff.writeInt32LE(1.5 * 100000000, 0)
-console.log('Int buff: ' + Buffer.from(intBuff.readInt32LE(0).toString()))
+log('Int buff: ' + Buffer.from(intBuff.readInt32LE(0).toString()))
 let addrBuff = Buffer.from('mgWZCzn4nv7noRwnbThqQ2hD2wT3YAKTJH', 'hex')
-console.log(addrBuff)
+log(addrBuff)
 let lastBuff = Buffer.from([0x9a,0x9a])
 let arr = Buffer.concat([firstBuff, hashBuff,intBuff, addrBuff, lastBuff])
 let port = new SerialPort('COM5', { autoOpen: false, baudRate: 115200 })
 getSig().then(value => {
-  console.log('FINALLY THIS VALUE: ' + value)
+  log('FINALLY THIS VALUE: ' + value)
 })
 
 function getData() {
   return new Promise((resolve, reject) => {
     port.write(arr)
-    console.log('Attempt to read')
+    log('Attempt to read')
     port.on('data', data => {
       resolve(data.toString('hex'))
     })
@@ -63,14 +65,14 @@ export async function getSig() {
   try {
     port.open(err => {
       if (err) {
-        return console.log('Error opening port: ' + err.message)
+        return log('Error opening port: ' + err.message)
       }
       getData().then(value => {
-        console.log('IN PROMISE: ' + value)
+        log('IN PROMISE: ' + value)
       })
     })
   } catch (err) {
-    console.log(err)
+    log(err)
   }
 }
 */
@@ -244,8 +246,9 @@ export default class App extends React.Component<any, IAPPState> {
   getWalletInfo() {
     let interval = setInterval(async () => {
       try {
+        log('START GETWALLET INFO')
         let data = await getInfoPCSC()
-        console.log('GOT THIS DATA',data)
+        log('GOT THIS DATA',data)
         switch (data) {
         case 0: {
           clearInterval(interval)
@@ -269,13 +272,13 @@ export default class App extends React.Component<any, IAPPState> {
           break
         }
         }
-        console.log('DATA ASYNC AWAIT' + data)
       } catch (error) {
-        console.log('GOT ERROR',error)
+        log('GOT ERROR',error)
         clearInterval(interval)
       }
     },500,[])
   }
+
   componentDidMount() {
     /*
     setInterval(() => {
@@ -291,7 +294,7 @@ export default class App extends React.Component<any, IAPPState> {
           }
         }
         if (this.state.connection) {
-          console.log('FLI FLOP')
+          log('FLI FLOP')
           this.setState({ connection: !this.state.connection })
         }
       })
@@ -305,34 +308,41 @@ export default class App extends React.Component<any, IAPPState> {
       }
     },1000,[])
  */
-    console.log('APP PROPS:', this.props)
-    console.log('APP:', App)
+
+    log('APP PROPS:', this.props)
+    log('APP:', App)
     pcsc.on('reader', async (reader) => {
+      log('READER DETECTED', reader.name)
       if (reader.name.includes('PN7462AU')) {
-        console.log('setting')
+        log('setting')
         setReader(reader)
         this.setState({ connection: true })
         reader.on('status', (status) => {
-          console.log('READER STATE', reader.state)
+          log('READER STATE', reader.state)
           let changes = reader.state ^ status.state
+          log(status)
           if (changes) {
             if ((changes & reader.SCARD_STATE_EMPTY) && (status.state & reader.SCARD_STATE_EMPTY)) {
-              console.log('card removed')
+              log('card removed')
               reader.disconnect(reader.SCARD_LEAVE_CARD, (err) => {
                 if (err) {
-                  console.log(err)
+                  log(err)
                 } else {
-                  console.log('Disconnected')
+                  log('Disconnected')
                 }
               })
             } else if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
-              console.log('card inserted')
-              reader.connect({ share_mode : reader.SCARD_SHARE_SHARED }, (err, protocol) => {
+              log('card inserted')
+              reader.connect({ share_mode : reader.SCARD_SHARE_SHARED }, async (err, protocol) => {
                 if (err) {
-                  console.log(err)
+                  error('ERROR OCCURED', err)
+                  error(err)
                 } else {
+                  log('CONNECTED')
                   this.getWalletInfo()
-                  console.log('Protocol(', reader.name, '):', protocol)
+                  let ans = await get()
+                  log(ans)
+                  log('Protocol(', reader.name, '):', protocol)
                 }
               })
             }
@@ -340,37 +350,37 @@ export default class App extends React.Component<any, IAPPState> {
         })
       }
       reader.on('error', function(err) {
-        console.log('Error(', this.name, '):', err.message)
+        error('Error(', this.name, '):', err.message)
       })
       reader.on('end', () => {
-        console.log('Reader', reader.name, 'removed')
+        log('Reader', reader.name, 'removed')
         this.setState({ connection: false })
       })
     })
 
       /*reader.on('status', (status) => {
-        console.log('Status(', status.name, '):', status)
+        log('Status(', status.name, '):', status)
         const changes = reader.state ^ status.state
         if (changes) {
           if ((changes & reader.SCARD_STATE_EMPTY) && (status.state & reader.SCARD_STATE_EMPTY)) {
-            console.log('card removed')
+            log('card removed')
             reader.disconnect(reader.SCARD_LEAVE_CARD, function(err) {
               if (err) {
-                console.log(err)
+                log(err)
               } else {
-                console.log('Disconnected')
+                log('Disconnected')
               }
             })
           } else if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
-            console.log('card inserted')
+            log('card inserted')
             setTimeout(() => {
               this.setState({ status: true })
             }, 2000)
             reader.connect({ share_mode : reader.SCARD_SHARE_SHARED }, function(err, protocol) {
               if (err) {
-                console.log(err)
+                log(err)
               } else {
-                console.log('Protocol(', reader.name, '):', protocol)
+                log('Protocol(', reader.name, '):', protocol)
               }
             })
           }
@@ -379,7 +389,7 @@ export default class App extends React.Component<any, IAPPState> {
       */
 
     pcsc.on('error', function(err) {
-      console.log('PCSC error', err.message)
+      log('PCSC error', err.message)
     })
   }
   initAll() {
@@ -392,7 +402,7 @@ export default class App extends React.Component<any, IAPPState> {
     }
   }
   updateData() {
-    console.log('REFRESHING')
+    log('REFRESHING')
     this.getTransactions().then(() => this.getValues())
     .then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)
     )
@@ -492,23 +502,23 @@ export default class App extends React.Component<any, IAPPState> {
     })
   }
   componentWillMount() {
-    console.log('SETTING REDIRECT')
+    log('SETTING REDIRECT')
     this.setState({ redirect: true })
   }
   getTransactions() {
     return Promise.all([getBitcoinLastTx(),getLitecoinLastTx(), getEthereumLastTx()]).then(value => {
-      console.log('PROMISE ALL VALUE',value)
+      log('PROMISE ALL VALUE',value)
       for (let index in value) {
         if (Object.prototype.hasOwnProperty.call(JSON.parse(value[index].content),'data')) {
-          console.log('Parsing btc-like tx')
+          log('Parsing btc-like tx')
           this.parseBTCLikeTransactions(value[index].content)
         } else {
-          console.log('PArsing btc tx')
+          log('PArsing btc tx')
           this.parseETHTransactions(value[index].content)
         }
       }
     }).catch(error => {
-      console.log(error)
+      log(error)
     })
   }
   parseETHTransactions(value: any) {
@@ -548,7 +558,7 @@ export default class App extends React.Component<any, IAPPState> {
         break
       }
       case 'LTCTEST': {
-        console.log('IN LTC')
+        log('IN LTC')
         let parsedTx = this.parseTransactionDataBTC(parsedResponse.txs[tx], 'LTC')
         let findResp = this.state.LTCLastTx.find(function (obj) {
           return obj.Hash === Object(parsedTx).Hash
@@ -666,7 +676,7 @@ export default class App extends React.Component<any, IAPPState> {
   }
 }
 /* function mapStateToProps(state: any, store: any) {
-  console.log(store)
+  log(store)
   return {
     balance: state.getBalance
   }
