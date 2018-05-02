@@ -121,7 +121,8 @@ interface IAPPState {
   redirectToTransactionSuccess: boolean,
   totalPercentage: number,
   isInitialized: boolean,
-  walletStatus: number
+  walletStatus: number,
+  redirectToMain: boolean
 }
 
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
@@ -209,7 +210,8 @@ export default class App extends React.Component<any, IAPPState> {
       redirectToTransactionSuccess: false,
       totalPercentage: 0,
       isInitialized: false,
-      walletStatus: 3
+      walletStatus: 3,
+      redirectToMain: false
     }
     this.resetRedirect = this.resetRedirect.bind(this)
     this.redirectToTransactionsuccess = this.redirectToTransactionsuccess.bind(this)
@@ -227,6 +229,7 @@ export default class App extends React.Component<any, IAPPState> {
     this.addUnconfirmedTx = this.addUnconfirmedTx.bind(this)
     this.changeBalance = this.changeBalance.bind(this)
     this.getWalletInfo = this.getWalletInfo.bind(this)
+    this.setRedirectToMain = this.setRedirectToMain.bind(this)
   }
   redirectToTransactionsuccess() {
     let self = this
@@ -390,11 +393,14 @@ export default class App extends React.Component<any, IAPPState> {
       info('PCSC error', err.message)
     })
   }
+  setRedirectToMain() {
+    this.setState({ redirectToMain: true })
+  }
   initAll() {
     info('INITING')
     if (this.state.allowInit) {
       this.setState({ allowInit: false })
-      initBitcoinAddress().then(initEthereumAddress).then(initLitecoinAddress).then(this.getValues).then(this.getTransactions).then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice))
+      initBitcoinAddress().then(initEthereumAddress).then(initLitecoinAddress).then(this.getValues).then(this.getTransactions).then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)).then(() => this.setRedirectToMain())
       /*initBitcoinAddress()
       .then(() => initEthereumAddress()).then(() => initLitecoinAddress()).then(() => this.setState({ status: true }))
       .then(() => this.getValues()).then(() => this.getTransactions())
@@ -404,7 +410,7 @@ export default class App extends React.Component<any, IAPPState> {
   }
   updateData() {
     info('REFRESHING')
-    this.getTransactions().then(() => this.getValues())
+    this.getTransactions().then(this.getValues)
     .then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)
     )
 
@@ -659,7 +665,7 @@ export default class App extends React.Component<any, IAPPState> {
           null
         )}
         <Route path = '/transaction_success' component = {() => <TransactionSuccess refresh = {this.updateData} resetState = {this.redirectToTransactionsuccess}/> }/>
-        <Route path = '/start' component = {() => <MainWindow connection = {this.state.connection} status = {this.state.status} init = {this.initAll} isInitialized = {this.state.isInitialized} walletStatus = {this.state.walletStatus}/> }/>
+        <Route path = '/start' component = {() => <MainWindow connection = {this.state.connection} status = {this.state.status} init = {this.initAll} isInitialized = {this.state.isInitialized} walletStatus = {this.state.walletStatus} redirectToMain = {this.state.redirectToMain}/> }/>
          {this.routes.map((route, index) => (
           <Route
             exact = {route.exact}

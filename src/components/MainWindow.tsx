@@ -36,13 +36,14 @@ export class MainWindow extends React.Component<any, IMainWindowState> {
   startRedirect() {
     console.log('STARTING REDIR3')
     this.props.init()
-    let timeout = setTimeout(() => {
+    /* let timeout = setTimeout(() => {
       this.setState({ redirect: true })
       clearTimeout(timeout)
     },5000)
+    */
   }
   render() {
-    if (this.state.redirect) {
+    if (this.props.redirectToMain) {
       return <Redirect from = '/' to = '/main'/>
     }
 
