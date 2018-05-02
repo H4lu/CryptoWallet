@@ -1,6 +1,5 @@
-import { log, error } from 'electron-log'
+import { info } from 'electron-log'
 import React from 'react'
-import { get } from '../API/hardwareAPI/GetAddress'
 // import { Switch, Route } from 'react-router'
 import { Route, Redirect } from 'react-router'
 import { Header } from '../components/Header'
@@ -246,12 +245,13 @@ export default class App extends React.Component<any, IAPPState> {
   getWalletInfo() {
     let interval = setInterval(async () => {
       try {
-        log('START GETWALLET INFO')
+        info('START GETWALLET INFO')
         let data = await getInfoPCSC()
-        log('GOT THIS DATA',data)
+        info('GOT THIS DATA',data)
         switch (data) {
         case 0: {
           clearInterval(interval)
+          info('SETTING WALLET STATUS 0')
           this.setState({ walletStatus: 0 })
           break
         }
@@ -273,7 +273,7 @@ export default class App extends React.Component<any, IAPPState> {
         }
         }
       } catch (error) {
-        log('GOT ERROR',error)
+        info('GOT ERROR',error)
         clearInterval(interval)
       }
     },500,[])
@@ -309,40 +309,38 @@ export default class App extends React.Component<any, IAPPState> {
     },1000,[])
  */
 
-    log('APP PROPS:', this.props)
-    log('APP:', App)
+    info('APP PROPS:', this.props)
+    info('APP:', App)
     pcsc.on('reader', async (reader) => {
-      log('READER DETECTED', reader.name)
+      info('READER DETECTED', reader.name)
       if (reader.name.includes('PN7462AU')) {
-        log('setting')
+        info('setting')
         setReader(reader)
         this.setState({ connection: true })
         reader.on('status', (status) => {
-          log('READER STATE', reader.state)
+          info('READER STATE', reader.state)
           let changes = reader.state ^ status.state
-          log(status)
+          info(status)
           if (changes) {
             if ((changes & reader.SCARD_STATE_EMPTY) && (status.state & reader.SCARD_STATE_EMPTY)) {
-              log('card removed')
+              info('card removed')
               reader.disconnect(reader.SCARD_LEAVE_CARD, (err) => {
                 if (err) {
-                  log(err)
+                  info(err)
                 } else {
-                  log('Disconnected')
+                  info('Disconnected')
                 }
               })
             } else if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
-              log('card inserted')
+              info('card inserted')
               reader.connect({ share_mode : reader.SCARD_SHARE_SHARED }, async (err, protocol) => {
                 if (err) {
-                  error('ERROR OCCURED', err)
-                  error(err)
+                  info('ERROR OCCURED', err)
+                  info(err)
                 } else {
-                  log('CONNECTED')
+                  info('CONNECTED')
                   this.getWalletInfo()
-                  let ans = await get()
-                  log(ans)
-                  log('Protocol(', reader.name, '):', protocol)
+                  info('Protocol(', reader.name, '):', protocol)
                 }
               })
             }
@@ -350,10 +348,10 @@ export default class App extends React.Component<any, IAPPState> {
         })
       }
       reader.on('error', function(err) {
-        error('Error(', this.name, '):', err.message)
+        info('Error(', this.name, '):', err.message)
       })
       reader.on('end', () => {
-        log('Reader', reader.name, 'removed')
+        info('Reader', reader.name, 'removed')
         this.setState({ connection: false })
       })
     })
@@ -389,20 +387,23 @@ export default class App extends React.Component<any, IAPPState> {
       */
 
     pcsc.on('error', function(err) {
-      log('PCSC error', err.message)
+      info('PCSC error', err.message)
     })
   }
   initAll() {
+    info('INITING')
     if (this.state.allowInit) {
       this.setState({ allowInit: false })
-      initBitcoinAddress()
+      initBitcoinAddress().then(initEthereumAddress).then(initLitecoinAddress).then(this.getValues).then(this.getTransactions).then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice))
+      /*initBitcoinAddress()
       .then(() => initEthereumAddress()).then(() => initLitecoinAddress()).then(() => this.setState({ status: true }))
       .then(() => this.getValues()).then(() => this.getTransactions())
       .then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice))
+      */
     }
   }
   updateData() {
-    log('REFRESHING')
+    info('REFRESHING')
     this.getTransactions().then(() => this.getValues())
     .then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)
     )
@@ -456,13 +457,14 @@ export default class App extends React.Component<any, IAPPState> {
         if (typeof(value[val]) === 'object') {
           if (Number(val) !== value.length - 1) {
             let parsedResponse = JSON.parse(value[val].content).data
+            info('PARSED RESPONSE', parsedResponse)
             switch (parsedResponse.network) {
-            case 'BTCTEST': {
+            case 'BTC': {
               let balance: number = Number(parsedResponse.confirmed_balance) + Number(parsedResponse.unconfirmed_balance)
               this.setState({ BTCBalance:  Number(balance.toFixed(8)) })
               break
             }
-            case 'LTCTEST': {
+            case 'LTC': {
               let balance: number = Number(parsedResponse.confirmed_balance) + Number(parsedResponse.unconfirmed_balance)
               this.setState({ LTCBalance: Number(balance.toFixed(8)) })
               break
@@ -502,27 +504,31 @@ export default class App extends React.Component<any, IAPPState> {
     })
   }
   componentWillMount() {
-    log('SETTING REDIRECT')
+    info('SETTING REDIRECT')
     this.setState({ redirect: true })
   }
   getTransactions() {
     return Promise.all([getBitcoinLastTx(),getLitecoinLastTx(), getEthereumLastTx()]).then(value => {
-      log('PROMISE ALL VALUE',value)
+      info('PROMISE ALL VALUE',value)
       for (let index in value) {
         if (Object.prototype.hasOwnProperty.call(JSON.parse(value[index].content),'data')) {
-          log('Parsing btc-like tx')
+          info('Parsing btc-like tx')
           this.parseBTCLikeTransactions(value[index].content)
         } else {
-          log('PArsing btc tx')
+          info('PArsing btc tx')
           this.parseETHTransactions(value[index].content)
         }
       }
     }).catch(error => {
-      log(error)
+      info(error)
     })
   }
   parseETHTransactions(value: any) {
     let transactionsObject = JSON.parse(value)
+    if (transactionsObject === undefined) {
+      info('RETURNING')
+      return
+    }
     transactionsObject.map((value: any) => {
       let parsedTx = this.parseTransactionDataETH(value, getEthereumAddress())
       let findResp = this.state.ETHLastTx.find(function (obj) {
@@ -543,7 +549,7 @@ export default class App extends React.Component<any, IAPPState> {
     let parsedResponse = JSON.parse(value).data
     for (let tx in parsedResponse.txs) {
       switch (parsedResponse.network) {
-      case 'BTCTEST': {
+      case 'BTC': {
         let parsedTx = this.parseTransactionDataBTC(parsedResponse.txs[tx], 'BTC')
         let findResp = this.state.BTCLastTx.find(function (obj) {
           return obj.Hash === Object(parsedTx).Hash
@@ -557,8 +563,8 @@ export default class App extends React.Component<any, IAPPState> {
         }
         break
       }
-      case 'LTCTEST': {
-        log('IN LTC')
+      case 'LTC': {
+        info('IN LTC')
         let parsedTx = this.parseTransactionDataBTC(parsedResponse.txs[tx], 'LTC')
         let findResp = this.state.LTCLastTx.find(function (obj) {
           return obj.Hash === Object(parsedTx).Hash

@@ -9,29 +9,80 @@ import * as crypto from 'crypto'
 import * as satoshi from 'satoshi-bitcoin'
 // const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
-console.log(urlChainSo)
-const network = networks.testnet
-const NETWORK = 'BTCTEST'
+const network = networks.bitcoin
+const NETWORK = 'BTC'
 const rootURL = 'https://chain.so/api/v2'
 let myAddr = ''
+import { info } from 'electron-log'
+
+export async function getBitcoinSmartBitBalance() {
+  let url = 'https://testnet-api.smartbit.com.au/v1/blockchain/address/' + myAddr
+  try {
+    const response = await webRequest.get(url)
+    info('RESPONSE OF SMARTBIT',response)
+    return response
+  } catch (error) {
+    Promise.reject(error).catch(error => {
+      info(error)
+    })
+  }
+}
+
 export async function initBitcoinAddress() {
+  /*
   myAddr = await getAddressPCSC(0)
-  if (myAddr.length < 2) return Promise.reject('ADDRESS IS EMPTY')
-  console.log('MY ADDRESS BITCOIN: ' + myAddr)
+  info('BTC ADDRESS', myAddr)
+  */
+  info('INITING BTC ADDRESS')
+
+  return new Promise(async (resolve) => {
+    let status = false
+    while (!status) {
+      info('Status', status)
+      let answer = await getAddressPCSC(0)
+      info('GOT MYADDR ANSWER', answer)
+      info('My addr length', answer.length)
+      if (answer.length > 16 && answer.includes('BTC')) {
+        status = true
+        info('status after reset', status)
+        info('MY ADDRESS BITCOIN: ' + myAddr)
+        info('resolving')
+        setMyAddress(answer.substring(3,answer.length))
+        resolve(0)
+      }
+    }
+    /*
+    let interval = setInterval(async () => {
+      myAddr = await getAddressPCSC(0)
+      if (myAddr.length > 20) {
+        clearInterval(interval)
+        resolve(0)
+        info('MY ADDRESS BITCOIN: ' + myAddr)
+      }
+    },500,[])
+    */
+  //
+// })
+
+  })
+}
+function setMyAddress(address: string) {
+  myAddr = address
+  info('MY ADDRESS BITCOIN: ' + myAddr)
 }
 export default function getBitcoinAddress() {
   return myAddr
 }
 export async function getBitcoinLastTx(): Promise<any> {
-  console.log('CALLING BTC')
+  info('CALLING BTC')
   try {
     const requestUrl = rootURL + '/address/' + NETWORK + '/' + myAddr
-    console.log('My req url: ' + requestUrl)
+    info('My req url: ' + requestUrl)
     let response = await webRequest.get(requestUrl)
-    console.log('GOT THIS RESPONSE',response)
+    info('GOT THIS RESPONSE',response)
     return response
   } catch (err) {
-    console.log(err)
+    info(err)
   }
 }
 export async function getFee() {
@@ -40,7 +91,7 @@ export async function getFee() {
     const response = await webRequest.get(requestUrl)
     return response.content
   } catch (error) {
-    console.log(error)
+    info(error)
   }
 }
 // We`re Bob. Bob send`s BTC to Alice
@@ -52,14 +103,14 @@ export async function getBalance(): Promise<any> {
   */
   // rootURL + 'get_address_balance/' + myAddr
   let requestUrl = 'https://chain.so/api/v2/get_address_balance/' + NETWORK + '/' + myAddr + '/' + 0
-  console.log(requestUrl)
+  info(requestUrl)
   try {
     // Делаем запрос и отдаём в виде Promise
     const response = await webRequest.get(requestUrl)
     return response
   } catch (error) {
     Promise.reject(error).catch(error => {
-      console.log(error)
+      info(error)
     })
   }
 }
@@ -72,20 +123,20 @@ async function getLastTransactionData(): Promise<any> {
   let requestUrl = 'https://chain.so/api/v2/get_tx_unspent/' + NETWORK + '/' + myAddr
   try {
     const response = await webRequest.get(requestUrl)
-    console.log('Raw response: ' + response.content)
-    console.log('Response of last tx: ' + JSON.parse(response.content).data.txs)
+    info('Raw response: ' + response.content)
+    info('Response of last tx: ' + JSON.parse(response.content).data.txs)
     return response
   } catch (error) {
     Promise.reject(error).catch(error => {
-      console.log(error)
+      info(error)
     })
   }
 }
 
 function ReplaceAt(input: any, search: any, replace: any, start: any, end: any) {
-  console.log('FIRST SLICE:' + input.slice(0, start))
-  console.log('SECOND SLICE ' + input.slice(start, end).replace(search, replace))
-  console.log('THIRD SLICE: ' + input.slice(end))
+  info('FIRST SLICE:' + input.slice(0, start))
+  info('SECOND SLICE ' + input.slice(start, end).replace(search, replace))
+  info('THIRD SLICE: ' + input.slice(end))
   return input.slice(0, start)
       + input.slice(start, end).replace(search, replace)
       + input.slice(end)
@@ -93,22 +144,22 @@ function ReplaceAt(input: any, search: any, replace: any, start: any, end: any) 
 
 async function createTransaction(paymentAdress: string,
     transactionAmount: number,transactionFee: number, redirect: any, utxos: Array<any>) {
-  console.log(redirect)
-  console.log('Tx amount: ' + transactionAmount)
-  console.log(transactionFee)
+  info(redirect)
+  info('Tx amount: ' + transactionAmount)
+  info(transactionFee)
   let targets = {
     address: paymentAdress,
     value: transactionAmount
   }
-  console.log('Got this utxos: ' + utxos)
+  info('Got this utxos: ' + utxos)
   let { inputs, outputs, fee } = coinSelect(utxos, targets, 10)
-  console.log('Got this inputs: ' + inputs)
+  info('Got this inputs: ' + inputs)
       // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
-  console.log(fee)
+  info(fee)
   let transaction = new TransactionBuilder(network)
   for (let input in inputs) {
     transaction.addInput(inputs[input].txid, inputs[input].output_no)
-    console.log('Tx inputs: ' + transaction.inputs)
+    info('Tx inputs: ' + transaction.inputs)
   }
   for (let out in outputs) {
     if (!outputs[out].address) {
@@ -117,73 +168,73 @@ async function createTransaction(paymentAdress: string,
     transaction.addOutput(outputs[out].address, outputs[out].value)
   }
   let unbuildedTx = transaction.buildIncomplete().toHex()
-  console.log('Unbuilded: ' + transaction.buildIncomplete().toHex())
+  info('Unbuilded: ' + transaction.buildIncomplete().toHex())
   let sig: string = ''
   for (let tx in inputs) {
-    console.log('Index: ' + tx)
+    info('Index: ' + tx)
     let hashForSig = transaction.tx.hashForSignature(Number(tx), Buffer.from(Object(utxos[Number(tx)]).script_hex),Transaction.SIGHASH_ALL)
-    console.log('Hash for sig in for: ' + hashForSig.toString('hex'))
+    info('Hash for sig in for: ' + hashForSig.toString('hex'))
   }
   transaction.inputs.map(value => {
-    console.log('MAPPED INPUT: ' + value)
+    info('MAPPED INPUT: ' + value)
   })
   transaction.tx.ins.forEach((value: any) => {
-    console.log('PROBABLY TX INPUT: ' + JSON.stringify(value))
+    info('PROBABLY TX INPUT: ' + JSON.stringify(value))
   })
 
   let hashArray: Array<any>
   let lastIndex = 0
   hashArray = []
   transaction.inputs.forEach(function(input, index) {
-    console.log('My index: ' + index)
-    console.log('For each')
-    console.log(input)
-    console.log('Utxo script: ' + Object(utxos[index]).script_hex)
+    info('My index: ' + index)
+    info('For each')
+    info(input)
+    info('Utxo script: ' + Object(utxos[index]).script_hex)
     let dataForHash = ReplaceAt(unbuildedTx + '01000000', '00000000ff', '00000019' + Object(utxos[index]).script_hex + 'ff', unbuildedTx.indexOf('00000000ff', lastIndex), unbuildedTx.indexOf('00000000ff', lastIndex) + 50)
-    console.log('DATA FOR HASH: ' + dataForHash)
+    info('DATA FOR HASH: ' + dataForHash)
     let firstHash = crypto.createHash('sha256').update(Buffer.from(dataForHash, 'hex')).digest('hex')
     let secondHash = crypto.createHash('sha256').update(Buffer.from(firstHash, 'hex')).digest('hex')
-    console.log('SECOND HASH: ' + secondHash)
-    console.log('GOT THIS HASH' + crypto.createHash('sha256').update(crypto.createHash('sha256').update('sdfsdf').digest('hex')).digest('hex'))
+    info('SECOND HASH: ' + secondHash)
+    info('GOT THIS HASH' + crypto.createHash('sha256').update(crypto.createHash('sha256').update('sdfsdf').digest('hex')).digest('hex'))
     let sigIndex = unbuildedTx.indexOf('00000000ff', lastIndex)
-    console.log(sigIndex)
+    info(sigIndex)
     lastIndex += 90
       // let hashForSig = transaction.tx.hashForSignature(index, Buffer.from(Object(utxos[index]).script_hex),Transaction.SIGHASH_ALL)
     hashArray.push(Buffer.from(secondHash,'hex'))
   })
   let hashBuffer = Buffer.concat(hashArray)
-  console.log('HASHBUFFER: ' + hashBuffer + 'LENGTH: ' + hashBuffer.length)
-  console.log('HASHARRAY: ' + hashArray)
+  info('HASHBUFFER: ' + hashBuffer + 'LENGTH: ' + hashBuffer.length)
+  info('HASHARRAY: ' + hashArray)
   let data = await getSignaturePCSC(0, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.tx.ins.length)
   /* let startIndex = 5
   let shift = data[4] + 5
   */
   transaction.inputs.forEach((input, index) => {
-    console.log('Input', input)
-    console.log('Index', index)
-    console.log('SIGNATURE DATA', data[index].toString('hex'))
+    info('Input', input)
+    info('Index', index)
+    info('SIGNATURE DATA', data[index].toString('hex'))
     unbuildedTx = unbuildedTx.replace('00000000ff','000000' + data[index].toString('hex') + 'ff')
-    console.log('Unbuilded step',index, 'tx', unbuildedTx)
+    info('Unbuilded step',index, 'tx', unbuildedTx)
     /*
-    console.log('Input', input)
-    console.log('Index', index)
-    console.log('Sig of index', data[index].toString('hex'))
+    info('Input', input)
+    info('Index', index)
+    info('Sig of index', data[index].toString('hex'))
     unbuildedTx = unbuildedTx.replace('00000000ff','000000' + data.slice(startIndex, shift).toString('hex') + 'ff')
-    console.log('INSERT THIS: ' + data.slice(startIndex, shift).toString('hex'))
-    console.log('STARTINDEX: ' + data[startIndex] + 2)
-    console.log('DATA OF : ' + data[startIndex])
+    info('INSERT THIS: ' + data.slice(startIndex, shift).toString('hex'))
+    info('STARTINDEX: ' + data[startIndex] + 2)
+    info('DATA OF : ' + data[startIndex])
     startIndex += (data[startIndex] + 2)
     shift += data[startIndex] + 2
-    console.log('SHIFT VALUE: ' + shift)
-    console.log('DATA OF SHIFT: ' + data[shift])
-    console.log('START INDEX: ' + startIndex)
-    console.log('SHIFT: ' + shift)
+    info('SHIFT VALUE: ' + shift)
+    info('DATA OF SHIFT: ' + data[shift])
+    info('START INDEX: ' + startIndex)
+    info('SHIFT: ' + shift)
     */
   })
-  console.log('UNBUILDED TX: ' + unbuildedTx)
-  console.log('DATA: ' + data)
+  info('UNBUILDED TX: ' + unbuildedTx)
+  info('DATA: ' + data)
   sendTransaction(unbuildedTx, redirect)
-  console.log('Final sig: ' + sig)
+  info('Final sig: ' + sig)
   // Добавляем вход транзакции в виде хэша предыдущей транзакции и номер выхода с нашим адресом
   // Добавляем выход транзакции, где указывается адрес и сумма перевода
   transaction.addOutput(paymentAdress, transactionAmount)
@@ -196,8 +247,8 @@ async function createTransaction(paymentAdress: string,
 }
 /*  function createTransaction(paymentAdress: string,transactionHash: string, transactionInputAmount: number,
   transactionAmount: number,transactionFee: number, prevOutScript: string, outNumber: number, redirect: any): void {
-  console.log(transactionFee)
-  console.log('Transaction amount: ' + transactionAmount)
+  info(transactionFee)
+  info('Transaction amount: ' + transactionAmount)
   // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
   let transaction = new TransactionBuilder(network)
   // Добавляем вход транзакции в виде хэша предыдущей транзакции и номер выхода с нашим адресом
@@ -209,20 +260,20 @@ async function createTransaction(paymentAdress: string,
   if (change > 0) {
     transaction.addOutput(myAddr, Math.round(change))
   }
-  console.log('Build incomplete: ' + transaction.buildIncomplete().toHex())
+  info('Build incomplete: ' + transaction.buildIncomplete().toHex())
   // Вычисляем хэш неподписанной транзакции
   let txHashForSignature = transaction.tx.hashForSignature(0, Buffer.from(prevOutScript.trim(), 'hex'), Transaction.SIGHASH_ALL)
-  console.log('Hash for sig: ' + txHashForSignature.toString('hex'))
-  console.log('Hash for sig length: ' + txHashForSignature.length)
+  info('Hash for sig: ' + txHashForSignature.toString('hex'))
+  info('Hash for sig length: ' + txHashForSignature.length)
   // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
   openPort().then(() => {
     getSig(0, txHashForSignature.toString('hex'), paymentAdress, transactionAmount).then(value => {
-      console.log('Suppposed to be sig: ' + value.slice(5,value.length).toString('hex'))
+      info('Suppposed to be sig: ' + value.slice(5,value.length).toString('hex'))
       // Сериализуем неподписанную транзакцию
       let txHex = transaction.tx.toHex()
       // Добавляем UnlockingScript в транзакцию
       let data = txHex.replace('00000000ff','000000' + value.slice(5,value.length).toString('hex') + 'ff')
-      console.log('Final transaction: ' + data)
+      info('Final transaction: ' + data)
       // Возвращаем готовую к отправке транзакцию
       sendTransaction(data, redirect)
     }).catch(err => {
@@ -237,7 +288,7 @@ async function createTransaction(paymentAdress: string,
 // Функция отправки транзакции, на вход принимает транзакцию в hex- формате
 
 function sendTransaction(transactionHex: string, redirect: any) {
-  console.log('url: ' + urlChainSo + NETWORK)
+  info('url: ' + urlChainSo + NETWORK)
   // формируем запрос
   /* Request.post({
     url: 'https://api.blockcypher.com/v1/btc/test3/txs/push',
@@ -248,10 +299,10 @@ function sendTransaction(transactionHex: string, redirect: any) {
     json: true
   },
       (res,err,body) => {
-        console.log(body)
-        console.log(res), console.log(err)
+        info(body)
+        info(res), info(err)
         let bodyStatus = body
-        console.log(bodyStatus.tx.confirmations)
+        info(bodyStatus.tx.confirmations)
         try {
           if (body.tx.confirmations === 0) {
             // alert('Transaction sended! Hash: ' + Object(body).tx.hash)
@@ -272,17 +323,52 @@ function sendTransaction(transactionHex: string, redirect: any) {
   },
   // Обрабатываем ответ
    (res,err,body) => {
-     console.log(body)
-     console.log(res), console.log(err)
+     info(body)
+     info(res), info(err)
      let bodyStatus = body.status
-     console.log(bodyStatus)
-     if (bodyStatus.toString() === 'success') {
-       redirect()
+     info(bodyStatus)
+     if (res) {
+       info('ERROR IN SEND BITCOIN', err)
+       sendByBlockcypher(transactionHex, redirect)
      } else {
-       console.log(body.error.message)
-       alert('Error occured: ' + body.error.message)
+       if (bodyStatus.toString() === 'success') {
+         redirect()
+       } else {
+         info(body.error.message)
+         alert('Error occured: ' + body.error.message)
+       }
      }
    })
+}
+
+function sendByBlockcypher(transactionHex: string, redirect: any) {
+  Request.post({
+    url: 'https://api.blockcypher.com/v1/btc/test3/txs/push',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body : { 'tx': transactionHex },
+    json: true
+  },
+        (res,err,body) => {
+          info(body)
+          info(res), info(err)
+          let bodyStatus = body
+          info(bodyStatus.tx.confirmations)
+          if (res !== null) {
+            info('ERROR IN SEND BY BLOCKCYPHER', err)
+            alert(err)
+          } else {
+            try {
+              if (body.tx.confirmations === 0) {
+                // alert('Transaction sended! Hash: ' + Object(body).tx.hash)
+                redirect()
+              }
+            } catch (error) {
+              alert('Error occured: ' + Object(body).error)
+            }
+          }
+        })
 }
 
 /* const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
@@ -293,61 +379,61 @@ function sendTransaction(transactionHash: string) {
     },
     body : { 'hex': transactionHash },
     json: true}, (err, res, body) => {
-    console.log(body)
-    console.log(res), console.log(err)
+    info(body)
+    info(res), info(err)
     let bodyStatus = body.success
     if (bodyStatus.toString() === 'true') {
       alert('Transaction sended! Hash: ' + body.txid)
 
     } else {
-      console.log(body.error.message)
+      info(body.error.message)
       alert('Error occured: ' + body.error.message)
     }
   })
 }
 */
 export function handle(paymentAdress: string, amount: number, transactionFee: number, redirect: any) {
-  console.log('In handle')
+  info('In handle')
   getLastTransactionData().then(Response => {
     let respData = JSON.parse(Response.content)
-    console.log('RespData: ' + respData.data)
-    console.log('Resp status: ' + respData.status)
+    info('RespData: ' + respData.data)
+    info('Resp status: ' + respData.status)
     if (respData.status === 'success') {
-      console.log('In success')
+      info('In success')
       let utxos = []
       for (let utxo in respData.data.txs) {
         let temp = respData.data.txs[utxo].value
         respData.data.txs[utxo].value = toSatoshi(temp)
-        console.log('My value: ' + respData.data.txs[utxo].value)
+        info('My value: ' + respData.data.txs[utxo].value)
         utxos.push(respData.data.txs[utxo])
-        console.log('Utxo: ' + utxo)
-        console.log('Utxos: ' + utxos)
+        info('Utxo: ' + utxo)
+        info('Utxos: ' + utxos)
       }
       amount = toSatoshi(amount)
       createTransaction(paymentAdress, amount, transactionFee, redirect, utxos).catch(err => {
-        console.log(err)
+        info(err)
       })
     } else {
       alert('Error provided by internet connection')
     }
   }).catch((error: any) => {
-    console.log(error)
+    info(error)
   })
 }
 /* export function handle(paymentAdress: string, amount: number, transactionFee: number) {
-  console.log('In handle')
+  info('In handle')
   getLastTransactionData().then(Response => {
     let respData = JSON.parse(Response.content)
-    console.log('RespData: ' + respData.data)
-    console.log('Resp status: ' + respData.status)
+    info('RespData: ' + respData.data)
+    info('Resp status: ' + respData.status)
     let utxos = []
     for (let utxo in respData.data.txs) {
       let temp = respData.data.txs[utxo].value
       respData.data.txs[utxo].value = toSatoshi(temp)
-      console.log('My value: ' + respData.data.txs[utxo].value)
+      info('My value: ' + respData.data.txs[utxo].value)
       utxos.push(respData.data.txs[utxo])
-      console.log('Utxo: ' + utxo)
-      console.log('Utxos: ' + utxos)
+      info('Utxo: ' + utxo)
+      info('Utxos: ' + utxos)
     }
     let targets = {
       address: paymentAdress,
@@ -355,11 +441,11 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
     }
     let tx = createTransaction(paymentAdress, toSatoshi(Number(amount)), transactionFee, utxos)
     sendTransaction(tx)
-    console.log(tx)
+    info(tx)
     let { inputs, outputs, fee } = coinSelect(utxos, targets, Number(transactionFee))
-    console.log(fee)
-    console.log('Inputs in handle: ' + inputs)
-    console.log('Outputs in handle:' + outputs)
+    info(fee)
+    info('Inputs in handle: ' + inputs)
+    info('Outputs in handle:' + outputs)
 
     if (!inputs || !outputs) return
     let txb = new TransactionBuilder(network)
@@ -368,14 +454,14 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
       txb.addInput(inputs[input].txid, inputs[input].output_no)
     }
     /* Array(inputs).forEach(input => {
-      console.log('My input: ' + input)
+      info('My input: ' + input)
       txb.addInput(Objecttxb(input).txid, Object(input).vout)
     })
     for (let out in outputs) {
-      console.log('Out address: ' + outputs[out].address)
+      info('Out address: ' + outputs[out].address)
       if (!outputs[out].address) {
         outputs[out].address = myAddr
-        console.log('Added this to change: ' + outputs[out].address)
+        info('Added this to change: ' + outputs[out].address)
       }
       txb.addOutput(outputs[out].address, outputs[out].value)
     }
@@ -386,23 +472,23 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
       txb.addOutput(output.address, output.value)
     })
     const key = ECPair.fromWIF('cT2KsVoG9CxsphtEefRXDvmFnq3aUZ5mvQDNT3HKb3UqhGGrWxiy', network)
-    console.log('Unbuilded in handle: ' + txb.buildIncomplete().toHex())
+    info('Unbuilded in handle: ' + txb.buildIncomplete().toHex())
     let sig = ''
     txb.inputs.forEach(function(input, index) {
-      console.log('My index: ' + index)
-      console.log('For each')
-      console.log(input)
-      console.log('Utxo script: ' + Object(inputs[index]).script_hex)
+      info('My index: ' + index)
+      info('For each')
+      info(input)
+      info('Utxo script: ' + Object(inputs[index]).script_hex)
       let hashForSig = txb.tx.hashForSignature(index, Buffer.from(Object(inputs[index]).script_hex),Transaction.SIGHASH_ALL)
-      console.log('My hash type: ' + Transaction.SIGHASH_ALL)
-      console.log('Hash for sig: ' + hashForSig.toString('hex'))
+      info('My hash type: ' + Transaction.SIGHASH_ALL)
+      info('Hash for sig: ' + hashForSig.toString('hex'))
       let data = getSign(0, hashForSig.toString('hex'))
       if (index !== 0) {
         sig = sig.concat(Object(inputs[index]).script_hex + data.toString() + 'ffffffff')
-        console.log('My signature: ' + sig)
+        info('My signature: ' + sig)
       } else {
         sig = sig.concat(data.toString() + 'ffffffff')
-        console.log('Concatenate sig: ' + sig)
+        info('Concatenate sig: ' + sig)
       }
     })
     /*
@@ -417,13 +503,13 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
     0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d5000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888acffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
     0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c48000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888acffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
     txb.inputs.forEach(function (input, index) {
-      console.log(input)
+      info(input)
       txb.sign(index, key)
     })
-    console.log('Builder Tx: ' + txb.build().toHex())
+    info('Builder Tx: ' + txb.build().toHex())
 
   }).catch((error) => {
-    console.log(error)
+    info(error)
   })
 }
 */

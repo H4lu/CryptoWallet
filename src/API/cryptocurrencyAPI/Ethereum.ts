@@ -6,36 +6,57 @@ import { keccak256 } from 'js-sha3'
 // import fs from 'fs'
 import * as webRequest from 'web-request'
 import { getAddressPCSC } from '../hardwareAPI/GetAddress'
+import { info } from 'electron-log'
 // import getAddress from '../hardwareAPI/GetAddress'
-const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM'))
+// const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM'))
 // const testTokenAdress = '0x583cbBb8a8443B38aBcC0c956beCe47340ea1367'
 // const apiKeyToken = 'MJTK1MQJIR91D82SMCGC6SU61MGICCJQH2'
 // const web3 = new Web3(new Web3.providers.HttpProvider('https://api.myetherapi.com/rop'))
-// const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/hgAaKEDG9sIpNHqt8UYM'))
+const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/hgAaKEDG9sIpNHqt8UYM'))
 // const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws'))
 /*const ERC20AbiInterface: string = __dirname + '/../erc20abi.json'
 const abi = JSON.parse(fs.readFileSync(ERC20AbiInterface, 'utf-8'))
-console.log('abi ' + abi)
+info('abi ' + abi)
 */
 import Container from '../../ui/Index'
 let myAdress = ''
 export async function initEthereumAddress() {
-  myAdress = await getAddressPCSC(1)
-  myAdress = web3.utils.toChecksumAddress('0x' + myAdress.toString())
+  info('INITING ETH ADDRESS')
+
+  return new Promise(async (resolve) => {
+    let status = false
+    while (!status) {
+      info('Status', status)
+      let answer = await getAddressPCSC(1)
+      info('GOT MYADDR ANSWER', answer)
+      info('My addr length', answer.length)
+      if (answer.length > 16 && answer.includes('ETH')) {
+        status = true
+        info('status after reset', status)
+        info('resolving')
+        setAddress(answer.substring(3,answer.length))
+        resolve(0)
+      }
+    }
+  })
 }
 
+function setAddress(address: string) {
+  myAdress = web3.utils.toChecksumAddress('0x' + address)
+  info('ETH ADDRESS', myAdress)
+}
 export function getEthereumAddress() {
   return myAdress
 }
 export async function getEthereumLastTx(): Promise<any> {
-  console.log('GETTING ETH')
+  info('GETTING ETH')
   try {
     const requestURL = 'https://api.ethplorer.io/getAddressTransactions/' + myAdress + '?apiKey=freekey&limit=50'
     let response = await webRequest.get(requestURL)
-    console.log('GOT THIS',response)
+    info('GOT THIS',response)
     return response
   } catch (err) {
-    console.log(err)
+    info(err)
   }
 }
 // const myAdress = '0x033baF5BEdc9fFbf2190C800bfd17e073Bf79D18'
@@ -47,9 +68,9 @@ const gasLimitConst = 100000*/
 // const ERC20Contract = new web3.eth.Contract(JSON.parse(abi), testTokenAdress, { from: myAdress })
 
 export function getEthereumBalance() {
-  web3.eth.getGasPrice().then(value => console.log(value)).catch(err => console.log(err))
+  web3.eth.getGasPrice().then(value => info(value)).catch(err => info(err))
   let resp = web3.eth.getBalance(myAdress)
-  console.log('ETH balance: ' + resp)
+  info('ETH balance: ' + resp)
   return resp
 }
 
@@ -61,18 +82,18 @@ export function convertFromWei(amount: number) {
     let response = await web3.eth.estimateGas(tx)
     return response
   } catch (error) {
-    console.log(error)
+    info(error)
   }
 }
 */
 /* async function getNonce() {
   try {
     let response = await web3.eth.getTransactionCount(myAdress)
-    console.log('Nonce response: ' + response)
-    console.log('Response to string: ' + response.toString())
+    info('Nonce response: ' + response)
+    info('Response to string: ' + response.toString())
     return response
   } catch (error) {
-    console.log(error)
+    info(error)
   }
 }
 */
@@ -80,10 +101,10 @@ export function convertFromWei(amount: number) {
    После чего получанная подпись вставляется в новую транзакцию, которая отправляется
 */
 function createTransaction (paymentAdress: string, amount: number, gasPrice: number, gasLimit: number, redirect: any) {
-  console.log(redirect)
+  info(redirect)
   web3.eth.getTransactionCount(myAdress).then((value) => {
   // Получаем порядковый номер транзакции, т.н nonce
-    console.log('Got this values: ' + 'gasPrice: ' + gasPrice + 'gasLimit: ' + gasLimit)
+    info('Got this values: ' + 'gasPrice: ' + gasPrice + 'gasLimit: ' + gasLimit)
     /* Создаём неподписанную транзакцию. Она включает в себя:
        nonce - порядковый номер
        gasPrice и gasLimit - константы, использующиеся для подсчёта комиссии
@@ -107,58 +128,56 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
       r: 0,
       s: 0
     }
-    console.log('Gas price: ' + rawtx.gasPrice)
-    console.log('tx value: ' + rawtx.value)
+    info('Gas price: ' + rawtx.gasPrice)
+    info('tx value: ' + rawtx.value)
     for (let item in rawtx) {
-      console.log('item : ' + Object(rawtx)[item])
+      info('item : ' + Object(rawtx)[item])
     }
       // С помощью ethereumjs-tx создаём объект транзакции
     let tx = new Transaction(rawtx)
     let txCost = tx.getUpfrontCost()
-    console.log('Transaction cost: ' + web3.utils.fromWei(txCost, 'ether'))
-    console.log('Unsigned: ' + tx.serialize().toString('hex'))
+    info('Transaction cost: ' + web3.utils.fromWei(txCost, 'ether'))
+    info('Unsigned: ' + tx.serialize().toString('hex'))
       // Получаем хэш для подписи
     let txHash = keccak256(tx.serialize())
-    console.log('Tx hash: ' + txHash.toString())
+    info('Tx hash: ' + txHash.toString())
       // Отправляем на подпись
-    console.log('Pass this to amount: ' + amount)
-    console.log('Amount type: ' + typeof(amount))
+    info('Pass this to amount: ' + amount)
+    info('Amount type: ' + typeof(amount))
     let hash = Buffer.from(txHash, 'hex')
     let arr = [hash]
     getSignaturePCSC(1,arr, paymentAdress, amount, 1).then(data => {
       let sign = data[0]
-      console.log('SIGN IN ETH', sign.toString('hex'))
+      info('SIGN IN ETH', sign.toString('hex'))
       /*
-      console.log('data length: ' + sign.length)
-      console.log(web3.utils.toHex(sign[69]))
-      console.log('r: ' + sign.slice(5,37).toString('hex'))
-      console.log('s: ' + sign.slice(37,69).toString('hex'))
-      console.log('v: ' + sign[69])
+      info('data length: ' + sign.length)
+      info(web3.utils.toHex(sign[69]))
+      info('r: ' + sign.slice(5,37).toString('hex'))
+      info('s: ' + sign.slice(37,69).toString('hex'))
+      info('v: ' + sign[69])
       */
           // создаём объект подписи
           // cost: 600000130000000
       let sig = {
-        v : web3.utils.toHex(sign[69] + 14),
+        v : web3.utils.toHex(sign[69] + 10),
         r : sign.slice(5,37),
         s : sign.slice(37,69)
       }
-      console.log('V in sig: ' + sig.v)
+      info('V in sig: ' + sig.v)
           // Вставляем подпись в транзакцию
       Object.assign(tx, sig)
           // Приводим транзакцию к нужному для отправки виду
       let serTx = '0x' + tx.serialize().toString('hex')
-      console.log(serTx)
-      web3.eth.sendSignedTransaction(serTx).on('receipt', console.log).on('transactionHash', function(hash) {
-        console.log('Transaction sended: ' + hash)
-        console.log('CONTAINER', Container)
-        Container.redirectToTransactionsuccess()
-
-        Container.addUnconfirmedTx('ETH', amount, myAdress, hash)
-      }).on('error', console.error).catch(err => console.log(err))
+      info(serTx)
+      web3.eth.sendSignedTransaction(serTx).on('receipt', info).on('transactionHash', function(hash) {
+        info('Transaction sended: ' + hash)
+        info('CONTAINER', Container)
+        redirect()
+      }).on('error', console.error).catch(err => info(err))
         // Отправляем
 
-    }).catch(err => console.log(err))
-  }).catch(err => console.log(err))
+    }).catch(err => info(err))
+  }).catch(err => info(err))
 }
 export function handleEthereum(paymentAdress: string, amount: number, gasPrice: number, gasLimit: number,redirect: any) {
   createTransaction(paymentAdress, amount, gasPrice, gasLimit, redirect)
@@ -171,23 +190,23 @@ export function handleEthereum(paymentAdress: string, amount: number, gasPrice: 
 }
 // Вернёт Promise с результатом запроса
 /*function sendTransaction(transaction: string): PromiEvent<TransactionReceipt> {
-  console.log('in sendtransaction')
-  return web3.eth.sendSignedTransaction(transaction).on('receipt', console.log).on('transactionHash', function(hash) {
-    console.log('Hash: ' + hash)
+  info('in sendtransaction')
+  return web3.eth.sendSignedTransaction(transaction).on('receipt', info).on('transactionHash', function(hash) {
+    info('Hash: ' + hash)
   }).on('error', console.error)
 }
 
 /* export async function balanceOf (tokenAdress: string) {
   let ERC20Token = new web3.eth.Contract(abi, tokenAdress, { from: myAdress })
   let balance = await ERC20Token.methods.balanceOf(myAdress).call()
-  console.log('Balance: ' + balance)
+  info('Balance: ' + balance)
   totalSupply(tokenAdress)
   // return ERC20Token.methods.balanceOf(myAdress).call()
   return balance
 }
 */
 /* export function transferToken(tokenAdress: string, spenderAdress: string, amountToTransfer: number) {
-  console.log('Amount to transfer: ' + amountToTransfer)
+  info('Amount to transfer: ' + amountToTransfer)
   let ERC20Token = new web3.eth.Contract(abi, tokenAdress, { from: myAdress })
   web3.eth.getTransactionCount(myAdress).then(value => {
     let rawTx: any = {
@@ -207,43 +226,43 @@ export function handleEthereum(paymentAdress: string, amount: number, gasPrice: 
     let txHash = keccak256(tx.serialize())
     let signature: Buffer = getEthereumSignature(txHash)
     // создаём объект подписи
-    console.log(web3.utils.toHex(signature.slice(64,65).readInt32LE(0) + 14))
+    info(web3.utils.toHex(signature.slice(64,65).readInt32LE(0) + 14))
     let sig = {
       v : web3.utils.toHex(signature.slice(64,65).readInt32LE(0) + 14),
       r : signature.slice(0,32),
       s : signature.slice(32,64)
     }
     Object.assign(tx, sig)
-    console.log('Base fee: ' + tx.getBaseFee())
-    console.log('Data fee: ' + tx.getDataFee())
+    info('Base fee: ' + tx.getBaseFee())
+    info('Data fee: ' + tx.getDataFee())
     web3.eth.estimateGas(Object.assign(rawTx, sig), (error, result) => {
-      console.log(error)
-      console.log('Res of estimate gas: ' + result)
-    }).catch(error => console.log(error))
+      info(error)
+      info('Res of estimate gas: ' + result)
+    }).catch(error => info(error))
     let serTx = '0x' + tx.serialize().toString('hex')
-    console.log(serTx)
+    info(serTx)
     sendTransaction(serTx).on('transactionHash', (hash) => {
       alert('Transaction sended! Hash: ' + hash)
     }).on('error', error => {
       alert(error)
     }).catch(err => {
-      console.log(err)
+      info(err)
     })
-  }).catch(error => { console.log(error) })
+  }).catch(error => { info(error) })
  //  return ERC20Token.methods.transfer(spenderAdress, amountToTransfer).
 }
 
 export function totalSupply(tokenAdress: string) {
   let ERC20Token = new web3.eth.Contract(abi, tokenAdress, { from: myAdress })
   ERC20Token.methods.totalSupply().call().then((value: any) => {
-    console.log('Total supply: ' + value)
-  }).catch((err: any) => console.log(err))
+    info('Total supply: ' + value)
+  }).catch((err: any) => info(err))
   ERC20Token.methods.name().call().then(value => {
-    console.log('Token name: ' + value)
-  }).catch(error => console.log(error))
+    info('Token name: ' + value)
+  }).catch(error => info(error))
   ERC20Token.methods.decimals().call().then(value => {
-    console.log('Decimals: ' + value)
-  }).catch(error => console.log(error))
+    info('Decimals: ' + value)
+  }).catch(error => info(error))
 }
 
 /* export function transferFrom(tokenAdress: string, adressFrom: string, adressTo: string, amount: number) {
@@ -252,7 +271,7 @@ export function totalSupply(tokenAdress: string) {
 
 /* export function approve(tokenAdress: string, spenderAdress: string, amount: number) {
   let ERC20Token = new web3.eth.Contract(abi, tokenAdress, { from: myAdress })
-  console.log('Allowed amount:' + amount)
+  info('Allowed amount:' + amount)
   web3.eth.getTransactionCount(myAdress).then(value => {
     let rawTx: any = {
       value: '0x0',
@@ -271,7 +290,7 @@ export function totalSupply(tokenAdress: string) {
     let txHash = keccak256(tx.serialize())
     let signature: Buffer = getEthereumSignature(txHash)
     // создаём объект подписи
-    console.log(web3.utils.toHex(signature.slice(64,65).readInt32LE(0) + 14))
+    info(web3.utils.toHex(signature.slice(64,65).readInt32LE(0) + 14))
     let sig = {
       v : web3.utils.toHex(signature.slice(64,65).readInt32LE(0) + 14),
       r : signature.slice(0,32),
@@ -279,40 +298,40 @@ export function totalSupply(tokenAdress: string) {
     }
     Object.assign(tx, sig)
     let serTx = '0x' + tx.serialize().toString('hex')
-    console.log(serTx)
+    info(serTx)
     ERC20Token.events.Approval({},(error, result) => {
-      console.log('Error: ' + error)
-      console.log('Result: ' + result.returnValues)
+      info('Error: ' + error)
+      info('Result: ' + result.returnValues)
     }).on('data', event => {
-      console.log(event.returnValues)
-      console.log(event)
+      info(event.returnValues)
+      info(event)
     }).on('changed', event => {
-      console.log(event)
+      info(event)
     }).on('error', error => {
-      console.log(error)
+      info(error)
     })
     sendTransaction(serTx).on('transactionHash', (hash) => {
       alert('Transaction sended! Hash: ' + hash)
     }).on('error', error => {
       alert(error)
     }).catch((err) => {
-      console.log(err)
+      info(err)
     })
-  }).catch(error => { console.log(error) })
+  }).catch(error => { info(error) })
 }
 
 export function allowance(tokenAdress: string, ownerAdress: string, spenderAdress: string) {
   let ERC20Token = new web3.eth.Contract(abi, tokenAdress, { from: myAdress })
   ERC20Token.methods.allowance(ownerAdress, spenderAdress).call().then(response => {
-    console.log('Response of allowance: ' + response)
+    info('Response of allowance: ' + response)
   }).catch(err => {
-    console.log(err)
+    info(err)
   })
 }
 
 export function transferFrom(tokenAdress: string, adressFrom: string, adressTo: string, amount: number, gasPrice: number, gasLimit: number) {
   let ERC20Token = new web3.eth.Contract(abi, tokenAdress, { from: myAdress })
-  console.log('Allowed amount:' + amount)
+  info('Allowed amount:' + amount)
   web3.eth.getTransactionCount(myAdress).then(value => {
     let rawTx: any = {
       value: '0x0',
@@ -331,7 +350,7 @@ export function transferFrom(tokenAdress: string, adressFrom: string, adressTo: 
     let txHash = keccak256(tx.serialize())
     let signature: Buffer = getEthereumSignature(txHash)
     // создаём объект подписи
-    console.log(web3.utils.toHex(signature.slice(64,65).readInt32LE(0) + 14))
+    info(web3.utils.toHex(signature.slice(64,65).readInt32LE(0) + 14))
     let sig = {
       v : web3.utils.toHex(signature.slice(64,65).readInt32LE(0) + 14),
       r : signature.slice(0,32),
@@ -339,25 +358,25 @@ export function transferFrom(tokenAdress: string, adressFrom: string, adressTo: 
     }
     Object.assign(tx, sig)
     let serTx = '0x' + tx.serialize().toString('hex')
-    console.log(serTx)
+    info(serTx)
     ERC20Token.events.Transfer({},(error, result) => {
-      console.log('Error: ' + error)
-      console.log('Result: ' + result.returnValues)
+      info('Error: ' + error)
+      info('Result: ' + result.returnValues)
     }).on('data', event => {
-      console.log(event.returnValues)
-      console.log(event)
+      info(event.returnValues)
+      info(event)
     }).on('changed', event => {
-      console.log(event)
+      info(event)
     }).on('error', error => {
-      console.log(error)
+      info(error)
     })
     sendTransaction(serTx).on('transactionHash', (hash) => {
       alert('Transaction sended! Hash: ' + hash)
     }).on('error', error => {
       alert(error)
     }).catch(err => {
-      console.log(err)
+      info(err)
     })
-  }).catch(error => { console.log(error) })
+  }).catch(error => { info(error) })
 }
 */

@@ -1,7 +1,7 @@
 // import SerialPort from 'serialport'
 // import { port } from './OpenPort'
 import { reader } from './Reader'
-
+import { info } from 'electron-log'
 export async function wrapper(): Promise<any> {
   try {
     const res = await Promise.resolve()
@@ -11,27 +11,27 @@ export async function wrapper(): Promise<any> {
   }
 }
 export function getInfoPCSC(): Promise<Number> {
-  console.log('TRANSMITTING')
+  info('TRANSMITTING')
   return new Promise((resolve, reject) => {
     reader.transmit(Buffer.from([0xB1,0x10,0x00,0x00,0x00]),4,2, async(err, data) => {
       if (err) {
-        console.log(err)
+        info(err)
         reject(new Error(err))
       } else {
-        console.log('STATUS DATA:',data.toString('hex'))
+        info('STATUS DATA:',data.toString('hex'))
         switch (data.toString('hex')) {
         case '9000': {
           try {
             let realStatus = await getRealState()
             if (realStatus === '6e00') {
               resolve(3)
-              console.log('resolve 3', realStatus)
+              info('resolve 3', realStatus)
             } else {
-              console.log('resolve 0', realStatus)
+              info('resolve 0', realStatus)
               resolve(0)
             }
           } catch (err) {
-            console.log('ERROR IN GETINFO', err)
+            info('ERROR IN GETINFO', err)
           }
           break
         }
@@ -61,10 +61,10 @@ function getRealState() {
   return new Promise((resolve, reject) => {
     reader.transmit(Buffer.from([0xB0,0x10,0x00,0x00,0x00]), 255,2,(err,data) => {
       if (err) {
-        console.log('ERROR IN REALSTATUS', err)
+        info('ERROR IN REALSTATUS', err)
         reject(err)
       } else {
-        console.log('REALSTATUS', data.toString('hex'))
+        info('REALSTATUS', data.toString('hex'))
         resolve(data)
       }
     })
@@ -76,13 +76,13 @@ function getRealState() {
     setTimeout(() => {
       findDevice().then(value => {
         if (value !== undefined) {
-          console.log(value)
-          console.log('CONNECTED')
+          info(value)
+          info('CONNECTED')
           connection = true
         } else {
-          console.log('DISCONNECTED')
+          info('DISCONNECTED')
         }
-      }).catch(err => console.log(err))
+      }).catch(err => info(err))
     },1000)
   }
 }
@@ -90,15 +90,15 @@ function getRealState() {
 /* export async function findDevice(): Promise<any> {
   return new Promise((resolve, reject) => {
     SerialPort.list().then(result => {
-      console.log(result.find())
+      info(result.find())
       for (let item in result) {
-        console.log('VENDOR ID: ' + result[item].vendorId)
+        info('VENDOR ID: ' + result[item].vendorId)
         if (result[item].vendorId === '1FC9') resolve(result[item].comName)
       }
       reject('NO DEVICES FOUND')
-    }).catch(error => console.log(error))
+    }).catch(error => info(error))
   }).catch(error => {
-    console.log(error)
+    info(error)
   })
 }
 */
@@ -110,8 +110,8 @@ function getRealState() {
   port.write(message)
   return new Promise((resolve) => {
     port.on('data', data => {
-      console.log('got this answer:',data)
-      console.log('value in swith: ' + data[5])
+      info('got this answer:',data)
+      info('value in swith: ' + data[5])
       switch (data[5]) {
       case 0x00: {
         port.removeAllListeners('data')

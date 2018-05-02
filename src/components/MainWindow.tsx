@@ -1,7 +1,6 @@
 import React from 'react'
 import { Redirect } from 'react-router'
 import { LOGO_PATH } from '../core/paths'
-
 interface IMainWindowState {
   redirect: boolean
 }
@@ -35,11 +34,12 @@ export class MainWindow extends React.Component<any, IMainWindowState> {
     }
   }
   startRedirect() {
+    console.log('STARTING REDIR3')
     this.props.init()
     let timeout = setTimeout(() => {
       this.setState({ redirect: true })
       clearTimeout(timeout)
-    }, 3000,[])
+    },5000)
   }
   render() {
     if (this.state.redirect) {

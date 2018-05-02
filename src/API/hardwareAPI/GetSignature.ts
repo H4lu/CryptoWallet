@@ -1,43 +1,43 @@
 import { Buffer } from 'buffer'
 // import { port } from './OpenPort'
 import { reader } from '../hardwareAPI/Reader'
-
+import { info } from 'electron-log'
 /* import * as Path from 'path'
 // declare var __dirname: string
 // let path = __dirname + './../../iTokenDLL'
 const path = Path.join(__dirname,'../..','iTokenDLL')
 const kernelPath = Path.join(__dirname, '../..', 'kernel32')
-console.log('path is:' + path)
+info('path is:' + path)
 const kernel = ffi.Library(kernelPath, {'SetDllDirectoryW': ['bool', ['string']]
 })
-console.log('before set dll')
+info('before set dll')
 kernel.SetDllDirectoryW(Path.join(__dirname, '../..','mtoken_stb.dll'))
-console.log('after set dll')
+info('after set dll')
 const MyLib = ffi.Library(path, { 'get_dataForTransaction': ['int', ['string','int','char*','string','int*']] })
 */
 /*let port: SerialPort
 export function openPort(portName: string): Promise<SerialPort> {
   port = new SerialPort(portName, { autoOpen: false, baudRate: 115200 })
-  console.log(portName)
+  info(portName)
   port.open()
   return new Promise((resolve, reject) => {
     port.on('open', data => {
-      console.log('Port opened! data: ' + data)
-      console.log('RESOLVING T?HIS PORT:', port)
+      info('Port opened! data: ' + data)
+      info('RESOLVING T?HIS PORT:', port)
       resolve(port)
     })
     port.on('error', error => {
-      console.log('Error occured while opening: ' + console.log(error))
+      info('Error occured while opening: ' + info(error))
       reject(error)
     })
     port.on('disconnect',() => {
-      console.log('disconnect detected')
+      info('disconnect detected')
       port.close(() => {
-        console.log('Port closed by disconnect!')
+        info('Port closed by disconnect!')
       })
     })
     port.on('close', () => {
-      console.log('Port closed!')
+      info('Port closed!')
     })
   })
 }
@@ -59,18 +59,18 @@ export function getSignaturePCSC(id: number, message: Array<Buffer>, address: st
       break
     }
     }
-    console.log('LENGTH OF MESSAGE', message.length)
+    info('LENGTH OF MESSAGE', message.length)
     let amountBuf = new Buffer(16)
     amountBuf.write(amount.toString(),0,amount.toString().length, 'ascii')
-    console.log('Number of inputs:', Number('0x' + numberOfInputs))
+    info('Number of inputs:', Number('0x' + numberOfInputs))
     reader.transmit(Buffer.from([0xb1,0x40,Number('0x' + numberOfInputs),currencyId,message.length,amountBuf,Buffer.from(address)]), 4, 2, async (err, data) => {
       if (err) {
-        console.log('ERROR IN FIRST MMESSAGE',err)
+        info('ERROR IN FIRST MMESSAGE',err)
         reject(err)
       } else {
-        console.log('DATA IN FIRST MESSAGE', data.toString('hex'))
+        info('DATA IN FIRST MESSAGE', data.toString('hex'))
         let sigArray: Array<Buffer> = []
-        console.log(data)
+        info(data)
         for (let i = 0; i < numberOfInputs; i++) {
           let answer = await sendDataMessage(Number('0x' + i), currencyId, message[i])
           sigArray.push(answer)
@@ -82,16 +82,16 @@ export function getSignaturePCSC(id: number, message: Array<Buffer>, address: st
 }
 
 function sendDataMessage(inputNumber: number, currencyId: number, hash: Buffer): Promise<Buffer> {
-  console.log('GOT THIS INPUT NUMBER: ' + inputNumber)
-  console.log('GOT THIS CURRENCY ID: ' + currencyId)
+  info('GOT THIS INPUT NUMBER: ' + inputNumber)
+  info('GOT THIS CURRENCY ID: ' + currencyId)
   return new Promise((resolve, reject) => {
     reader.transmit(Buffer.from([0xb1,0x41,inputNumber, currencyId,0x20,hash]), 110, 2, (err, data) => {
       if (err) {
-        console.log('ERROR IN SEND HASH',err)
+        info('ERROR IN SEND HASH',err)
         reject(err)
       } else {
-        console.log('GOT THIS DATA',data)
-        console.log('TO STRING',data.toString('hex'))
+        info('GOT THIS DATA',data)
+        info('TO STRING',data.toString('hex'))
         resolve(data)
       }
     })
@@ -99,7 +99,7 @@ function sendDataMessage(inputNumber: number, currencyId: number, hash: Buffer):
 }
 
 /* export function getSig(id: number, message: Buffer, address: string, amount: number, numberOfInputs: number): Promise<Buffer> {
-  console.log(numberOfInputs)
+  info(numberOfInputs)
   let currencyId: number = 0x00
   switch (id) {
   case 0: {
@@ -115,23 +115,23 @@ function sendDataMessage(inputNumber: number, currencyId: number, hash: Buffer):
     break
   }
   }
-  console.log('Currency id:' + currencyId)
+  info('Currency id:' + currencyId)
   let numberOfIns = Number('0x' + numberOfInputs)
-  console.log('NUMBER OF INPUTS: ' + numberOfIns)
+  info('NUMBER OF INPUTS: ' + numberOfIns)
   let startMessageBuf = Buffer.from([0x9c, 0x9c, 0x53, currencyId, numberOfIns])
   let amountBuf = new Buffer(16)
-  console.log('WRITE THIS AMOUNT: ' + amount)
+  info('WRITE THIS AMOUNT: ' + amount)
   amountBuf.write(amount.toString(),0,amount.toString().length, 'ascii')
   let addressBuf = Buffer.from(address)
   let endMessageBuf = Buffer.from([0x9a, 0x9a])
   let messageBuf = Buffer.concat([startMessageBuf,message,amountBuf,addressBuf,endMessageBuf])
-  console.log('message buf : ', messageBuf)
-  console.log('LENGTH OF MESSAGE BUF: ' + messageBuf.length)
+  info('message buf : ', messageBuf)
+  info('LENGTH OF MESSAGE BUF: ' + messageBuf.length)
   return new Promise((resolve) => {
-    console.log('PORT IN GET SIGNATURE',port)
+    info('PORT IN GET SIGNATURE',port)
     port.write(messageBuf)
     port.on('data', data => {
-      console.log('GOT this data: ' + data.toString('hex'))
+      info('GOT this data: ' + data.toString('hex'))
       port.removeAllListeners('data')
       resolve(data)
     })

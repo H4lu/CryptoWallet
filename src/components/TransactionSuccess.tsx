@@ -18,7 +18,7 @@ export class TransactionSuccess extends React.Component<any, ITransactionsuccess
   render() {
     setTimeout(() => {
       this.setState({ redirect: true })
-    },3000,[])
+    },2000,[])
     if (this.state.redirect) return <Redirect from = '/transaction_success' to = '/main'/>
     return(
       <div className = 'window-main'>
