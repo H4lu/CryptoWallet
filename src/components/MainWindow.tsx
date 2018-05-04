@@ -16,7 +16,6 @@ export class MainWindow extends React.Component<any, IMainWindowState> {
   renderWalletState() {
     switch (this.props.walletStatus) {
     case 0: {
-      this.startRedirect()
       return <p className = 'window-main-ready'>Your Braitberry is ready for use</p>
     }
     case 1: {
@@ -35,7 +34,6 @@ export class MainWindow extends React.Component<any, IMainWindowState> {
   }
   startRedirect() {
     console.log('STARTING REDIR3')
-    this.props.init()
     /* let timeout = setTimeout(() => {
       this.setState({ redirect: true })
       clearTimeout(timeout)

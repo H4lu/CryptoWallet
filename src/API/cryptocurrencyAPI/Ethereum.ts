@@ -67,11 +67,21 @@ const gasLimitConst = 100000*/
 // const web3 = new Web3('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM')
 // const ERC20Contract = new web3.eth.Contract(JSON.parse(abi), testTokenAdress, { from: myAdress })
 
-export function getEthereumBalance() {
+export async function getETHBalance() {
   web3.eth.getGasPrice().then(value => info(value)).catch(err => info(err))
-  let resp = web3.eth.getBalance(myAdress)
+  let resp = await web3.eth.getBalance(myAdress)
   info('ETH balance: ' + resp)
-  return resp
+  return parseValueCrypto(resp)
+}
+
+function parseValueCrypto(amount: number): Array<Number | String> {
+  let ethValue = convertFromWei(amount)
+  let arr = []
+  arr.push('ETH')
+  arr.push(Number(ethValue).toFixed(8))
+  let answer = 'ETH' + ethValue.toString()
+  info('RETURNING ETH BALANCE',answer)
+  return arr
 }
 
 export function convertFromWei(amount: number) {

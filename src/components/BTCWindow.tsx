@@ -51,6 +51,7 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
     this.setState({ fee: e.target.value })
   }
   render () {
+    console.log('PROPS IN BTCWINDOW', this.props.balance)
     return (
       <div className = 'main'>
         <div className = 'main-content'>

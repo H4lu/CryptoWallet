@@ -13,9 +13,9 @@ import { ETHWIndow } from '../components/ETHWindow'
 import { LTCWindow } from '../components/LTCWindow'
 import '../components/style.css'
 import MainContent from '../components/MainContent'
-import { getBitcoinLastTx, initBitcoinAddress, getBalance } from '../API/cryptocurrencyAPI/BitCoin'
-import { getLitecoinBalance, initLitecoinAddress, getLitecoinLastTx } from '../API/cryptocurrencyAPI/Litecoin'
-import { getEthereumBalance, convertFromWei, initEthereumAddress, getEthereumLastTx, getEthereumAddress } from '../API/cryptocurrencyAPI/Ethereum'
+import { getBitcoinLastTx, initBitcoinAddress, getBTCBalance } from '../API/cryptocurrencyAPI/BitCoin'
+import { getLTCBalance, initLitecoinAddress, getLitecoinLastTx } from '../API/cryptocurrencyAPI/Litecoin'
+import { getETHBalance, initEthereumAddress, getEthereumLastTx, getEthereumAddress } from '../API/cryptocurrencyAPI/Ethereum'
 import GetCurrencyRate from '../core/GetCurrencyRate'
 import { SidebarNoButtons } from '../components/SidebarNoButtons'
 import { MainWindow } from '../components/MainWindow'
@@ -221,7 +221,7 @@ export default class App extends React.Component<any, IAPPState> {
     this.parseTransactionDataBTC = this.parseTransactionDataBTC.bind(this)
     // this.waitForPin = this.waitForPin.bind(this)
     this.initAll = this.initAll.bind(this)
-    this.getValues = this.getValues.bind(this)
+    this.getBalances = this.getBalances.bind(this)
     this.getTransactions = this.getTransactions.bind(this)
     this.updateData = this.updateData.bind(this)
     this.connectionERROR = this.connectionERROR.bind(this)
@@ -230,6 +230,7 @@ export default class App extends React.Component<any, IAPPState> {
     this.changeBalance = this.changeBalance.bind(this)
     this.getWalletInfo = this.getWalletInfo.bind(this)
     this.setRedirectToMain = this.setRedirectToMain.bind(this)
+    this.getRates = this.getRates.bind(this)
   }
   redirectToTransactionsuccess() {
     let self = this
@@ -255,6 +256,7 @@ export default class App extends React.Component<any, IAPPState> {
         case 0: {
           clearInterval(interval)
           info('SETTING WALLET STATUS 0')
+          this.initAll()
           this.setState({ walletStatus: 0 })
           break
         }
@@ -326,14 +328,7 @@ export default class App extends React.Component<any, IAPPState> {
           info(status)
           if (changes) {
             if ((changes & reader.SCARD_STATE_EMPTY) && (status.state & reader.SCARD_STATE_EMPTY)) {
-              info('card removed')
-              reader.disconnect(reader.SCARD_LEAVE_CARD, (err) => {
-                if (err) {
-                  info(err)
-                } else {
-                  info('Disconnected')
-                }
-              })
+              info('derju v kurse')
             } else if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
               info('card inserted')
               reader.connect({ share_mode : reader.SCARD_SHARE_SHARED }, async (err, protocol) => {
@@ -400,7 +395,7 @@ export default class App extends React.Component<any, IAPPState> {
     info('INITING')
     if (this.state.allowInit) {
       this.setState({ allowInit: false })
-      initBitcoinAddress().then(initEthereumAddress).then(initLitecoinAddress).then(this.getValues).then(this.getTransactions).then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)).then(() => this.setRedirectToMain())
+      initBitcoinAddress().then(initEthereumAddress).then(initLitecoinAddress).then(this.getBalances).then(this.getTransactions).then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)).then(() => this.setRedirectToMain()).then(this.getRates)
       /*initBitcoinAddress()
       .then(() => initEthereumAddress()).then(() => initLitecoinAddress()).then(() => this.setState({ status: true }))
       .then(() => this.getValues()).then(() => this.getTransactions())
@@ -410,10 +405,10 @@ export default class App extends React.Component<any, IAPPState> {
   }
   updateData() {
     info('REFRESHING')
-    this.getTransactions().then(this.getValues)
-    .then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)
-    )
-
+    this.getTransactions().then(this.getBalances)
+    .then(() => {
+      UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)
+    }).then(this.getRates)
   }
   changeBalance(currency: string, amount: number) {
     switch (currency) {
@@ -456,9 +451,71 @@ export default class App extends React.Component<any, IAPPState> {
     }
     }
   }
-
-  getValues() {
-    return Promise.all([getBalance(),getEthereumBalance(), getLitecoinBalance(), GetCurrencyRate()]).then(value => {
+  getRates() {
+    return new Promise(() => {
+      info('IN GET RATES')
+      GetCurrencyRate().then(value => {
+        const parsedValue = JSON.parse(value.content)
+        info('PARSED VALUE', parsedValue)
+        for (let item in parsedValue) {
+          switch (parsedValue[item].id) {
+          case 'bitcoin': {
+            info('BTC PRICE')
+            this.setState({ BTCPrice: Number((parsedValue[item].price_usd * this.state.BTCBalance).toFixed(2)),
+              BTCHourChange: Number(parsedValue[item].percent_change_1h)})
+            info('RATES', parsedValue[item].price_usd,parsedValue[item].percent_change_1h)
+            break
+          }
+          case 'ethereum': {
+            info('ETH PRICE')
+            this.setState({ ETHPrice: Number((parsedValue[item].price_usd * this.state.ETHBalance).toFixed(2)),
+              ETHHourChange: Number(parsedValue[item].percent_change_1h)})
+            break
+          }
+          case 'litecoin': {
+            info('LTC PRICE')
+            this.setState({ LTCPrice: Number((parsedValue[item].price_usd * this.state.LTCBalance).toFixed(2)),
+              LTCHourChange: Number(parsedValue[item].percent_change_1h)})
+            break
+          }
+          }
+        }
+      })
+      let total = this.state.BTCPrice + this.state.ETHPrice + this.state.LTCPrice
+      this.setState({ totalBalance: Number((total).toFixed(8)) })
+      let totalPercentage = this.state.BTCHourChange + this.state.ETHHourChange + this.state.LTCHourChange
+      this.setState({ totalPercentage: Number((totalPercentage).toFixed(2)) })
+    })
+  }
+  getBalances() {
+    return Promise.all([getBTCBalance(),getETHBalance(), getLTCBalance()]).then(value => {
+      for (let item in value) {
+        info('SUBSTRING' + value[item][0])
+        info('VALUE OF SUB', value[item][1])
+        switch (value[item][0]) {
+        case 'BTC': {
+          info('SETTING BTC BALANCE', value[item][1])
+          this.setState({ BTCBalance:  value[item][1] })
+          info('BTC STATE', this.state.BTCBalance)
+          break
+        }
+        case 'ETH': {
+          info('SETTING ETH BALANCE', value[item][1])
+          this.setState({ ETHBalance: value[item][1] })
+          info('ETH STATE', this.state.ETHBalance)
+          break
+        }
+        case 'LTC': {
+          info('SETTING LTC BALANCE', value[item][1])
+          this.setState({ LTCBalance: value[item][1] })
+          info('LTC STATE', this.state.LTCBalance)
+          break
+        }
+        }
+      }
+    })
+  }
+      /*
       for (let val in value) {
         if (typeof(value[val]) === 'object') {
           if (Number(val) !== value.length - 1) {
@@ -475,6 +532,7 @@ export default class App extends React.Component<any, IAPPState> {
               this.setState({ LTCBalance: Number(balance.toFixed(8)) })
               break
             }
+
             }
           } else {
             const parsedRate = JSON.parse(value[val].content)
@@ -509,10 +567,12 @@ export default class App extends React.Component<any, IAPPState> {
       this.setState({ totalPercentage: Number((totalPercentage).toFixed(2)) })
     })
   }
+  */
   componentWillMount() {
     info('SETTING REDIRECT')
     this.setState({ redirect: true })
   }
+
   getTransactions() {
     return Promise.all([getBitcoinLastTx(),getLitecoinLastTx(), getEthereumLastTx()]).then(value => {
       info('PROMISE ALL VALUE',value)

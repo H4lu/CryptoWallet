@@ -52,10 +52,20 @@ export async function initLitecoinAddress() {
 
   })
 }
+function parseValueCrypto(response: webRequest.Response<string>): Array<Number | String> {
+  let parsedResponse = JSON.parse(response.content).data
+  let balance: Number = Number(parsedResponse.confirmed_balance) + Number(parsedResponse.unconfirmed_balance)
+  let arr = []
+  arr.push('LTC')
+  arr.push(balance.toFixed(8))
+  return arr
+}
+
 function setMyAddress(address: string) {
   myAddress = address
   info('MY ADDRESS LITECOIN: ' + myAddress)
 }
+
 export async function getLitecoinLastTx(): Promise<any> {
   info('CALLING LTC')
   try {
@@ -67,13 +77,14 @@ export async function getLitecoinLastTx(): Promise<any> {
     info(err)
   }
 }
+
 // const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
 
 // export const address: string = 'mhyUjiGtUvKQc5EuBAYxxE2NTojZywJ7St'
 
 // We`re Bob. Bob send`s BTC to Alice
 
-export async function getLitecoinBalance(): Promise<any> {
+export async function getLTCBalance(): Promise<Array<Number | String>> {
   /* Задаём параметры запроса
     Network - тип сети, testnet или mainnet
     address - наш адрес
@@ -84,7 +95,7 @@ export async function getLitecoinBalance(): Promise<any> {
   try {
     // Делаем запрос и отдаём в виде Promise
     const response = await webRequest.get(requestUrl)
-    return response
+    return parseValueCrypto(response)
   } catch (error) {
     Promise.reject(error).catch(error => {
       info(error)

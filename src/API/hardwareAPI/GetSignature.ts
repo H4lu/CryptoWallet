@@ -66,7 +66,7 @@ export function getSignaturePCSC(id: number, message: Array<Buffer>, address: st
     let xor = 0
     let data = Buffer.concat([amountBuf,Buffer.from(address)])
     for (let i in data) {
-      xor ^= data[i]
+      xor ^= Number(amount.toString().charCodeAt(Number(i)).toString(16))
     }
     info('XOR RESUL',xor)
     reader.transmit(Buffer.from([0xb1,0x40,Number('0x' + numberOfInputs),currencyId,message.length,amountBuf,Buffer.from(address),Number('0x' + xor)]), 4, 2, async (err, data) => {
