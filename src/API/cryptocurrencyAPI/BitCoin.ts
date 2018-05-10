@@ -1,18 +1,19 @@
-import { TransactionBuilder, networks, Transaction } from 'bitcoinjs-lib'
+import { TransactionBuilder, networks, Transaction, ECPair } from 'bitcoinjs-lib'
 import * as Request from 'request'
 import * as webRequest from 'web-request'
-import { getSignaturePCSC } from '../hardwareAPI/GetSignature'
+// import { getSignaturePCSC } from '../hardwareAPI/GetSignature'
 import { getAddressPCSC } from '../hardwareAPI/GetAddress'
 // import getAddress from '../hardwareAPI/GetAddress'
 import * as utils from './utils'
-import * as crypto from 'crypto'
+// import * as crypto from 'crypto'
 import * as satoshi from 'satoshi-bitcoin'
+import * as wif from 'wif'
 // const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
-const network = networks.bitcoin
-const NETWORK = 'BTC'
+const network = networks.testnet
+const NETWORK = 'BTCTEST'
 const rootURL = 'https://chain.so/api/v2'
-let myAddr = ''
+let myAddr = 'mvLpZMU3cavwLbUMKocpSWcjP9LF62BQMd'
 import { info } from 'electron-log'
 
 export async function getBitcoinSmartBitBalance(): Promise<webRequest.Response<string>> {
@@ -150,7 +151,7 @@ async function getLastTransactionData(): Promise<any> {
   }
 }
 
-function ReplaceAt(input: any, search: any, replace: any, start: any, end: any) {
+/* function ReplaceAt(input: any, search: any, replace: any, start: any, end: any) {
   info('FIRST SLICE:' + input.slice(0, start))
   info('SECOND SLICE ' + input.slice(start, end).replace(search, replace))
   info('THIRD SLICE: ' + input.slice(end))
@@ -158,7 +159,7 @@ function ReplaceAt(input: any, search: any, replace: any, start: any, end: any) 
       + input.slice(start, end).replace(search, replace)
       + input.slice(end)
 }
-
+*/
 async function createTransaction(paymentAdress: string,
     transactionAmount: number,transactionFee: number, redirect: any, utxos: Array<any>) {
   info(redirect)
@@ -199,9 +200,18 @@ async function createTransaction(paymentAdress: string,
     info('PROBABLY TX INPUT: ' + JSON.stringify(value))
   })
 
-  let hashArray: Array<any>
-  let lastIndex = 0
-  hashArray = []
+  let key = wif.encode(239,Buffer.from('13EBA971CA10122D00A3641E8DEF685A9C5EE5457E591B97E96022F054B626FF','hex'),true)
+  let alice = ECPair.fromWIF(key,network)
+  info('MY ADDRESS', alice.getAddress())
+  transaction.inputs.forEach((value, index) => {
+    info('THIS SIGNING INDEX',index,'and value',value)
+    transaction.sign(index,alice)
+  })
+
+  // let hashArray: Array<any>
+  // let lastIndex = 0
+  // hashArray = []
+  /*
   transaction.inputs.forEach(function(input, index) {
     info('My index: ' + index)
     info('For each')
@@ -226,6 +236,7 @@ async function createTransaction(paymentAdress: string,
   /* let startIndex = 5
   let shift = data[4] + 5
   */
+ /*
   transaction.inputs.forEach((input, index) => {
     info('Input', input)
     info('Index', index)
@@ -246,15 +257,18 @@ async function createTransaction(paymentAdress: string,
     info('DATA OF SHIFT: ' + data[shift])
     info('START INDEX: ' + startIndex)
     info('SHIFT: ' + shift)
-    */
   })
+*/
   info('UNBUILDED TX: ' + unbuildedTx)
-  info('DATA: ' + data)
-  sendTransaction(unbuildedTx, redirect)
+  // info('DATA: ' + data)
+  // transaction.addOutput(paymentAdress, transactionAmount)
+  let final = transaction.build().toHex()
+  info('FINAL', final)
+  sendTransaction(final, redirect)
   info('Final sig: ' + sig)
   // Добавляем вход транзакции в виде хэша предыдущей транзакции и номер выхода с нашим адресом
   // Добавляем выход транзакции, где указывается адрес и сумма перевода
-  transaction.addOutput(paymentAdress, transactionAmount)
+
   // Добавляем адрес для "сдачи"
   // Вычисляем хэш неподписанной транзакции
   // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
@@ -411,6 +425,14 @@ function sendTransaction(transactionHash: string) {
 */
 export function handle(paymentAdress: string, amount: number, transactionFee: number, redirect: any) {
   info('In handle')
+  // let code = 128
+  let code = 239
+  let key = wif.encode(code,Buffer.from('13EBA971CA10122D00A3641E8DEF685A9C5EE5457E591B97E96022F054B626FF','hex'),true)
+  info('GOT THIS KEY', key)
+  let alice = ECPair.fromWIF(key,network)
+  info('EC PAIR', alice)
+  info('EC PAIR', alice.toWIF())
+  info('MY ADDRESS', alice.getAddress())
   getLastTransactionData().then(Response => {
     let respData = JSON.parse(Response.content)
     info('RespData: ' + respData.data)

@@ -1,18 +1,19 @@
-import { TransactionBuilder, networks, Transaction } from 'bitcoinjs-lib'
+import { TransactionBuilder, networks, Transaction, ECPair } from 'bitcoinjs-lib'
 import * as Request from 'request'
 import * as webRequest from 'web-request'
 import * as utils from './utils'
-import * as crypto from 'crypto'
+// import * as crypto from 'crypto'
 import { getAddressPCSC } from '../hardwareAPI/GetAddress'
 // import { Transaction, TransactionBuilder, networks } from 'bitcoinjs-lib'
-import { getSignaturePCSC } from '../hardwareAPI/GetSignature'
+// import { getSignaturePCSC } from '../hardwareAPI/GetSignature'
+import * as wif from 'wif'
 import * as satoshi from 'satoshi-bitcoin'
 import { info } from 'electron-log'
-let myAddress = ''
+let myAddress = 'mvLpZMU3cavwLbUMKocpSWcjP9LF62BQMd'
 const rootURL = 'https://chain.so/api/v2'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
-const network = networks.litecoin
-const NETWORK = 'LTC'
+const network = networks.testnet
+const NETWORK = 'LTCTEST'
 export default function getAddres() {
   return myAddress
 }
@@ -121,7 +122,7 @@ async function getLastTransactionData(): Promise<any> {
   }
 }
 
-function ReplaceAt(input: any, search: any, replace: any, start: any, end: any) {
+/*function ReplaceAt(input: any, search: any, replace: any, start: any, end: any) {
   info('FIRST SLICE:' + input.slice(0, start))
   info('SECOND SLICE ' + input.slice(start, end).replace(search, replace))
   info('THIRD SLICE: ' + input.slice(end))
@@ -129,7 +130,7 @@ function ReplaceAt(input: any, search: any, replace: any, start: any, end: any) 
       + input.slice(start, end).replace(search, replace)
       + input.slice(end)
 }
-
+*/
 async function createTransaction(paymentAdress: string,
     transactionAmount: number,transactionFee: number, redirect: any, utxos: Array<any>) {
   info(redirect)
@@ -170,7 +171,7 @@ async function createTransaction(paymentAdress: string,
     info('PROBABLY TX INPUT: ' + JSON.stringify(value))
   })
 
-  let hashArray: Array<any>
+  /*let hashArray: Array<any>
   let lastIndex = 0
   hashArray = []
   transaction.inputs.forEach(function(input, index) {
@@ -194,6 +195,7 @@ async function createTransaction(paymentAdress: string,
   let startIndex = 5
   let shift = data[4] + 5
   */
+ /*
   transaction.inputs.forEach((input, index) => {
     info('Input', input)
     info('Index', index)
@@ -212,14 +214,22 @@ async function createTransaction(paymentAdress: string,
     info('START INDEX: ' + startIndex)
     info('SHIFT: ' + shift)
     */
-  })
+  // })
   info('UNBUILDED TX: ' + unbuildedTx)
-  info('DATA: ' + data)
-  sendTransaction(unbuildedTx, redirect)
+  let key = wif.encode(239,Buffer.from('13EBA971CA10122D00A3641E8DEF685A9C5EE5457E591B97E96022F054B626FF','hex'),true)
+  let alice = ECPair.fromWIF(key,network)
+  transaction.inputs.forEach((value,index) => {
+    transaction.sign(index,alice)
+    info('SIG VALUE', value)
+  })
+  // info('DATA: ' + data)
+  let final = transaction.build().toHex()
+  info('FIANL', final)
+  sendTransaction(final, redirect)
   info('Final sig: ' + sig)
   // Добавляем вход транзакции в виде хэша предыдущей транзакции и номер выхода с нашим адресом
   // Добавляем выход транзакции, где указывается адрес и сумма перевода
-  transaction.addOutput(paymentAdress, transactionAmount)
+  // transaction.addOutput(paymentAdress, transactionAmount)
   // Добавляем адрес для "сдачи"
   // Вычисляем хэш неподписанной транзакции
   // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
@@ -357,6 +367,15 @@ function sendByBlockcypher(transactionHex: string, redirect: any) {
       })
 }
 export function handleLitecoin(paymentAdress: string, amount: number, transactionFee: number, redirect: any) {
+  let code = 239
+  let code2 = 57
+  // let code = 239
+  let key = wif.encode(code,Buffer.from('13EBA971CA10122D00A3641E8DEF685A9C5EE5457E591B97E96022F054B626FF','hex'),true)
+  let key2 = wif.encode(code2,Buffer.from('13EBA971CA10122D00A3641E8DEF685A9C5EE5457E591B97E96022F054B626FF','hex'),true)
+  info('WIF KEY', key,key2)
+  let alice = ECPair.fromWIF(key, network)
+
+  info('LTC ADDRESS', alice.getAddress())
   getLastTransactionData().then(Response => {
     let respData = JSON.parse(Response.content)
     info('RespData: ' + respData.data)
