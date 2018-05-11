@@ -60,9 +60,9 @@ export function getAddressPCSC(id: number): Promise<string> {
         reject(err)
       } else {
         info('ADDRESS ANSWER', data.toString())
-        console.log('RESOLVING', data.slice(3, data.length - 2).toString())
+        console.log('RESOLVING', data.slice(3, data.length - 3).toString())
         console.log('LENGTH', data.length)
-        resolve(data.slice(0, data.length - 2).toString())
+        resolve(data.slice(0, data.length - 3).toString())
       }
     })
   })

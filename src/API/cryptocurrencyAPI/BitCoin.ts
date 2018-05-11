@@ -10,10 +10,10 @@ import * as satoshi from 'satoshi-bitcoin'
 import * as wif from 'wif'
 // const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
-const network = networks.testnet
-const NETWORK = 'BTCTEST'
+const network = networks.bitcoin
+const NETWORK = 'BTC'
 const rootURL = 'https://chain.so/api/v2'
-let myAddr = 'mvLpZMU3cavwLbUMKocpSWcjP9LF62BQMd'
+let myAddr = ''
 import { info } from 'electron-log'
 
 export async function getBitcoinSmartBitBalance(): Promise<webRequest.Response<string>> {
@@ -86,7 +86,7 @@ export async function initBitcoinAddress() {
 }
 function setMyAddress(address: string) {
   myAddr = address
-  info('MY ADDRESS BITCOIN: ' + myAddr)
+  info('MY ADDRESS BITCOIN:' + myAddr)
 }
 export default function getBitcoinAddress() {
   return myAddr

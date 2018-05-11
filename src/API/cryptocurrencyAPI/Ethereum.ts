@@ -34,7 +34,7 @@ export async function initEthereumAddress() {
         status = true
         info('status after reset', status)
         info('resolving')
-        setAddress(answer.substring(3,answer.length))
+        setAddress(answer.substring(3,answer.length).toLowerCase())
         resolve(0)
       }
     }

@@ -64,12 +64,23 @@ export function getSignaturePCSC(id: number, message: Array<Buffer>, address: st
     amountBuf.write(amount.toString(),0,amount.toString().length, 'ascii')
     info('Number of inputs:', Number('0x' + numberOfInputs))
     let xor = 0
-    let data = Buffer.concat([amountBuf,Buffer.from(address)])
+    let data: any = amount.toString() + address
     for (let i in data) {
-      xor ^= Number(amount.toString().charCodeAt(Number(i)).toString(16))
+      xor ^= data.charCodeAt(i)
+      info('XOR', xor)
+      info('XOR TO HEX', xor.toString(16))
     }
-    info('XOR RESUL',xor)
-    reader.transmit(Buffer.from([0xb1,0x40,Number('0x' + numberOfInputs),currencyId,message.length,amountBuf,Buffer.from(address),Number('0x' + xor)]), 4, 2, async (err, data) => {
+
+    info('XOR RESUL',xor.toString(16))
+    let xorBuf = Buffer.from(xor.toString(16),'hex')
+    let numberOfInputsBuf = Buffer.from(numberOfInputs.toString(16),'hex')
+    info('NUMBER OF INPUTS', numberOfInputsBuf)
+    let idBuf = Buffer.from(currencyId.toString(16),'hex')
+    info('ID BUF',idBuf)
+    let Le = Buffer.from(message.length.toString(16),'hex').length + idBuf.length + numberOfInputsBuf.length + Buffer.from(address).length + xorBuf.length
+    let LeBuf = Buffer.from(Le.toString(16),'hex')
+    info('Le',LeBuf)
+    reader.transmit(Buffer.from([0xb1,0x40,numberOfInputsBuf,idBuf,LeBuf,amountBuf,Buffer.from(address),xorBuf]), 4, 2, async (err, data) => {
       if (err) {
         info('ERROR IN FIRST MMESSAGE',err)
         reject(err)
@@ -78,7 +89,7 @@ export function getSignaturePCSC(id: number, message: Array<Buffer>, address: st
         let sigArray: Array<Buffer> = []
         info(data)
         for (let i = 0; i < numberOfInputs; i++) {
-          let answer = await sendDataMessage(Number('0x' + i), currencyId, message[i])
+          let answer = await sendDataMessage(Buffer.from(i.toString(16),'hex'), Buffer.from(currencyId.toString(16),'hex'), message[i])
           sigArray.push(answer)
         }
         resolve(sigArray)
@@ -87,11 +98,21 @@ export function getSignaturePCSC(id: number, message: Array<Buffer>, address: st
   })
 }
 
-function sendDataMessage(inputNumber: number, currencyId: number, hash: Buffer): Promise<Buffer> {
+function sendDataMessage(inputNumber: Buffer, currencyId: Buffer, hash: Buffer): Promise<Buffer> {
   info('GOT THIS INPUT NUMBER: ' + inputNumber)
   info('GOT THIS CURRENCY ID: ' + currencyId)
+  let xor = 0
+  let xorData: any = hash.toString('hex')
+  info('XOR DATA', xorData)
+  for (let i in xorData) {
+    xor ^= xorData[i].charCodeAt(0)
+    info('DATA TO XOR',xorData[i].charCodeAt(0))
+    info('XOR', xor)
+  }
+  let xorBuf = Buffer.from(xor.toString(16),'hex')
+  info('XOR BUF IN DATA MESSAGE', xorBuf)
   return new Promise((resolve, reject) => {
-    reader.transmit(Buffer.from([0xb1,0x41,inputNumber, currencyId,0x20,hash]), 110, 2, (err, data) => {
+    reader.transmit(Buffer.from([0xb1,0x41,inputNumber, currencyId,0x20,hash,xorBuf]), 110, 2, (err, data) => {
       if (err) {
         info('ERROR IN SEND HASH',err)
         reject(err)

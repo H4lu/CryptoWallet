@@ -9,11 +9,11 @@ import { getAddressPCSC } from '../hardwareAPI/GetAddress'
 import * as wif from 'wif'
 import * as satoshi from 'satoshi-bitcoin'
 import { info } from 'electron-log'
-let myAddress = 'mvLpZMU3cavwLbUMKocpSWcjP9LF62BQMd'
+let myAddress = ''
 const rootURL = 'https://chain.so/api/v2'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
-const network = networks.testnet
-const NETWORK = 'LTCTEST'
+const network = networks.litecoin
+const NETWORK = 'LTC'
 export default function getAddres() {
   return myAddress
 }

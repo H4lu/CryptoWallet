@@ -356,14 +356,13 @@ export default class App extends React.Component<any, IAPPState> {
       if (reader.name.includes('PN7462AU')) {
         info('setting')
         setReader(reader)
-        this.setState({ connection: true })
         reader.on('status', (status) => {
           info('READER STATE', reader.state)
           let changes = reader.state ^ status.state
           info(status)
           if (changes) {
             if ((changes & reader.SCARD_STATE_EMPTY) && (status.state & reader.SCARD_STATE_EMPTY)) {
-              info('derju v kurse')
+              reader.disconnect()
             } else if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
               info('card inserted')
               reader.connect({ share_mode : reader.SCARD_SHARE_SHARED }, async (err, protocol) => {
@@ -372,6 +371,7 @@ export default class App extends React.Component<any, IAPPState> {
                   info(err)
                 } else {
                   info('CONNECTED')
+                  this.setState({ connection: true })
                   this.getWalletInfo()
                   info('Protocol(', reader.name, '):', protocol)
                 }
@@ -430,7 +430,7 @@ export default class App extends React.Component<any, IAPPState> {
     info('INITING')
     if (this.state.allowInit) {
       this.setState({ allowInit: false })
-      initBitcoinAddress().then(initEthereumAddress).then(initLitecoinAddress).then(this.getBalances).then(this.getTransactions).then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)).then(() => this.setRedirectToMain()).then(this.getRates)
+      initBitcoinAddress().then(initEthereumAddress).then(initLitecoinAddress).then(this.getBalances).then(this.getTransactions).then(this.getRates).then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)).then(() => this.setRedirectToMain())
       /*initBitcoinAddress()
       .then(() => initEthereumAddress()).then(() => initLitecoinAddress()).then(() => this.setState({ status: true }))
       .then(() => this.getValues()).then(() => this.getTransactions())
@@ -487,11 +487,10 @@ export default class App extends React.Component<any, IAPPState> {
     }
   }
   getRates() {
-    return new Promise(() => {
+    return new Promise((resolve) => {
       info('IN GET RATES')
       GetCurrencyRate().then(value => {
         const parsedValue = JSON.parse(value.content)
-        info('PARSED VALUE', parsedValue)
         for (let item in parsedValue) {
           switch (parsedValue[item].id) {
           case 'bitcoin': {
@@ -525,6 +524,7 @@ export default class App extends React.Component<any, IAPPState> {
         let totalPercentage = this.state.BTCHourChange + this.state.ETHHourChange + this.state.LTCHourChange
         info('TOTAL PERCENTAGE', totalPercentage)
         this.setState({ totalPercentage: Number((totalPercentage).toFixed(2)) })
+        resolve()
       })
     })
   }
