@@ -1,6 +1,5 @@
 import { info } from 'electron-log'
 import React from 'react'
-import Transaction from 'ethereumjs-tx'
 // import { Switch, Route } from 'react-router'
 import { Route, Redirect } from 'react-router'
 import { Header } from '../components/Header'
@@ -30,8 +29,7 @@ import { setReader } from '../API/hardwareAPI/Reader'
 let pcsc = new pcsclite()
 import { getInfoPCSC } from '../API/hardwareAPI/GetWalletInfo'
 import { UpdateHWStatusPCSC } from '../API/hardwareAPI/UpdateHWStatus'
-import Web3 from 'web3'
-import { keccak256 } from 'js-sha3'
+
 // import { connect } from 'react-redux'
 /*
 SerialPort.list().then(value => {
@@ -289,36 +287,6 @@ export default class App extends React.Component<any, IAPPState> {
   }
 
   componentDidMount() {
-    const web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/hgAaKEDG9sIpNHqt8UYM'))
-    let amount = 0.000001
-    let rawtx = {
-      value: web3.utils.toHex(web3.utils.toWei(amount.toString(), 'ether')),
-      nonce: web3.utils.toHex(1221),
-      to: '0x033baF5BEdc9fFbf2190C800bfd17e073Bf79D18',
-      gasPrice: web3.utils.toHex(web3.utils.toWei('5', 'shannon')),
-      gasLimit: web3.utils.toHex(24000),
-      chainId: web3.utils.toHex(3),
-      data: '0x00',
-      v: web3.utils.toHex(3),
-      r: 0,
-      s: 0
-    }
-    let tx = new Transaction(rawtx)
-    let txHash = keccak256(tx.serialize())
-    info('SIGNATURE',web3.eth.accounts.sign(txHash,'F4A4CC6890E11FE3089E5E7CD4E76EE0AE37D6C348811703443B3623801F8534'))
-    tx.sign(Buffer.from('F4A4CC6890E11FE3089E5E7CD4E76EE0AE37D6C348811703443B3623801F8534','hex'))
-    info('SIGN THORUGH ETH_TX', tx)
-    let sig = web3.eth.accounts.signTransaction({
-      to: '0x033baF5BEdc9fFbf2190C800bfd17e073Bf79D18',
-      value: web3.utils.toHex(web3.utils.toWei(amount.toString(), 'ether')),
-      gasPrice: web3.utils.toHex(web3.utils.toWei('5', 'shannon')),
-      gas: web3.utils.toHex(24000),
-      nonce: web3.utils.toHex(1221),
-      chainId: 3
-    }, 'F4A4CC6890E11FE3089E5E7CD4E76EE0AE37D6C348811703443B3623801F8534')
-    info('SIG',sig)
-    info('R value',Object(sig)._rejectionHandler0.r)
-    info('ACCOUNT',web3.eth.accounts.privateKeyToAccount('F4A4CC6890E11FE3089E5E7CD4E76EE0AE37D6C348811703443B3623801F8534'))
     // handleLitecoin('mw3nwmeux9gEghMezCjfiepTtzXrDoFg6a',0.0002,10,this.redirectToTransactionsuccess)
     // handle('mgWZCzn4nv7noRwnbThqQ2hD2wT3YAKTJH',0.00002,10,this.redirectToTransactionsuccess())
     /*
@@ -431,7 +399,10 @@ export default class App extends React.Component<any, IAPPState> {
     info('INITING')
     if (this.state.allowInit) {
       this.setState({ allowInit: false })
-      initBitcoinAddress().then(initEthereumAddress).then(initLitecoinAddress).then(this.getBalances).then(this.getTransactions).then(this.getRates).then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)).then(() => this.setRedirectToMain()).then(() => this.setValues())
+      initBitcoinAddress().then(initEthereumAddress).then(initLitecoinAddress).then(this.getBalances).then(this.getTransactions).then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)).then(() => {
+        this.setRedirectToMain()
+        this.setValues()
+      })
       /*initBitcoinAddress()
       .then(() => initEthereumAddress()).then(() => initLitecoinAddress()).then(() => this.setState({ status: true }))
       .then(() => this.getValues()).then(() => this.getTransactions())
@@ -507,7 +478,6 @@ export default class App extends React.Component<any, IAPPState> {
             this.setState({ BTCPrice: Number((parsedValue[item].price_usd * this.state.BTCBalance).toFixed(2)),
               BTCHourChange: Number(parsedValue[item].percent_change_1h)})
             info('RATES', parsedValue[item].price_usd,parsedValue[item].percent_change_1h)
-            info()
             break
           }
           case 'ethereum': {

@@ -157,7 +157,7 @@ async function createTransaction(paymentAdress: string,
     value: transactionAmount
   }
   info('Got this utxos: ' + utxos)
-  let { inputs, outputs, fee } = coinSelect(utxos, targets, 20)
+  let { inputs, outputs, fee } = coinSelect(utxos, targets, 100)
   info('Got this inputs: ' + inputs)
       // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
   info(fee)

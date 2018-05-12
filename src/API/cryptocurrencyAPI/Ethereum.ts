@@ -144,10 +144,10 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
       nonce: web3.utils.toHex(value),
       from: myAdress,
       to: paymentAdress,
-      gasPrice: web3.utils.toHex(web3.utils.toWei('5', 'shannon')),
+      gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'shannon')),
       gasLimit: web3.utils.toHex(24000),
       chainId: web3.utils.toHex(1),
-      data: '0x',
+      data: '0x00',
       v: web3.utils.toHex(1),
       r: 0,
       s: 0
