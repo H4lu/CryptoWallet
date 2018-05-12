@@ -363,7 +363,7 @@ export default class App extends React.Component<any, IAPPState> {
           info(status)
           if (changes) {
             if ((changes & reader.SCARD_STATE_EMPTY) && (status.state & reader.SCARD_STATE_EMPTY)) {
-              reader.disconnect()
+              info('ASD')
             } else if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
               info('card inserted')
               reader.connect({ share_mode : reader.SCARD_SHARE_SHARED }, async (err, protocol) => {

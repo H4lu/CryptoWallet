@@ -374,6 +374,12 @@ function sendByBlockcypher(transactionHex: string, redirect: any) {
         info(res), info(err)
         let bodyStatus = body
         info(bodyStatus.tx.hash)
+        if (err !== null) {
+          if (err.statusMessage === 'Conflict') {
+            alert('Conflict')
+            return
+          }
+        }
         try {
           if (body.tx.confirmations === 0) {
             redirect()

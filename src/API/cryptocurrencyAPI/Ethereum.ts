@@ -2,7 +2,7 @@ import Web3 from 'web3'
 import Transaction from 'ethereumjs-tx'
 import { sig } from '../hardwareAPI/GetSignature'
 // import { PromiEvent, TransactionReceipt } from 'web3/types'
-import { keccak256 } from 'js-sha3'
+// import { keccak256 } from 'js-sha3'
 // import fs from 'fs'
 import * as webRequest from 'web-request'
 import { getAddressPCSC } from '../hardwareAPI/GetAddress'
@@ -146,9 +146,9 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
       to: paymentAdress,
       gasPrice: web3.utils.toHex(web3.utils.toWei('5', 'shannon')),
       gasLimit: web3.utils.toHex(24000),
-      chainId: web3.utils.toHex(3),
-      data: '0x00',
-      v: web3.utils.toHex(3),
+      chainId: web3.utils.toHex(1),
+      data: '0x',
+      v: web3.utils.toHex(1),
       r: 0,
       s: 0
     }
@@ -163,8 +163,8 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
     info('Transaction cost: ' + web3.utils.fromWei(txCost, 'ether'))
     info('Unsigned: ' + tx.serialize().toString('hex'))
       // Получаем хэш для подписи
-    let txHash = keccak256(tx.serialize())
-    info('Tx hash: ' + txHash.toString())
+    // let txHash = keccak256(tx.serialize())
+    // info('Tx hash: ' + txHash.toString())
       // Отправляем на подпись
     info('Pass this to amount: ' + amount)
     info('Amount type: ' + typeof(amount))
