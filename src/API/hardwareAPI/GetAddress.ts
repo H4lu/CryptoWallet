@@ -31,7 +31,17 @@ export function getREALSTATUS() {
     })
   })
 }
-
+export function getAnswer(id: Number): Promise<Buffer> {
+  return new Promise(async (resolve,reject) => {
+    reader.transmit(Buffer.concat([Buffer.from([0xB1,0x30,0x00]),Buffer.from([id]),Buffer.from([0x00])]),255,2,(err,data) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(data)
+      }
+    })
+  })
+}
 export function getAddressPCSC(id: number): Promise<string> {
   return new Promise(async (resolve, reject) => {
     let currencyId: number

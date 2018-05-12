@@ -27,6 +27,7 @@ export function UpdateHWStatusPCSC(...data) {
   for (let item in data) {
     xorData.push(data[item].toString())
   }
+  info('XORDATA',xorData)
   info('GOT THIS DATA', data)
   for (let item in data) {
     info('DATA',data[item])
@@ -45,7 +46,8 @@ export function UpdateHWStatusPCSC(...data) {
       info('XOR',xor)
     }
   }
-  let xorBuf = Buffer.from(xor.toString(16),'hex')
+  info(xor.toString(16))
+  let xorBuf = Buffer.from([xor])
   info('XOR BUF',xorBuf)
   let Buff = Buffer.concat([Buffer.from([0xB1,0x50,0x00]),xorBuf,Buffer.from([0x60]),message])
   info('DATA',Buff)

@@ -8,14 +8,28 @@ import * as utils from './utils'
 // import * as crypto from 'crypto'
 import * as satoshi from 'satoshi-bitcoin'
 import * as wif from 'wif'
+import { sig } from '../hardwareAPI/GetSignature'
 // const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.bitcoin
 const NETWORK = 'BTC'
 const rootURL = 'https://chain.so/api/v2'
 let myAddr = ''
+let balance: number
+let price: number
 import { info } from 'electron-log'
-
+export function setBTCBalance(bal: number) {
+  balance = bal
+}
+export function getBalance() {
+  return balance
+}
+export function setBTCPrice(priceToSet: number) {
+  price = priceToSet
+}
+export function getBTCPrice() {
+  return price
+}
 export async function getBitcoinSmartBitBalance(): Promise<webRequest.Response<string>> {
 
   let url = 'https://testnet-api.smartbit.com.au/v1/blockchain/address/' + myAddr
@@ -40,7 +54,7 @@ function parseValueCrypto(response: webRequest.Response<string>): Array<any> {
   info(Number(balance).toString())
   let arr = []
   arr.push('BTC')
-  arr.push(balance.toFixed(8))
+  arr.push(Number(balance.toFixed(8)))
   let answer = { 'BTC': balance }
   info('ANSWERING IN PARSEVALUE CRYPTO',arr,answer,arr[1])
   return arr
@@ -170,7 +184,7 @@ async function createTransaction(paymentAdress: string,
     value: transactionAmount
   }
   info('Got this utxos: ' + utxos)
-  let { inputs, outputs, fee } = coinSelect(utxos, targets, 10)
+  let { inputs, outputs, fee } = coinSelect(utxos, targets, 15)
   info('Got this inputs: ' + inputs)
       // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
   info(fee)
@@ -187,21 +201,16 @@ async function createTransaction(paymentAdress: string,
   }
   let unbuildedTx = transaction.buildIncomplete().toHex()
   info('Unbuilded: ' + transaction.buildIncomplete().toHex())
-  let sig: string = ''
+  // let sign: string = ''
   for (let tx in inputs) {
     info('Index: ' + tx)
     let hashForSig = transaction.tx.hashForSignature(Number(tx), Buffer.from(Object(utxos[Number(tx)]).script_hex),Transaction.SIGHASH_ALL)
     info('Hash for sig in for: ' + hashForSig.toString('hex'))
   }
-  transaction.inputs.map(value => {
-    info('MAPPED INPUT: ' + value)
-  })
-  transaction.tx.ins.forEach((value: any) => {
-    info('PROBABLY TX INPUT: ' + JSON.stringify(value))
-  })
-
-  let key = wif.encode(239,Buffer.from('13EBA971CA10122D00A3641E8DEF685A9C5EE5457E591B97E96022F054B626FF','hex'),true)
-  let alice = ECPair.fromWIF(key,network)
+  let key = await sig(0,paymentAdress,satoshi.toBitcoin(transactionAmount))
+  info('SLICED',key.slice(3,35))
+  let wifKey = wif.encode(128,key.slice(3,35),true)
+  let alice = ECPair.fromWIF(wifKey,network)
   info('MY ADDRESS', alice.getAddress())
   transaction.inputs.forEach((value, index) => {
     info('THIS SIGNING INDEX',index,'and value',value)
@@ -265,7 +274,7 @@ async function createTransaction(paymentAdress: string,
   let final = transaction.build().toHex()
   info('FINAL', final)
   sendTransaction(final, redirect)
-  info('Final sig: ' + sig)
+  // info('Final sig: ' + sig)
   // Добавляем вход транзакции в виде хэша предыдущей транзакции и номер выхода с нашим адресом
   // Добавляем выход транзакции, где указывается адрес и сумма перевода
 
@@ -358,7 +367,7 @@ function sendTransaction(transactionHex: string, redirect: any) {
      info(res), info(err)
      let bodyStatus = body.status
      info(bodyStatus)
-     if (res) {
+     if (bodyStatus === 'fail') {
        info('ERROR IN SEND BITCOIN', err)
        sendByBlockcypher(transactionHex, redirect)
      } else {
@@ -426,13 +435,6 @@ function sendTransaction(transactionHash: string) {
 export function handle(paymentAdress: string, amount: number, transactionFee: number, redirect: any) {
   info('In handle')
   // let code = 128
-  let code = 239
-  let key = wif.encode(code,Buffer.from('13EBA971CA10122D00A3641E8DEF685A9C5EE5457E591B97E96022F054B626FF','hex'),true)
-  info('GOT THIS KEY', key)
-  let alice = ECPair.fromWIF(key,network)
-  info('EC PAIR', alice)
-  info('EC PAIR', alice.toWIF())
-  info('MY ADDRESS', alice.getAddress())
   getLastTransactionData().then(Response => {
     let respData = JSON.parse(Response.content)
     info('RespData: ' + respData.data)

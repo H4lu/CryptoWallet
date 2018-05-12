@@ -2,6 +2,12 @@ import { Buffer } from 'buffer'
 // import { port } from './OpenPort'
 import { reader } from '../hardwareAPI/Reader'
 import { info } from 'electron-log'
+import { getAnswer } from './GetAddress'
+import { UpdateHWStatusPCSC } from './UpdateHWStatus'
+import { getBalance, getBTCPrice } from '../cryptocurrencyAPI/BitCoin'
+import { getETBalance, getETHPrice } from '../cryptocurrencyAPI/Ethereum'
+import { getLTalance,getLTCPrice } from '../cryptocurrencyAPI/Litecoin'
+// import { UpdateHWStatusPCSC } from './UpdateHWStatus'
 /* import * as Path from 'path'
 // declare var __dirname: string
 // let path = __dirname + './../../iTokenDLL'
@@ -42,6 +48,53 @@ export function openPort(portName: string): Promise<SerialPort> {
   })
 }
 */
+export function sig(id: number, address: string, amount: number): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    if (address.length !== 34 && id !== 1) {
+      address = address + '0'
+    }
+    let xorData: any = address + amount.toString()
+    let xor = 0
+    for (let i in xorData) {
+      xor = xor ^ xorData[i].charCodeAt(0)
+    }
+    info('FINAL XOR', xor)
+    let amountBuf = new Buffer(16)
+    amountBuf.write(amount.toString(),0,amount.toString().length, 'ascii')
+    let code = 33
+    let message = Buffer.concat([Buffer.from([0xB1,0x50,0x00]),Buffer.from([xor]),Buffer.from([0x60]),Buffer.from([code]),Buffer.from([id]),amountBuf,Buffer.from(address)])
+    info('MESSAGE TO SEND',message)
+    getAnswer(id).then(data => info(data)).catch(err => info(err))
+    reader.transmit(message, 4,2, async (err,data) => {
+      if (err) {
+        info(err)
+        reject(err)
+      } else {
+        info(data)
+        let status = false
+        let timeout = setTimeout(async () => {
+          clearTimeout(timeout)
+          while (!status) {
+            let res = await getAnswer(id)
+            info('GOT PRIVATE RESP', res)
+            info('TO HEX', res.toString('hex'))
+            info(res[35])
+            if (res[35] === 33) {
+              status = true
+              getAnswer(id).then(data => info(data)).catch(err => info(err))
+              UpdateHWStatusPCSC(getBalance(),getBTCPrice(),getETBalance(),getETHPrice(),getLTalance(),getLTCPrice())
+              resolve(res)
+            } else if (res[35] === 63) {
+              status = true
+              reject()
+            }
+          }
+        },1000 ,[])
+      }
+    })
+  })
+
+}
 export function getSignaturePCSC(id: number, message: Array<Buffer>, address: string, amount: number, numberOfInputs: number): Promise<Array<Buffer>> {
   return new Promise((resolve, reject) => {
     let currencyId: number = 0x00
@@ -72,13 +125,13 @@ export function getSignaturePCSC(id: number, message: Array<Buffer>, address: st
     }
 
     info('XOR RESUL',xor.toString(16))
-    let xorBuf = Buffer.from(xor.toString(16),'hex')
-    let numberOfInputsBuf = Buffer.from(numberOfInputs.toString(16),'hex')
+    let xorBuf = Buffer.from([xor])
+    let numberOfInputsBuf = Buffer.from([numberOfInputs])
     info('NUMBER OF INPUTS', numberOfInputsBuf)
-    let idBuf = Buffer.from(currencyId.toString(16),'hex')
+    let idBuf = Buffer.from([currencyId])
     info('ID BUF',idBuf)
-    let Le = Buffer.from(message.length.toString(16),'hex').length + idBuf.length + numberOfInputsBuf.length + Buffer.from(address).length + xorBuf.length
-    let LeBuf = Buffer.from(Le.toString(16),'hex')
+    let Le = Buffer.from(address).length + xorBuf.length + amountBuf.length
+    let LeBuf = Buffer.from([Le])
     info('Le',LeBuf)
     reader.transmit(Buffer.from([0xb1,0x40,numberOfInputsBuf,idBuf,LeBuf,amountBuf,Buffer.from(address),xorBuf]), 4, 2, async (err, data) => {
       if (err) {
@@ -89,15 +142,24 @@ export function getSignaturePCSC(id: number, message: Array<Buffer>, address: st
         let sigArray: Array<Buffer> = []
         info(data)
         for (let i = 0; i < numberOfInputs; i++) {
-          let answer = await sendDataMessage(Buffer.from(i.toString(16),'hex'), Buffer.from(currencyId.toString(16),'hex'), message[i])
+          let answer = await sendDataMessage(Buffer.from([i]), Buffer.from([currencyId]), message[i])
           sigArray.push(answer)
         }
+        sendFinalMessage()
         resolve(sigArray)
       }
     })
   })
 }
-
+function sendFinalMessage() {
+  reader.transmit(Buffer.from([0xB1,0x60,0x00,0x00,0x00]),4,2,(err,data) => {
+    if (err) {
+      info(err)
+    } else {
+      info(data)
+    }
+  })
+}
 function sendDataMessage(inputNumber: Buffer, currencyId: Buffer, hash: Buffer): Promise<Buffer> {
   info('GOT THIS INPUT NUMBER: ' + inputNumber)
   info('GOT THIS CURRENCY ID: ' + currencyId)
@@ -109,7 +171,7 @@ function sendDataMessage(inputNumber: Buffer, currencyId: Buffer, hash: Buffer):
     info('DATA TO XOR',xorData[i].charCodeAt(0))
     info('XOR', xor)
   }
-  let xorBuf = Buffer.from(xor.toString(16),'hex')
+  let xorBuf = Buffer.from([xor])
   info('XOR BUF IN DATA MESSAGE', xorBuf)
   return new Promise((resolve, reject) => {
     reader.transmit(Buffer.from([0xb1,0x41,inputNumber, currencyId,0x20,hash,xorBuf]), 110, 2, (err, data) => {

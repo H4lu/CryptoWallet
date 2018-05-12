@@ -14,9 +14,9 @@ import { ETHWIndow } from '../components/ETHWindow'
 import { LTCWindow } from '../components/LTCWindow'
 import '../components/style.css'
 import MainContent from '../components/MainContent'
-import { getBitcoinLastTx, initBitcoinAddress, getBTCBalance } from '../API/cryptocurrencyAPI/BitCoin'
-import { getLTCBalance, initLitecoinAddress, getLitecoinLastTx } from '../API/cryptocurrencyAPI/Litecoin'
-import { getETHBalance, initEthereumAddress, getEthereumLastTx, getEthereumAddress } from '../API/cryptocurrencyAPI/Ethereum'
+import { getBitcoinLastTx, initBitcoinAddress, getBTCBalance,setBTCBalance,setBTCPrice } from '../API/cryptocurrencyAPI/BitCoin'
+import { getLTCBalance, initLitecoinAddress, getLitecoinLastTx,setLTCBalance,setLTCPrice } from '../API/cryptocurrencyAPI/Litecoin'
+import { getETHBalance, initEthereumAddress, getEthereumLastTx, getEthereumAddress,setETHBalance,setETHPrice } from '../API/cryptocurrencyAPI/Ethereum'
 import GetCurrencyRate from '../core/GetCurrencyRate'
 import { SidebarNoButtons } from '../components/SidebarNoButtons'
 import { MainWindow } from '../components/MainWindow'
@@ -234,6 +234,7 @@ export default class App extends React.Component<any, IAPPState> {
     this.getWalletInfo = this.getWalletInfo.bind(this)
     this.setRedirectToMain = this.setRedirectToMain.bind(this)
     this.getRates = this.getRates.bind(this)
+    this.setValues = this.setValues.bind(this)
   }
   redirectToTransactionsuccess() {
     let self = this
@@ -430,13 +431,21 @@ export default class App extends React.Component<any, IAPPState> {
     info('INITING')
     if (this.state.allowInit) {
       this.setState({ allowInit: false })
-      initBitcoinAddress().then(initEthereumAddress).then(initLitecoinAddress).then(this.getBalances).then(this.getTransactions).then(this.getRates).then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)).then(() => this.setRedirectToMain())
+      initBitcoinAddress().then(initEthereumAddress).then(initLitecoinAddress).then(this.getBalances).then(this.getTransactions).then(this.getRates).then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)).then(() => this.setRedirectToMain()).then(() => this.setValues())
       /*initBitcoinAddress()
       .then(() => initEthereumAddress()).then(() => initLitecoinAddress()).then(() => this.setState({ status: true }))
       .then(() => this.getValues()).then(() => this.getTransactions())
       .then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice))
       */
     }
+  }
+  setValues() {
+    setBTCBalance(this.state.BTCBalance)
+    setBTCPrice(this.state.BTCPrice)
+    setETHBalance(this.state.ETHBalance)
+    setETHPrice(this.state.ETHPrice)
+    setLTCBalance(this.state.LTCBalance)
+    setLTCPrice(this.state.LTCPrice)
   }
   updateData() {
     info('REFRESHING')

@@ -1,6 +1,6 @@
 import Web3 from 'web3'
 import Transaction from 'ethereumjs-tx'
-import { getSignaturePCSC } from '../hardwareAPI/GetSignature'
+import { sig } from '../hardwareAPI/GetSignature'
 // import { PromiEvent, TransactionReceipt } from 'web3/types'
 import { keccak256 } from 'js-sha3'
 // import fs from 'fs'
@@ -20,6 +20,20 @@ info('abi ' + abi)
 */
 import Container from '../../ui/Index'
 let myAdress = ''
+let balance: number
+let price: number
+export function setETHBalance(bal: number) {
+  balance = bal
+}
+export function getETBalance() {
+  return balance
+}
+export function setETHPrice(priceToSet: number) {
+  price = priceToSet
+}
+export function getETHPrice() {
+  return price
+}
 export async function initEthereumAddress() {
   info('INITING ETH ADDRESS')
 
@@ -78,7 +92,7 @@ function parseValueCrypto(amount: number): Array<Number | String> {
   let ethValue = convertFromWei(amount)
   let arr = []
   arr.push('ETH')
-  arr.push(Number(ethValue).toFixed(8))
+  arr.push(Number(Number(ethValue).toFixed(8)))
   let answer = 'ETH' + ethValue.toString()
   info('RETURNING ETH BALANCE',answer)
   return arr
@@ -154,11 +168,9 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
       // Отправляем на подпись
     info('Pass this to amount: ' + amount)
     info('Amount type: ' + typeof(amount))
-    let hash = Buffer.from(txHash, 'hex')
-    let arr = [hash]
-    getSignaturePCSC(1,arr, paymentAdress, amount, 1).then(data => {
-      let sign = data[0]
-      info('SIGN IN ETH', sign.toString('hex'))
+    // let hash = Buffer.from(txHash, 'hex')
+    // let arr = [hash]
+    sig(1, paymentAdress, amount).then(data => {
       /*
       info('data length: ' + sign.length)
       info(web3.utils.toHex(sign[69]))
@@ -168,14 +180,16 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
       */
           // создаём объект подписи
           // cost: 600000130000000
-      let sig = {
+      /*let sig = {
         v : web3.utils.toHex(sign[69] + 10),
         r : sign.slice(5,37),
         s : sign.slice(37,69)
-      }
-      info('V in sig: ' + sig.v)
+      }*/
+      info('SIGNING BY THIS KEY', data.slice(3,35))
+      tx.sign(data.slice(3,35))
+      // info('V in sig: ' + sig.v)
           // Вставляем подпись в транзакцию
-      Object.assign(tx, sig)
+      // Object.assign(tx, sig)
           // Приводим транзакцию к нужному для отправки виду
       let serTx = '0x' + tx.serialize().toString('hex')
       info(serTx)
