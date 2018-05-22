@@ -16,7 +16,7 @@ export class MainWindow extends React.Component<any, IMainWindowState> {
   renderWalletState() {
     switch (this.props.walletStatus) {
     case 0: {
-      return <p className = 'window-main-ready'>Your Braitberry is ready for use</p>
+      return <p className = 'window-main-ready'>Your Crypto Wallet is ready for use</p>
     }
     case 1: {
       return <p className = 'window-main-not-ready'>Don`t contain SIM</p>
@@ -51,8 +51,6 @@ export class MainWindow extends React.Component<any, IMainWindowState> {
         <div className = 'main-window-flex-container'>
         <p className = 'window-main-header'>Your Safest Wallet</p>
         <img src = {LOGO_PATH} className = 'logo'/>
-        <p className = 'window-main-text'>Braitberry</p>
-
         {(this.props.connection) ? (
           this.renderWalletState()
         ) : (

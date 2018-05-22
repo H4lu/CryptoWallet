@@ -399,7 +399,7 @@ export default class App extends React.Component<any, IAPPState> {
     info('INITING')
     if (this.state.allowInit) {
       this.setState({ allowInit: false })
-      initBitcoinAddress().then(initEthereumAddress).then(initLitecoinAddress).then(this.getBalances).then(this.getTransactions).then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)).then(() => {
+      initBitcoinAddress().then(initEthereumAddress).then(initLitecoinAddress).then(this.getRates).then(this.getBalances).then(this.getTransactions).then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)).then(() => {
         this.setRedirectToMain()
         this.setValues()
       })
