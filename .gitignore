@@ -59,3 +59,4 @@ typings/
 
 # Ignore build output
 dist/
+.yarn.lock
