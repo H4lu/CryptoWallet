@@ -6,12 +6,12 @@
         "pretty": true,
         "newLine": "LF",
         "allowSyntheticDefaultImports": true,
-        "strict": true,
+        "strict": false,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "sourceMap": true,
+        "sourceMap": false,
         "skipLibCheck": true,
         "allowJs": true,
-        "jsx": "preserve"
+        "jsx": "react"
     }
 }

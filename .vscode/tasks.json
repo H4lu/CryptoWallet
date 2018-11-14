@@ -9,5 +9,13 @@
           "args": ["run", "build"],
           "isBuildCommand": true
       }
+    ],
+    "command": "npm",
+    "tasks": [
+      {
+          "taskName": "build",
+          "args": ["run", "build"],
+          "isBuildCommand": true
+      }
     ]
 }

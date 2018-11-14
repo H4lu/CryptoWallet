@@ -1,8 +1,7 @@
 import * as React from 'react'
-import { Route } from 'react-router-dom'
-import { App } from './App'
+// import { Route } from 'react-router-dom'
+// import App from './App'
 // import { TransactionComponent } from '../components/TransactionComponent'
-import { SignIn } from './SignIn'
 // import { Switch } from 'react-router';
 // import { Switch } from 'react-router';
 interface IRoutesProps {}
@@ -11,11 +10,14 @@ export class Routes extends React.Component<IRoutesProps, IRoutesState> {
   constructor(props: any) {
     super(props)
   }
-  render() {
+  /* render() {
     return(<div>
-    <Route path = '/home' component = {App} />
-    <Route path = '/login' component = { SignIn } />
+    <Route path = '/' component = {App} />
     </div>
     )
+  }
+  */
+  render() {
+    return(<div></div>)
   }
 }
