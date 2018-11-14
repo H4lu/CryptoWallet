@@ -1,5 +1,5 @@
 import * as path from 'path'
-export const LOGO_PATH = path.resolve(__dirname, './static/logo.svg')
+export const LOGO_PATH = path.resolve(__dirname, './static/backgroundStart.svg')
 export const USB_ON_PATH = path.resolve(__dirname, 'static/i_usb_connection_on.svg')
 export const USB_OFF_PATH = path.resolve(__dirname, 'static/i_usb_connection_off.svg')
 export const BITCOIN_PATH = path.resolve(__dirname, 'static/bitcoin.svg')

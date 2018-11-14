@@ -1,6 +1,6 @@
 import React from 'react'
 import { Redirect } from 'react-router'
-import { LOGO_PATH } from '../core/paths'
+/*import { LOGO_PATH } from '../core/paths'*/
 interface IMainWindowState {
   redirect: boolean
 }
@@ -50,7 +50,7 @@ export class MainWindow extends React.Component<any, IMainWindowState> {
         <div className = 'window-main'>
         <div className = 'main-window-flex-container'>
         <p className = 'window-main-header'>Your Safest Wallet</p>
-        <img src = {LOGO_PATH} className = 'logo'/>
+        {/*<img src = {LOGO_PATH} className = 'logo'/>*/}
         {(this.props.connection) ? (
           this.renderWalletState()
         ) : (

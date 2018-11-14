@@ -12,7 +12,7 @@ ipcMain.on('hide', () => {
   mainWindow.minimize()
 })
 app.on('ready', () => {
-  mainWindow = new BrowserWindow({ width: 1024, height: 720, resizable: false,
+  mainWindow = new BrowserWindow({ width: 1366, height: 768, resizable: false,
     fullscreen: false, frame: false })
   mainWindow.loadURL(`file:///${__dirname}/index.html`)
   setupLogger()
