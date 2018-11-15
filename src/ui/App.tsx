@@ -146,6 +146,7 @@ export default class App extends React.Component<any, IAPPState> {
       path: '/main',
       exact: true,
       sidebar: () => <SidebarContent total = {this.state.totalBalance} refresh = {this.updateData} totalPercent = {this.state.totalPercentage}/>,
+      sidebarLeft: () => <SidebarContent total = {this.state.totalBalance} refresh = {this.updateData} totalPercent = {this.state.totalPercentage}/>,
       main: () => <MainContent btcBalance = {this.state.BTCBalance} ltcBalance = {this.state.LTCBalance} ethBalance = {this.state.ETHBalance}
       btcPrice = {this.state.BTCPrice} ltcPrice = {this.state.LTCPrice} ethPrice = {this.state.ETHPrice} btcHourChange = {this.state.BTCHourChange}
       ltcHourChange = {this.state.LTCHourChange} ethHourChange = {this.state.ETHHourChange} lastTx = {this.state.BTCLastTx.concat(this.state.ETHLastTx, this.state.LTCLastTx).sort((a: any, b: any) => {
@@ -158,6 +159,7 @@ export default class App extends React.Component<any, IAPPState> {
       path: '/btc-window',
       exact: true,
       sidebar: () => <SidebarNoButtons total = {this.state.totalBalance} totalPercent = {this.state.totalPercentage}/>,
+        sidebarLeft: () => <SidebarContent total = {this.state.totalBalance} refresh = {this.updateData} totalPercent = {this.state.totalPercentage}/>,
       main: () => <BTCWindow balance = {this.state.BTCBalance} price = {this.state.BTCPrice} hourChange = {this.state.BTCHourChange} lastTx = {this.state.BTCLastTx.sort((a: any, b: any) => {
         let c = new Date(a.Date).getTime()
         let d = new Date(b.Date).getTime()
@@ -168,6 +170,7 @@ export default class App extends React.Component<any, IAPPState> {
       path: '/eth-window',
       exact: true,
       sidebar: () => <SidebarNoButtons total = {this.state.totalBalance} totalPercent = {this.state.totalPercentage}/>,
+        sidebarLeft: () => <SidebarContent total = {this.state.totalBalance} refresh = {this.updateData} totalPercent = {this.state.totalPercentage}/>,
       main: () => <ETHWIndow balance = {this.state.ETHBalance} price = {this.state.ETHPrice} hourChange = {this.state.ETHHourChange} lastTx = {this.state.ETHLastTx.sort((a: any, b: any) => {
         let c = new Date(a.Date).getTime()
         let d = new Date(b.Date).getTime()
@@ -178,6 +181,7 @@ export default class App extends React.Component<any, IAPPState> {
       path: '/ltc-window',
       exact: true,
       sidebar: () => <SidebarNoButtons total = {this.state.totalBalance} totalPercent = {this.state.totalPercentage}/>,
+        sidebarLeft: () => <SidebarContent total = {this.state.totalBalance} refresh = {this.updateData} totalPercent = {this.state.totalPercentage}/>,
       main: () => <LTCWindow balance = {this.state.LTCBalance} price = {this.state.LTCPrice} hourChange = {this.state.LTCHourChange} lastTx = {this.state.LTCLastTx.sort((a: any, b: any) => {
         let c = new Date(a.Date).getTime()
         let d = new Date(b.Date).getTime()
@@ -730,9 +734,12 @@ export default class App extends React.Component<any, IAPPState> {
     return returnedObject
   }
   render() {
+      let container: string = (this.state.redirectToMain === true) ? 'container' : 'main_container'
     return(
-      <div className = 'container'>
-        <Header/>
+        <div>
+            <Header/>
+      <div className = {container}>
+
         {(this.state.redirect) ? (
           <Redirect to = '/start'/>
         ) : (
@@ -744,7 +751,7 @@ export default class App extends React.Component<any, IAPPState> {
           null
         )}
         <Route path = '/transaction_success' component = {() => <TransactionSuccess refresh = {this.updateData} resetState = {this.redirectToTransactionsuccess}/> }/>
-        <Route path = '/start' component = {() => <MainWindow connection = {this.state.connection} status = {this.state.status} init = {this.initAll} isInitialized = {this.state.isInitialized} walletStatus = {this.state.walletStatus} redirectToMain = {this.state.redirectToMain}/> }/>
+        <Route path = '/start' component = {() => <MainWindow connection = {true}/*{this.state.connection}*/ status = {true}/*{this.state.status}*/ init = {true}/*{this.initAll}*/ isInitialized = {true}/*{this.state.isInitialized}*/ walletStatus = {true}/*{this.state.walletStatus}*/ redirectToMain = {true}/*{this.state.redirectToMain}*//> }/>
          {this.routes.map((route, index) => (
           <Route
             exact = {route.exact}
@@ -761,8 +768,17 @@ export default class App extends React.Component<any, IAPPState> {
             component= {route.main}
           />
         ))}
+          {this.routes.map((route, index) => (
+              <Route
+                  exact = {route.exact}
+                  key = {index}
+                  path={route.path}
+                  component= {route.sidebarLeft}
+              />
+          ))}
        
       </div>
+        </div>
     )
   }
 }
