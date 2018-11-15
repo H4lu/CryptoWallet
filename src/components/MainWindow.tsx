@@ -47,16 +47,8 @@ export class MainWindow extends React.Component<any, IMainWindowState> {
 
     // <img src = '../static/logo.svg'/>
     return(
-        <div className = 'window-main'>
-        <div className = 'main-window-flex-container'>
-        <p className = 'window-main-header'>Your Safest Wallet</p>
-        {/*<img src = {LOGO_PATH} className = 'logo'/>*/}
-        {(this.props.connection) ? (
-          this.renderWalletState()
-        ) : (
-          <p className = 'window-main-not-ready'>USB-cable is not connected</p>
-        )}
-        </div>
+        <div className = 'background-start'>
+   
       </div>
     )
   }

@@ -1,9 +1,8 @@
 import { info } from 'electron-log'
 import React from 'react'
+import { Header } from '../components/Header'
 // import { Switch, Route } from 'react-router'
 import { Route, Redirect } from 'react-router'
-import { Header } from '../components/Header'
-import { Footer } from '../components/Footer'
 import { SidebarContent } from '../components/SidebarContent'
 // import { ERC20 } from '../components/ERC20'
 // import {Main} from '../components/Main'
@@ -762,7 +761,7 @@ export default class App extends React.Component<any, IAPPState> {
             component= {route.main}
           />
         ))}
-        <Footer status = {this.state.status} connection = {this.state.connection}/>
+       
       </div>
     )
   }
