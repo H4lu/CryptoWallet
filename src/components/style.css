@@ -65,7 +65,7 @@
 .sidebar {
   margin-right: 24px;
   margin-left: 12px;
-
+  order: 3;
   width: 22%;
 }
 
@@ -73,10 +73,25 @@
 .sidebarLeft {
   margin-right: 12px;
   margin-left: 12px;
-
+  order: 1;
   width: 22%;
 }
 
 .main{
   width: 56%;
+  order: 2;
+}
+
+.but_home{
+  background: url('file://../../../static/home_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 42px;
+  width: 42px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  margin-right: 2px;
+  margin-left: 2px;
+}
+.but_home:hover{
+  background: url('file://../../../static/home_a.svg') no-repeat center;
 }
