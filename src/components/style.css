@@ -90,7 +90,7 @@
   border: 0px solid black;
   height: 42px;
   width: 42px;
-  margin-top: 104px;
+  margin-top: 133px;
   margin-right: 20px;
   margin-left: 20px;
   order: 1;
@@ -168,7 +168,106 @@
 .but_menu:hover{
   background: url('file://../../../static/menu_a.svg') no-repeat center;
 }
+
+
+.main_container{
+  display: flex;
+}
+.currency-block{
+  order: 1;
+}
+.vert{
+  display: flex;
+  flex-direction: column;
+}
+.currencies-header{
+  order: 1;
+  margin-top: 66px;
+  margin-left: 10px;
+  font-family: Lato;
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.82);
+  opacity: 75%;
+}
+.cryptocurrency{
+  order: 2;
+}
+.Block_explorer{
+  order: 3;
+}
+.cryptocurrency_flex{
+  display: flex;
+}
+.column_1{
+  order: 1;
+}
+.column_2{
+  order: 2;
+}
+.column_BTC_ETH{
+  display: flex;
+  flex-direction: column;
+}
+.but_BTC {
+  order: 1;
+}
+.img_BTC{
+  background: url('file://../../../static/but_BTC.svg') no-repeat center;
+  border: 0px solid black;
+  height: 150px;
+  width: 230px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.but_ETH {
+  order: 1;
+}
+.img_ETH{
+  background: url('file://../../../static/but_ETH.svg') no-repeat center;
+  border: 0px solid black;
+  height: 150px;
+  width: 230px;
+  margin-top: 0px;
+  margin-left: 10px;
+}
+.column_LTC_XPR{
+  display: flex;
+  flex-direction: column;
+}
+
+.but_LTC {
+  order: 1;
+}
+.img_LTC{
+  background: url('file://../../../static/but_LTC.svg') no-repeat center;
+  border: 0px solid black;
+  height: 150px;
+  width: 230px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.but_XRP {
+  order: 1;
+}
+.img_XRP{
+  background: url('file://../../../static/but_XRP.svg') no-repeat center;
+  border: 0px solid black;
+  height: 150px;
+  width: 230px;
+  margin-top: 0px;
+  margin-left: 10px;
+}
+
+.transaction_info{
+  order: 2;
+}
+
 body, html {
   height: 100vh;
   margin: 0;
+}
+button {
+  outline: none;
 }
