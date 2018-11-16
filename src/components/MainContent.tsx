@@ -82,9 +82,7 @@ class MainContent extends React.Component<any, any> {
                 </div>
             </Link>
            </div>
-           <hr/>
           </div>
-         <Table data = {this.props.lastTx} type = 'normal'/>
         </div>
       </div>
     )

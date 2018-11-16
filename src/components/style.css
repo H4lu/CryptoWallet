@@ -71,10 +71,13 @@
 
 
 .sidebarLeft {
-  margin-right: 12px;
-  margin-left: 12px;
   order: 1;
-  width: 22%;
+  width: 82px;
+}
+
+.nav-buttons-Left{
+  display: flex;
+  flex-direction: column;
 }
 
 .main{
@@ -87,11 +90,81 @@
   border: 0px solid black;
   height: 42px;
   width: 42px;
-  margin-top: 2px;
-  margin-bottom: 2px;
-  margin-right: 2px;
-  margin-left: 2px;
+  margin-top: 104px;
+  margin-right: 20px;
+  margin-left: 20px;
+  order: 1;
 }
 .but_home:hover{
   background: url('file://../../../static/home_a.svg') no-repeat center;
+}
+
+.but_pay{
+  background: url('file://../../../static/pay_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 42px;
+  width: 42px;
+  margin-top: 32px;
+  margin-right: 20px;
+  margin-left: 20px;
+  order: 2;
+}
+.but_pay:hover{
+  background: url('file://../../../static/pay_a.svg') no-repeat center;
+}
+
+.but_refresh{
+  background: url('file://../../../static/refresh_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 42px;
+  width: 42px;
+  margin-top: 76px;
+  margin-right: 20px;
+  margin-left: 20px;
+  order: 3;
+}
+.but_refresh:hover{
+  background: url('file://../../../static/refresh_a.svg') no-repeat center;
+}
+
+.but_exchange{
+  background: url('file://../../../static/exchange_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 42px;
+  width: 42px;
+  margin-top: 76px;
+  margin-right: 20px;
+  margin-left: 20px;
+  order: 4;
+}
+.but_exchange:hover{
+  background: url('file://../../../static/exchange_a.svg') no-repeat center;
+}
+
+.but_info{
+  background: url('file://../../../static/info_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 42px;
+  width: 42px;
+  margin-top: 76px;
+  margin-right: 20px;
+  margin-left: 20px;
+  order: 5;
+}
+.but_info:hover{
+  background: url('file://../../../static/info_a.svg') no-repeat center;
+}
+
+.but_menu{
+  background: url('file://../../../static/menu_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 42px;
+  width: 42px;
+  margin-top: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+  order: 6;
+}
+.but_menu:hover{
+  background: url('file://../../../static/menu_a.svg') no-repeat center;
 }
