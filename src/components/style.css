@@ -168,3 +168,7 @@
 .but_menu:hover{
   background: url('file://../../../static/menu_a.svg') no-repeat center;
 }
+body, html {
+  height: 100vh;
+  margin: 0;
+}
