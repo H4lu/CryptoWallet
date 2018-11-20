@@ -10,8 +10,10 @@ import {SidebarContent} from '../components/SidebarContent'
 import {BTCWindow} from '../components/BTCWindow'
 import {ETHWIndow} from '../components/ETHWindow'
 import {LTCWindow} from '../components/LTCWindow'
+
 import '../components/style.css'
 import MainContent from '../components/MainContent'
+import { CarouselHOC } from '../components/CarouselHOC'
 import {
     getBitcoinLastTx,
     initBitcoinAddress,
@@ -186,6 +188,14 @@ export default class App extends React.Component<any, IAPPState> {
                                          return d - c
                                      })} transactions={this.getTransactions}/>
         },
+{
+       path: '/currency-carousel',
+        exact: true,
+        sidebar: () => <SidebarNoButtons total={this.state.totalBalance}
+                                        totalPercent={this.state.totalPercentage}/>,
+        sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
+        main: () => <CarouselHOC/>
+        },  
         {
             path: '/btc-window',
             exact: true,

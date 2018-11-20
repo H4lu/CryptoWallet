@@ -486,3 +486,29 @@ body, html {
 button {
   outline: none;
 }
+
+/* .ico_btc img{
+  src: url("file://../../../static/icon_BTC.svg");
+  width: 100%;
+  display: block;
+}
+.ico_eth img {
+  src: url("file://../../../static/icon_ETH.svg");
+  width: 100%;
+  display: block;
+} */
+.carousel-container {
+   width: 80vh !important;
+   border: none !important;
+   outline: 0 !important;
+}
+.carousel-container:active {
+
+  border: none !important;
+  outline: 0 !important;
+}
+.carousel-container:focus {
+
+  border: none !important;
+  outline: 0 !important;
+}
