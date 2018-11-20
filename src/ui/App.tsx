@@ -144,7 +144,8 @@ interface IAPPState {
     totalPercentage: number,
     isInitialized: boolean,
     walletStatus: number,
-    redirectToMain: boolean
+    redirectToMain: boolean,
+    stateTransaction: string
 }
 
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
@@ -169,12 +170,16 @@ export default class App extends React.Component<any, IAPPState> {
             exact: true,
             sidebar: () => <SidebarContent total={this.state.totalBalance} refresh={this.updateData}
                                            totalPercent={this.state.totalPercentage}/>,
-            sidebarLeft: () => <SidebarLeft/>,
+            sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
             main: () => <MainContent btcBalance={this.state.BTCBalance} ltcBalance={this.state.LTCBalance}
-                                     ethBalance={this.state.ETHBalance}
+                                     ethBalance={this.state.ETHBalance} total={this.state.totalBalance}
                                      btcPrice={this.state.BTCPrice} ltcPrice={this.state.LTCPrice}
                                      ethPrice={this.state.ETHPrice} btcHourChange={this.state.BTCHourChange}
                                      ltcHourChange={this.state.LTCHourChange} ethHourChange={this.state.ETHHourChange}
+                                     updateStateBTC = {this.setStateTransBTC}
+                                     updateStateETH = {this.setStateTransETH}
+                                     updateStateLTC = {this.setStateTransLTC}
+                                     updateStateXRP = {this.setStateTransXRP}
                                      lastTx={this.state.BTCLastTx.concat(this.state.ETHLastTx, this.state.LTCLastTx).sort((a: any, b: any) => {
                                          let c = new Date(a.Date).getTime()
                                          let d = new Date(b.Date).getTime()
@@ -186,9 +191,9 @@ export default class App extends React.Component<any, IAPPState> {
             exact: true,
             sidebar: () => <SidebarNoButtons total={this.state.totalBalance}
                                              totalPercent={this.state.totalPercentage}/>,
-            sidebarLeft: () => <SidebarLeft/>,
+            sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
             main: () => <BTCWindow balance={this.state.BTCBalance} price={this.state.BTCPrice}
-                                   hourChange={this.state.BTCHourChange}
+                                   hourChange={this.state.BTCHourChange} pathState={this.state.stateTransaction}
                                    lastTx={this.state.BTCLastTx.sort((a: any, b: any) => {
                                        let c = new Date(a.Date).getTime()
                                        let d = new Date(b.Date).getTime()
@@ -201,7 +206,7 @@ export default class App extends React.Component<any, IAPPState> {
             exact: true,
             sidebar: () => <SidebarNoButtons total={this.state.totalBalance}
                                              totalPercent={this.state.totalPercentage}/>,
-            sidebarLeft: () => <SidebarLeft/>,
+            sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
             main: () => <ETHWIndow balance={this.state.ETHBalance} price={this.state.ETHPrice}
                                    hourChange={this.state.ETHHourChange}
                                    lastTx={this.state.ETHLastTx.sort((a: any, b: any) => {
@@ -215,7 +220,7 @@ export default class App extends React.Component<any, IAPPState> {
             exact: true,
             sidebar: () => <SidebarNoButtons total={this.state.totalBalance}
                                              totalPercent={this.state.totalPercentage}/>,
-            sidebarLeft: () => <SidebarLeft/>,
+            sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
             main: () => <LTCWindow balance={this.state.LTCBalance} price={this.state.LTCPrice}
                                    hourChange={this.state.LTCHourChange}
                                    lastTx={this.state.LTCLastTx.sort((a: any, b: any) => {
@@ -231,13 +236,13 @@ export default class App extends React.Component<any, IAPPState> {
         super(props)
 
         this.state = {
-            BTCBalance: 0,
-            ETHBalance: 0,
-            LTCBalance: 0,
-            BTCPrice: 0,
-            ETHPrice: 0,
-            LTCPrice: 0,
-            totalBalance: 0,
+            BTCBalance: 0.00,
+            ETHBalance: 0.00,
+            LTCBalance: 0.00,
+            BTCPrice: 0.00,
+            ETHPrice: 0.00,
+            LTCPrice: 0.00,
+            totalBalance: 0.00,
             BTCHourChange: 0,
             LTCHourChange: 0,
             ETHHourChange: 0,
@@ -253,7 +258,8 @@ export default class App extends React.Component<any, IAPPState> {
             totalPercentage: 0,
             isInitialized: false,
             walletStatus: 3,
-            redirectToMain: false
+            redirectToMain: false,
+            stateTransaction: '/btc-window'
         }
         this.resetRedirect = this.resetRedirect.bind(this)
         this.redirectToTransactionsuccess = this.redirectToTransactionsuccess.bind(this)
@@ -274,6 +280,27 @@ export default class App extends React.Component<any, IAPPState> {
         this.setRedirectToMain = this.setRedirectToMain.bind(this)
         this.getRates = this.getRates.bind(this)
         this.setValues = this.setValues.bind(this)
+        this.setStateTransBTC = this.setStateTransBTC.bind(this)
+        this.setStateTransETH = this.setStateTransETH.bind(this)
+        this.setStateTransLTC = this.setStateTransLTC.bind(this)
+        this.setStateTransXRP = this.setStateTransXRP.bind(this)
+    }
+
+    setStateTransBTC(){
+          this.setState({stateTransaction: '/btc-window'} )
+        console.log(this.state.stateTransaction)
+    }
+    setStateTransETH(){
+        this.setState({stateTransaction: '/eth-window'} )
+        console.log(this.state.stateTransaction)
+    }
+    setStateTransLTC(){
+        this.setState({stateTransaction: '/ltc-window'} )
+        console.log(this.state.stateTransaction)
+    }
+    setStateTransXRP(){
+        this.setState({stateTransaction: '/btc-window'} )
+        console.log(this.state.stateTransaction)
     }
 
     redirectToTransactionsuccess() {
@@ -491,6 +518,8 @@ export default class App extends React.Component<any, IAPPState> {
             }
         }
     }
+
+
 
     addUnconfirmedTx(currency: string, amount: number, address: string, hash: string) {
         let currentDate = new Date()

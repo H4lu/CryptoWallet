@@ -14,6 +14,8 @@ interface IBTCWindowState {
 }
 
 export class BTCWindow extends React.Component<any, IBTCWindowState> {
+    icoClass = ['icoBTC', 'icoETH', 'icoLTC', 'icoXRP']
+    centr: number
   constructor(props: any) {
     super(props)
 
@@ -29,7 +31,26 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
       amount: 0,
       fee: 0
     }
+    switch (this.props.pathState) {
+        case '/btc-window': {
+            this.centr = 0
+            break
+        }
+        case '/eth-window': {
+            this.centr = 1
+            break
+        }
+        case '/ltc-window': {
+            this.centr = 2
+            break
+        }
+        case '/xrp-window': {
+            this.centr = 3
+            break
+        }
+    }
   }
+
   componentWillMount() {
     this.setState({ qrcodeAddress: CreateQR(this.state.address) })
     // this.props.transactions()
@@ -54,7 +75,15 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
     console.log('PROPS IN BTCWINDOW', this.props.balance)
     return (
       <div className = 'main'>
-        <div className = 'main-content'>
+        <div className = 'main-content_pay'>
+          <div className='karusel'>
+              <div className={this.icoClass[(4 + this.centr - 2)%4]} id = 'm2'/>
+              <div className={this.icoClass[(4 + this.centr - 1)%4]} id = 'm1'/>
+              <div className={this.icoClass[this.centr]} id = 'c0'/>
+              <div className={this.icoClass[(this.centr + 1)%4]} id = 'p1'/>
+              <div className={this.icoClass[(this.centr + 2)%4]} id = 'p2'/>
+          </div>
+
           <div className = 'currency-content'>
             <div className = 'currency-block-container'>
               <div className = 'currency-block-card'>

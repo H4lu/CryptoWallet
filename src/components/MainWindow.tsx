@@ -1,6 +1,5 @@
 import React from 'react'
 import { Redirect } from 'react-router'
-/*import { LOGO_PATH } from '../core/paths'*/
 interface IMainWindowState {
   redirect: boolean
 }
