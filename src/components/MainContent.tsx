@@ -51,7 +51,6 @@ class MainContent extends React.Component<any, any> {
     }
     updateStateTransXRP(){
         this.props.updateStateXRP()
-        this.props.updateStateLTC()
         this.classBTC = 'img_BTC'
         this.classETH = 'img_ETH'
         this.classLTC = 'img_LTC'

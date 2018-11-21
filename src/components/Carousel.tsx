@@ -14,13 +14,14 @@ export class Carousel extends React.Component<any, any> {
         return(
             <div>
 
-                <Coverflow width={1000}
-                height={400}
+                <Coverflow width={1080}
+                height={106}
                 clickable = {true}
-                displayQuantityOfSide={2}
+                displayQuantityOfSide={4}
                 navigation={false}
                 enableHeading={false}
-                active={0}
+                active={3}
+                otherFigureScale={0.7}
               
             >{/* TODO: map from currency list from HOC(App.tsx or CarouselHOC) */}
 

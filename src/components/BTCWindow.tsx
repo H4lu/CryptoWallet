@@ -81,7 +81,7 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
               <div className={this.icoClass[(4 + this.centr - 1)%4]} id = 'm1'/>
               <div className={this.icoClass[this.centr]} id = 'c0'/>
               <div className={this.icoClass[(this.centr + 1)%4]} id = 'p1'/>
-              <div className={this.icoClass[(this.centr + 2)%4]} id = 'p2'/>
+              <div className={this.icoClass[(this.centr + 2)%4]} id = 'p2'/>/
           </div>
 
           <div className = 'currency-content'>
