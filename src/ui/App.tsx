@@ -1,4 +1,4 @@
-import {info} from 'electron-log'
+import {info, log} from 'electron-log'
 import React from 'react'
 import {Header} from '../components/Header'
 // import { Switch, Route } from 'react-router'
@@ -147,7 +147,8 @@ interface IAPPState {
     isInitialized: boolean,
     walletStatus: number,
     redirectToMain: boolean,
-    stateTransaction: string
+    stateTransaction: string,
+    activeCurrency: number
 }
 
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
@@ -182,6 +183,9 @@ export default class App extends React.Component<any, IAPPState> {
                                      updateStateETH = {this.setStateTransETH}
                                      updateStateLTC = {this.setStateTransLTC}
                                      updateStateXRP = {this.setStateTransXRP}
+                                     setActiveCurrency = {this.setActiveCurrency}
+                                     getActiveCurrency = {this.getActiveCurrency}
+                                
                                      lastTx={this.state.BTCLastTx.concat(this.state.ETHLastTx, this.state.LTCLastTx).sort((a: any, b: any) => {
                                          let c = new Date(a.Date).getTime()
                                          let d = new Date(b.Date).getTime()
@@ -194,7 +198,8 @@ export default class App extends React.Component<any, IAPPState> {
         sidebar: () => <SidebarNoButtons total={this.state.totalBalance}
                                         totalPercent={this.state.totalPercentage}/>,
         sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
-        main: () => <CarouselHOC/>
+        main: () => <CarouselHOC   setActiveCurrency = {this.setActiveCurrency}
+        getActiveCurrency = {this.getActiveCurrency} activeCurrency = {this.state.activeCurrency}/>
         },  
         {
             path: '/btc-window',
@@ -269,7 +274,8 @@ export default class App extends React.Component<any, IAPPState> {
             isInitialized: false,
             walletStatus: 3,
             redirectToMain: false,
-            stateTransaction: '/btc-window'
+            stateTransaction: '/btc-window',
+            activeCurrency: 1
         }
         this.resetRedirect = this.resetRedirect.bind(this)
         this.redirectToTransactionsuccess = this.redirectToTransactionsuccess.bind(this)
@@ -294,6 +300,51 @@ export default class App extends React.Component<any, IAPPState> {
         this.setStateTransETH = this.setStateTransETH.bind(this)
         this.setStateTransLTC = this.setStateTransLTC.bind(this)
         this.setStateTransXRP = this.setStateTransXRP.bind(this)
+        this.getActiveCurrency = this.getActiveCurrency.bind(this)
+        this.setActiveCurrency = this.setActiveCurrency.bind(this)
+    }
+    getActiveCurrency(): string {
+        log("GET ACTIVE CURRENCY")
+        switch(this.state.activeCurrency) {
+            case 1: {
+                return "BTC"
+            }
+            case 2: {
+                return "ETH"
+            }
+            case 3: {
+                return "LTC"
+            }
+            case 4: {
+                return "XRP"
+            }
+        }
+
+    }
+    setActiveCurrency(currency: string) {
+        log("Setting active currency + " + currency)
+        switch(currency) {
+            case 'BTC': {
+                log("Setting active currency BTC ")
+                this.setState({ activeCurrency: 1 })
+                break
+            }
+            case 'ETH': {
+                log("Setting active currency ETH ")
+                this.setState({ activeCurrency: 2 })
+                break
+            }
+            case 'LTC': {
+                log("Setting active currency LTC ")
+                this.setState({ activeCurrency: 3 })
+                break
+            }
+            case 'XRP': {
+                log("Setting active currency XRP ")
+                this.setState({ activeCurrency: 4 })
+                break
+            }
+        }
     }
 
     setStateTransBTC(){
