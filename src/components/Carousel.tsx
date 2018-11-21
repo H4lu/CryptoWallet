@@ -5,7 +5,7 @@ import { BTC_ICON, LTC_ICON, XRP_ICON } from "../core/paths"
 import CarouselElement from './CarouselElement'
 import Coverflow from "../../react-coverflow.js"
 export class Carousel extends React.Component<any, any> {
-    
+
     constructor(props: any) {
         super(props)
 
@@ -18,7 +18,7 @@ export class Carousel extends React.Component<any, any> {
         return(
             <div>
                 <Coverflow width={1000}
-                height={400}
+                height={106}
                 clickable = {true}
                 displayQuantityOfSide={4}
                 navigation={false}
@@ -30,6 +30,7 @@ export class Carousel extends React.Component<any, any> {
                 <CarouselElement currencyName = "LTC" onClicked = {() => this.props.setActiveCurrency("LTC")} />
                 <CarouselElement currencyName = "XRP" onClicked = {() => this.props.setActiveCurrency("XRP")} />
             </Coverflow>
+
         </div>
 
         )

@@ -487,16 +487,6 @@ button {
   outline: none;
 }
 
-/* .ico_btc img{
-  src: url("file://../../../static/icon_BTC.svg");
-  width: 100%;
-  display: block;
-}
-.ico_eth img {
-  src: url("file://../../../static/icon_ETH.svg");
-  width: 100%;
-  display: block;
-} */
 .carousel-container {
    width: 80vh !important;
    border: none !important;
@@ -511,4 +501,28 @@ button {
 
   border: none !important;
   outline: 0 !important;
+}
+.currencyName{
+  margin-top: 55px;
+  text-align: center;
+  font-family: Lato;
+  font-size: 42px;
+  color: rgba(255, 255, 255, 0.75);
+  opacity: 75%;
+}
+.currencyCryptoBalance{
+  margin-top: 15px;
+  text-align: center;
+  font-family: Lato;
+  font-size: 23px;
+  color: rgba(255, 255, 255, 0.75);
+  opacity: 75%;
+}
+.currencyFiatBalance{
+  margin-top: 15px;
+  text-align: center;
+  font-family: Lato;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.75);
+  opacity: 75%;
 }

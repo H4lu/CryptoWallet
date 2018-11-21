@@ -88,7 +88,9 @@ export default class MainContent extends React.Component<any, any> {
     }
     updateStateTransXRP(){
         this.props.updateStateXRP()
+
         this.props.setActiveCurrency("XRP")
+
         this.classBTC = 'img_BTC'
         this.classETH = 'img_ETH'
         this.classLTC = 'img_LTC'

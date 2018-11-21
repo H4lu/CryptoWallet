@@ -42,7 +42,7 @@ export default class CarouselElement extends React.Component<ICarouselProps, any
              
                 <img
                     src = {this.currency}
-                    style={{ display: 'block', width: '100%' }}
+                    style={{ display: 'block', width: '50%' }}
                     onClick = {() => this.props.onClicked()}/>
             </div>
 

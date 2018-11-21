@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Carousel } from './Carousel'
 import { log } from 'electron-log'
+import {CarouselDesc} from "./CarouselDesc";
 
 export class CarouselHOC extends React.Component<any, any> {
     constructor(props: any) {
@@ -40,13 +41,12 @@ export class CarouselHOC extends React.Component<any, any> {
             case "LTC": {
                 return 3
             }
-            case "ETH": {
+            case "XRP": {
                 return 4
             }
     }
 }
     mapProps() {
-       
         switch(this.props.getActiveCurrency) {
             case "BTC": {
                 this.setState({ activeCurrency: 1})
@@ -60,7 +60,7 @@ export class CarouselHOC extends React.Component<any, any> {
                 this.setState({ activeCurrency: 3})
                 break
             }
-            case "ETH": {
+            case "XRP": {
                 this.setState({ activeCurrency: 4})
                 break
             }
@@ -70,6 +70,9 @@ export class CarouselHOC extends React.Component<any, any> {
         return(
             <div>
                 <Carousel onClicked = {this.chooseActiveCurrency} getActiveCurrency = {this.props.getActiveCurrency} setActiveCurrency = {this.props.setActiveCurrency} activeCurrency = {this.state.activeCurrency}/>
+                <CarouselDesc activeCurrency = {this.props.activeCurrency} getActiveCurrency = {this.props.getActiveCurrency}
+                              btcBalance={this.props.btcBalance} ltcBalance={this.props.ltcBalance} ethBalance={this.props.ethBalance}
+                              btcPrice={this.props.btcPrice} ltcPrice={this.props.ltcPrice} ethPrice={this.props.ethPrice}/>
             </div>
         )
     }

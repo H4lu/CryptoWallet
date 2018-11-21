@@ -199,7 +199,9 @@ export default class App extends React.Component<any, IAPPState> {
                                         totalPercent={this.state.totalPercentage}/>,
         sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
         main: () => <CarouselHOC   setActiveCurrency = {this.setActiveCurrency}
-        getActiveCurrency = {this.getActiveCurrency} activeCurrency = {this.state.activeCurrency}/>
+        getActiveCurrency = {this.getActiveCurrency} activeCurrency = {this.state.activeCurrency}
+        btcBalance={this.state.BTCBalance} ltcBalance={this.state.LTCBalance} ethBalance={this.state.ETHBalance}
+        btcPrice={this.state.BTCPrice} ltcPrice={this.state.LTCPrice} ethPrice={this.state.ETHPrice}/>
         },  
         {
             path: '/btc-window',
