@@ -1,9 +1,9 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 import {Table} from './Table'
-import {connect} from 'react-redux'
+import { log } from 'electron-log'
 
-class MainContent extends React.Component<any, any> {
+export default class MainContent extends React.Component<any, any> {
     classBTC : string;
     classETH : string;
     classLTC : string;
@@ -28,35 +28,75 @@ class MainContent extends React.Component<any, any> {
     handleClick() {
         this.props.refresh()
     }
+    componentDidMount() {//TODO maybe avoid implicit call of updateState<curr_name> 
+        let activeCurrency: string = this.props.getActiveCurrency()
+        log("ACtive currency: " + activeCurrency)
+        switch(activeCurrency) {
+            case "BTC":{
+                log("IN active currency btc")
+                this.updateStateTransBTC()
+                break
+            }
+            case "ETH":{
+                log("IN active currency eth")
+                this.updateStateTransETH()
+                break
+            }
+            case "LTC":{
+                log("IN active currency ltc")
+                this.updateStateTransLTC()
+                break
+            }
+            case "XRP":{
+                log("IN active currency xrp")
+                this.updateStateTransXRP()
+                break
+            }
+        }
+
+    }
     updateStateTransBTC(){
         this.props.updateStateBTC()
+        this.props.setActiveCurrency("BTC")
         this.classBTC = 'click_img_BTC'
         this.classETH = 'img_ETH'
         this.classLTC = 'img_LTC'
         this.classXRP = 'img_XRP'
+  
+
     }
+  
     updateStateTransETH(){
         this.props.updateStateETH()
+        this.props.setActiveCurrency("ETH")
         this.classBTC = 'img_BTC'
         this.classETH = 'click_img_ETH'
         this.classLTC = 'img_LTC'
         this.classXRP = 'img_XRP'
+    
+
     }
     updateStateTransLTC(){
         this.props.updateStateLTC()
+        this.props.setActiveCurrency("LTC")
         this.classBTC = 'img_BTC'
         this.classETH = 'img_ETH'
         this.classLTC = 'click_img_LTC'
         this.classXRP = 'img_XRP'
+      
+     
     }
     updateStateTransXRP(){
         this.props.updateStateXRP()
+        this.props.setActiveCurrency("XRP")
         this.classBTC = 'img_BTC'
         this.classETH = 'img_ETH'
         this.classLTC = 'img_LTC'
         this.classXRP = 'click_img_XRP'
+      
     }
 
+  
     render() {
         return (
             <div className='main'>
@@ -128,15 +168,5 @@ class MainContent extends React.Component<any, any> {
     }
 }
 
-function mapStateToProps(state: any, IMainContentProps) {
-    console.log('MY STATE: ' + state)
-    console.log(state)
-    console.log(JSON.stringify(state))
-    console.log(IMainContentProps)
-    console.log('BALANCE STATE: ' + state.getBalance)
-    return {
-        balance: state.getBalance
-    }
-}
 
-export default connect(mapStateToProps)(MainContent)
+

@@ -8,32 +8,28 @@ export class Carousel extends React.Component<any, any> {
     
     constructor(props: any) {
         super(props)
+
+   
     }
 
+
+   
     render() {
         return(
             <div>
-
-                <Coverflow width={1080}
-                height={106}
+                <Coverflow width={1000}
+                height={400}
                 clickable = {true}
                 displayQuantityOfSide={4}
                 navigation={false}
                 enableHeading={false}
-                active={3}
-                otherFigureScale={0.7}
-              
+                active={this.props.activeCurrency}
             >{/* TODO: map from currency list from HOC(App.tsx or CarouselHOC) */}
-
-                <CarouselElement currencyName = "BTC" onClicked = {() => { log("BTC CLICKED!") }} />
-                <CarouselElement currencyName = "LTC" onClicked = {() => { log("LTC CLICKED!") }} />
-                <CarouselElement currencyName = "ETH" onClicked = {() => { log("ETH CLICKED!") }} />
-                <CarouselElement currencyName = "XRP" onClicked = {() => { log("XRP CLICKED!") }} />
-                
-                
-        
+                <CarouselElement currencyName = "BTC" onClicked = {() => this.props.setActiveCurrency("BTC")} />
+                <CarouselElement currencyName = "ETH" onClicked = {() => this.props.setActiveCurrency("ETH")} />
+                <CarouselElement currencyName = "LTC" onClicked = {() => this.props.setActiveCurrency("LTC")} />
+                <CarouselElement currencyName = "XRP" onClicked = {() => this.props.setActiveCurrency("XRP")} />
             </Coverflow>
-
         </div>
 
         )
