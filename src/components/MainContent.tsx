@@ -17,6 +17,7 @@ export default class MainContent extends React.Component<any, any> {
         this.updateStateTransETH = this.updateStateTransETH.bind(this)
         this.updateStateTransLTC = this.updateStateTransLTC.bind(this)
         this.updateStateTransXRP = this.updateStateTransXRP.bind(this)
+        this.handleUpdateDataClick = this.handleUpdateDataClick.bind(this)
 
         this.classBTC = 'click_img_BTC'
         this.classETH = 'img_ETH'
@@ -24,6 +25,10 @@ export default class MainContent extends React.Component<any, any> {
         this.classXRP = 'img_XRP'
     }
 
+
+handleUpdateDataClick() {
+    this.props.refresh()
+}
 
     handleClick() {
         this.props.refresh()
@@ -155,7 +160,12 @@ export default class MainContent extends React.Component<any, any> {
                     </div>
                     <div className='transaction_info'>
                         <div className='tran_cur_info'>
-                            <p className='overwiew'>Overview</p>
+                            <div className='overwiewUpdate'>
+                                <div className='overwiewUpdateFlex'>
+                                      <div className='overwiew'>Overview</div>
+                                      <div className='update' onClick = {this.handleUpdateDataClick}/>
+                                </div>
+                            </div>
                             <div className='current_balance'>
                                 <p className='num_transaction'>0</p>
                                 <p className='general_usd_balance'>{this.props.total}</p>

@@ -66,7 +66,7 @@
   margin-right: 24px;
   margin-left: 12px;
   order: 3;
-  width: 204px;
+  width: 334px;
 }
 
 
@@ -81,7 +81,7 @@
 }
 
 .main{
-  width: 1080px;
+  width: 950px;
   order: 2;
 }
 
@@ -364,22 +364,41 @@
   display: flex;
   flex-direction: column;
 }
-.overwiew{
+.overwiewUpdate{
   order: 1;
   margin-top: 66px;
   margin-left: 20px;
+}
+.overwiewUpdateFlex{
+  display: flex;
+  flex-direction: row;
+}
+.overwiew{
+  order: 1;
   font-family: Lato;
   font-size: 22px;
   color: rgba(255, 255, 255, 0.82);
   opacity: 75%;
 }
+.update{
+  order: 2;
+  background: url('file://../../../static/but_update_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 22px;
+  width: 22px;
+  margin-left: 280px;
+}
+.update:hover {
+  background: url('file://../../../static/but_update_a.svg') no-repeat center;
+}
+
 .current_balance{
   order: 2;
   background: url('file://../../../static/tr_cur_bal.svg') no-repeat center;
   border: 0px solid black;
   height: 235px;
   width: 401px;
-  margin-top: -4px;
+  margin-top: 18px;
   margin-left: 20px;
   opacity: 42%;
 }
@@ -409,74 +428,16 @@
   margin-left: 20px;
   opacity: 42%;
 }
-
-.main-content_pay{
+.windowPay{
+  width: 950px;
+}
+.payWindow{
   background: url('file://../../../static/Rectangle.svg') no-repeat center;
   border: 0px solid black;
   height: 612px;
   width: 894px;
   margin-top: 66px;
   margin-left: 10px;
-}
-
-.karusel{
-  display: flex;
-}
-.icoBTC{
-  background: url('file://../../../static/icon_BTC.svg') no-repeat center;
-}
-.icoETH{
-  background: url('file://../../../static/icon_ETH.svg') no-repeat center;
-}
-.icoLTC{
-  background: url('file://../../../static/icon_LTC.svg') no-repeat center;
-}
-.icoXRP{
-  background: url('file://../../../static/icon_XRP.svg') no-repeat center;
-}
-#m2{
-  order: 1;
-  border: 0px solid black;
-  height: 42px;
-  width: 42px;
-  margin-top: 138px;
-  margin-left: 60px;
-  opacity: 40%;
-}
-#m1{
-  order: 2;
-  border: 0px solid black;
-  height: 74px;
-  width: 74px;
-  margin-top: 122px;
-  margin-left: 10px;
-  opacity: 70%;
-}
-#c0{
-  order: 3;
-  border: 0px solid black;
-  height: 106px;
-  width: 106px;
-  margin-top: 106px;
-  margin-left: 10px;
-}
-#p1{
-  order: 4;
-  border: 0px solid black;
-  height: 74px;
-  width: 74px;
-  margin-top: 122px;
-  margin-left: 10px;
-  opacity: 70%;
-}
-#p2{
-  order: 5;
-  border: 0px solid black;
-  height: 42px;
-  width: 42px;
-  margin-top: 138px;
-  margin-left: 10px;
-  opacity: 40%;
 }
 
 body, html {
@@ -525,4 +486,78 @@ button {
   font-size: 15px;
   color: rgba(255, 255, 255, 0.75);
   opacity: 75%;
+}
+
+.sendCurrencybutton{
+  background: url('file://../../../static/buttonSend_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 38px;
+  width: 147px;
+  margin-top: 25px;
+  margin-left: 295px;
+}
+.recieveCurrencybutton{
+  background: url('file://../../../static/buttonRecieve_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 38px;
+  width: 147px;
+  margin-top: 25px;
+  margin-left: 12px;
+}
+.sendCurrencybutton:hover {
+  background: url('file://../../../static/buttonSend_a.svg') no-repeat center;
+}
+.recieveCurrencybutton:hover {
+  background: url('file://../../../static/buttonRecieve_a.svg') no-repeat center;
+}
+
+.sidebar-content{
+  display: flex;
+  flex-direction: column;
+}
+.headerSidebar{
+  order: 1;
+  margin-top: 60px;
+
+  margin-left: 10px;
+}
+.headerSidebarFlex{
+  display: flex;
+}
+.Notifications{
+  order: 1;
+  margin-top: 0px;
+  font-family: Lato;
+  font-size: 28px;
+  color: rgba(255, 255, 255, 0.82);
+  opacity: 75%;
+}
+.NotificationsNumber{
+  order: 2;
+  background: url('file://../../../static/numNotif.svg') no-repeat center;
+  border: 0px solid black;
+  height: 24px;
+  width: 21px;
+  margin-top: 0px;
+  margin-left: 5px;
+}
+.CloseNotifications{
+  order: 3;
+  padding-top: 10px;
+  padding-bottom: -10px;
+  margin-left: 70px;
+  font-family: Lato;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.61);
+  opacity: 70%;
+}
+
+.notificationContent{
+  order: 2;
+  background: url('file://../../../static/notificationsGroup.svg') no-repeat center;
+  border: 0px solid black;
+  height: 637px;
+  width: 312px;
+  margin-top: 0px;
+  margin-left: 10px;
 }

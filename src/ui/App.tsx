@@ -171,8 +171,7 @@ export default class App extends React.Component<any, IAPPState> {
         {
             path: '/main',
             exact: true,
-            sidebar: () => <SidebarContent total={this.state.totalBalance} refresh={this.updateData}
-                                           totalPercent={this.state.totalPercentage}/>,
+            sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
             main: () => <MainContent btcBalance={this.state.BTCBalance} ltcBalance={this.state.LTCBalance}
                                      ethBalance={this.state.ETHBalance} total={this.state.totalBalance}
@@ -190,24 +189,24 @@ export default class App extends React.Component<any, IAPPState> {
                                          let c = new Date(a.Date).getTime()
                                          let d = new Date(b.Date).getTime()
                                          return d - c
-                                     })} transactions={this.getTransactions}/>
+                                     })} transactions={this.getTransactions}
+                                     refresh={this.updateData}/>
         },
 {
        path: '/currency-carousel',
         exact: true,
-        sidebar: () => <SidebarNoButtons total={this.state.totalBalance}
-                                        totalPercent={this.state.totalPercentage}/>,
+        sidebar: () => <SidebarContent/>,
         sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
         main: () => <CarouselHOC   setActiveCurrency = {this.setActiveCurrency}
         getActiveCurrency = {this.getActiveCurrency} activeCurrency = {this.state.activeCurrency}
         btcBalance={this.state.BTCBalance} ltcBalance={this.state.LTCBalance} ethBalance={this.state.ETHBalance}
-        btcPrice={this.state.BTCPrice} ltcPrice={this.state.LTCPrice} ethPrice={this.state.ETHPrice}/>
+        btcPrice={this.state.BTCPrice} ltcPrice={this.state.LTCPrice} ethPrice={this.state.ETHPrice}
+                                   />
         },  
         {
             path: '/btc-window',
             exact: true,
-            sidebar: () => <SidebarNoButtons total={this.state.totalBalance}
-                                             totalPercent={this.state.totalPercentage}/>,
+            sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
             main: () => <BTCWindow balance={this.state.BTCBalance} price={this.state.BTCPrice}
                                    hourChange={this.state.BTCHourChange} pathState={this.state.stateTransaction}
@@ -221,8 +220,7 @@ export default class App extends React.Component<any, IAPPState> {
         {
             path: '/eth-window',
             exact: true,
-            sidebar: () => <SidebarNoButtons total={this.state.totalBalance}
-                                             totalPercent={this.state.totalPercentage}/>,
+            sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
             main: () => <ETHWIndow balance={this.state.ETHBalance} price={this.state.ETHPrice}
                                    hourChange={this.state.ETHHourChange}
@@ -235,8 +233,7 @@ export default class App extends React.Component<any, IAPPState> {
         {
             path: '/ltc-window',
             exact: true,
-            sidebar: () => <SidebarNoButtons total={this.state.totalBalance}
-                                             totalPercent={this.state.totalPercentage}/>,
+            sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
             main: () => <LTCWindow balance={this.state.LTCBalance} price={this.state.LTCPrice}
                                    hourChange={this.state.LTCHourChange}
