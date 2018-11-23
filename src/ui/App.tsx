@@ -51,6 +51,8 @@ let pcsc = new pcsclite()
 import {getInfoPCSC} from '../API/hardwareAPI/GetWalletInfo'
 import {UpdateHWStatusPCSC} from '../API/hardwareAPI/UpdateHWStatus'
 import {SidebarLeft} from "../components/SidebarLeft";
+import {BtcRecieveWindow} from "../components/BtcRecieveWindow";
+import {BtcSendWindow} from "../components/BtcSendWindow";
 
 // import { connect } from 'react-redux'
 /*
@@ -148,7 +150,8 @@ interface IAPPState {
     walletStatus: number,
     redirectToMain: boolean,
     stateTransaction: string,
-    activeCurrency: number
+    activeCurrency: number,
+    BTCCourse: number
 }
 
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
@@ -200,9 +203,20 @@ export default class App extends React.Component<any, IAPPState> {
         main: () => <CarouselHOC   setActiveCurrency = {this.setActiveCurrency}
         getActiveCurrency = {this.getActiveCurrency} activeCurrency = {this.state.activeCurrency}
         btcBalance={this.state.BTCBalance} ltcBalance={this.state.LTCBalance} ethBalance={this.state.ETHBalance}
-        btcPrice={this.state.BTCPrice} ltcPrice={this.state.LTCPrice} ethPrice={this.state.ETHPrice}
-                                   />
-        },  
+        btcPrice={this.state.BTCPrice} ltcPrice={this.state.LTCPrice} ethPrice={this.state.ETHPrice}                                   />
+        },
+        {path: '/btc-window-send',
+            exact: true,
+            sidebar: () => <SidebarContent/>,
+            sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
+            main: () => <BtcSendWindow course = {this.state.BTCCourse} btcBalance={this.state.BTCBalance}/>
+        },
+        {path: '/btc-window-recieve',
+            exact: true,
+            sidebar: () => <SidebarContent/>,
+            sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
+            main: () => <BtcRecieveWindow/>
+        },
         {
             path: '/btc-window',
             exact: true,
@@ -274,7 +288,8 @@ export default class App extends React.Component<any, IAPPState> {
             walletStatus: 3,
             redirectToMain: false,
             stateTransaction: '/btc-window',
-            activeCurrency: 1
+            activeCurrency: 1,
+            BTCCourse: 0
         }
         this.resetRedirect = this.resetRedirect.bind(this)
         this.redirectToTransactionsuccess = this.redirectToTransactionsuccess.bind(this)
@@ -420,6 +435,8 @@ export default class App extends React.Component<any, IAPPState> {
     }
 
     componentDidMount() {
+
+        this.getRates()
         // handleLitecoin('mw3nwmeux9gEghMezCjfiepTtzXrDoFg6a',0.0002,10,this.redirectToTransactionsuccess)
         // handle('mgWZCzn4nv7noRwnbThqQ2hD2wT3YAKTJH',0.00002,10,this.redirectToTransactionsuccess())
         /*
@@ -613,12 +630,14 @@ export default class App extends React.Component<any, IAPPState> {
             info('IN GET RATES')
             GetCurrencyRate().then(value => {
                 const parsedValue = JSON.parse(value.content)
+                info(parsedValue)
                 for (let item in parsedValue) {
                     switch (parsedValue[item].id) {
                         case 'bitcoin': {
                             info('BTC PRICE')
                             this.setState({
                                 BTCPrice: Number((parsedValue[item].price_usd * this.state.BTCBalance).toFixed(2)),
+                                BTCCourse: Number(parsedValue[item].price_usd),
                                 BTCHourChange: Number(parsedValue[item].percent_change_1h)
                             })
                             info('RATES', parsedValue[item].price_usd, parsedValue[item].percent_change_1h)

@@ -23,6 +23,7 @@ export default class MainContent extends React.Component<any, any> {
         this.classETH = 'img_ETH'
         this.classLTC = 'img_LTC'
         this.classXRP = 'img_XRP'
+
     }
 
 

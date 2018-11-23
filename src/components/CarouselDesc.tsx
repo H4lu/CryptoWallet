@@ -21,8 +21,8 @@ export class CarouselDesc extends React.Component<any, any> {
                 this.currencyName = 'Bitcoin'
                 this.cryptoBalans = this.props.btcBalance.toString() + '  BTC'
                 this.fiatBalance = this.props.btcPrice.toString()
-                this.pathSend = '/btc-window'
-                this.pathRecive = '/btc-window'
+                this.pathSend = '/btc-window-send'
+                this.pathRecive = '/btc-window-recieve'
                 break
             }
             case 2: {

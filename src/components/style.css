@@ -561,3 +561,168 @@ button {
   margin-top: 0px;
   margin-left: 10px;
 }
+.rectangleSR{
+  background: url('file://../../../static/rectangleSR.svg') no-repeat center;
+  border: 0px solid black;
+  height: 535px;
+  width: 612px;
+  margin-top: 30px;
+  margin-left: 169px;
+  padding-top: 80px;
+}
+.iconCryptoCurrency{
+  background: url('file://../../../static/icon_BTC.svg') no-repeat center;
+  border: 0px solid black;
+  height: 106px;
+  width: 106px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-top: 20px;
+  margin-bottom: 0px;
+  margin-left: 253px;
+}
+.blockSendTransactionAddress{
+  display: flex;
+  margin-top: 0px;
+  margin-left: 50px;
+}
+.iconQr{
+  order: 1;
+  background: url('file://../../../static/icon_QR.svg') no-repeat center;
+  border: 0px solid black;
+  height: 58px;
+  width: 58px;
+  margin-top: 20px;
+  margin-left: 0px;
+}
+.payment_address{
+  order: 2;
+  margin-top: 26px;
+  margin-left: 20px;
+  border: 0px solid black;
+  font-family: Lato;
+  font-weight: bold;
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.31);
+  opacity: 70%;
+  background-color: rgba(0,0,0, 0.31);
+  height: 44px;
+  width: 418px;
+}
+.payment_address:focus{
+  outline: none;
+  border: none;
+}
+
+.blockSendTransactionSum{
+  display: flex;
+  margin-top: 10px;
+  margin-left: 50px;
+}
+.iconSum{
+  order: 1;
+  background: url('file://../../../static/icon_Sum.svg') no-repeat center;
+  border: 0px solid black;
+  height: 58px;
+  width: 58px;
+  margin-top: 28px;
+  margin-left: 0px;
+}
+.poleSum{
+  order: 2;
+  margin-top: 15px;
+  margin-left: 20px;
+  background: url('file://../../../static/fonSendBTC.svg') no-repeat center;
+  border: 0px solid black;
+  height: 89px;
+  width: 419px;
+}
+.payment_sum{
+  margin-top: 0px;
+  margin-left: 9px;
+  border: 0px solid black;
+  font-family: Lato;
+  font-weight: bold;
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(0,0,0,0);
+  height: 44px;
+  width: 418px;
+}
+.payment_sum:focus{
+  outline: none;
+  border: none;
+}
+.payment_sumUSD{
+  margin-top: 5px;
+  margin-left: 9px;
+  border: 0px solid black;
+  font-family: Lato;
+  font-weight: bold;
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(0,0,0,0);
+  height: 44px;
+  width: 418px;
+}
+.blockFee{
+  display: flex;
+  margin-top: 20px;
+}
+.text_Transaction_fee{
+  order: 1;
+  margin-left: 130px;
+  margin-top: 0px;
+  border: 0px solid black;
+  font-family: Lato;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+.sum_Transaction_fee{
+  order: 2;
+  margin-left: 180px;
+  margin-top: 0px;
+  border: 0px solid black;
+  font-family: Lato;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+}
+.NameCrypto_Transaction_fee{
+  order: 3;
+  margin-left: 3px;
+  margin-top: 0px;
+  border: 0px solid black;
+  font-family: Lato;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+}
+.USD_icon{
+  order: 4;
+  margin-left: 15px;
+  margin-top: 0px;
+  border: 0px solid black;
+  font-family: Lato;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+.USD_Transaction_fee{
+  order: 5;
+  margin-top: 0px;
+  border: 0px solid black;
+  font-family: Lato;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+.blockBalance{
+  display: flex;
+  margin-top: 0px;
+}
+.sum_Transaction_balance{
+  order: 2;
+  margin-left: 218px;
+  margin-top: 0px;
+  border: 0px solid black;
+  font-family: Lato;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+}
