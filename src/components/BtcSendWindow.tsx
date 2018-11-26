@@ -1,10 +1,11 @@
 import * as React from 'react'
 import getBitcoinAddress from "../API/cryptocurrencyAPI/BitCoin";
 import {log} from "electron-log";
+import {sendTransaction} from "../core/SendTransaction";
+import {Link} from "react-router-dom";
 
 interface IBTCSendState {
     address: string,
-    qrcodeAddress: string,
     paymentAddress: string,
     amount: number,
     usd: number,
@@ -17,9 +18,9 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
     constructor(props: any) {
         super(props)
 
+        this.props.stateSR(true)
         this.state = {
             address: getBitcoinAddress(),
-            qrcodeAddress: '',
             paymentAddress: '',
             amount: 0,
             fee: 0.00005,
@@ -29,7 +30,8 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
         }
         this.handleAddressChange = this.handleAddressChange.bind(this)
         this.handleAmountChange = this.handleAmountChange.bind(this)
-        this.setState({balanceUSD: (this.props.btcBalance*this.props.course)})
+        this.setState({balanceUSD: (this.props.btcBalance * this.props.course)})
+        this.handleClick = this.handleClick.bind(this)
 
     }
 
@@ -39,9 +41,13 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
 
     handleAmountChange(e: any) {
         this.setState({amount: e.target.value})
-        this.setState({usd:(e.target.value*this.props.course)})
-        this.setState({feeUSD:(this.state.fee*this.props.course)})
+        this.setState({usd: (e.target.value * this.props.course)})
+        this.setState({feeUSD: (this.state.fee * this.props.course)})
         log(this.props.course)
+    }
+
+    handleClick() {
+        sendTransaction('bitcoin', this.state.paymentAddress, this.state.amount, this.state.fee, this.props.redirect)
     }
 
     render() {
@@ -76,7 +82,16 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
                         <p className='USD_icon'>{'$'}</p>
                         <p className='USD_Transaction_fee'>{(this.state.balanceUSD).toFixed(2)}</p>
                     </div>
-                    /*To Do Button send Cancel*/
+                    <div className='buttonSendCancelFlex'>
+                        <div className='buttonSendBig'>
+                            <button type='submit' className='button-send-transaction' onClick={this.handleClick}/>
+                        </div>
+                        <div className='buttonCancelBig'>
+                            <Link to={'/currency-carousel'}>
+                                <div className='button-cancel-transaction'/>
+                            </Link>
+                        </div>
+                    </div>
                 </div>
             </div>
         )

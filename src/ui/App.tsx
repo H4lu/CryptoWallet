@@ -53,6 +53,7 @@ import {UpdateHWStatusPCSC} from '../API/hardwareAPI/UpdateHWStatus'
 import {SidebarLeft} from "../components/SidebarLeft";
 import {BtcRecieveWindow} from "../components/BtcRecieveWindow";
 import {BtcSendWindow} from "../components/BtcSendWindow";
+import {SidebarLeftBlur} from "../components/SidebarLeftBlur";
 
 // import { connect } from 'react-redux'
 /*
@@ -151,7 +152,8 @@ interface IAPPState {
     redirectToMain: boolean,
     stateTransaction: string,
     activeCurrency: number,
-    BTCCourse: number
+    BTCCourse: number,
+    SR: boolean
 }
 
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
@@ -193,7 +195,7 @@ export default class App extends React.Component<any, IAPPState> {
                                          let d = new Date(b.Date).getTime()
                                          return d - c
                                      })} transactions={this.getTransactions}
-                                     refresh={this.updateData}/>
+                                     refresh={this.updateData} stateSR ={this.setStateSR}/>
         },
 {
        path: '/currency-carousel',
@@ -203,19 +205,20 @@ export default class App extends React.Component<any, IAPPState> {
         main: () => <CarouselHOC   setActiveCurrency = {this.setActiveCurrency}
         getActiveCurrency = {this.getActiveCurrency} activeCurrency = {this.state.activeCurrency}
         btcBalance={this.state.BTCBalance} ltcBalance={this.state.LTCBalance} ethBalance={this.state.ETHBalance}
-        btcPrice={this.state.BTCPrice} ltcPrice={this.state.LTCPrice} ethPrice={this.state.ETHPrice}                                   />
+        btcPrice={this.state.BTCPrice} ltcPrice={this.state.LTCPrice} ethPrice={this.state.ETHPrice} stateSR ={this.setStateSR}
+        />
         },
         {path: '/btc-window-send',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
-            main: () => <BtcSendWindow course = {this.state.BTCCourse} btcBalance={this.state.BTCBalance}/>
+            sidebarLeft: () => <SidebarLeftBlur/>,
+            main: () => <BtcSendWindow stateSR ={this.setStateSR} course = {this.state.BTCCourse} btcBalance={this.state.BTCBalance} sr ={this.setStateSR}/>
         },
         {path: '/btc-window-recieve',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
-            main: () => <BtcRecieveWindow/>
+            sidebarLeft: () => <SidebarLeft  refresh={this.updateData} pathState={this.state.stateTransaction}/>,
+            main: () => <BtcRecieveWindow stateSR ={this.setStateSR}/>
         },
         {
             path: '/btc-window',
@@ -289,7 +292,8 @@ export default class App extends React.Component<any, IAPPState> {
             redirectToMain: false,
             stateTransaction: '/btc-window',
             activeCurrency: 1,
-            BTCCourse: 0
+            BTCCourse: 0,
+            SR: false
         }
         this.resetRedirect = this.resetRedirect.bind(this)
         this.redirectToTransactionsuccess = this.redirectToTransactionsuccess.bind(this)
@@ -316,6 +320,7 @@ export default class App extends React.Component<any, IAPPState> {
         this.setStateTransXRP = this.setStateTransXRP.bind(this)
         this.getActiveCurrency = this.getActiveCurrency.bind(this)
         this.setActiveCurrency = this.setActiveCurrency.bind(this)
+        this.setStateSR = this.setStateSR.bind(this)
     }
     getActiveCurrency(): string {
         log("GET ACTIVE CURRENCY")
@@ -361,6 +366,9 @@ export default class App extends React.Component<any, IAPPState> {
         }
     }
 
+    setStateSR(sr:boolean){
+        this.setState({SR:sr})
+    }
     setStateTransBTC(){
           this.setState({stateTransaction: '/btc-window'} )
         console.log(this.state.stateTransaction)
@@ -909,10 +917,12 @@ export default class App extends React.Component<any, IAPPState> {
 
     render() {
         let container: string = (this.state.redirectToMain === true) ? 'container' : 'main_container'
+        if(this.state.SR) container = 'main_container_blur'
         return (
-            <div>
+            <div className='blackBackground'>
                 <Header/>
                 <div className={container}>
+
 
                     {(this.state.redirect) ? (
                         <Redirect to='/start'/>
@@ -941,14 +951,7 @@ export default class App extends React.Component<any, IAPPState> {
                         />
                     ))}
 
-                    {this.routes.map((route, index) => (
-                        <Route
-                            key={index}
-                            exact={route.exact}
-                            path={route.path}
-                            component={route.main}
-                        />
-                    ))}
+
 
                     {this.routes.map((route, index) => (
                         <Route
@@ -959,6 +962,17 @@ export default class App extends React.Component<any, IAPPState> {
                         />
                     ))}
                 </div>
+
+            <div className = 'containerData'>
+                {this.routes.map((route, index) => (
+                    <Route
+                        key={index}
+                        exact={route.exact}
+                        path={route.path}
+                        component={route.main}
+                    />
+                ))}
+            </div>
             </div>
         )
     }

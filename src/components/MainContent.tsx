@@ -12,6 +12,7 @@ export default class MainContent extends React.Component<any, any> {
     constructor(props: any) {
         super(props)
 
+        this.props.stateSR(false)
         this.handleClick = this.handleClick.bind(this)
         this.updateStateTransBTC = this.updateStateTransBTC.bind(this)
         this.updateStateTransETH = this.updateStateTransETH.bind(this)

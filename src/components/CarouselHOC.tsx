@@ -6,6 +6,7 @@ import {CarouselDesc} from "./CarouselDesc";
 export class CarouselHOC extends React.Component<any, any> {
     constructor(props: any) {
         super(props)
+        this.props.stateSR(false)
         this.getActive = this.getActive.bind(this)
         this.state = {
             activeCurrency:this.props.activeCurrency,
