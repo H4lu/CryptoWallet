@@ -29,24 +29,24 @@ export class CarouselDesc extends React.Component<any, any> {
                 this.currencyName = 'Etereum'
                 this.cryptoBalans = this.props.ethBalance.toString() + '  ETH'
                 this.fiatBalance = this.props.ethPrice.toString()
-                this.pathSend = '/eth-window'
-                this.pathRecive = '/eth-window'
+                this.pathSend = '/eth-window-send'
+                this.pathRecive = '/eth-window-recieve'
                 break
             }
             case 3: {
                 this.currencyName = 'Litecoin'
                 this.cryptoBalans = this.props.ltcBalance.toString() + '  LTC'
                 this.fiatBalance = this.props.ltcPrice.toString()
-                this.pathSend = '/ltc-window'
-                this.pathRecive = '/ltc-window'
+                this.pathSend = '/ltc-window-send'
+                this.pathRecive = '/ltc-window-recieve'
                 break
             }
             case 4: {
                 this.currencyName = 'Ripple'
                 this.cryptoBalans = this.props.btcBalance.toString() + '  XRP'
                 this.fiatBalance = this.props.btcPrice.toString()
-                this.pathSend = '/btc-window'
-                this.pathRecive = '/btc-window'
+                this.pathSend = '/xrp-window-send'
+                this.pathRecive = '/xrp-window-recieve'
                 break
             }
         }

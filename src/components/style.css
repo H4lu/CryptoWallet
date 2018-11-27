@@ -576,11 +576,11 @@ button {
   filter: inherit;
   background: url('file://../../../static/RectangleSR.svg') no-repeat center;
   border: 0px solid black;
-  height: 535px;
+  height: 540px;
   width: 612px;
   margin-top: 50px;
   margin-left: 169px;
-  padding-top: 80px;
+  padding-top: 50px;
 }
 .iconCryptoCurrency{
   background: url('file://../../../static/icon_BTC.svg') no-repeat center;
@@ -593,6 +593,40 @@ button {
   margin-bottom: 0px;
   margin-left: 253px;
 }
+.iconCryptoCurrencyLTC{
+  background: url('file://../../../static/icon_LTC.svg') no-repeat center;
+  border: 0px solid black;
+  height: 106px;
+  width: 106px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-top: 10px;
+  margin-bottom: 0px;
+  margin-left: 253px;
+}
+.iconCryptoCurrencyETH{
+  background: url('file://../../../static/icon_ETH.svg') no-repeat center;
+  border: 0px solid black;
+  height: 106px;
+  width: 106px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-top: 10px;
+  margin-bottom: 0px;
+  margin-left: 253px;
+}
+.iconCryptoCurrencyXRP{
+  background: url('file://../../../static/icon_XRP.svg') no-repeat center;
+  border: 0px solid black;
+  height: 106px;
+  width: 106px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-top: 10px;
+  margin-bottom: 0px;
+  margin-left: 253px;
+}
+
 .blockSendTransactionAddress{
   display: flex;
   margin-top: 0px;
@@ -649,6 +683,35 @@ button {
   height: 89px;
   width: 419px;
 }
+
+.poleSumLTC{
+  order: 2;
+  margin-top: 15px;
+  margin-left: 20px;
+  background: url('file://../../../static/fonSendLTC.svg') no-repeat center;
+  border: 0px solid black;
+  height: 89px;
+  width: 419px;
+}
+.poleSumETH{
+  order: 2;
+  margin-top: 15px;
+  margin-left: 20px;
+  background: url('file://../../../static/fonSendETH.svg') no-repeat center;
+  border: 0px solid black;
+  height: 89px;
+  width: 419px;
+}
+.poleSumXRP{
+  order: 2;
+  margin-top: 15px;
+  margin-left: 20px;
+  background: url('file://../../../static/fonSendXRP.svg') no-repeat center;
+  border: 0px solid black;
+  height: 89px;
+  width: 419px;
+}
+
 .payment_sum{
   margin-top: 0px;
   margin-left: 9px;
@@ -809,8 +872,8 @@ button {
   color: rgba(255, 255, 255, 1);
 }
 .flex_button_recieve{
-  margin-top: 10px;
-  margin-left: 10px;
+  margin-top: 20px;
+  margin-left: 50px;
   display: flex;
 }
 .copy_to_buffer{
@@ -820,7 +883,7 @@ button {
   height: 60px;
   width: 60px;
   margin-top: 0px;
-  margin-left: 84px;
+  margin-left: 55px;
   cursor: pointer;
   outline: none;
 }
@@ -835,7 +898,7 @@ button {
   height: 60px;
   width: 60px;
   margin-top: 0px;
-  margin-left: 84px;
+  margin-left: 55px;
   cursor: pointer;
   outline: none;
 }
@@ -845,30 +908,42 @@ button {
 
 .sent_to_email{
   order: 3;
-  background: url('file://../../../static/copyToBuffer_p.svg') no-repeat center;
+  background: url('file://../../../static/sentToEmail_p.svg') no-repeat center;
   border: 0px solid black;
   height: 60px;
   width: 60px;
   margin-top: 0px;
-  margin-left: 84px;
+  margin-left: 55px;
   cursor: pointer;
   outline: none;
 }
 .sent_to_email:active {
-  background: url('file://../../../static/copyToBuffer_a.svg') no-repeat center;
+  background: url('file://../../../static/sentToEmail_a.svg') no-repeat center;
 }
 
 .view_on_blockchain{
   order: 4;
-  background: url('file://../../../static/copyToBuffer_p.svg') no-repeat center;
+  background: url('file://../../../static/viewOnBlockchain_p.svg') no-repeat center;
   border: 0px solid black;
   height: 60px;
   width: 60px;
   margin-top: 0px;
-  margin-left: 84px;
+  margin-left: 55px;
   cursor: pointer;
   outline: none;
 }
 .view_on_blockchain:active {
-  background: url('file://../../../static/copyToBuffer_a.svg') no-repeat center;
+  background: url('file://../../../static/viewOnBlockchain_a.svg') no-repeat center;
+}
+
+.button-cancel-ricieve{
+  background: url('file://../../../static/buttonCancelBig_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 43px;
+  width: 166px;
+  margin-top: 15px;
+  margin-left: 223px;
+}
+.button-cancel-ricieve:hover {
+  background: url('file://../../../static/buttonCancelBig_a.svg') no-repeat center;
 }
