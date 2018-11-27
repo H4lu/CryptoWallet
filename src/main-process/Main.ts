@@ -44,9 +44,10 @@ app.on('ready', () => {
     ])
     const { inputFieldType, selectionText } = props
     if (inputFieldType === 'plainText') {
-      InputMenu.popup(mainWindow)
+      
+      InputMenu.popup({window: mainWindow})
     } else if (selectionText && selectionText.trim() !== '') {
-      selectionMenu.popup(mainWindow)
+      selectionMenu.popup({window: mainWindow})
     }
   })
   mainWindow.once('close', () => {
