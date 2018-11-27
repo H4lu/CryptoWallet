@@ -54,6 +54,12 @@ import {SidebarLeft} from "../components/SidebarLeft";
 import {BtcRecieveWindow} from "../components/BtcRecieveWindow";
 import {BtcSendWindow} from "../components/BtcSendWindow";
 import {SidebarLeftBlur} from "../components/SidebarLeftBlur";
+import {LtcSendWindow} from "../components/LtcSendWindow";
+import {LtcRecieveWindow} from "../components/LtcRecieveWindow";
+import {EthRecieveWindow} from "../components/EthReceiveWindow";
+import {EthSendWindow} from "../components/EthSendWindow";
+import {XrpRecieveWindow} from "../components/XrpRecieveWindow";
+import {XrpSendWindow} from "../components/XrpSendWindow";
 
 // import { connect } from 'react-redux'
 /*
@@ -130,13 +136,16 @@ interface IAPPState {
     BTCBalance: number,
     ETHBalance: number,
     LTCBalance: number,
+    XRPBalance: number,
     BTCPrice: number,
     ETHPrice: number,
     LTCPrice: number,
+    XRPPrice: number,
     totalBalance: number,
     BTCHourChange: number,
     ETHHourChange: number,
     LTCHourChange: number,
+    XRPHourChange: number,
     BTCLastTx: Array<any>,
     LTCLastTx: Array<any>,
     ETHLastTx: Array<any>,
@@ -153,6 +162,9 @@ interface IAPPState {
     stateTransaction: string,
     activeCurrency: number,
     BTCCourse: number,
+    LTCCourse: number,
+    ETHCourse: number,
+    XRPCourse: number,
     SR: boolean
 }
 
@@ -212,13 +224,49 @@ export default class App extends React.Component<any, IAPPState> {
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeftBlur/>,
-            main: () => <BtcSendWindow stateSR ={this.setStateSR} course = {this.state.BTCCourse} btcBalance={this.state.BTCBalance} sr ={this.setStateSR}/>
+            main: () => <BtcSendWindow stateSR ={this.setStateSR} course = {this.state.BTCCourse} btcBalance={this.state.BTCBalance}/>
         },
         {path: '/btc-window-recieve',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeft  refresh={this.updateData} pathState={this.state.stateTransaction}/>,
+            sidebarLeft: () => <SidebarLeftBlur/>,
             main: () => <BtcRecieveWindow stateSR ={this.setStateSR}/>
+        },
+        {path: '/ltc-window-send',
+            exact: true,
+            sidebar: () => <SidebarContent/>,
+            sidebarLeft: () => <SidebarLeftBlur/>,
+            main: () => <LtcSendWindow stateSR ={this.setStateSR} course = {this.state.LTCCourse} btcBalance={this.state.LTCBalance} />
+        },
+        {path: '/ltc-window-recieve',
+            exact: true,
+            sidebar: () => <SidebarContent/>,
+            sidebarLeft: () => <SidebarLeftBlur/>,
+            main: () => <LtcRecieveWindow stateSR ={this.setStateSR}/>
+        },
+        {path: '/eth-window-send',
+            exact: true,
+            sidebar: () => <SidebarContent/>,
+            sidebarLeft: () => <SidebarLeftBlur/>,
+            main: () => <EthSendWindow stateSR ={this.setStateSR} course = {this.state.ETHCourse} btcBalance={this.state.ETHBalance} />
+        },
+        {path: '/eth-window-recieve',
+            exact: true,
+            sidebar: () => <SidebarContent/>,
+            sidebarLeft: () => <SidebarLeftBlur/>,
+            main: () => <EthRecieveWindow stateSR ={this.setStateSR}/>
+        },
+        {path: '/xrp-window-send',
+            exact: true,
+            sidebar: () => <SidebarContent/>,
+            sidebarLeft: () => <SidebarLeftBlur/>,
+            main: () => <XrpSendWindow stateSR ={this.setStateSR} course = {this.state.XRPCourse} btcBalance={this.state.XRPBalance} />
+        },
+        {path: '/xrp-window-recieve',
+            exact: true,
+            sidebar: () => <SidebarContent/>,
+            sidebarLeft: () => <SidebarLeftBlur/>,
+            main: () => <XrpRecieveWindow stateSR ={this.setStateSR}/>
         },
         {
             path: '/btc-window',
@@ -270,13 +318,16 @@ export default class App extends React.Component<any, IAPPState> {
             BTCBalance: 0.00,
             ETHBalance: 0.00,
             LTCBalance: 0.00,
+            XRPBalance: 0.00,
             BTCPrice: 0.00,
             ETHPrice: 0.00,
             LTCPrice: 0.00,
+            XRPPrice: 0.00,
             totalBalance: 0.00,
             BTCHourChange: 0,
             LTCHourChange: 0,
             ETHHourChange: 0,
+            XRPHourChange: 0,
             LTCLastTx: [],
             BTCLastTx: [],
             ETHLastTx: [],
@@ -293,6 +344,9 @@ export default class App extends React.Component<any, IAPPState> {
             stateTransaction: '/btc-window',
             activeCurrency: 1,
             BTCCourse: 0,
+            LTCCourse: 0,
+            ETHCourse: 0,
+            XRPCourse: 0,
             SR: false
         }
         this.resetRedirect = this.resetRedirect.bind(this)
@@ -655,6 +709,7 @@ export default class App extends React.Component<any, IAPPState> {
                             info('ETH PRICE')
                             this.setState({
                                 ETHPrice: Number((parsedValue[item].price_usd * this.state.ETHBalance).toFixed(2)),
+                                ETHCourse: Number(parsedValue[item].price_usd),
                                 ETHHourChange: Number(parsedValue[item].percent_change_1h)
                             })
                             info(this.state.ETHPrice, this.state.ETHHourChange)
@@ -664,18 +719,29 @@ export default class App extends React.Component<any, IAPPState> {
 
                             this.setState({
                                 LTCPrice: Number((parsedValue[item].price_usd * this.state.LTCBalance).toFixed(2)),
+                                LTCCourse: Number(parsedValue[item].price_usd),
                                 LTCHourChange: Number(parsedValue[item].percent_change_1h)
                             })
                             info('LTC PRICE', this.state.LTCPrice, this.state.LTCHourChange)
                             break
                         }
+                        case 'ripple': {
+
+                            this.setState({
+                                XRPPrice: Number((parsedValue[item].price_usd * this.state.XRPBalance).toFixed(2)),
+                                XRPCourse: Number(parsedValue[item].price_usd),
+                                XRPHourChange: Number(parsedValue[item].percent_change_1h)
+                            })
+                            info('XRP PRICE', this.state.XRPPrice, this.state.XRPHourChange)
+                            break
+                        }
                     }
                 }
-                let total = this.state.BTCPrice + this.state.ETHPrice + this.state.LTCPrice
+                let total = this.state.BTCPrice + this.state.ETHPrice + this.state.LTCPrice + this.state.XRPPrice
                 info('TOTAL', total)
                 info(Number((total).toFixed(8)))
                 this.setState({totalBalance: Number((total).toFixed(8))})
-                let totalPercentage = this.state.BTCHourChange + this.state.ETHHourChange + this.state.LTCHourChange
+                let totalPercentage = this.state.BTCHourChange + this.state.ETHHourChange + this.state.LTCHourChange + this.state.XRPHourChange
                 info('TOTAL PERCENTAGE', totalPercentage)
                 this.setState({totalPercentage: Number((totalPercentage).toFixed(2))})
                 resolve()
