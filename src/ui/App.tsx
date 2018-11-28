@@ -13,7 +13,7 @@ import {LTCWindow} from '../components/LTCWindow'
 
 import '../components/style.css'
 import MainContent from '../components/MainContent'
-import { CarouselHOC } from '../components/CarouselHOC'
+import {CarouselHOC} from '../components/CarouselHOC'
 import {
     getBitcoinLastTx,
     initBitcoinAddress,
@@ -60,6 +60,7 @@ import {EthRecieveWindow} from "../components/EthReceiveWindow";
 import {EthSendWindow} from "../components/EthSendWindow";
 import {XrpRecieveWindow} from "../components/XrpRecieveWindow";
 import {XrpSendWindow} from "../components/XrpSendWindow";
+import {CarouselHistory} from "../components/CarouselHistory";
 
 // import { connect } from 'react-redux'
 /*
@@ -195,79 +196,110 @@ export default class App extends React.Component<any, IAPPState> {
                                      btcPrice={this.state.BTCPrice} ltcPrice={this.state.LTCPrice}
                                      ethPrice={this.state.ETHPrice} btcHourChange={this.state.BTCHourChange}
                                      ltcHourChange={this.state.LTCHourChange} ethHourChange={this.state.ETHHourChange}
-                                     updateStateBTC = {this.setStateTransBTC}
-                                     updateStateETH = {this.setStateTransETH}
-                                     updateStateLTC = {this.setStateTransLTC}
-                                     updateStateXRP = {this.setStateTransXRP}
-                                     setActiveCurrency = {this.setActiveCurrency}
-                                     getActiveCurrency = {this.getActiveCurrency}
-                                
+                                     updateStateBTC={this.setStateTransBTC}
+                                     updateStateETH={this.setStateTransETH}
+                                     updateStateLTC={this.setStateTransLTC}
+                                     updateStateXRP={this.setStateTransXRP}
+                                     setActiveCurrency={this.setActiveCurrency}
+                                     getActiveCurrency={this.getActiveCurrency}
+
                                      lastTx={this.state.BTCLastTx.concat(this.state.ETHLastTx, this.state.LTCLastTx).sort((a: any, b: any) => {
                                          let c = new Date(a.Date).getTime()
                                          let d = new Date(b.Date).getTime()
                                          return d - c
                                      })} transactions={this.getTransactions}
-                                     refresh={this.updateData} stateSR ={this.setStateSR}/>
+                                     refresh={this.updateData} stateSR={this.setStateSR}/>
         },
-{
-       path: '/currency-carousel',
-        exact: true,
-        sidebar: () => <SidebarContent/>,
-        sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
-        main: () => <CarouselHOC   setActiveCurrency = {this.setActiveCurrency}
-        getActiveCurrency = {this.getActiveCurrency} activeCurrency = {this.state.activeCurrency}
-        btcBalance={this.state.BTCBalance} ltcBalance={this.state.LTCBalance} ethBalance={this.state.ETHBalance}
-        btcPrice={this.state.BTCPrice} ltcPrice={this.state.LTCPrice} ethPrice={this.state.ETHPrice} stateSR ={this.setStateSR}
-        />
+        {
+            path: '/currency-carousel',
+            exact: true,
+            sidebar: () => <SidebarContent/>,
+            sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
+            main: () => <CarouselHOC setActiveCurrency={this.setActiveCurrency}
+                                     getActiveCurrency={this.getActiveCurrency}
+                                     activeCurrency={this.state.activeCurrency}
+                                     btcBalance={this.state.BTCBalance} ltcBalance={this.state.LTCBalance}
+                                     ethBalance={this.state.ETHBalance}
+                                     btcPrice={this.state.BTCPrice} ltcPrice={this.state.LTCPrice}
+                                     ethPrice={this.state.ETHPrice} stateSR={this.setStateSR}
+            />
         },
-        {path: '/btc-window-send',
+        {
+            path: '/btc-window-send',
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeftBlur/>,
-            main: () => <BtcSendWindow stateSR ={this.setStateSR} course = {this.state.BTCCourse} btcBalance={this.state.BTCBalance}/>
+            main: () => <BtcSendWindow stateSR={this.setStateSR} course={this.state.BTCCourse}
+                                       btcBalance={this.state.BTCBalance}/>
         },
-        {path: '/btc-window-recieve',
+        {
+            path: '/btc-window-recieve',
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeftBlur/>,
-            main: () => <BtcRecieveWindow stateSR ={this.setStateSR}/>
+            main: () => <BtcRecieveWindow stateSR={this.setStateSR}/>
         },
-        {path: '/ltc-window-send',
+        {
+            path: '/ltc-window-send',
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeftBlur/>,
-            main: () => <LtcSendWindow stateSR ={this.setStateSR} course = {this.state.LTCCourse} btcBalance={this.state.LTCBalance} />
+            main: () => <LtcSendWindow stateSR={this.setStateSR} course={this.state.LTCCourse}
+                                       btcBalance={this.state.LTCBalance}/>
         },
-        {path: '/ltc-window-recieve',
+        {
+            path: '/ltc-window-recieve',
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeftBlur/>,
-            main: () => <LtcRecieveWindow stateSR ={this.setStateSR}/>
+            main: () => <LtcRecieveWindow stateSR={this.setStateSR}/>
         },
-        {path: '/eth-window-send',
+        {
+            path: '/eth-window-send',
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeftBlur/>,
-            main: () => <EthSendWindow stateSR ={this.setStateSR} course = {this.state.ETHCourse} btcBalance={this.state.ETHBalance} />
+            main: () => <EthSendWindow stateSR={this.setStateSR} course={this.state.ETHCourse}
+                                       btcBalance={this.state.ETHBalance}/>
         },
-        {path: '/eth-window-recieve',
+        {
+            path: '/eth-window-recieve',
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeftBlur/>,
-            main: () => <EthRecieveWindow stateSR ={this.setStateSR}/>
+            main: () => <EthRecieveWindow stateSR={this.setStateSR}/>
         },
-        {path: '/xrp-window-send',
+        {
+            path: '/xrp-window-send',
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeftBlur/>,
-            main: () => <XrpSendWindow stateSR ={this.setStateSR} course = {this.state.XRPCourse} btcBalance={this.state.XRPBalance} />
+            main: () => <XrpSendWindow stateSR={this.setStateSR} course={this.state.XRPCourse}
+                                       btcBalance={this.state.XRPBalance}/>
         },
-        {path: '/xrp-window-recieve',
+        {
+            path: '/xrp-window-recieve',
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeftBlur/>,
-            main: () => <XrpRecieveWindow stateSR ={this.setStateSR}/>
+            main: () => <XrpRecieveWindow stateSR={this.setStateSR}/>
         },
+
+        {
+            path: '/history-carousel',
+            exact: true,
+            sidebar: () => <SidebarContent/>,
+            sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
+            main: () => <CarouselHistory setActiveCurrency={this.setActiveCurrency}
+                                     getActiveCurrency={this.getActiveCurrency}
+                                     activeCurrency={this.state.activeCurrency}
+                                     btcBalance={this.state.BTCBalance} ltcBalance={this.state.LTCBalance}
+                                     ethBalance={this.state.ETHBalance}
+                                     btcPrice={this.state.BTCPrice} ltcPrice={this.state.LTCPrice}
+                                     ethPrice={this.state.ETHPrice} stateSR={this.setStateSR}
+            />
+        },
+
         {
             path: '/btc-window',
             exact: true,
@@ -376,9 +408,10 @@ export default class App extends React.Component<any, IAPPState> {
         this.setActiveCurrency = this.setActiveCurrency.bind(this)
         this.setStateSR = this.setStateSR.bind(this)
     }
+
     getActiveCurrency(): string {
         log("GET ACTIVE CURRENCY")
-        switch(this.state.activeCurrency) {
+        switch (this.state.activeCurrency) {
             case 1: {
                 return "BTC"
             }
@@ -394,49 +427,54 @@ export default class App extends React.Component<any, IAPPState> {
         }
 
     }
+
     setActiveCurrency(currency: string) {
         log("Setting active currency + " + currency)
-        switch(currency) {
+        switch (currency) {
             case 'BTC': {
                 log("Setting active currency BTC ")
-                this.setState({ activeCurrency: 1 })
+                this.setState({activeCurrency: 1})
                 break
             }
             case 'ETH': {
                 log("Setting active currency ETH ")
-                this.setState({ activeCurrency: 2 })
+                this.setState({activeCurrency: 2})
                 break
             }
             case 'LTC': {
                 log("Setting active currency LTC ")
-                this.setState({ activeCurrency: 3 })
+                this.setState({activeCurrency: 3})
                 break
             }
             case 'XRP': {
                 log("Setting active currency XRP ")
-                this.setState({ activeCurrency: 4 })
+                this.setState({activeCurrency: 4})
                 break
             }
         }
     }
 
-    setStateSR(sr:boolean){
-        this.setState({SR:sr})
+    setStateSR(sr: boolean) {
+        this.setState({SR: sr})
     }
-    setStateTransBTC(){
-          this.setState({stateTransaction: '/btc-window'} )
+
+    setStateTransBTC() {
+        this.setState({stateTransaction: '/btc-window'})
         console.log(this.state.stateTransaction)
     }
-    setStateTransETH(){
-        this.setState({stateTransaction: '/eth-window'} )
+
+    setStateTransETH() {
+        this.setState({stateTransaction: '/eth-window'})
         console.log(this.state.stateTransaction)
     }
-    setStateTransLTC(){
-        this.setState({stateTransaction: '/ltc-window'} )
+
+    setStateTransLTC() {
+        this.setState({stateTransaction: '/ltc-window'})
         console.log(this.state.stateTransaction)
     }
-    setStateTransXRP(){
-        this.setState({stateTransaction: '/btc-window'} )
+
+    setStateTransXRP() {
+        this.setState({stateTransaction: '/btc-window'})
         console.log(this.state.stateTransaction)
     }
 
@@ -657,7 +695,6 @@ export default class App extends React.Component<any, IAPPState> {
             }
         }
     }
-
 
 
     addUnconfirmedTx(currency: string, amount: number, address: string, hash: string) {
@@ -983,7 +1020,7 @@ export default class App extends React.Component<any, IAPPState> {
 
     render() {
         let container: string = (this.state.redirectToMain === true) ? 'container' : 'main_container'
-        if(this.state.SR) container = 'main_container_blur'
+        if (this.state.SR) container = 'main_container_blur'
         return (
             <div className='blackBackground'>
                 <Header/>
@@ -1018,7 +1055,6 @@ export default class App extends React.Component<any, IAPPState> {
                     ))}
 
 
-
                     {this.routes.map((route, index) => (
                         <Route
                             exact={route.exact}
@@ -1029,16 +1065,16 @@ export default class App extends React.Component<any, IAPPState> {
                     ))}
                 </div>
 
-            <div className = 'containerData'>
-                {this.routes.map((route, index) => (
-                    <Route
-                        key={index}
-                        exact={route.exact}
-                        path={route.path}
-                        component={route.main}
-                    />
-                ))}
-            </div>
+                <div className='containerData'>
+                    {this.routes.map((route, index) => (
+                        <Route
+                            key={index}
+                            exact={route.exact}
+                            path={route.path}
+                            component={route.main}
+                        />
+                    ))}
+                </div>
             </div>
         )
     }
