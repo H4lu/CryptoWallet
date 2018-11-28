@@ -34,10 +34,9 @@ export default function getAddres() {
   return myAddress
 }
 export async function initLitecoinAddress() {
-  /*
-  myAddr = await getAddressPCSC(0)
-  info('BTC ADDRESS', myAddr)
-  */
+  
+  
+  
   info('INITING LTC ADDRESS')
 
   return new Promise(async (resolve) => {
@@ -245,15 +244,7 @@ async function createTransaction(paymentAdress: string,
   info('FIANL', final)
   sendTransaction(final, redirect)
   info('Final sig: ' + sig)
-  // Добавляем вход транзакции в виде хэша предыдущей транзакции и номер выхода с нашим адресом
-  // Добавляем выход транзакции, где указывается адрес и сумма перевода
-  // transaction.addOutput(paymentAdress, transactionAmount)
-  // Добавляем адрес для "сдачи"
-  // Вычисляем хэш неподписанной транзакции
-  // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
-  // Сериализуем неподписаннуб транзакцию
-  // Добавляем UnlockingScript в транзакцию
-  // Возвращаем готовую к отправке транзакцию
+
 }
 // Функция отправки транзакции, на вход принимает транзакцию в hex- формате
 /*function sendTransaction(transactionHex: string, redirect: any) {

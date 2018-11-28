@@ -692,7 +692,6 @@ export default class App extends React.Component<any, IAPPState> {
             info('IN GET RATES')
             GetCurrencyRate().then(value => {
                 const parsedValue = JSON.parse(value.content)
-                info(parsedValue)
                 for (let item in parsedValue) {
                     switch (parsedValue[item].id) {
                         case 'bitcoin': {

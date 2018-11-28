@@ -41,7 +41,7 @@ module : {
             options: {
                 // there should be 1 cpu for the fork-ts-checker-webpack-plugin
                 workers: 2,
-                workerParallelJobs: 30,
+                workerParallelJobs: 50,
                 workerNodeArgs:['--stack_size=8192', '--max-old-space-size=4080'],
                 poolParallelJobs: 300,
                 name: "ts-pool"
@@ -64,26 +64,18 @@ module : {
       // },
       {
         test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
-        use :[
+        use : [
           { loader: 'cache-loader' },
-          { loader: 'thread-loader',
-          options: {
-              // there should be 1 cpu for the fork-ts-checker-webpack-plugin
-              workers: 2,
-              workerParallelJobs: 30,
-              workerNodeArgs:['--stack_size=8192', '--max-old-space-size=4080'],
-              poolParallelJobs: 300,
-              name: "ts-pool"
-          },
-        },
-        {
-          loader: 'file-loader',
-          options: {
-               name : 'assets/images/[name].[ext]',
-               emitFile: false
-          }
+          {  loader: 'file-loader',
+              options: {
+                name : 'assets/images/[name].[ext]',
+  
+          } 
         }
         ]
+         
+        
+       
         
       },
       {
@@ -114,7 +106,7 @@ module : {
        options: {
            // there should be 1 cpu for the fork-ts-checker-webpack-plugin
            workers: 2,
-           workerParallelJobs: 30,
+           workerParallelJobs: 50,
            workerNodeArgs:['--stack_size=8192', '--max-old-space-size=4080'],
            poolParallelJobs: 300,
            name: "ts-pool"

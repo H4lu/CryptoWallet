@@ -123,7 +123,7 @@
   background: url('file://../../../static/pay_a.svg') no-repeat center;
 }
 
-.but_refresh{
+.but_history{
   background: url('file://../../../static/refresh_p.svg') no-repeat center;
   border: 0px solid black;
   height: 42px;
@@ -133,7 +133,7 @@
   margin-left: 20px;
   order: 3;
 }
-.but_refresh:hover{
+.but_history:hover{
   background: url('file://../../../static/refresh_a.svg') no-repeat center;
 }
 
@@ -450,6 +450,15 @@
   margin-left: 10px;
 }
 
+.payWindowTable{
+  background: url('file://../../../static/RectangleTable.svg') no-repeat center;
+  border: 0px solid black;
+  height: 690px;
+  width: 894px;
+  margin-top: 30px;
+  margin-left: 10px;
+}
+
 body, html {
   height: 100vh;
   margin: 0;
@@ -475,6 +484,15 @@ button {
 }
 .currencyName{
   margin-top: 55px;
+  text-align: center;
+  font-family: Lato;
+  font-size: 42px;
+  color: rgba(255, 255, 255, 0.75);
+  opacity: 75%;
+}
+
+.currencyHistory{
+  margin-top: 20px;
   text-align: center;
   font-family: Lato;
   font-size: 42px;
@@ -946,4 +964,83 @@ button {
 }
 .button-cancel-ricieve:hover {
   background: url('file://../../../static/buttonCancelBig_a.svg') no-repeat center;
+}
+.buttonHistoryFlex{
+  display: flex;
+  margin-top: 15px;
+  margin-left: 50px;
+}
+.AlldirectHistory_p{
+  background-color: inherit;
+  border: 0px solid black;
+  margin-top: 0px;
+  margin-left: 0px;
+  font-family: Lato;
+  font-weight: bolder;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.5);
+
+}
+.AlldirectHistory_p:hover{
+  color: rgba(255, 255, 255, 1);
+}
+.AlldirectHistory_a{
+  background-color: inherit;
+  border: 0px solid black;
+  margin-top: 0px;
+  margin-left: 0px;
+  font-family: Lato;
+  font-weight: bolder;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 1);
+
+}
+.SenddirectHistory_p{
+  background-color: inherit;
+  border: 0px solid black;
+  margin-top: 0px;
+  margin-left: 0px;
+  font-family: Lato;
+  font-weight: bolder;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.5);
+
+}
+.SenddirectHistory_p:hover{
+  color: rgba(255, 255, 255, 1);
+}
+.SenddirectHistory_a{
+  background-color: inherit;
+  border: 0px solid black;
+  margin-top: 0px;
+  margin-left: 0px;
+  font-family: Lato;
+  font-weight: bolder;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 1);
+}
+.ReceivedirectHistory_p{
+  background-color: inherit;
+  border: 0px solid black;
+  margin-top: 0px;
+  margin-left: 0px;
+  font-family: Lato;
+  font-weight: bolder;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.5);
+
+}
+.ReceivedirectHistory_p:hover{
+  color: rgba(255, 255, 255, 1);
+}
+.ReceivedirectHistory_a{
+  background-color: inherit;
+  border: 0px solid black;
+  margin-top: 0px;
+  margin-left: 0px;
+  font-family: Lato;
+  font-weight: bolder;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 1);
+
 }

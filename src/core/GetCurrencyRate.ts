@@ -4,7 +4,6 @@ const requestURL = 'https://api.coinmarketcap.com/v1/ticker/'
 export default async function getCurrencyRate() {
   try {
     let response = await webRequest.get(requestURL)
-    info('GET CURRENCY RATE', response)
     return response
   } catch (error) {
     info(error)

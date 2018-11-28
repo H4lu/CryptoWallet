@@ -98,7 +98,7 @@ export async function initBitcoinAddress() {
 
   })
 }
-function setMyAddress(address: string) {
+export function setMyAddress(address: string) {
   myAddr = address
   info('MY ADDRESS BITCOIN:' + myAddr)
 }
