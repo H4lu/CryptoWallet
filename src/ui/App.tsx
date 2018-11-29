@@ -402,6 +402,7 @@ export default class App extends React.Component<any, IAPPState> {
             SR: false,
             SideBarLeftState: 1
         }
+ 
         this.resetRedirect = this.resetRedirect.bind(this)
         this.redirectToTransactionsuccess = this.redirectToTransactionsuccess.bind(this)
         this.parseETHTransactions = this.parseETHTransactions.bind(this)
@@ -518,7 +519,7 @@ export default class App extends React.Component<any, IAPPState> {
     connectionERROR() {
         this.setState({connection: false})
     }
-
+    
     getWalletInfo() {
         let interval = setInterval(async () => {
             try {

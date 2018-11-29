@@ -18,7 +18,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io
 const abi = JSON.parse(fs.readFileSync(ERC20AbiInterface, 'utf-8'))
 info('abi ' + abi)
 */
-import Container from '../../ui/Index'
+
 const myAdress = '0xCF426E1175348a492D30c518B9647a23443AB5af'
 let balance: number
 let price: number
@@ -194,7 +194,6 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
       info(serTx)
       web3.eth.sendSignedTransaction(serTx).on('receipt', info).on('transactionHash', function(hash) {
         info('Transaction sended: ' + hash)
-        info('CONTAINER', Container)
         redirect()
       }).on('error', console.error).catch(err => info(err))
         // Отправляем

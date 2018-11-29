@@ -11,12 +11,16 @@ ipcMain.once('close', () => {
 ipcMain.on('hide', () => {
   mainWindow.minimize()
 })
+app.disableHardwareAcceleration()
+
 app.on('ready', () => {
+  
   mainWindow = new BrowserWindow({ width: 1366, height: 768, resizable: false,
     fullscreen: false, frame: false })
   mainWindow.loadURL(`file:///${__dirname}/index.html`)
   setupLogger()
   mainWindow.once('ready-to-show', () => mainWindow.show())
+
  // const fileName = 'file:///' + __dirname + '/index.html'
  // mainWindow.loadURL(fileName)
   /* mainWindow.loadURL(url.format({
