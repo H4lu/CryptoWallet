@@ -150,6 +150,7 @@ interface IAPPState {
     BTCLastTx: Array<any>,
     LTCLastTx: Array<any>,
     ETHLastTx: Array<any>,
+    XRPLastTx: Array<any>,
     connection: boolean,
     status: boolean,
     redirect: boolean,
@@ -166,7 +167,8 @@ interface IAPPState {
     LTCCourse: number,
     ETHCourse: number,
     XRPCourse: number,
-    SR: boolean
+    SR: boolean,
+    SideBarLeftState: number
 }
 
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
@@ -291,12 +293,29 @@ export default class App extends React.Component<any, IAPPState> {
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
             main: () => <CarouselHistory setActiveCurrency={this.setActiveCurrency}
-                                     getActiveCurrency={this.getActiveCurrency}
-                                     activeCurrency={this.state.activeCurrency}
-                                     btcBalance={this.state.BTCBalance} ltcBalance={this.state.LTCBalance}
-                                     ethBalance={this.state.ETHBalance}
-                                     btcPrice={this.state.BTCPrice} ltcPrice={this.state.LTCPrice}
-                                     ethPrice={this.state.ETHPrice} stateSR={this.setStateSR}
+                                         getActiveCurrency={this.getActiveCurrency}
+                                         activeCurrency={this.state.activeCurrency}
+                                         btcBalance={this.state.BTCBalance} ltcBalance={this.state.LTCBalance}
+                                         ethBalance={this.state.ETHBalance}
+                                         btcPrice={this.state.BTCPrice} ltcPrice={this.state.LTCPrice}
+                                         ethPrice={this.state.ETHPrice} stateSR={this.setStateSR}
+                                         refresh={this.updateData}
+                                         lastTxBTC={this.state.BTCLastTx.sort((a: any, b: any) => {
+                                             let c = new Date(a.Date).getTime()
+                                             let d = new Date(b.Date).getTime()
+                                             return d - c})}
+                                         lastTxETH={this.state.ETHLastTx.sort((a: any, b: any) => {
+                                             let c = new Date(a.Date).getTime()
+                                             let d = new Date(b.Date).getTime()
+                                             return d - c})}
+                                         lastTxLTC={this.state.LTCLastTx.sort((a: any, b: any) => {
+                                             let c = new Date(a.Date).getTime()
+                                             let d = new Date(b.Date).getTime()
+                                             return d - c})}
+                                         lastTxXRP={this.state.XRPLastTx.sort((a: any, b: any) => {
+                                             let c = new Date(a.Date).getTime()
+                                             let d = new Date(b.Date).getTime()
+                                             return d - c})}
             />
         },
 
@@ -363,6 +382,7 @@ export default class App extends React.Component<any, IAPPState> {
             LTCLastTx: [],
             BTCLastTx: [],
             ETHLastTx: [],
+            XRPLastTx: [],
             connection: false,
             status: false,
             redirect: false,
@@ -379,7 +399,8 @@ export default class App extends React.Component<any, IAPPState> {
             LTCCourse: 0,
             ETHCourse: 0,
             XRPCourse: 0,
-            SR: false
+            SR: false,
+            SideBarLeftState: 1
         }
         this.resetRedirect = this.resetRedirect.bind(this)
         this.redirectToTransactionsuccess = this.redirectToTransactionsuccess.bind(this)
@@ -407,6 +428,8 @@ export default class App extends React.Component<any, IAPPState> {
         this.getActiveCurrency = this.getActiveCurrency.bind(this)
         this.setActiveCurrency = this.setActiveCurrency.bind(this)
         this.setStateSR = this.setStateSR.bind(this)
+
+
     }
 
     getActiveCurrency(): string {
@@ -534,9 +557,12 @@ export default class App extends React.Component<any, IAPPState> {
         }, 500, [])
     }
 
-    componentDidMount() {
 
-        this.getRates()
+
+        async componentDidMount() {
+            await this.getBalances()
+            await this.getTransactions()
+            await this.getRates()
         // handleLitecoin('mw3nwmeux9gEghMezCjfiepTtzXrDoFg6a',0.0002,10,this.redirectToTransactionsuccess)
         // handle('mgWZCzn4nv7noRwnbThqQ2hD2wT3YAKTJH',0.00002,10,this.redirectToTransactionsuccess())
         /*

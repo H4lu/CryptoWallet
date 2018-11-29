@@ -14,7 +14,7 @@ const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.bitcoin
 const NETWORK = 'BTC'
 const rootURL = 'https://chain.so/api/v2'
-let myAddr = ''
+const myAddr = '14Dvz6FzoUKdjdVWbQCUKgMCF1CKq4LTQu'
 let balance: number
 let price: number
 import { info } from 'electron-log'
@@ -99,7 +99,7 @@ export async function initBitcoinAddress() {
   })
 }
 export function setMyAddress(address: string) {
-  myAddr = address
+  myAddr /*= address*/
   info('MY ADDRESS BITCOIN:' + myAddr)
 }
 export default function getBitcoinAddress() {

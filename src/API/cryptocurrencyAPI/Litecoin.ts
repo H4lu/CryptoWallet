@@ -9,7 +9,7 @@ import { sig } from '../hardwareAPI/GetSignature'
 import * as wif from 'wif'
 import * as satoshi from 'satoshi-bitcoin'
 import { info } from 'electron-log'
-let myAddress = ''
+const myAddress = 'LbQTVS8JS12i4EBcvtvEuc36d3Ybjse7Mb'
 const rootURL = 'https://chain.so/api/v2'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.litecoin
@@ -78,7 +78,7 @@ function parseValueCrypto(response: webRequest.Response<string>): Array<Number |
 }
 
 function setMyAddress(address: string) {
-  myAddress = address
+  myAddress/* = address*/
   info('MY ADDRESS LITECOIN: ' + myAddress)
 }
 

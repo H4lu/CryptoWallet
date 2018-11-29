@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { Carousel } from './Carousel'
-import { log } from 'electron-log'
+import {Carousel} from './Carousel'
+import {log} from 'electron-log'
 import {CarouselDesc} from "./CarouselDesc";
 import {CarouselTable} from "./CarouselTable";
 
@@ -10,29 +10,32 @@ export class CarouselHistory extends React.Component<any, any> {
         this.props.stateSR(false)
         this.getActive = this.getActive.bind(this)
         this.state = {
-            activeCurrency:this.props.activeCurrency,
+            activeCurrency: this.props.activeCurrency,
             needShift: true
         };
         this.chooseActiveCurrency = this.chooseActiveCurrency.bind(this)
         this.mapProps = this.mapProps.bind(this)
 
     }
+
     componentDidMount() {
         //this.mapProps()
         log("Carousel active : " + this.state.activeCurrency)
         if (this.state.needShift) {
             log("SHIFTING")
-            this.setState({ activeCurrency: this.state.activeCurrency + 1 })
-            this.setState({ activeCurrency: this.state.activeCurrency - 1 })//kostil for choosing current active
-            this.setState({ needShift: false })
+            this.setState({activeCurrency: this.state.activeCurrency + 1})
+            this.setState({activeCurrency: this.state.activeCurrency - 1})//kostil for choosing current active
+            this.setState({needShift: false})
         }
     }
+
     chooseActiveCurrency(index: number) {
-        this.setState({ activeCurrency: index })
+        this.setState({activeCurrency: index})
     }
+
     getActive() {
         log("gettign active")
-        switch(this.props.getActiveCurrency) {
+        switch (this.props.getActiveCurrency) {
             case "BTC": {
                 return 1
 
@@ -48,32 +51,41 @@ export class CarouselHistory extends React.Component<any, any> {
             }
         }
     }
+
     mapProps() {
-        switch(this.props.getActiveCurrency) {
+        switch (this.props.getActiveCurrency) {
             case "BTC": {
-                this.setState({ activeCurrency: 1})
+                this.setState({activeCurrency: 1})
                 break
             }
             case "ETH": {
-                this.setState({ activeCurrency: 2})
+                this.setState({activeCurrency: 2})
                 break
             }
             case "LTC": {
-                this.setState({ activeCurrency: 3})
+                this.setState({activeCurrency: 3})
                 break
             }
             case "XRP": {
-                this.setState({ activeCurrency: 4})
+                this.setState({activeCurrency: 4})
                 break
             }
         }
     }
+
     render() {
-        return(
+        return (
             <div className='windowPay'>
                 <div className='payWindowTable'>
-                    <Carousel onClicked = {this.chooseActiveCurrency} getActiveCurrency = {this.props.getActiveCurrency} setActiveCurrency = {this.props.setActiveCurrency} activeCurrency = {this.state.activeCurrency}/>
-                    <CarouselTable activeCurrency = {this.props.activeCurrency} getActiveCurrency = {this.props.getActiveCurrency}/>
+                    <Carousel onClicked={this.chooseActiveCurrency} getActiveCurrency={this.props.getActiveCurrency}
+                              setActiveCurrency={this.props.setActiveCurrency}
+                              activeCurrency={this.state.activeCurrency}/>
+                    <CarouselTable activeCurrency={this.props.activeCurrency}
+                                   getActiveCurrency={this.props.getActiveCurrency} refresh={this.props.refresh}
+                                   lastTxBTC = {this.props.lastTxBTC}
+                                   lastTxLTC = {this.props.lastTxLTC}
+                                   lastTxETH = {this.props.lastTxETH}
+                                   lastTxXRP = {this.props.lastTxXRP}/>
                 </div>
             </div>
         )

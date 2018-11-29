@@ -967,8 +967,8 @@ button {
 }
 .buttonHistoryFlex{
   display: flex;
-  margin-top: 15px;
-  margin-left: 50px;
+  margin-top: 0px;
+  margin-left: 20px;
 }
 .AlldirectHistory_p{
   background-color: inherit;
@@ -999,7 +999,7 @@ button {
   background-color: inherit;
   border: 0px solid black;
   margin-top: 0px;
-  margin-left: 0px;
+  margin-left: 10px;
   font-family: Lato;
   font-weight: bolder;
   font-size: 15px;
@@ -1013,7 +1013,7 @@ button {
   background-color: inherit;
   border: 0px solid black;
   margin-top: 0px;
-  margin-left: 0px;
+  margin-left: 10px;
   font-family: Lato;
   font-weight: bolder;
   font-size: 15px;
@@ -1023,7 +1023,7 @@ button {
   background-color: inherit;
   border: 0px solid black;
   margin-top: 0px;
-  margin-left: 0px;
+  margin-left: 10px;
   font-family: Lato;
   font-weight: bolder;
   font-size: 15px;
@@ -1037,10 +1037,66 @@ button {
   background-color: inherit;
   border: 0px solid black;
   margin-top: 0px;
-  margin-left: 0px;
+  margin-left: 10px;
   font-family: Lato;
   font-weight: bolder;
   font-size: 15px;
   color: rgba(255, 255, 255, 1);
+}
+.hrLine{
+  margin-top: 0px;
+  margin-left: 20px;
+  border-width: 2px;
+  border-color: rgba(150,150,150,0.5);
+  width: 850px;
+}
+.currencyNameHistory{
+  margin-top: 20px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-family: Lato;
+  font-weight: bolder;
+  font-size: 35px;
+  color: rgba(255, 255, 255, 0.7);
+}
+.updateTable{
+  background: url('file://../../../static/but_update_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 22px;
+  width: 22px;
+  margin-left: 670px;
+  margin-bottom: 5px;
+}
+.updateTable:hover {
+  background: url('file://../../../static/but_update_a.svg') no-repeat center;
+}
+.transaction-history {
+  height: 450px;
+  overflow: scroll;
+  margin-left: auto;
+  margin-right: auto;
+  bottom: 5vh;
+  width: 68%;
+  position: absolute;
+  background: inherit;
+}
+.transaction-history::-webkit-scrollbar {
+  width: 3px;
 
+}
+.transaction-history::-webkit-scrollbar-corner {
+  background: inherit;
+}
+
+.transaction-history::-webkit-scrollbar-thumb {
+  background-color: #2B4059;
+}
+.transaction-history-header {
+  font-family: 'Heebo',Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  line-height: normal;
+  font-size: 12px;
+
+  color: #4D6F96;
 }

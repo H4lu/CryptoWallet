@@ -19,7 +19,7 @@ const abi = JSON.parse(fs.readFileSync(ERC20AbiInterface, 'utf-8'))
 info('abi ' + abi)
 */
 import Container from '../../ui/Index'
-let myAdress = ''
+const myAdress = '0xCF426E1175348a492D30c518B9647a23443AB5af'
 let balance: number
 let price: number
 export function setETHBalance(bal: number) {
@@ -56,7 +56,7 @@ export async function initEthereumAddress() {
 }
 
 function setAddress(address: string) {
-  myAdress = web3.utils.toChecksumAddress('0x' + address)
+  myAdress /*= web3.utils.toChecksumAddress('0x' + address)*/
   info('ETH ADDRESS', myAdress)
 }
 export function getEthereumAddress() {
