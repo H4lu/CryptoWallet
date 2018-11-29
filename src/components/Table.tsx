@@ -5,7 +5,8 @@ interface ITableClass {
 }
 interface ITableProps {
   data: Array<Object>,
-  type: string
+  type: string,
+    activeCurrency: string
 }
 
 export class Table extends React.Component<ITableProps,ITableClass> {
@@ -22,20 +23,11 @@ export class Table extends React.Component<ITableProps,ITableClass> {
     let tableType = (this.props.type === 'normal') ? 'transaction-history' : 'transaction-history-small'
     return(
       <div className = {tableType}>
-        <p className = 'transaction-history-header'>Transaction History:</p>
         <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Currency</th>
-              <th>Value</th>
-              <th>Address</th>
-              <th>Status</th>
-            </tr>
-          </thead>
+
           <tbody>
             {this.props.data.map((element: any) => {
-              return <TableRow data = {element}/>
+              return <TableRow data = {element} activeCurrency={this.props.activeCurrency}/>
             })
           }
           </tbody>

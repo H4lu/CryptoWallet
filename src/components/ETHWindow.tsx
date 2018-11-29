@@ -96,7 +96,7 @@ export class ETHWIndow extends React.Component<any, IETHWindowState> {
               </div>
             </div>
           </div>
-          <Table data = {this.props.lastTx} type = 'small'/>
+
       </div>
     </div>
     )

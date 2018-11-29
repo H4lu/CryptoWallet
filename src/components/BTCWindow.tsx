@@ -128,7 +128,7 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
                 </div>
               </div>
             </div>
-            <Table data = {this.props.lastTx} type = 'small'/>
+
           </div>
       </div>
     )

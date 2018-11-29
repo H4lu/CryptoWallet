@@ -102,7 +102,7 @@ export class LTCWindow extends React.Component<any, ILTCWindowState> {
                 </div>
               </div>
             </div>
-            <Table data = {this.props.lastTx} type = 'small'/>
+
         </div>
       </div>
     )

@@ -8,7 +8,6 @@ export class CarouselTable extends React.PureComponent<any, any> {
     pathSend: string
     pathRecive: string
     direct: number
-   // curTableData
 
 
     constructor(props: any) {
@@ -21,7 +20,8 @@ export class CarouselTable extends React.PureComponent<any, any> {
             classNameSend: 'SenddirectHistory_p',
             classNameReceive: 'ReceivedirectHistory_p',
             direct: 0,
-            curTableData: this.props.lastTxBTC
+            curTableData: this.props.lastTxBTC,
+            activeCur: 'BTC'
         }
 
         this.updateProps = this.updateProps.bind(this)
@@ -44,6 +44,7 @@ export class CarouselTable extends React.PureComponent<any, any> {
                 this.pathSend = '/btc-window-send'
                 this.pathRecive = '/btc-window-recieve'
                 this.setState({curTableData: this.props.lastTxBTC})
+                this.setState({activeCur: 'BTC'})
               //  this.curTableData = this.props.lastTxBTC
                 break
             }
@@ -52,6 +53,7 @@ export class CarouselTable extends React.PureComponent<any, any> {
                 this.pathSend = '/eth-window-send'
                 this.pathRecive = '/eth-window-recieve'
                 this.setState({curTableData: this.props.lastTxETH})
+                this.setState({activeCur: 'ETH'})
                // this.curTableData = this.props.lastTxETH
                 break
             }
@@ -60,6 +62,7 @@ export class CarouselTable extends React.PureComponent<any, any> {
                 this.pathSend = '/ltc-window-send'
                 this.pathRecive = '/ltc-window-recieve'
                 this.setState({curTableData: this.props.lastTxLTC})
+                this.setState({activeCur: 'LTC'})
                // this.curTableData = this.props.lastTxLTC
                 break
             }
@@ -68,6 +71,7 @@ export class CarouselTable extends React.PureComponent<any, any> {
                 this.pathSend = '/xrp-window-send'
                 this.pathRecive = '/xrp-window-recieve'
                 this.setState({curTableData: this.props.lastTxXRP})
+                this.setState({activeCur: 'XRP'})
                // this.curTableData = this.props.lastTxXRP
                 break
             }
@@ -136,7 +140,9 @@ export class CarouselTable extends React.PureComponent<any, any> {
                     <div className='updateTable' onClick={this.handleUpdateDataClick}/>
                 </div>
                 <hr className='hrLine'/>
-                <Table data = {this.state.curTableData} type = 'normal'/>
+                <div className='table_content'>
+                <Table data = {this.state.curTableData}  activeCurrency = {this.state.activeCur} type = 'normal'/>
+            </div>
             </div>
         )
     }
