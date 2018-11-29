@@ -900,7 +900,6 @@ export default class App extends React.Component<any, IAPPState> {
 
     getTransactions() {
         return Promise.all([getBitcoinLastTx(), getLitecoinLastTx(), getEthereumLastTx()]).then(value => {
-            info('PROMISE ALL VALUE', value)
             for (let index in value) {
                 if (Object.prototype.hasOwnProperty.call(JSON.parse(value[index].content), 'data')) {
                     info('Parsing btc-like tx')

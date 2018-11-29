@@ -150,7 +150,7 @@ module : {
                 workerParallelJobs: 50,
                 workerNodeArgs:['--stack_size=8192', '--max-old-space-size=4080'],
                 poolParallelJobs: 300,
-                name: "ts-pool"
+                name: "js-pool"
             }
         },
         {  
@@ -183,7 +183,7 @@ module : {
                workerParallelJobs: 50,
                workerNodeArgs:['--stack_size=8192', '--max-old-space-size=4080'],
                poolParallelJobs: 300,
-               name: "ts-pool"
+               name: "js-pool"
            },
        },
        {

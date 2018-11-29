@@ -67,7 +67,6 @@ export async function getEthereumLastTx(): Promise<any> {
   try {
     const requestURL = 'https://api.ethplorer.io/getAddressTransactions/' + myAdress + '?apiKey=freekey&limit=50'
     let response = await webRequest.get(requestURL)
-    info('GOT THIS',response)
     return response
   } catch (err) {
     info(err)

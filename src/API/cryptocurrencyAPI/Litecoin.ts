@@ -87,7 +87,6 @@ export async function getLitecoinLastTx(): Promise<any> {
   try {
     const requestUrl = rootURL + '/address/' + NETWORK + '/' + myAddress
     let response = await webRequest.get(requestUrl)
-    info('GOT THIS',response)
     return response
   } catch (err) {
     info(err)

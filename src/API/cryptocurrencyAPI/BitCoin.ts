@@ -111,7 +111,6 @@ export async function getBitcoinLastTx(): Promise<any> {
     const requestUrl = rootURL + '/address/' + NETWORK + '/' + myAddr
     info('My req url: ' + requestUrl)
     let response = await webRequest.get(requestUrl)
-    info('GOT THIS RESPONSE',response)
     return response
   } catch (err) {
     info(err)
