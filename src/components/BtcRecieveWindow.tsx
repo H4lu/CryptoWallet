@@ -19,7 +19,7 @@ export class BtcRecieveWindow extends React.Component<any, IBTCRecieveState> {
 
         this.props.stateSR(true)
         this.state = {
-            address: /*getBitcoinAddress()*/'1NeJEFzY8PbVS9RvYPfDP93iqXxHjav791',
+            address: getBitcoinAddress(),
             qrcodeAddress: '',
         }
     }

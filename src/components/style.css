@@ -1215,14 +1215,16 @@ button {
     margin-top: 20px;
 }
 
+.dateTransactoion{
+    margin-left: 25px;
+}
 
 .BTCimg {
     background: url('file://../../../static/tableBTCico.svg') no-repeat center;
     border: 0px solid black;
     height: 29px;
     width: 29px;
-    margin-left: 8px;
-    margin-right: 8px;
+    margin-left: 25px;
     margin-top: 2px
 }
 
@@ -1231,8 +1233,7 @@ button {
     border: 0px solid black;
     height: 29px;
     width: 29px;
-    margin-left: 8px;
-    margin-right: 8px;
+    margin-left: 25px;
     margin-top: 2px
 }
 
@@ -1241,8 +1242,7 @@ button {
     border: 0px solid black;
     height: 29px;
     width: 29px;
-    margin-left: 8px;
-    margin-right: 8px;
+    margin-left: 25px;
     margin-top: 2px
 }
 
@@ -1251,7 +1251,53 @@ button {
     border: 0px solid black;
     height: 29px;
     width: 29px;
-    margin-left: 8px;
-    margin-right: 8px;
+    margin-left: 25px;
     margin-top: 2px
+}
+.income{
+    background: url('file://../../../static/txIn.svg') no-repeat center;
+    border: 0px solid black;
+    height: 12px;
+    width: 14px;
+    margin-left: 25px;
+}
+.outcome{
+    background: url('file://../../../static/txOut.svg') no-repeat center;
+    border: 0px solid black;
+    height: 12px;
+    width: 14px;
+    margin-left: 25px;
+}
+
+.addressTransaction{
+    margin-left: 25px;
+}
+.amountTransaction{
+    margin-left: 25px;
+}
+.currencyTransaction{
+    margin-left: 8px;
+    color: rgba(255, 255, 255, 0.4);
+}
+.pointConfirmed{
+    margin-left: 25px;
+    width: 6px;
+    height: 6px;
+    border-radius: 3px;
+    background-color: rgba(222, 222, 222, 0.3);
+}
+.pointUnConfirmed{
+    margin-left: 25px;
+    width: 6px;
+    height: 6px;
+    border-radius: 3px;
+    background-color: #30874F;
+}
+
+.confirmedTransaction{
+    margin-left: 15px;
+}
+.unconfirmedTransaction{
+    margin-left: 15px;
+    color: #30874F;
 }

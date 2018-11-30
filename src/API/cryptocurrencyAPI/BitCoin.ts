@@ -14,7 +14,7 @@ const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.bitcoin
 const NETWORK = 'BTC'
 const rootURL = 'https://chain.so/api/v2'
-const myAddr = '14Dvz6FzoUKdjdVWbQCUKgMCF1CKq4LTQu'
+const myAddr = '1Debis4DVnwwUKXL5o8qn1ToWiBEN2ErFR'
 let balance: number
 let price: number
 import { info } from 'electron-log'

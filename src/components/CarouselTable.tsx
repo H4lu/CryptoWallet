@@ -5,10 +5,7 @@ import {Table} from "./Table";
 
 export class CarouselTable extends React.PureComponent<any, any> {
     currencyName: string
-    pathSend: string
-    pathRecive: string
     direct: number
-
 
     constructor(props: any) {
         super(props)
@@ -21,7 +18,9 @@ export class CarouselTable extends React.PureComponent<any, any> {
             classNameReceive: 'ReceivedirectHistory_p',
             direct: 0,
             curTableData: this.props.lastTxBTC,
-            activeCur: 'BTC'
+            tableData: this.props.lastTxBTC,
+            activeCur: 'BTC',
+            numb: []
         }
 
         this.updateProps = this.updateProps.bind(this)
@@ -30,6 +29,7 @@ export class CarouselTable extends React.PureComponent<any, any> {
         this.receiveDirect = this.receiveDirect.bind(this)
         this.choeceDirect = this.choeceDirect.bind(this)
         this.handleUpdateDataClick = this.handleUpdateDataClick.bind(this)
+        this.parseData = this.parseData.bind(this)
     }
 
     handleUpdateDataClick() {
@@ -41,38 +41,26 @@ export class CarouselTable extends React.PureComponent<any, any> {
         switch (this.props.activeCurrency) {
             case 1: {
                 this.currencyName = 'Bitcoin'
-                this.pathSend = '/btc-window-send'
-                this.pathRecive = '/btc-window-recieve'
                 this.setState({curTableData: this.props.lastTxBTC})
                 this.setState({activeCur: 'BTC'})
-              //  this.curTableData = this.props.lastTxBTC
                 break
             }
             case 2: {
                 this.currencyName = 'Etereum'
-                this.pathSend = '/eth-window-send'
-                this.pathRecive = '/eth-window-recieve'
                 this.setState({curTableData: this.props.lastTxETH})
                 this.setState({activeCur: 'ETH'})
-               // this.curTableData = this.props.lastTxETH
                 break
             }
             case 3: {
                 this.currencyName = 'Litecoin'
-                this.pathSend = '/ltc-window-send'
-                this.pathRecive = '/ltc-window-recieve'
                 this.setState({curTableData: this.props.lastTxLTC})
                 this.setState({activeCur: 'LTC'})
-               // this.curTableData = this.props.lastTxLTC
                 break
             }
             case 4: {
                 this.currencyName = 'Ripple'
-                this.pathSend = '/xrp-window-send'
-                this.pathRecive = '/xrp-window-recieve'
                 this.setState({curTableData: this.props.lastTxXRP})
                 this.setState({activeCur: 'XRP'})
-               // this.curTableData = this.props.lastTxXRP
                 break
             }
         }
@@ -80,23 +68,44 @@ export class CarouselTable extends React.PureComponent<any, any> {
     }
 
     allDirect() {
-        this.setState({direct: 0}, this.choeceDirect)
-        //  this.updateProps()
-        // this.choeceDirect()
+        this.setState({direct: 0}, () => {
+            this.choeceDirect()
+            this.parseData()
+        })
     }
 
     sendDirect() {
-        this.setState({direct: -1}, this.choeceDirect)
-        // this.updateProps()
-        // this.choeceDirect()
+        this.setState({direct: -1}, () => {
+            this.choeceDirect()
+            this.parseData()
+        })
     }
 
     receiveDirect() {
-        this.setState({direct: 1}, this.choeceDirect)
-        // this.updateProps()
-        // this.choeceDirect()
+        this.setState({direct: 1}, () => {
+            this.choeceDirect()
+            this.parseData()
+        })
     }
 
+    parseData() {
+
+        log('parseData In')
+        switch (this.state.direct) {
+            case -1: {
+                this.setState({tableData: (this.state.curTableData.filter(curTableData => curTableData.Type === "outgoing"))})
+                break
+            }
+            case 1: {
+                this.setState({tableData: (this.state.curTableData.filter(curTableData => curTableData.Type === "incoming"))})
+                break
+            }
+            case 0: {
+                this.setState({tableData: this.state.curTableData})
+                break
+            }
+        }
+    }
 
     choeceDirect() {
         log('choose direct')
@@ -125,7 +134,6 @@ export class CarouselTable extends React.PureComponent<any, any> {
         }
     }
 
-
     render() {
         {
             this.updateProps()
@@ -141,8 +149,8 @@ export class CarouselTable extends React.PureComponent<any, any> {
                 </div>
                 <hr className='hrLine'/>
                 <div className='table_content'>
-                <Table data = {this.state.curTableData}  activeCurrency = {this.state.activeCur} type = 'normal'/>
-            </div>
+                    <Table data={this.state.tableData} activeCurrency={this.state.activeCur} type='normal'/>
+                </div>
             </div>
         )
     }

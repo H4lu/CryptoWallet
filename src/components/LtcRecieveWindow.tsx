@@ -19,7 +19,7 @@ export class LtcRecieveWindow extends React.Component<any, ILTCRecieveState> {
 
         this.props.stateSR(true)
         this.state = {
-            address: /*getLitecoinAddress()*/'LQuEzpYDzuzgoP9WdCVjSysdntPQervkKC',
+            address: getLitecoinAddress(),
             qrcodeAddress: '',
         }
     }

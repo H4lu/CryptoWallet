@@ -2,7 +2,6 @@ import * as React from 'react'
 import {ARROW_UP_PATH, ARROW_DOWN_PATH} from '../core/paths'
 
 interface ITableRowState {
-    statusClassName: string,
     classImg: string
 }
 
@@ -10,7 +9,6 @@ export class TableRow extends React.PureComponent<any, ITableRowState> {
     constructor(props: any) {
         super(props)
         this.state = {
-            statusClassName: 'text-confirmed',
             classImg: 'BTCimg'
         }
 
@@ -27,33 +25,39 @@ export class TableRow extends React.PureComponent<any, ITableRowState> {
         }
         return (
             <tr>
-                <td>{this.props.data.Date}</td>
+                <td><div className='numTransactoion'>#</div></td>
+
+                <td><div className='dateTransactoion'>{this.props.data.Date}</div></td>
 
                 <td><div className={this.state.classImg}/></td>
 
                 {(this.props.data.Type === 'incoming') ? (
-                    <td><img src={ARROW_UP_PATH}/>{this.props.data.Currency}</td>
+                    <td><div className='income'/> </td>
                 ) : (
-                    <td><img src={ARROW_DOWN_PATH}/>{this.props.data.Currency}</td>
+                    <td><div className='outcome'/> </td>
                 )}
 
-                {(this.props.data.Status === 'Confirmed') ? (
-                    <td className='text-confirmed'>{this.props.data.Amount}</td>
+                <td><div  className='addressTransaction'>{this.props.data.Address}</div></td>
+
+
+                <td ><div className='amountTransaction'>{this.props.data.Amount}</div></td>
+
+                <td><div className='currencyTransaction'>{this.props.data.Currency}</div></td>
+
+                {(this.props.data.Status === 'Finished') ? (
+                    <td><div className='pointConfirmed'/></td>
                 ) : (
-                    <td className='text-unconfirmed'>{this.props.data.Amount}</td>
+                    <td><div className='pointUnConfirmed'/></td>
                 )}
 
-                {(this.props.data.Status === 'Confirmed') ? (
-                    <td className='text-confirmed'>{this.props.data.Address}</td>
+                {(this.props.data.Status === 'Finished') ? (
+                    <td><div className='confirmedTransaction'>{this.props.data.Status}</div></td>
                 ) : (
-                    <td className='text-unconfirmed'>{this.props.data.Address}</td>
+                    <td><div className='unconfirmedTransaction'>{this.props.data.Status}</div></td>
                 )}
 
-                {(this.props.data.Status === 'Confirmed') ? (
-                    <td className='text-confirmed'>{this.props.data.Status}</td>
-                ) : (
-                    <td className='text-unconfirmed'>{this.props.data.Status}</td>
-                )}
+
+
             </tr>
         )
     }

@@ -906,7 +906,7 @@ export default class App extends React.Component<any, IAPPState> {
                     info('Parsing btc-like tx')
                     this.parseBTCLikeTransactions(value[index].content)
                 } else {
-                    info('PArsing btc tx')
+                    info('PArsing eth tx')
                     this.parseETHTransactions(value[index].content)
                 }
             }
@@ -976,7 +976,7 @@ export default class App extends React.Component<any, IAPPState> {
 
     parseTransactionDataETH(transaction: any, ethAddress: string) {
         let date = new Date(transaction.timestamp * 1000)
-        let dateCell = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
+        let dateCell = date.getHours() + ':' + ((date.getMinutes() >= 10) ? date.getMinutes(): '0' + date.getMinutes()) + ' ' + ' ' + ' ' + date.getDate() + ' ' + (date.getMonth() + 1) + ' ' + date.getFullYear()
         let amount = transaction.value
         let type = ''
         let hash = transaction.hash
@@ -987,7 +987,7 @@ export default class App extends React.Component<any, IAPPState> {
         {
             (type === 'outgoing') ? (address = transaction.to) : (address = transaction.from)
         }
-        let status = transaction.success ? 'Confirmed' : 'Unconfirmed'
+        let status = transaction.success ? 'Finished' : 'Active'
         let returnedObject = {
             Date: dateCell,
             Currency: 'ETH',
@@ -1005,11 +1005,11 @@ export default class App extends React.Component<any, IAPPState> {
         let returnedObject = {}
         if (transaction.outgoing !== undefined) {
             let date = new Date(transaction.time * 1000)
-            let dateCell = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
+            let dateCell = date.getHours() + ':' + ((date.getMinutes() >= 10) ? date.getMinutes(): '0' + date.getMinutes()) + ' ' + ' ' + ' ' + date.getDate() + ' ' + (date.getMonth() + 1) + ' ' + date.getFullYear()
             let amount = transaction.outgoing.outputs[0].value
             let address = transaction.outgoing.outputs[0].address
             let type = 'outgoing'
-            let status = (transaction.confirmations === 0) ? 'Uncofirmed' : 'Confirmed'
+            let status = (transaction.confirmations === 0) ? 'Active' : 'Finished'
             let hash = transaction.txid
             let dataToPass = {
                 Date: dateCell,
@@ -1023,11 +1023,11 @@ export default class App extends React.Component<any, IAPPState> {
             returnedObject = dataToPass
         } else {
             let date = new Date(transaction.time * 1000)
-            let dateCell = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
+            let dateCell = date.getHours() + ':' + ((date.getMinutes() >= 10) ? date.getMinutes(): '0' + date.getMinutes()) + ' ' + ' ' + ' ' + date.getDate() + ' ' + (date.getMonth() + 1) + ' ' + date.getFullYear()
             let amount = transaction.incoming.value
             let address = transaction.incoming.inputs[0].address
             let type = 'incoming'
-            let status = (transaction.confirmations === 0) ? 'Uncofirmed' : 'Confirmed'
+            let status = (transaction.confirmations === 0) ? 'Active' : 'Finished'
             let hash = transaction.txid
             let dataToPass = {
                 Date: dateCell,
