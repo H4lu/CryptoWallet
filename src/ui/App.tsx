@@ -295,10 +295,7 @@ export default class App extends React.Component<any, IAPPState> {
             main: () => <CarouselHistory setActiveCurrency={this.setActiveCurrency}
                                          getActiveCurrency={this.getActiveCurrency}
                                          activeCurrency={this.state.activeCurrency}
-                                         btcBalance={this.state.BTCBalance} ltcBalance={this.state.LTCBalance}
-                                         ethBalance={this.state.ETHBalance}
-                                         btcPrice={this.state.BTCPrice} ltcPrice={this.state.LTCPrice}
-                                         ethPrice={this.state.ETHPrice} stateSR={this.setStateSR}
+                                         stateSR={this.setStateSR}
                                          refresh={this.updateData}
                                          lastTxBTC={this.state.BTCLastTx.sort((a: any, b: any) => {
                                              let c = new Date(a.Date).getTime()

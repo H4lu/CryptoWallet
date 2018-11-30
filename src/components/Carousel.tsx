@@ -4,7 +4,7 @@ import { log } from 'electron-log'
 import { BTC_ICON, LTC_ICON, XRP_ICON } from "../core/paths"
 import CarouselElement from './CarouselElement'
 import Coverflow from "../../react-coverflow.js"
-export class Carousel extends React.Component<any, any> {
+export class Carousel extends React.PureComponent<any, any> {
 
     constructor(props: any) {
         super(props)

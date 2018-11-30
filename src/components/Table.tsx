@@ -11,7 +11,7 @@ interface ITableProps {
     activeCurrency: string
 }
 
-export class Table extends React.Component<ITableProps, ITableClass> {
+export class Table extends React.PureComponent<ITableProps, ITableClass> {
     constructor(props: any) {
         super(props)
 

@@ -1,13 +1,14 @@
-const path = require('path')
-const webpack = require('webpack')
-const HtmlWebpackPlugin = require("html-webpack-plugin")
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CleanWebpackPlugin = require('clean-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 var ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const threadLoader = require('thread-loader');
 
 
 const commonConfig = {
+
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js'
@@ -198,6 +199,7 @@ module : {
       }
     ]
   },
+
   plugins: [
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output

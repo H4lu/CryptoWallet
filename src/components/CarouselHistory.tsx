@@ -4,7 +4,7 @@ import {log} from 'electron-log'
 import {CarouselDesc} from "./CarouselDesc";
 import {CarouselTable} from "./CarouselTable";
 
-export class CarouselHistory extends React.Component<any, any> {
+export class CarouselHistory extends React.PureComponent<any, any> {
     constructor(props: any) {
         super(props)
         this.props.stateSR(false)
@@ -74,6 +74,7 @@ export class CarouselHistory extends React.Component<any, any> {
     }
 
     render() {
+        {log("History carousel update")}
         return (
             <div className='windowPay'>
                 <div className='payWindowTable'>
