@@ -9,7 +9,7 @@ import { sig } from '../hardwareAPI/GetSignature'
 import * as wif from 'wif'
 import * as satoshi from 'satoshi-bitcoin'
 import { info } from 'electron-log'
-const myAddress = 'LbQTVS8JS12i4EBcvtvEuc36d3Ybjse7Mb'
+let myAddress = ''
 const rootURL = 'https://chain.so/api/v2'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.litecoin
@@ -45,11 +45,11 @@ export async function initLitecoinAddress() {
       let answer = await getAddressPCSC(2)
       info('GOT MYADDR ANSWER', answer)
       info('My addr length', answer.length)
-      if (answer.length > 16 && answer.includes('LTC')) {
+      if (answer.length > 1 && answer[0].includes('LTC')) {
         status = true
         info('status after reset', status)
         info('resolving')
-        setMyAddress(answer.substring(3,answer.length))
+        setMyAddress(answer[0].substring(3,answer[0].length))
         resolve(0)
       }
     }
@@ -78,7 +78,7 @@ function parseValueCrypto(response: webRequest.Response<string>): Array<Number |
 }
 
 function setMyAddress(address: string) {
-  myAddress/* = address*/
+  myAddress = address
   info('MY ADDRESS LITECOIN: ' + myAddress)
 }
 

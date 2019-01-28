@@ -2,8 +2,10 @@
 .background-start {
     background: url('file://../../../static/backgroundStart.svg') no-repeat center;
     background-size: cover;
-    height: 97vh;
-}
+    height: 744px;
+    width: 1366px;
+    margin-top: -23.5px;
+    }
 
 .header-content {
     margin-left: 32px;
@@ -15,6 +17,7 @@
     height: 3vh;
     -webkit-app-region: drag;
     background-color: #1b1b1b;
+
 }
 
 .title-bar-buttons {
@@ -1300,4 +1303,29 @@ button {
 .unconfirmedTransaction{
     margin-left: 15px;
     color: #30874F;
+}
+
+.window-main-not-ready{
+    font-family: Lato;
+    font-weight: bold;
+    font-size: 24px;
+    color: rgba(255, 255, 255, 0.65);
+    letter-spacing: 1px;
+    padding-top: 450px;
+    text-align: center;
+}
+.two_line_1{
+     margin-top: -10px;
+ }
+.two_line_2{
+    margin-top: -15px;
+}
+.window-main-ready{
+    font-family: Lato;
+    font-weight: bold;
+    font-size: 24px;
+    color: rgba(255, 255, 255, 0.65);
+    letter-spacing: 1px;
+    padding-top: 450px;
+    text-align: center;
 }

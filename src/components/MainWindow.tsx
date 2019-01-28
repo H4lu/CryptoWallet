@@ -21,7 +21,7 @@ export class MainWindow extends React.Component<any, IMainWindowState> {
       return <p className = 'window-main-not-ready'>Don`t contain SIM</p>
     }
     case 2: {
-      return <p className = 'window-main-not-ready'>Waiting for PIN</p>
+        return <p className = 'window-main-not-ready'><p className='two_line_1'>Please enter</p><p className='two_line_2'>Pin code</p></p>
     }
     case 3: {
       return <p className = 'window-main-not-ready'>Not initialized</p>
@@ -47,7 +47,11 @@ export class MainWindow extends React.Component<any, IMainWindowState> {
     // <img src = '../static/logo.svg'/>
     return(
         <div className = 'background-start'>
-   
+            {(this.props.connection) ? (
+                this.renderWalletState()
+            ) : (
+                <p className = 'window-main-not-ready'>Please connect Runer</p>
+            )}
       </div>
     )
   }

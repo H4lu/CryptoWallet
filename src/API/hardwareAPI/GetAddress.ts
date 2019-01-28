@@ -6,7 +6,7 @@ import { info } from 'electron-log'
 
 export function get() {
   return new Promise((resolve,reject) => {
-    reader.transmit(Buffer.from([0xb1,0x20,0x00,0x00,0x01]), 4, 2, (err,data) => {
+    reader.transmit(Buffer.from([0xB0,0x20,0x00,0x00,0x01]), 4, 2, (err,data) => {
       if (err) {
         info(err)
         reject(err)
@@ -33,7 +33,7 @@ export function getREALSTATUS() {
 }
 export function getAnswer(id: Number): Promise<Buffer> {
   return new Promise(async (resolve,reject) => {
-    reader.transmit(Buffer.concat([Buffer.from([0xB1,0x30,0x00]),Buffer.from([id]),Buffer.from([0x00])]),255,2,(err,data) => {
+    reader.transmit(Buffer.concat([Buffer.from([0xB0,0x30,0x00]),Buffer.from([id]),Buffer.from([0x00])]),255,2,(err,data) => {
       if (err) {
         reject(err)
       } else {
@@ -42,23 +42,23 @@ export function getAnswer(id: Number): Promise<Buffer> {
     })
   })
 }
-export function getAddressPCSC(id: number): Promise<string> {
+export function getAddressPCSC(id: number): Promise<[string, Buffer]> {
   return new Promise(async (resolve, reject) => {
     let currencyId: number
     let dataToSend
     switch (id) {
     case 0: {
-      dataToSend = Buffer.from([0xB1,0x30,0x00,0x00,0x00])
+      dataToSend = Buffer.from([0xB0,0x30,0x00,0x00,0x00])
       currencyId = 0x00
       break
     }
     case 1: {
-      dataToSend = Buffer.from([0xB1,0x30,0x00,0x01,0x00])
+      dataToSend = Buffer.from([0xB0,0x30,0x00,0x01,0x00])
       currencyId = 0x01
       break
     }
     case 2: {
-      dataToSend = Buffer.from([0xB1,0x30,0x00,0x02,0x00])
+      dataToSend = Buffer.from([0xB0,0x30,0x00,0x02,0x00])
       currencyId = 0x02
       break
     }
@@ -70,11 +70,13 @@ export function getAddressPCSC(id: number): Promise<string> {
         reject(err)
       } else {
         info('ADDRESS ANSWER', data.toString())
-        console.log('RESOLVING', data.slice(3, data.length - 3).toString())
-        console.log('LENGTH', data.length)
-        resolve(data.slice(0, data.length - 3).toString())
+        console.log('RESOLVING', data.slice(4, data[0]+1).toString())
+        console.log('LENGTH', data[0])
+
+          console.log('pub',data.slice(data[0]+1, data[0]+66).toString('hex') )
+        resolve([data.slice(1, data[0]+1).toString(), data.slice(data[0]+1, data[0]+66)])
       }
-    })
+    })//data.length - 3
   })
 
 }

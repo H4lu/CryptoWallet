@@ -19,7 +19,7 @@ const abi = JSON.parse(fs.readFileSync(ERC20AbiInterface, 'utf-8'))
 info('abi ' + abi)
 */
 
-const myAdress = '0xCF426E1175348a492D30c518B9647a23443AB5af'
+let myAdress = ''
 let balance: number
 let price: number
 export function setETHBalance(bal: number) {
@@ -44,11 +44,11 @@ export async function initEthereumAddress() {
       let answer = await getAddressPCSC(1)
       info('GOT MYADDR ANSWER', answer)
       info('My addr length', answer.length)
-      if (answer.length > 16 && answer.includes('ETH')) {
+      if (answer.length > 1 && answer[0].includes('ETH')) {
         status = true
         info('status after reset', status)
         info('resolving')
-        setAddress(answer.substring(3,answer.length).toLowerCase())
+        setAddress(answer[0].substring(3,answer[0].length).toLowerCase())
         resolve(0)
       }
     }
@@ -56,7 +56,7 @@ export async function initEthereumAddress() {
 }
 
 function setAddress(address: string) {
-  myAdress /*= web3.utils.toChecksumAddress('0x' + address)*/
+  myAdress = web3.utils.toChecksumAddress(address)
   info('ETH ADDRESS', myAdress)
 }
 export function getEthereumAddress() {

@@ -45,7 +45,7 @@ import {TransactionSuccess} from '../components/TransactionSuccess'
 // import SerialPort from 'serialport'
 // import { loadBitcoinBalance } from '../core/actions/load'
 import pcsclite from 'pcsclite'
-import {setReader} from '../API/hardwareAPI/Reader'
+import {reader, setReader} from '../API/hardwareAPI/Reader'
 
 let pcsc = new pcsclite()
 import {getInfoPCSC} from '../API/hardwareAPI/GetWalletInfo'
@@ -558,9 +558,9 @@ export default class App extends React.Component<any, IAPPState> {
 
 
         async componentDidMount() {
-            await this.getBalances()
-            await this.getTransactions()
-            await this.getRates()
+        //    await this.getBalances()
+        //    await this.getTransactions()
+        //    await this.getRates()
         // handleLitecoin('mw3nwmeux9gEghMezCjfiepTtzXrDoFg6a',0.0002,10,this.redirectToTransactionsuccess)
         // handle('mgWZCzn4nv7noRwnbThqQ2hD2wT3YAKTJH',0.00002,10,this.redirectToTransactionsuccess())
         /*
@@ -596,7 +596,7 @@ export default class App extends React.Component<any, IAPPState> {
         info('APP:', App)
         pcsc.on('reader', async (reader) => {
             info('READER DETECTED', reader.name)
-            if (reader.name.includes('PN7462AU')) {
+            if (/*reader.name.includes('PN7462AU')*/true) {
                 info('setting')
                 setReader(reader)
                 reader.on('status', (status) => {
@@ -608,14 +608,31 @@ export default class App extends React.Component<any, IAPPState> {
                             info('ASD')
                         } else if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
                             info('card inserted')
-                            reader.connect({share_mode: reader.SCARD_SHARE_SHARED}, async (err, protocol) => {
+                            reader.connect({share_mode: reader.SCARD_SHARE_SHARED, protocol: reader.SCARD_PROTOCOL_T1}, async (err, protocol) => {
                                 if (err) {
                                     info('ERROR OCCURED', err)
                                     info(err)
                                 } else {
                                     info('CONNECTED')
                                     this.setState({connection: true})
-                                    this.getWalletInfo()
+
+                                    reader.transmit(Buffer.from([0x00,0xA4,0x04,0x00,0x08,0x48,0x65,0x6C,0x6C, 0x6F, 0x41, 0x70, 0x70]), 4,2,(err,data) => {
+                                        if (err) {
+                                            info('ERROR IN APLET', err)
+                                        } else {
+                                            info('SETAPLET', data.toString('hex'))
+                                            reader.transmit(Buffer.from([0xB0,0x60,0x00,0x00,0x04,0x31,0x32,0x33,0x34]), 100,2,(err,data) => {
+                                                if (err) {
+                                                    info('ERROR IN SETPIN', err)
+                                                } else {
+                                                    info('SETPIN', data.toString('hex'))
+
+                                                    this.getWalletInfo()
+                                                }
+                                            })
+                                        }
+                                    })
+
                                     info('Protocol(', reader.name, '):', protocol)
                                 }
                             })
@@ -1041,7 +1058,7 @@ export default class App extends React.Component<any, IAPPState> {
     }
 
     render() {
-        let container: string = (this.state.redirectToMain === true) ? 'container' : 'main_container'
+        let container: string = (this.state.redirectToMain === true) ? 'main_container' : 'container'
         if (this.state.SR) container = 'main_container_blur'
         return (
             <div className='blackBackground'>
@@ -1061,12 +1078,12 @@ export default class App extends React.Component<any, IAPPState> {
                     )}
                     <Route path='/transaction_success' component={() => <TransactionSuccess refresh={this.updateData}
                                                                                             resetState={this.redirectToTransactionsuccess}/>}/>
-                    <Route path='/start' component={() => <MainWindow connection={true}/*{this.state.connection}*/
-                                                                      status={true}/*{this.state.status}*/
-                                                                      init={true}/*{this.initAll}*/
-                                                                      isInitialized={true}/*{this.state.isInitialized}*/
-                                                                      walletStatus={true}/*{this.state.walletStatus}*/
-                                                                      redirectToMain={true}/*{this.state.redirectToMain}*//>}/>
+                    <Route path='/start' component={() => <MainWindow connection={this.state.connection}
+                                                                      status={this.state.status}
+                                                                      init={this.initAll}
+                                                                      isInitialized={this.state.isInitialized}
+                                                                      walletStatus={this.state.walletStatus}
+                                                                      redirectToMain={this.state.redirectToMain}/>}/>
                     {this.routes.map((route, index) => (
                         <Route
                             exact={route.exact}
