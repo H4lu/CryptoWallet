@@ -71,6 +71,7 @@ export function sig(id: number, address: string, amount: number): Promise<Buffer
 
 }
 export function getSignaturePCSC(id: number, message: Array<Buffer>, address: string, amount: number, numberOfInputs: number): Promise<Array<Buffer>> {
+  info("inputs length", numberOfInputs)
   return new Promise((resolve, reject) => {
     let currencyId: number = 0x00
     switch (id) {
@@ -100,7 +101,8 @@ export function getSignaturePCSC(id: number, message: Array<Buffer>, address: st
     let Le = Buffer.from(address).length + /*xorBuf.length +*/ amountBuf.length
     let LeBuf = Buffer.from([Le])
     info('Le',LeBuf)
-    reader.transmit(Buffer.from([0xb0,0x40,numberOfInputsBuf,idBuf,LeBuf,amountBuf,Buffer.from(address)]), 4, 2, async (err, data) => {
+      info('40: ',Buffer.concat([Buffer.from([0xb0,0x40]),Buffer.from([numberOfInputs]),Buffer.from(idBuf),Buffer.from(LeBuf),Buffer.from(amountBuf),Buffer.from(address)]).toString('hex'))
+    reader.transmit(Buffer.concat([Buffer.from([0xb0,0x40]),Buffer.from([numberOfInputs]),Buffer.from(idBuf),Buffer.from(LeBuf),Buffer.from(amountBuf),Buffer.from(address)]), 4, 2, async (err, data) => {
       if (err) {
         info('ERROR IN FIRST MMESSAGE',err)
         reject(err)
@@ -130,8 +132,9 @@ function sendFinalMessage() {
 function sendDataMessage(inputNumber: Buffer, currencyId: Buffer, hash: Buffer): Promise<Buffer> {
   info('GOT THIS INPUT NUMBER: ' + inputNumber)
   info('GOT THIS CURRENCY ID: ' + currencyId)
+    info('41: ', Buffer.concat([Buffer.from([0xb0,0x41]),Buffer.from(inputNumber), Buffer.from(currencyId), Buffer.from([0x20]), Buffer.from(hash)]).toString('hex'))
   return new Promise((resolve, reject) => {
-    reader.transmit(Buffer.from([0xb0,0x41,inputNumber, currencyId, hash]), 110, 2, (err, data) => {
+    reader.transmit(Buffer.concat([Buffer.from([0xb0,0x41]),Buffer.from(inputNumber), Buffer.from(currencyId), Buffer.from([0x20]), Buffer.from(hash)]), 110, 2, (err, data) => {
       if (err) {
         info('ERROR IN SEND HASH',err)
         reject(err)

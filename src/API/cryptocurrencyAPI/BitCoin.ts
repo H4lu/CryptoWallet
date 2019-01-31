@@ -234,7 +234,7 @@ async function createTransaction(paymentAdress: string,
 
     info('HASHARRAY: ', hashArray[0])
     info('HASHARRAY len: ', hashArray[0].length)
-    let data = await getSignaturePCSC(0, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.tx.ins.length)
+    let data = await getSignaturePCSC(0, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.inputs.length)
 
     transaction.inputs.forEach((input, index) => {
         info('Input', input)
