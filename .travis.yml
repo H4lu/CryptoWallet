@@ -1,0 +1,22 @@
+osx_image: xcode10.2
+
+dist: trusty
+sudo: required
+
+
+language: node_js
+node_js: '8'
+
+addons:
+    chrome: stable
+os:
+ - windows
+ - linux
+ - osx
+
+
+script:
+  - echo "Deploy windows build"
+  - if [[ "$TRAVIS_BRANCH" == "master" ]] && [[ "$TRAVIS_OS_NAME" == "windows" ]]; then npm release:win; fi
+
+

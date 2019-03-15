@@ -4,7 +4,6 @@
   "main": "main.js",
   "license": "MIT",
   "devDependencies": {
-    "@types/ffi": "^0.0.19",
     "@types/jest": "^21.1.5",
     "@types/node-fetch": "^1.6.7",
     "@types/react": "^16.0.22",
@@ -64,7 +63,7 @@
     "win-7zip": "^0.1.1"
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js",
+    "build": "npm install && npm run postinstall && webpack --config webpack.config.js",
     "prestart": "npm run build",
     "start": "electron ./dist/main.js",
     "pretest": "webpack --config webpack.tests.config.js",
@@ -73,7 +72,8 @@
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "rebuild": "electron-rebuild --force",
-    "start:dev": "webpack-dev-server"
+    "start:dev": "webpack-dev-server",
+    "release:win": "npm run build && cd dist/ && npm run dist"
   },
   "dependencies": {
     "@pokusew/pcsclite": "^0.4.18",
@@ -93,7 +93,6 @@
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.0.6",
     "keccak": "^1.4.0",
-    "libclang": "^0.0.11",
     "native-ext-loader": "^2.0.0",
     "pcsclite": "git+https://github.com/H4lu/node-pcsclite.git",
     "react-hot-loader": "^3.1.3",
