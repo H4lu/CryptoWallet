@@ -3,7 +3,7 @@ osx_image: xcode10.2
 dist: trusty
 sudo: required
 before_install:
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install -y libpcsclite1 libpcsclite-dev pcscd 
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install -y libpcsclite1 libpcsclite-dev pcscd; fi
 
 
 language: node_js
