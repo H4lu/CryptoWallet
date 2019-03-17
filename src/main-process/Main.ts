@@ -15,7 +15,7 @@ app.on('ready', () => {
   mainWindow = new BrowserWindow({ width: 1024, height: 720, resizable: false,
     fullscreen: false, frame: false })
   mainWindow.loadURL(`file:///${__dirname}/index.html`)
-  setupLogger()
+  //setupLogger()
   mainWindow.once('ready-to-show', () => mainWindow.show())
  // const fileName = 'file:///' + __dirname + '/index.html'
  // mainWindow.loadURL(fileName)
