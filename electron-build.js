@@ -7,7 +7,9 @@
   },
   "main": "/dist/main.js"
   "files": [
-     "dist/**"
+     "dist/**",
+     "static/**",
+     "webpack.config.js"
     "!*.ts",
     "!*.code-workspace",
     "!LICENSE.md",

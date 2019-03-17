@@ -4,7 +4,8 @@ dist: trusty
 sudo: required
 before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install -y libpcsclite1 libpcsclite-dev pcscd; fi
-
+env:
+  BRANCH="feature/travis_build"
 
 language: node_js
 node_js: '8'
@@ -13,19 +14,17 @@ addons:
     chrome: stable
     apt: 
       update: true
+
 os:
  - windows
  - linux
  - osx
 
-
 script:
   - echo "Deploy windows build"
-  - if [[ "$TRAVIS_BRANCH" == "master" ]] && [[ "$TRAVIS_OS_NAME" == "windows" ]]; then npm release:win; fi
+  - if [[ "$TRAVIS_BRANCH" == "$BRANCH" ]] && [[ "$TRAVIS_OS_NAME" == "windows" ]]; then npm release:win; fi
   - echo "Deploy linux build"
-  - if [[ "$TRAVIS_BRANCH" == "master" ]] && [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm release:linux; fi
+  - if [[ "$TRAVIS_BRANCH" == "$BRANCH" ]] && [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm release:linux; fi
   - echo "Deploy osx build"
-  - if [[ "$TRAVIS_BRANCH" == "master" ]] && [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm release:osx; fi
-
-
+  - if [[ "$TRAVIS_BRANCH" == "$BRANCH" ]] && [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm release:osx; fi
 

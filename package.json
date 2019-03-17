@@ -65,10 +65,10 @@
     "win-7zip": "^0.1.1"
   },
   "scripts": {
-    "build": "npm install && npm run postinstall && webpack --config webpack.config.js && cp webpack.config.js dist/",
+    "build": "npm install && npm run postinstall && webpack --config webpack.config.js && node setup_build.js",
     "prestart": "npm run build",
     "start": "electron ./dist/main.js",
-    "travisBuild": "rm -Rf dist/ && npm run build",
+    "travisBuild": "npm run build",
     "pretest": "webpack --config webpack.tests.config.js",
     "test": "jest",
     "postinstall": "electron-builder install-app-deps",
@@ -137,6 +137,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/H4lu/CryptoWallet/tree/master"
+    "owner": "H4lu",
+    "url": "https://github.com/H4lu/CryptoWallet"
   }
 }
