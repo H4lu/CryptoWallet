@@ -76,7 +76,7 @@
     "dist": "electron-builder",
     "rebuild": "electron-rebuild --force",
     "start:dev": "webpack-dev-server",
-    "release:win": "$GH_TOKEN = 76ebd353681066032f857c50e17ee20b47732410 npm run travisBuild && electron-builder build --windows -p always",
+    "release:win": "npm run travisBuild && electron-builder build --windows -p always",
     "release:osx": "npm run travisBuild && electron-builder build --mac -p always",
     "release:linux": "npm run travisBuild && electron-builder build --linux -p always"
   },
