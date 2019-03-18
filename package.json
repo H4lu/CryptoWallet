@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "dist/main.js",
   "license": "MIT",
-  "author": "Denis Golovkov",
+  "author": "Denis Golovkov <halurecht@gmail.com>",
   "description": "CET CryptoWallet application",
   "devDependencies": {
     "@types/jest": "^21.1.5",
