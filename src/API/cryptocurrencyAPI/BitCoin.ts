@@ -74,12 +74,10 @@ export async function initBitcoinAddress() {
       info('Status', status)
       let answer = await getAddressPCSC(0)
       info('GOT MYADDR ANSWER', answer)
-      info('My addr length', answer[0].length)
-      if (answer[0].length > 16 && answer[0].includes('BTC')) {
+        if (answer[0].length > 16 && answer[0].includes('BTC')) {
         status = true
         info('status after reset', status)
         info('MY ADDRESS BITCOIN: ' + myAddr)
-        info('resolving')
         setMyAddress(answer[0].substring(3,answer[0].length))
         setMyPubKey(answer[1])
         resolve(0)
@@ -184,7 +182,7 @@ async function createTransaction(paymentAdress: string,
                                  transactionAmount: number,transactionFee: number, redirect: any, utxos: Array<any>) {
     info(redirect)
     info('Tx amount: ' + transactionAmount)
-    info(transactionFee)
+    info('FEE:  ', transactionFee)
     let targets = {
         address: paymentAdress,
         value: transactionAmount
@@ -193,7 +191,7 @@ async function createTransaction(paymentAdress: string,
     let { inputs, outputs, fee } = coinSelect(utxos, targets, 10)
     info('Got this inputs: ' + inputs)
     // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
-    info(fee)
+    info('FEE_coinSelect', fee)
     let transaction = new TransactionBuilder(network)
     for (let input in inputs) {
         transaction.addInput(inputs[input].txid, inputs[input].output_no)
@@ -318,36 +316,11 @@ function sendByBlockcypher(transactionHex: string, redirect: any) {
         })
 }
 
-/* const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
-function sendTransaction(transactionHash: string) {
-  Request.post({ url: urlSmartbit,
-    headers: {
-      'content-type': 'application/json'
-    },
-    body : { 'hex': transactionHash },
-    json: true}, (err, res, body) => {
-    info(body)
-    info(res), info(err)
-    let bodyStatus = body.success
-    if (bodyStatus.toString() === 'true') {
-      alert('Transaction sended! Hash: ' + body.txid)
-
-    } else {
-      info(body.error.message)
-      alert('Error occured: ' + body.error.message)
-    }
-  })
-}
-*/
 export function handle(paymentAdress: string, amount: number, transactionFee: number, redirect: any) {
-  info('In handle')
-  // let code = 128
-  getLastTransactionData().then(Response => {
+   getLastTransactionData().then(Response => {
     let respData = JSON.parse(Response.content)
-    info('RespData: ' + respData.data)
     info('Resp status: ' + respData.status)
     if (respData.status === 'success') {
-      info('In success')
       let utxos = []
       for (let utxo in respData.data.txs) {
         let temp = respData.data.txs[utxo].value
@@ -368,99 +341,7 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
     info(error)
   })
 }
-/* export function handle(paymentAdress: string, amount: number, transactionFee: number) {
-  info('In handle')
-  getLastTransactionData().then(Response => {
-    let respData = JSON.parse(Response.content)
-    info('RespData: ' + respData.data)
-    info('Resp status: ' + respData.status)
-    let utxos = []
-    for (let utxo in respData.data.txs) {
-      let temp = respData.data.txs[utxo].value
-      respData.data.txs[utxo].value = toSatoshi(temp)
-      info('My value: ' + respData.data.txs[utxo].value)
-      utxos.push(respData.data.txs[utxo])
-      info('Utxo: ' + utxo)
-      info('Utxos: ' + utxos)
-    }
-    let targets = {
-      address: paymentAdress,
-      value: toSatoshi(Number(amount))
-    }
-    let tx = createTransaction(paymentAdress, toSatoshi(Number(amount)), transactionFee, utxos)
-    sendTransaction(tx)
-    info(tx)
-    let { inputs, outputs, fee } = coinSelect(utxos, targets, Number(transactionFee))
-    info(fee)
-    info('Inputs in handle: ' + inputs)
-    info('Outputs in handle:' + outputs)
 
-    if (!inputs || !outputs) return
-    let txb = new TransactionBuilder(network)
-    // inputs = JSON.parse(inputs)
-    for (let input in inputs) {
-      txb.addInput(inputs[input].txid, inputs[input].output_no)
-    }
-    /* Array(inputs).forEach(input => {
-      info('My input: ' + input)
-      txb.addInput(Objecttxb(input).txid, Object(input).vout)
-    })
-    for (let out in outputs) {
-      info('Out address: ' + outputs[out].address)
-      if (!outputs[out].address) {
-        outputs[out].address = myAddr
-        info('Added this to change: ' + outputs[out].address)
-      }
-      txb.addOutput(outputs[out].address, outputs[out].value)
-    }
-    /* Array(outputs).forEach(output => {
-      if (!output.address) {
-        output.address = myAddr
-      }
-      txb.addOutput(output.address, output.value)
-    })
-    const key = ECPair.fromWIF('cT2KsVoG9CxsphtEefRXDvmFnq3aUZ5mvQDNT3HKb3UqhGGrWxiy', network)
-    info('Unbuilded in handle: ' + txb.buildIncomplete().toHex())
-    let sig = ''
-    txb.inputs.forEach(function(input, index) {
-      info('My index: ' + index)
-      info('For each')
-      info(input)
-      info('Utxo script: ' + Object(inputs[index]).script_hex)
-      let hashForSig = txb.tx.hashForSignature(index, Buffer.from(Object(inputs[index]).script_hex),Transaction.SIGHASH_ALL)
-      info('My hash type: ' + Transaction.SIGHASH_ALL)
-      info('Hash for sig: ' + hashForSig.toString('hex'))
-      let data = getSign(0, hashForSig.toString('hex'))
-      if (index !== 0) {
-        sig = sig.concat(Object(inputs[index]).script_hex + data.toString() + 'ffffffff')
-        info('My signature: ' + sig)
-      } else {
-        sig = sig.concat(data.toString() + 'ffffffff')
-        info('Concatenate sig: ' + sig)
-      }
-    })
-    /*
-    0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
-    0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
-    0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
-    0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
-    0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
-    0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
-    0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d5000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888acffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
-    0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c48000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888acffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
-    0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c480000000000ffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d5000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888acffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
-    0100000003f50ed0db6b746c15ff909c74eff980890c8b926a1d4f2c3b231e12d7d019beee0100000000ffffffffec728d8e301d8db1c13e1e41986bbb8b41afa3d65546afcc0e94b581e1c35c48000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888acffffffff728265d77a27a14cf7f881c46273f26acac2ee4330ae6089ba2748803e79b7d50000000000ffffffff0280d1f008000000001976a9140ff05cc0ca92ed6687b3778708e1334277e5e59888ac47aadf03000000001976a9140ae4da83696abd6515d3a7d62736d6aa60f1d6c888ac00000000
-    txb.inputs.forEach(function (input, index) {
-      info(input)
-      txb.sign(index, key)
-    })
-    info('Builder Tx: ' + txb.build().toHex())
-
-  }).catch((error) => {
-    info(error)
-  })
-}
-*/
 function accumulative (utxos: any, outputs: any, feeRate: any) {
   if (!isFinite(utils.uintOrNaN(feeRate))) return {}
   let bytesAccum = utils.transactionBytes([], outputs)

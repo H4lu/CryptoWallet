@@ -733,9 +733,9 @@ button {
     border: 0px solid black;
     font-family: Lato;
     font-weight: bold;
-    font-size: 22px;
-    color: rgba(255, 255, 255, 0.31);
-    opacity: 70%;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.4);
+    opacity: 90%;
     background-color: rgba(0, 0, 0, 0.31);
     height: 44px;
     width: 418px;

@@ -23,7 +23,7 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
             address: getBitcoinAddress(),
             paymentAddress: '',
             amount: 0,
-            fee: 0.0000005,
+            fee: 0.00000226,
             usd: 0,
             feeUSD: 0,
             balanceUSD: 0
@@ -47,7 +47,9 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
     }
 
     handleClick() {
-        sendTransaction('bitcoin', this.state.paymentAddress, this.state.amount, this.state.fee, this.props.redirect)
+        if (this.state.paymentAddress != '') {
+            sendTransaction('bitcoin', this.state.paymentAddress, this.state.amount, this.state.fee, this.props.redirect)
+        }
     }
 
     render() {
@@ -84,7 +86,9 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
                     </div>
                     <div className='buttonSendCancelFlex'>
                         <div className='buttonSendBig'>
+                            <Link to={'/main'}>
                             <button type='submit' className='button-send-transaction' onClick={this.handleClick}/>
+                            </Link>
                         </div>
                         <div className='buttonCancelBig'>
                             <Link to={'/currency-carousel'}>

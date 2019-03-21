@@ -3,6 +3,7 @@ import CreateQR from "../core/CreateQR";
 /*import getRippleAddress from "../API/cryptocurrencyAPI/Ripple";*/
 import {clipboard, shell} from 'electron'
 import {Link} from "react-router-dom";
+import getRippleAddress from "../API/cryptocurrencyAPI/Ripple";
 
 interface IXRPRecieveState {
     address: string,
@@ -19,7 +20,7 @@ export class XrpRecieveWindow extends React.Component<any, IXRPRecieveState> {
 
         this.props.stateSR(true)
         this.state = {
-            address: /*getRippleAddress()*/'rMYVV4R6LQHDnWWBa46pZPjDz45r2Yb3fY',
+            address: getRippleAddress(),
             qrcodeAddress: '',
         }
     }

@@ -61,78 +61,16 @@ import {EthSendWindow} from "../components/EthSendWindow";
 import {XrpRecieveWindow} from "../components/XrpRecieveWindow";
 import {XrpSendWindow} from "../components/XrpSendWindow";
 import {CarouselHistory} from "../components/CarouselHistory";
+import {
+    getRippleLastTx,
+    getXRPBalance,
+    initRippleAddress,
+    setXRPBalance,
+    setXRPPrice
+} from "../API/cryptocurrencyAPI/Ripple";
 
-// import { connect } from 'react-redux'
-/*
-SerialPort.list().then(value => {
-  log('Serialport list value: ' + JSON.stringify(value))
-})
-let firstBuff = Buffer.from([0x9c,0x9c,0x53,0x00])
-let hashBuff = Buffer.from('8ac74ce78eda742ee94099da1f80ebf34da00dd65e26f65b189fdcfb18efc9bb', 'hex')
-let intBuff = new Buffer(4)
-intBuff.writeInt32LE(1.5 * 100000000, 0)
-log('Int buff: ' + Buffer.from(intBuff.readInt32LE(0).toString()))
-let addrBuff = Buffer.from('mgWZCzn4nv7noRwnbThqQ2hD2wT3YAKTJH', 'hex')
-log(addrBuff)
-let lastBuff = Buffer.from([0x9a,0x9a])
-let arr = Buffer.concat([firstBuff, hashBuff,intBuff, addrBuff, lastBuff])
-let port = new SerialPort('COM5', { autoOpen: false, baudRate: 115200 })
-getSig().then(value => {
-  log('FINALLY THIS VALUE: ' + value)
-})
 
-function getData() {
-  return new Promise((resolve, reject) => {
-    port.write(arr)
-    log('Attempt to read')
-    port.on('data', data => {
-      resolve(data.toString('hex'))
-    })
-    port.on('error', data => {
-      reject(data)
-    })
-  })
-}
-export async function getSig() {
-  try {
-    port.open(err => {
-      if (err) {
-        return log('Error opening port: ' + err.message)
-      }
-      getData().then(value => {
-        log('IN PROMISE: ' + value)
-      })
-    })
-  } catch (err) {
-    log(err)
-  }
-}
-*/
 
-/* interface IAppProps {
-  store: any,
-  BTCBalance: number,
-  ETHBalance: number,
-  LTCBalance: number,
-  BTCPrice: number,
-  ETHPrice: number,
-  LTCPrice: number,
-  totalBalance: number,
-  BTCHourChange: number,
-  ETHHourChange: number,
-  LTCHourChange: number,
-  BTCLastTx: Array<any>,
-  LTCLastTx: Array<any>,
-  ETHLastTx: Array<any>,
-  connection: boolean,
-  status: boolean,
-  redirect: boolean,
-  tempState: Array<any>,
-  allowInit: boolean,
-  redirectToTransactionSuccess: boolean,
-  totalPercentage: number
-}
-*/
 interface IAPPState {
     BTCBalance: number,
     ETHBalance: number,
@@ -171,20 +109,6 @@ interface IAPPState {
     SideBarLeftState: number
 }
 
-// import { BrowserRouter as Router, Route } from 'react-router-dom'
-// import { SignIn } from './signin'
-// import { MainLayout } from './MainLayout'
-// import { SignIn } from './SignIn'
-/* import { NavBar } from './NavBar'
-import { Switch, Route } from 'react-router'
-import { ActionLog } from '../components/ActionLog'
-import { TransactionComponent } from '../components/TransactionComponent'
-import { ERC20 } from '../components/ERC20'
-import { Exchange } from '../components/Exchange'
-*/
-/* import { Routes } from './Routes'
-import { Switch } from 'react-router'
-*/
 
 export default class App extends React.Component<any, IAPPState> {
     routes = [
@@ -194,10 +118,14 @@ export default class App extends React.Component<any, IAPPState> {
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
             main: () => <MainContent btcBalance={this.state.BTCBalance} ltcBalance={this.state.LTCBalance}
-                                     ethBalance={this.state.ETHBalance} total={this.state.totalBalance}
+                                     ethBalance={this.state.ETHBalance} xrpBalance={this.state.XRPBalance}
+                                     total={this.state.totalBalance}
                                      btcPrice={this.state.BTCPrice} ltcPrice={this.state.LTCPrice}
-                                     ethPrice={this.state.ETHPrice} btcHourChange={this.state.BTCHourChange}
-                                     ltcHourChange={this.state.LTCHourChange} ethHourChange={this.state.ETHHourChange}
+                                     ethPrice={this.state.ETHPrice} xrpPrice={this.state.XRPPrice}
+                                     btcHourChange={this.state.BTCHourChange}
+                                     ltcHourChange={this.state.LTCHourChange}
+                                     ethHourChange={this.state.ETHHourChange}
+                                     xrpHourChange={this.state.XRPHourChange}
                                      updateStateBTC={this.setStateTransBTC}
                                      updateStateETH={this.setStateTransETH}
                                      updateStateLTC={this.setStateTransLTC}
@@ -205,7 +133,7 @@ export default class App extends React.Component<any, IAPPState> {
                                      setActiveCurrency={this.setActiveCurrency}
                                      getActiveCurrency={this.getActiveCurrency}
 
-                                     lastTx={this.state.BTCLastTx.concat(this.state.ETHLastTx, this.state.LTCLastTx).sort((a: any, b: any) => {
+                                     lastTx={this.state.BTCLastTx.concat(this.state.ETHLastTx, this.state.LTCLastTx, this.state.XRPLastTx).sort((a: any, b: any) => {
                                          let c = new Date(a.Date).getTime()
                                          let d = new Date(b.Date).getTime()
                                          return d - c
@@ -221,9 +149,10 @@ export default class App extends React.Component<any, IAPPState> {
                                      getActiveCurrency={this.getActiveCurrency}
                                      activeCurrency={this.state.activeCurrency}
                                      btcBalance={this.state.BTCBalance} ltcBalance={this.state.LTCBalance}
-                                     ethBalance={this.state.ETHBalance}
+                                     ethBalance={this.state.ETHBalance} xrpBalance={this.state.XRPBalance}
                                      btcPrice={this.state.BTCPrice} ltcPrice={this.state.LTCPrice}
-                                     ethPrice={this.state.ETHPrice} stateSR={this.setStateSR}
+                                     ethPrice={this.state.ETHPrice} xrpPrice={this.state.XRPPrice}
+                                     stateSR={this.setStateSR}
             />
         },
         {
@@ -558,39 +487,6 @@ export default class App extends React.Component<any, IAPPState> {
 
 
         async componentDidMount() {
-        //    await this.getBalances()
-        //    await this.getTransactions()
-        //    await this.getRates()
-        // handleLitecoin('mw3nwmeux9gEghMezCjfiepTtzXrDoFg6a',0.0002,10,this.redirectToTransactionsuccess)
-        // handle('mgWZCzn4nv7noRwnbThqQ2hD2wT3YAKTJH',0.00002,10,this.redirectToTransactionsuccess())
-        /*
-        setInterval(() => {
-          SerialPort.list().then(value => {
-            for (let item in value) {
-              if (value[item].manufacturer === 'NXP') {
-                if (this.state.connection) {
-                  return
-                } else {
-                  this.waitForPin()
-                  return this.setState({ connection: !this.state.connection })
-                }
-              }
-            }
-            if (this.state.connection) {
-              log('FLI FLOP')
-              this.setState({ connection: !this.state.connection })
-            }
-          })
-        }, 1000, [])
-      }
-      waitForPin() {
-        let timer = setInterval(() => {
-          if (checkPin()) {
-            this.setState({ status: true })
-            clearInterval(timer)
-          }
-        },1000,[])
-     */
 
         info('APP PROPS:', this.props)
         info('APP:', App)
@@ -616,7 +512,8 @@ export default class App extends React.Component<any, IAPPState> {
                                     info('CONNECTED')
                                     this.setState({connection: true})
 
-                                    reader.transmit(Buffer.from([0x00,0xA4,0x04,0x00,0x08,0x48,0x65,0x6C,0x6C, 0x6F, 0x41, 0x70, 0x70]), 4,2,(err,data) => {
+                                    this.getWalletInfo()
+                                    /*reader.transmit(Buffer.from([0x00,0xA4,0x04,0x00,0x08,0x48,0x65,0x6C,0x6C, 0x6F, 0x41, 0x70, 0x70]), 4,2,(err,data) => {
                                         if (err) {
                                             info('ERROR IN APLET', err)
                                         } else {
@@ -631,7 +528,7 @@ export default class App extends React.Component<any, IAPPState> {
                                                 }
                                             })
                                         }
-                                    })
+                                    })*/
 
                                     info('Protocol(', reader.name, '):', protocol)
                                 }
@@ -649,35 +546,6 @@ export default class App extends React.Component<any, IAPPState> {
             })
         })
 
-        /*reader.on('status', (status) => {
-          log('Status(', status.name, '):', status)
-          const changes = reader.state ^ status.state
-          if (changes) {
-            if ((changes & reader.SCARD_STATE_EMPTY) && (status.state & reader.SCARD_STATE_EMPTY)) {
-              log('card removed')
-              reader.disconnect(reader.SCARD_LEAVE_CARD, function(err) {
-                if (err) {
-                  log(err)
-                } else {
-                  log('Disconnected')
-                }
-              })
-            } else if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
-              log('card inserted')
-              setTimeout(() => {
-                this.setState({ status: true })
-              }, 2000)
-              reader.connect({ share_mode : reader.SCARD_SHARE_SHARED }, function(err, protocol) {
-                if (err) {
-                  log(err)
-                } else {
-                  log('Protocol(', reader.name, '):', protocol)
-                }
-              })
-            }
-          }
-        })
-        */
 
         pcsc.on('error', function (err) {
             info('PCSC error', err.message)
@@ -692,15 +560,10 @@ export default class App extends React.Component<any, IAPPState> {
         info('INITING')
         if (this.state.allowInit) {
             this.setState({allowInit: false})
-            initBitcoinAddress().then(initEthereumAddress).then(initLitecoinAddress).then(this.getRates).then(this.getBalances).then(this.getTransactions).then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)).then(() => {
+            initBitcoinAddress().then(initEthereumAddress).then(initLitecoinAddress).then(initRippleAddress).then(this.getRates).then(this.getBalances).then(this.getTransactions).then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice)).then(() => {
                 this.setRedirectToMain()
                 this.setValues()
             })
-            /*initBitcoinAddress()
-            .then(() => initEthereumAddress()).then(() => initLitecoinAddress()).then(() => this.setState({ status: true }))
-            .then(() => this.getValues()).then(() => this.getTransactions())
-            .then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice))
-            */
         }
     }
 
@@ -711,13 +574,15 @@ export default class App extends React.Component<any, IAPPState> {
         setETHPrice(this.state.ETHPrice)
         setLTCBalance(this.state.LTCBalance)
         setLTCPrice(this.state.LTCPrice)
+        setXRPBalance(this.state.XRPBalance)
+        setXRPPrice(this.state.XRPPrice)
     }
 
     updateData() {
         info('REFRESHING')
         this.getTransactions().then(this.getBalances)
             .then(() => {
-                UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)
+                UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice)
             }).then(this.getRates)
     }
 
@@ -733,6 +598,9 @@ export default class App extends React.Component<any, IAPPState> {
             }
             case 'LTC': {
                 this.setState({LTCBalance: (this.state.LTCBalance - amount)})
+            }
+            case 'XRP': {
+                this.setState({XRPBalance: (this.state.XRPBalance - amount)})
             }
         }
     }
@@ -760,6 +628,10 @@ export default class App extends React.Component<any, IAPPState> {
             }
             case 'LTC': {
                 this.setState({LTCLastTx: [...this.state.LTCLastTx, tx]})
+                break
+            }
+            case 'XRP': {
+                this.setState({XRPLastTx: [...this.state.XRPLastTx, tx]})
                 break
             }
         }
@@ -827,7 +699,7 @@ export default class App extends React.Component<any, IAPPState> {
     }
 
     getBalances() {
-        return Promise.all([getBTCBalance(), getETHBalance(), getLTCBalance()]).then(value => {
+        return Promise.all([getBTCBalance(), getETHBalance(), getLTCBalance(), getXRPBalance()]).then(value => {
             for (let item in value) {
                 info('SUBSTRING' + value[item][0])
                 info('VALUE OF SUB', value[item][1])
@@ -850,71 +722,24 @@ export default class App extends React.Component<any, IAPPState> {
                         info('LTC STATE', this.state.LTCBalance)
                         break
                     }
+                    case 'XRP': {
+                        info('SETTING XRP BALANCE', value[item][1])
+                        this.setState({XRPBalance: value[item][1]})
+                        info('XRP STATE', this.state.XRPBalance)
+                        break
+                    }
                 }
             }
         })
     }
 
-    /*
-    for (let val in value) {
-      if (typeof(value[val]) === 'object') {
-        if (Number(val) !== value.length - 1) {
-          let parsedResponse = JSON.parse(value[val].content).data
-          info('PARSED RESPONSE', parsedResponse)
-          switch (parsedResponse.network) {
-          case 'BTC': {
-            let balance: number = Number(parsedResponse.confirmed_balance) + Number(parsedResponse.unconfirmed_balance)
-            this.setState({ BTCBalance:  Number(balance.toFixed(8)) })
-            break
-          }
-          case 'LTC': {
-            let balance: number = Number(parsedResponse.confirmed_balance) + Number(parsedResponse.unconfirmed_balance)
-            this.setState({ LTCBalance: Number(balance.toFixed(8)) })
-            break
-          }
-
-          }
-        } else {
-          const parsedRate = JSON.parse(value[val].content)
-          for (let item in parsedRate) {
-            switch (parsedRate[item].id) {
-            case 'bitcoin': {
-              this.setState({ BTCPrice: Number((parsedRate[item].price_usd * this.state.BTCBalance).toFixed(2)),
-                BTCHourChange: Number(parsedRate[item].percent_change_1h) })
-              break
-            }
-            case 'ethereum': {
-              this.setState({ ETHPrice: Number((parsedRate[item].price_usd * this.state.ETHBalance).toFixed(2)),
-                ETHHourChange: Number(parsedRate[item].percent_change_1h) })
-              break
-            }
-            case 'litecoin': {
-              this.setState({ LTCPrice: Number((parsedRate[item].price_usd * this.state.LTCBalance).toFixed(2)),
-                LTCHourChange: Number(parsedRate[item].percent_change_1h) })
-              break
-            }
-            }
-          }
-        }
-      } else {
-        let balance: number = Number(convertFromWei(value[val]))
-        this.setState({ ETHBalance: Number(balance.toFixed(8)) })
-      }
-    }
-    let total = this.state.BTCPrice + this.state.ETHPrice + this.state.LTCPrice
-    this.setState({ totalBalance: Number((total).toFixed(8)) })
-    let totalPercentage = this.state.BTCHourChange + this.state.ETHHourChange + this.state.LTCHourChange
-    this.setState({ totalPercentage: Number((totalPercentage).toFixed(2)) })
-  })
-}
-*/
     componentWillMount() {
         info('SETTING REDIRECT')
         this.setState({redirect: true})
     }
 
     getTransactions() {
-        return Promise.all([getBitcoinLastTx(), getLitecoinLastTx(), getEthereumLastTx()]).then(value => {
+        return Promise.all([getBitcoinLastTx(), getLitecoinLastTx(), getEthereumLastTx(), getRippleLastTx()]).then(value => {
             for (let index in value) {
                 if (Object.prototype.hasOwnProperty.call(JSON.parse(value[index].content), 'data')) {
                     info('Parsing btc-like tx')
@@ -1118,12 +943,4 @@ export default class App extends React.Component<any, IAPPState> {
         )
     }
 }
-/* function mapStateToProps(state: any, store: any) {
-  log(store)
-  return {
-    balance: state.getBalance
-  }
-}
 
-export default connect(mapStateToProps)(App)
-*/

@@ -147,8 +147,8 @@ handleUpdateDataClick() {
                                             <div className='but_XRP'>
                                                 <div className='clickXRP' onClick = {this.updateStateTransXRP}>
                                                     <div className={this.classXRP}>
-                                                    <p className='balance'> {this.props.btcBalance}</p>
-                                                    <p className='fiat'>{this.props.btcPrice}</p>
+                                                    <p className='balance'> {this.props.xrpBalance}</p>
+                                                    <p className='fiat'>{this.props.xrpPrice}</p>
                                                     </div>
                                                 </div>
                                             </div>
