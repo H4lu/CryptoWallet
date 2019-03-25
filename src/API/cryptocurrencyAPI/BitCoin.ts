@@ -7,9 +7,6 @@ import { getAddressPCSC } from '../hardwareAPI/GetAddress'
 import * as utils from './utils'
  import * as crypto from 'crypto'
 import * as satoshi from 'satoshi-bitcoin'
-import * as wif from 'wif'
-import { sig } from '../hardwareAPI/GetSignature'
-// const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.bitcoin
 const NETWORK = 'BTC'
@@ -83,7 +80,6 @@ export async function initBitcoinAddress() {
         resolve(0)
       }
     }
-
   })
 }
 export function setMyAddress(address: string) {
@@ -188,7 +184,7 @@ async function createTransaction(paymentAdress: string,
         value: transactionAmount
     }
     info('Got this utxos: ' + utxos)
-    let { inputs, outputs, fee } = coinSelect(utxos, targets, 10)
+    let { inputs, outputs, fee } = coinSelect(utxos, targets, 1)
     info('Got this inputs: ' + inputs)
     // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
     info('FEE_coinSelect', fee)

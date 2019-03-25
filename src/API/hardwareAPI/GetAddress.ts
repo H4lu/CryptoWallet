@@ -1,8 +1,10 @@
-
+import Web3 from 'web3'
+const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/hgAaKEDG9sIpNHqt8UYM'))
 import { Buffer } from 'buffer'
 // import { port } from './OpenPort'
 import { reader } from './Reader'
 import { info } from 'electron-log'
+import {keccak256, keccak_256} from "js-sha3";
 
 export function get() {
   return new Promise((resolve,reject) => {
@@ -45,7 +47,7 @@ export function getAnswer(id: Number): Promise<Buffer> {
 export function getAddressPCSC(id: number): Promise<[string, Buffer]> {
   return new Promise(async (resolve, reject) => {
     let currencyId: number
-    let dataToSend
+    let dataToSend = new Buffer(5)
     switch (id) {
     case 0: {
       dataToSend = Buffer.from([0xB0,0x30,0x00,0x00,0x00])
@@ -75,10 +77,16 @@ export function getAddressPCSC(id: number): Promise<[string, Buffer]> {
         reject(err)
       } else {
         info('ADDRESS ANSWER', data.toString())
-
-        resolve([data.slice(1, data[0]+1).toString(), data.slice(data[0]+1, data[0]+66)])
+         if(currencyId == 1) {
+            let forkeccak = (data.slice(data[0] + 2, data[0] + 66)).toString('hex')
+            let ethAdr = web3.utils.soliditySha3({t: 'bytes', v: forkeccak})
+            info('Keccak_web3', ethAdr)
+            ethAdr = 'ETH0x' + ethAdr.substr(26,40)
+             resolve([ethAdr, data.slice(data[0]+1, data[0]+66)])
+         }else {
+             resolve([data.slice(1, data[0] + 1).toString(), data.slice(data[0] + 1, data[0] + 66)])
+         }
       }
     })
   })
-
 }

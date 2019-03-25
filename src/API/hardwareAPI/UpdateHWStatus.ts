@@ -124,17 +124,4 @@ export function UpdateHWStatusPCSC(BTC_BAL: number, BTC_USD: number, ETH_BAL: nu
     reader.transmit(BuffXRP,20,2, (err, data) => {
     })
 
- /* let currency = 0
-  for (let item in data) {
-    let tempBuffer = new Buffer(16)
-    tempBuffer.write(data[item].toString(),0,data[item].length, 'ascii')
-
-
-      let Buff = Buffer.concat([Buffer.from([0xB0,0x50,0x00]),Buffer.from([currency]),Buffer.from([0x10]),tempBuffer])
-
-      reader.transmit(Buff,20,2, (err, data) => {
-      })
-      currency++
-  }*/
-
 }

@@ -84,7 +84,9 @@ export class LtcSendWindow extends React.Component<any, ILTCSendState> {
                     </div>
                     <div className='buttonSendCancelFlex'>
                         <div className='buttonSendBig'>
-                            <button type='submit' className='button-send-transaction' onClick={this.handleClick}/>
+                            <Link to={'/main'}>
+                                <button type='submit' className='button-send-transaction' onClick={this.handleClick}/>
+                            </Link>
                         </div>
                         <div className='buttonCancelBig'>
                             <Link to={'/currency-carousel'}>

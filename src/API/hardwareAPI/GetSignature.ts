@@ -1,5 +1,4 @@
 import { Buffer } from 'buffer'
-// import { port } from './OpenPort'
 import { reader } from '../hardwareAPI/Reader'
 import { info } from 'electron-log'
 import { getAnswer } from './GetAddress'
@@ -9,36 +8,18 @@ import { getETBalance, getETHPrice } from '../cryptocurrencyAPI/Ethereum'
 import { getLTalance,getLTCPrice } from '../cryptocurrencyAPI/Litecoin'
 import {bufferutils} from "bitcoinjs-lib";
 import {getXRPalance, getXRPPrice} from "../cryptocurrencyAPI/Ripple";
-// import { UpdateHWStatusPCSC } from './UpdateHWStatus'
-/* import * as Path from 'path'
-// declare var __dirname: string
-// let path = __dirname + './../../iTokenDLL'
-const path = Path.join(__dirname,'../..','iTokenDLL')
-const kernelPath = Path.join(__dirname, '../..', 'kernel32')
-info('path is:' + path)
-const kernel = ffi.Library(kernelPath, {'SetDllDirectoryW': ['bool', ['string']]
-})
-info('before set dll')
-kernel.SetDllDirectoryW(Path.join(__dirname, '../..','mtoken_stb.dll'))
-info('after set dll')
-const MyLib = ffi.Library(path, { 'get_dataForTransaction': ['int', ['string','int','char*','string','int*']] })
-*/
+
 
 export function sig(id: number, address: string, amount: number): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     if (address.length !== 34 && id !== 1) {
       address = address + '0'
     }
-    let xorData: any = address + amount.toString()
-    let xor = 0
-    for (let i in xorData) {
-      xor = xor ^ xorData[i].charCodeAt(0)
-    }
-    info('FINAL XOR', xor)
+
     let amountBuf = new Buffer(16)
     amountBuf.write(amount.toString(),0,amount.toString().length, 'ascii')
     let code = 33
-    let message = Buffer.concat([Buffer.from([0xB0,0x40,0x00]),Buffer.from([xor]),Buffer.from([0x60]),Buffer.from([code]),Buffer.from([id]),amountBuf,Buffer.from(address)])
+    let message = Buffer.concat([Buffer.from([0xB0,0x40,0x00]),Buffer.from([0x01]),Buffer.from([0x60]),Buffer.from([code]),Buffer.from([id]),amountBuf,Buffer.from(address)])
     info('MESSAGE TO SEND',message)
     getAnswer(id).then(data => info(data)).catch(err => info(err))
     reader.transmit(message, 4,2, async (err,data) => {

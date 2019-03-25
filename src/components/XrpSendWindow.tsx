@@ -84,7 +84,9 @@ export class XrpSendWindow extends React.Component<any, IXRPSendState> {
                     </div>
                     <div className='buttonSendCancelFlex'>
                         <div className='buttonSendBig'>
-                            <button type='submit' className='button-send-transaction' onClick={this.handleClick}/>
+                            <Link to={'/main'}>
+                                <button type='submit' className='button-send-transaction' onClick={this.handleClick}/>
+                            </Link>
                         </div>
                         <div className='buttonCancelBig'>
                             <Link to={'/currency-carousel'}>
