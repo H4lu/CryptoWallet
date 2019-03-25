@@ -16,9 +16,9 @@ addons:
       update: true
 
 os:
- - windows
+ # windows
  - linux
-# - osx
+ - osx
 
 script:
 #  - echo "Deploy windows build"
