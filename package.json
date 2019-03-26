@@ -1,6 +1,6 @@
 {
   "name": "CryptoWallet",
-  "version": "1.0.3",
+  "version": "1.0.2",
   "main": "dist/main.js",
   "license": "MIT",
   "author": "Denis Golovkov <halurecht@gmail.com>",
@@ -68,7 +68,7 @@
     "build": "npm install && npm run postinstall && webpack --config webpack.config.js && node setup_build.js",
     "prestart": "npm run build",
     "start": "electron ./dist/main.js",
-    "travisBuild": "npm run build && npm version patch",
+    "travisBuild": "npm run build && npm version patch --force",
     "pretest": "webpack --config webpack.tests.config.js",
     "test": "jest",
     "postinstall": "electron-builder install-app-deps",
