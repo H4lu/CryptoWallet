@@ -1,0 +1,2821 @@
+{
+  "name": "CryptoWallet",
+  "version": "1.0.0",
+  "main": "main.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^21.1.5",
+    "@types/node-fetch": "^1.6.7",
+    "@types/react": "^16.0.22",
+    "@types/react-dom": "^16.0.4",
+!    "@types/react-router-dom": "^4.2.1",
+    "@types/request-promise": "^4.1.39",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-es3-member-expression-literals": "^6.22.0",
+    "babel-plugin-transform-es3-property-literals": "^6.22.0",
+    "babel-preset-es2015-node": "^6.1.1",
+    "babel-preset-react": "^6.24.1",
+    "bindings": "^1.3.0",
+    "css-loader": "^0.28.8",
+    "electron": "^1.8.3",
+    "electron-builder": "^19.45.5",
+    "electron-devtools-installer": "^2.2.3",
+    "electron-log": "^2.2.14",
+    "electron-rebuild": "^1.7.3",
+    "electron-wix-msi": "^1.3.0",
+    "ethereumjs-util": "^5.1.5",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "file-loader": "^1.1.11",
+    "jest": "^21.2.1",
+    "jest-junit": "^3.1.0",
+    "js-sha3": "^0.7.0",
+    "node-fetch": "^1.7.3",
+    "node-gyp": "^3.6.2",
+    "node-loader": "^0.6.0",
+    "octal-number-loader": "^0.1.4",
+    "postcss-load-config": "^1.2.0",
+
+      
+> CryptoWallet@1.0.0 release:osx /Users/denis/CryptoWallet
+> npm run build && cd dist/ && npm run dist
+
+
+> CryptoWallet@1.0.0 build /Users/denis/CryptoWallet
+> npm install && npm run postinstall && webpack --config webpack.config.js
+
+
+> scrypt@6.0.3 preinstall /Users/denis/CryptoWallet/node_modules/scrypt
+> node node-scrypt-preinstall.js
+
+
+> fsevents@1.1.3 install /Users/denis/CryptoWallet/node_modules/fsevents
+> node install
+
+node-pre-gyp ERR! Tried to download(404): https://fsevents-binaries.s3-us-west-2.amazonaws.com/v1.1.3/fse-v1.1.3-node-v67-darwin-x64.tar.gz 
+node-pre-gyp ERR! Pre-built binaries not found for fsevents@1.1.3 and node@11.11.0 (node-v67 ABI, unknown) (falling back to source compile with node-gyp) 
+node-pre-gyp ERR! Tried to download(undefined): https://fsevents-binaries.s3-us-west-2.amazonaws.com/v1.1.3/fse-v1.1.3-node-v67-darwin-x64.tar.gz 
+node-pre-gyp ERR! Pre-built binaries not found for fsevents@1.1.3 and node@11.11.0 (node-v67 ABI, unknown) (falling back to source compile with node-gyp) 
+  SOLINK_MODULE(target) Release/.node
+  SOLINK_MODULE(target) Release/.node
+  CXX(target) Release/obj.target/fse/fsevents.o
+  CXX(target) Release/obj.target/fse/fsevents.o
+In file included from In file included from ../fsevents.cc:6:
+../fsevents.cc:6:
+In file included from In file included from ../../nan/nan.h../../nan/nan.h::203203:
+:
+In file included from In file included from ../../nan/nan_new.h../../nan/nan_new.h::189189:
+:
+../../nan/nan_implementation_12_inl.h../../nan/nan_implementation_12_inl.h::337337::2828::  warningwarning: : 'New' is deprecated: Use Isolate* version [-Wdeprecated-declarations]'New' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+
+  return v8::StringObject::New(value).As<v8::StringObject>();  return v8::StringObject::New(value).As<v8::StringObject>();
+                           ^
+
+                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:5241:3: note: 'New' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:5241:3: note: 'New' has been explicitly marked deprecated here
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+  declarator __attribute__((deprecated(message)))
+                            ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../fsevents.cc:6:
+../../nan/nan.h:839:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../fsevents.cc:6:
+../../nan/nan.h:854:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:164:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../fsevents.cc:6:
+../../nan/nan.h:869:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:157:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../fsevents.cc:6:
+../../nan/nan.h:916:44: warning: 'ToString' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      v8::Local<v8::String> string = from->ToString();
+                                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2548:10: note: 'ToString' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<String> ToString() const);In file included from 
+../fsevents.cc:6:
+../../nan/nan.h:839:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h    return node::MakeCallback(:
+                 ^
+326:29: note: /Users/denis/.node-gyp/11.11.0/include/node/node.hexpanded from macro 'V8_DEPRECATED':171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+
+  declarator __attribute__((deprecated(message)))
+                            ^NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../fsevents.cc:6:
+../../nan/nan.h:854:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:164:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+In file included from ../fsevents.cc:6:
+../../nan/nan.h:926    __attribute__((deprecated(message))) declarator:
+27                   ^
+: warning: 'WriteUtf8' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+        length_ = string->WriteUtf8(str_, static_cast<int>(len), 0, flags);
+                          ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2753:3: note: 'WriteUtf8' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../fsevents.cc:6:
+../../nan/nan.h:869:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:157:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../fsevents.cc:6:
+../../nan/nan.h:916:44: warning: 'ToString' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      v8::Local<v8::String> string = from->ToString();
+                                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2548:10: note: 'ToString' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<String> ToString() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../fsevents.cc:6:
+../../nan/nan.h:926:27: warning: 'WriteUtf8' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+        length_ = string->WriteUtf8(str_, static_cast<int>(len), 0, flags);
+                          ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2753:3: note: 'WriteUtf8' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../fsevents.cc:6:
+../../nan/nan.h:1478:31: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return scope.Escape(node::MakeCallback(
+                              ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../fsevents.cc:6:
+../../nan/nan.h:1478:31: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return scope.Escape(node::MakeCallback(
+                              ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+7 warnings generated.
+7 warnings generated.
+rm: ./Release/.deps/Release/obj.target/fse/fsevents.o.d.raw: No such file or directory
+make: *** [Release/obj.target/fse/fsevents.o] Error 1
+gyp  SOLINK_MODULE(target) Release/fse.node
+ ERR! build error 
+gyp ERR! stack Error: `make` failed with exit code: 2
+gyp ERR! stack     at ChildProcess.onExit (/usr/local/lib/node_modules/npm/node_modules/node-gyp/lib/build.js:262:23)
+gyp ERR! stack     at ChildProcess.emit (events.js:197:13)
+gyp ERR! stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:254:12)
+gyp ERR! System Darwin 18.2.0
+gyp ERR! command "/usr/local/Cellar/node/11.11.0/bin/node" "/usr/local/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js" "build" "--fallback-to-build" "--module=/Users/denis/CryptoWallet/node_modules/fsevents/lib/binding/Release/node-v67-darwin-x64/fse.node" "--module_name=fse" "--module_path=/Users/denis/CryptoWallet/node_modules/fsevents/lib/binding/Release/node-v67-darwin-x64"
+gyp ERR! cwd /Users/denis/CryptoWallet/node_modules/fsevents
+gyp ERR! node -v v11.11.0
+gyp ERR! node-gyp -v v3.8.0
+gyp ERR! not ok 
+node-pre-gyp ERR! build error 
+node-pre-gyp ERR! stack Error: Failed to execute '/usr/local/Cellar/node/11.11.0/bin/node /usr/local/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js build --fallback-to-build --module=/Users/denis/CryptoWallet/node_modules/fsevents/lib/binding/Release/node-v67-darwin-x64/fse.node --module_name=fse --module_path=/Users/denis/CryptoWallet/node_modules/fsevents/lib/binding/Release/node-v67-darwin-x64' (1)
+node-pre-gyp ERR! stack     at ChildProcess.<anonymous> (/Users/denis/CryptoWallet/node_modules/fsevents/node_modules/node-pre-gyp/lib/util/compile.js:83:29)
+node-pre-gyp ERR! stack     at ChildProcess.emit (events.js:197:13)
+node-pre-gyp ERR! stack     at maybeClose (internal/child_process.js:984:16)
+node-pre-gyp ERR! stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:265:5)
+node-pre-gyp ERR! System Darwin 18.2.0
+node-pre-gyp ERR! command "/usr/local/Cellar/node/11.11.0/bin/node" "/Users/denis/CryptoWallet/node_modules/fsevents/node_modules/node-pre-gyp/bin/node-pre-gyp" "install" "--fallback-to-build"
+node-pre-gyp ERR! cwd /Users/denis/CryptoWallet/node_modules/fsevents
+node-pre-gyp ERR! node -v v11.11.0
+node-pre-gyp ERR! node-pre-gyp -v v0.6.39
+node-pre-gyp ERR! not ok 
+Failed to execute '/usr/local/Cellar/node/11.11.0/bin/node /usr/local/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js build --fallback-to-build --module=/Users/denis/CryptoWallet/node_modules/fsevents/lib/binding/Release/node-v67-darwin-x64/fse.node --module_name=fse --module_path=/Users/denis/CryptoWallet/node_modules/fsevents/lib/binding/Release/node-v67-darwin-x64' (1)
+  COPY /Users/denis/CryptoWallet/node_modules/fsevents/lib/binding/Release/node-v67-darwin-x64/fse.node
+
+> ref@1.3.5 install /Users/denis/CryptoWallet/node_modules/ref
+> node-gyp rebuild
+
+  TOUCH Release/obj.target/action_after_build.stamp
+  CXX(target) Release/obj.target/binding/src/binding.o
+In file included from ../src/binding.cc:7:
+In file included from ../../nan/nan.h:203:
+In file included from ../../nan/nan_new.h:189:
+../../nan/nan_implementation_12_inl.h:337:28: warning: 'New' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+  return v8::StringObject::New(value).As<v8::StringObject>();
+                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:5241:3: note: 'New' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/binding.cc:7:
+../../nan/nan.h:839:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/binding.cc:7:
+../../nan/nan.h:854:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:164:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/binding.cc:7:
+../../nan/nan.h:869:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:157:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/binding.cc:7:
+../../nan/nan.h:916:44: warning: 'ToString' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      v8::Local<v8::String> string = from->ToString();
+                                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2548:10: note: 'ToString' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<String> ToString() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/binding.cc:7:
+../../nan/nan.h:926:27: warning: 'WriteUtf8' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+        length_ = string->WriteUtf8(str_, static_cast<int>(len), 0, flags);
+                          ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2753:3: note: 'WriteUtf8' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/binding.cc:7:
+../../nan/nan.h:1478:31: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return scope.Escape(node::MakeCallback(
+                              ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+../src/binding.cc:222:30: warning: 'BooleanValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+  bool persistent = info[3]->BooleanValue();
+                             ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2568:3: note: 'BooleanValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", bool BooleanValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/binding.cc:253:26: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+  size_t size = info[2]->Uint32Value();
+                         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/binding.cc:360:23: warning: 'Utf8Value' is deprecated: Use Isolate version [-Wdeprecated-declarations]
+    String::Utf8Value _str(in);
+                      ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2991:5: note: 'Utf8Value' has been explicitly marked deprecated here
+    V8_DEPRECATED("Use Isolate version",
+    ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/binding.cc:447:23: warning: 'Utf8Value' is deprecated: Use Isolate version [-Wdeprecated-declarations]
+    String::Utf8Value _str(in);
+                      ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2991:5: note: 'Utf8Value' has been explicitly marked deprecated here
+    V8_DEPRECATED("Use Isolate version",
+    ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/binding.cc:521:26: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+  size_t size = info[1]->Uint32Value();
+                         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/binding.cc:550:32: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+  uint32_t numZeros = info[1]->Uint32Value();
+                               ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/binding.cc:643:8: warning: 'ForceSet' is deprecated [-Wdeprecated-declarations]
+  Nan::ForceSet(target, Nan::New<v8::String>("endianness").ToLocalChecked(), Nan::New<v8::String>(CheckEndianness()).ToLocalChecked(), static_cast<PropertyAttribute>(ReadOnly|DontDelete));
+       ^
+../../nan/nan_maybe_43_inl.h:116:1: note: 'ForceSet' has been explicitly marked deprecated here
+NAN_DEPRECATED inline Maybe<bool> ForceSet(
+^
+../../nan/nan.h:98:40: note: expanded from macro 'NAN_DEPRECATED'
+# define NAN_DEPRECATED __attribute__((deprecated))
+                                       ^
+../src/binding.cc:644:8: warning: 'ForceSet' is deprecated [-Wdeprecated-declarations]
+  Nan::ForceSet(target, Nan::New<v8::String>("NULL").ToLocalChecked(), WrapNullPointer(), static_cast<PropertyAttribute>(ReadOnly|DontDelete));
+       ^
+../../nan/nan_maybe_43_inl.h:116:1: note: 'ForceSet' has been explicitly marked deprecated here
+NAN_DEPRECATED inline Maybe<bool> ForceSet(
+^
+../../nan/nan.h:98:40: note: expanded from macro 'NAN_DEPRECATED'
+# define NAN_DEPRECATED __attribute__((deprecated))
+                                       ^
+15 warnings generated.
+  SOLINK_MODULE(target) Release/binding.node
+
+> keccak@1.4.0 install /Users/denis/CryptoWallet/node_modules/keccak
+> npm run rebuild || echo "Keccak bindings compilation fail. Pure JS implementation will be used."
+
+
+> keccak@1.4.0 rebuild /Users/denis/CryptoWallet/node_modules/keccak
+> node-gyp rebuild
+
+  CXX(target) Release/obj.target/keccak/src/addon.o
+In file included from ../src/addon.cc:2:
+In file included from ../../nan/nan.h:203:
+In file included from ../../nan/nan_new.h:189:
+../../nan/nan_implementation_12_inl.h:337:28: warning: 'New' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+  return v8::StringObject::New(value).As<v8::StringObject>();
+                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:5241:3: note: 'New' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/addon.cc:2:
+../../nan/nan.h:839:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/addon.cc:2:
+../../nan/nan.h:854:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:164:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/addon.cc:2:
+../../nan/nan.h:869:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:157:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/addon.cc:2:
+../../nan/nan.h:916:44: warning: 'ToString' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      v8::Local<v8::String> string = from->ToString();
+                                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2548:10: note: 'ToString' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<String> ToString() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/addon.cc:2:
+../../nan/nan.h:926:27: warning: 'WriteUtf8' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+        length_ = string->WriteUtf8(str_, static_cast<int>(len), 0, flags);
+                          ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2753:3: note: 'WriteUtf8' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/addon.cc:2:
+../../nan/nan.h:1478:31: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return scope.Escape(node::MakeCallback(
+                              ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+../src/addon.cc:37:34: warning: 'IntegerValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+    unsigned int rate = info[0]->IntegerValue();
+                                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2570:3: note: 'IntegerValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", int64_t IntegerValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/addon.cc:38:38: warning: 'IntegerValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+    unsigned int capacity = info[1]->IntegerValue();
+                                     ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2570:3: note: 'IntegerValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", int64_t IntegerValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/addon.cc:56:35: warning: 'IntegerValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+    unsigned char bits = info[0]->IntegerValue();
+                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2570:3: note: 'IntegerValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", int64_t IntegerValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/addon.cc:64:30: warning: 'IntegerValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+    size_t length = info[0]->IntegerValue();
+                             ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2570:3: note: 'IntegerValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", int64_t IntegerValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/addon.cc:75:73: warning: 'ToObject' is deprecated: Use maybe version [-Wdeprecated-declarations]
+    KeccakWrapper* to = Nan::ObjectWrap::Unwrap<KeccakWrapper>(info[0]->ToObject());
+                                                                        ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2549:10: note: 'ToObject' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<Object> ToObject() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+12 warnings generated.
+  CC(target) Release/obj.target/keccak/src/libkeccak/KeccakSponge.o
+  CC(target) Release/obj.target/keccak/src/libkeccak/KeccakP-1600-reference.o
+../src/libkeccak/KeccakP-1600-reference.c:231:13: warning: unused function 'fromBytesToWords' [-Wunused-function]
+static void fromBytesToWords(tKeccakLane *stateAsWords, const unsigned char *state)
+            ^
+../src/libkeccak/KeccakP-1600-reference.c:242:13: warning: unused function 'fromWordsToBytes' [-Wunused-function]
+static void fromWordsToBytes(unsigned char *state, const tKeccakLane *stateAsWords)
+            ^
+2 warnings generated.
+  SOLINK_MODULE(target) Release/keccak.node
+
+> scrypt@6.0.3 install /Users/denis/CryptoWallet/node_modules/scrypt
+> node-gyp rebuild
+
+  SOLINK_MODULE(target) Release/copied_files.node
+  CC(target) Release/obj.target/scrypt_wrapper/src/util/memlimit.o
+  CC(target) Release/obj.target/scrypt_wrapper/src/scryptwrapper/keyderivation.o
+  CC(target) Release/obj.target/scrypt_wrapper/src/scryptwrapper/pickparams.o
+  CC(target) Release/obj.target/scrypt_wrapper/src/scryptwrapper/hash.o
+  LIBTOOL-STATIC Release/scrypt_wrapper.a
+  CC(target) Release/obj.target/scrypt_lib/scrypt/scrypt-1.2.0/lib/crypto/crypto_scrypt.o
+  CC(target) Release/obj.target/scrypt_lib/scrypt/scrypt-1.2.0/lib/crypto/crypto_scrypt_smix.o
+  CC(target) Release/obj.target/scrypt_lib/scrypt/scrypt-1.2.0/libcperciva/util/warnp.o
+  CC(target) Release/obj.target/scrypt_lib/scrypt/scrypt-1.2.0/libcperciva/alg/sha256.o
+  CC(target) Release/obj.target/scrypt_lib/scrypt/scrypt-1.2.0/libcperciva/util/insecure_memzero.o
+  CC(target) Release/obj.target/scrypt_lib/scrypt/scrypt-1.2.0/lib/scryptenc/scryptenc_cpuperf.o
+  LIBTOOL-STATIC Release/scrypt_lib.a
+  CXX(target) Release/obj.target/scrypt/src/node-boilerplate/scrypt_common.o
+In file included from ../src/node-boilerplate/scrypt_common.cc:28:
+In file included from ../../nan/nan.h:203:
+In file included from ../../nan/nan_new.h:189:
+../../nan/nan_implementation_12_inl.h:337:28: warning: 'New' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+  return v8::StringObject::New(value).As<v8::StringObject>();
+                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:5241:3: note: 'New' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_common.cc:28:
+../../nan/nan.h:839:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_common.cc:28:
+../../nan/nan.h:854:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:164:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_common.cc:28:
+../../nan/nan.h:869:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:157:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_common.cc:28:
+../../nan/nan.h:916:44: warning: 'ToString' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      v8::Local<v8::String> string = from->ToString();
+                                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2548:10: note: 'ToString' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<String> ToString() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_common.cc:28:
+../../nan/nan.h:926:27: warning: 'WriteUtf8' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+        length_ = string->WriteUtf8(str_, static_cast<int>(len), 0, flags);
+                          ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2753:3: note: 'WriteUtf8' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_common.cc:28:
+../../nan/nan.h:1478:31: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return scope.Escape(node::MakeCallback(
+                              ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+7 warnings generated.
+  CXX(target) Release/obj.target/scrypt/src/node-boilerplate/scrypt_params_async.o
+In file included from ../src/node-boilerplate/scrypt_params_async.cc:1:
+In file included from ../../nan/nan.h:203:
+In file included from ../../nan/nan_new.h:189:
+../../nan/nan_implementation_12_inl.h:337:28: warning: 'New' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+  return v8::StringObject::New(value).As<v8::StringObject>();
+                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:5241:3: note: 'New' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_params_async.cc:1:
+../../nan/nan.h:839:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_params_async.cc:1:
+../../nan/nan.h:854:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:164:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_params_async.cc:1:
+../../nan/nan.h:869:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:157:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_params_async.cc:1:
+../../nan/nan.h:916:44: warning: 'ToString' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      v8::Local<v8::String> string = from->ToString();
+                                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2548:10: note: 'ToString' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<String> ToString() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_params_async.cc:1:
+../../nan/nan.h:926:27: warning: 'WriteUtf8' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+        length_ = string->WriteUtf8(str_, static_cast<int>(len), 0, flags);
+                          ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2753:3: note: 'WriteUtf8' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_params_async.cc:1:
+../../nan/nan.h:1478:31: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return scope.Escape(node::MakeCallback(
+                              ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_params_async.cc:4:
+In file included from ../src/node-boilerplate/inc/scrypt_params_async.h:28:
+In file included from ../src/node-boilerplate/inc/scrypt_async.h:28:
+../src/node-boilerplate/inc/scrypt_common.h:39:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      N(obj->Get(Nan::New("N").ToLocalChecked())->Uint32Value()),
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_params_async.cc:4:
+In file included from ../src/node-boilerplate/inc/scrypt_params_async.h:28:
+In file included from ../src/node-boilerplate/inc/scrypt_async.h:28:
+../src/node-boilerplate/inc/scrypt_common.h:40:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      r(obj->Get(Nan::New("r").ToLocalChecked())->Uint32Value()),
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_params_async.cc:4:
+In file included from ../src/node-boilerplate/inc/scrypt_params_async.h:28:
+In file included from ../src/node-boilerplate/inc/scrypt_async.h:28:
+../src/node-boilerplate/inc/scrypt_common.h:41:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      p(obj->Get(Nan::New("p").ToLocalChecked())->Uint32Value()) {}
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_params_async.cc:4:
+../src/node-boilerplate/inc/scrypt_params_async.h:35:24: warning: 'NumberValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      maxtime(info[0]->NumberValue()),
+                       ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2569:3: note: 'NumberValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", double NumberValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_params_async.cc:4:
+../src/node-boilerplate/inc/scrypt_params_async.h:36:27: warning: 'NumberValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      maxmemfrac(info[1]->NumberValue()),
+                          ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2569:3: note: 'NumberValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", double NumberValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_params_async.cc:4:
+../src/node-boilerplate/inc/scrypt_params_async.h:37:23: warning: 'IntegerValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      maxmem(info[2]->IntegerValue()),
+                      ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2570:3: note: 'IntegerValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", int64_t IntegerValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_params_async.cc:4:
+../src/node-boilerplate/inc/scrypt_params_async.h:38:26: warning: 'IntegerValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      osfreemem(info[3]->IntegerValue())
+                         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2570:3: note: 'IntegerValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", int64_t IntegerValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+14 warnings generated.
+  CXX(target) Release/obj.target/scrypt/src/node-boilerplate/scrypt_params_sync.o
+In file included from ../src/node-boilerplate/scrypt_params_sync.cc:1:
+In file included from ../../nan/nan.h:203:
+In file included from ../../nan/nan_new.h:189:
+../../nan/nan_implementation_12_inl.h:337:28: warning: 'New' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+  return v8::StringObject::New(value).As<v8::StringObject>();
+                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:5241:3: note: 'New' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_params_sync.cc:1:
+../../nan/nan.h:839:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_params_sync.cc:1:
+../../nan/nan.h:854:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:164:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_params_sync.cc:1:
+../../nan/nan.h:869:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:157:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_params_sync.cc:1:
+../../nan/nan.h:916:44: warning: 'ToString' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      v8::Local<v8::String> string = from->ToString();
+                                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2548:10: note: 'ToString' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<String> ToString() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_params_sync.cc:1:
+../../nan/nan.h:926:27: warning: 'WriteUtf8' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+        length_ = string->WriteUtf8(str_, static_cast<int>(len), 0, flags);
+                          ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2753:3: note: 'WriteUtf8' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_params_sync.cc:1:
+../../nan/nan.h:1478:31: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return scope.Escape(node::MakeCallback(
+                              ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_params_sync.cc:4:
+../src/node-boilerplate/inc/scrypt_common.h:39:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      N(obj->Get(Nan::New("N").ToLocalChecked())->Uint32Value()),
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_params_sync.cc:4:
+../src/node-boilerplate/inc/scrypt_common.h:40:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      r(obj->Get(Nan::New("r").ToLocalChecked())->Uint32Value()),
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_params_sync.cc:4:
+../src/node-boilerplate/inc/scrypt_common.h:41:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      p(obj->Get(Nan::New("p").ToLocalChecked())->Uint32Value()) {}
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/node-boilerplate/scrypt_params_sync.cc:25:35: warning: 'NumberValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+  const double maxtime = info[0]->NumberValue();
+                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2569:3: note: 'NumberValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", double NumberValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/node-boilerplate/scrypt_params_sync.cc:26:34: warning: 'IntegerValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+  const size_t maxmem = info[2]->IntegerValue();
+                                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2570:3: note: 'IntegerValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", int64_t IntegerValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/node-boilerplate/scrypt_params_sync.cc:27:38: warning: 'NumberValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+  const double maxmemfrac = info[1]->NumberValue();
+                                     ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2569:3: note: 'NumberValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", double NumberValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/node-boilerplate/scrypt_params_sync.cc:28:37: warning: 'IntegerValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+  const size_t osfreemem = info[3]->IntegerValue();
+                                    ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2570:3: note: 'IntegerValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", int64_t IntegerValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+14 warnings generated.
+  CXX(target) Release/obj.target/scrypt/src/node-boilerplate/scrypt_kdf_async.o
+In file included from ../src/node-boilerplate/scrypt_kdf_async.cc:1:
+In file included from ../../nan/nan.h:203:
+In file included from ../../nan/nan_new.h:189:
+../../nan/nan_implementation_12_inl.h:337:28: warning: 'New' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+  return v8::StringObject::New(value).As<v8::StringObject>();
+                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:5241:3: note: 'New' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_kdf_async.cc:1:
+../../nan/nan.h:839:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_kdf_async.cc:1:
+../../nan/nan.h:854:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:164:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_kdf_async.cc:1:
+../../nan/nan.h:869:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:157:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_kdf_async.cc:1:
+../../nan/nan.h:916:44: warning: 'ToString' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      v8::Local<v8::String> string = from->ToString();
+                                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2548:10: note: 'ToString' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<String> ToString() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_kdf_async.cc:1:
+../../nan/nan.h:926:27: warning: 'WriteUtf8' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+        length_ = string->WriteUtf8(str_, static_cast<int>(len), 0, flags);
+                          ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2753:3: note: 'WriteUtf8' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_kdf_async.cc:1:
+../../nan/nan.h:1478:31: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return scope.Escape(node::MakeCallback(
+                              ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_kdf_async.cc:4:
+In file included from ../src/node-boilerplate/inc/scrypt_kdf_async.h:28:
+In file included from ../src/node-boilerplate/inc/scrypt_async.h:28:
+../src/node-boilerplate/inc/scrypt_common.h:39:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      N(obj->Get(Nan::New("N").ToLocalChecked())->Uint32Value()),
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_kdf_async.cc:4:
+In file included from ../src/node-boilerplate/inc/scrypt_kdf_async.h:28:
+In file included from ../src/node-boilerplate/inc/scrypt_async.h:28:
+../src/node-boilerplate/inc/scrypt_common.h:40:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      r(obj->Get(Nan::New("r").ToLocalChecked())->Uint32Value()),
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_kdf_async.cc:4:
+In file included from ../src/node-boilerplate/inc/scrypt_kdf_async.h:28:
+In file included from ../src/node-boilerplate/inc/scrypt_async.h:28:
+../src/node-boilerplate/inc/scrypt_common.h:41:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      p(obj->Get(Nan::New("p").ToLocalChecked())->Uint32Value()) {}
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_kdf_async.cc:4:
+../src/node-boilerplate/inc/scrypt_kdf_async.h:36:23: warning: 'ToObject' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      params(args[1]->ToObject()),
+                      ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2549:10: note: 'ToObject' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<Object> ToObject() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/node-boilerplate/scrypt_kdf_async.cc:25:53: warning: 'ToObject' is deprecated: Use maybe version [-Wdeprecated-declarations]
+        GetFromPersistent("ScryptPeristentObject")->ToObject()->Get(Nan::New("KDFResult").ToLocalChecked())
+                                                    ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2549:10: note: 'ToObject' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<Object> ToObject() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+12 warnings generated.
+  CXX(target) Release/obj.target/scrypt/src/node-boilerplate/scrypt_kdf_sync.o
+In file included from ../src/node-boilerplate/scrypt_kdf_sync.cc:1:
+In file included from ../../nan/nan.h:203:
+In file included from ../../nan/nan_new.h:189:
+../../nan/nan_implementation_12_inl.h:337:28: warning: 'New' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+  return v8::StringObject::New(value).As<v8::StringObject>();
+                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:5241:3: note: 'New' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_kdf_sync.cc:1:
+../../nan/nan.h:839:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_kdf_sync.cc:1:
+../../nan/nan.h:854:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:164:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_kdf_sync.cc:1:
+../../nan/nan.h:869:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:157:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_kdf_sync.cc:1:
+../../nan/nan.h:916:44: warning: 'ToString' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      v8::Local<v8::String> string = from->ToString();
+                                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2548:10: note: 'ToString' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<String> ToString() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_kdf_sync.cc:1:
+../../nan/nan.h:926:27: warning: 'WriteUtf8' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+        length_ = string->WriteUtf8(str_, static_cast<int>(len), 0, flags);
+                          ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2753:3: note: 'WriteUtf8' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_kdf_sync.cc:1:
+../../nan/nan.h:1478:31: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return scope.Escape(node::MakeCallback(
+                              ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_kdf_sync.cc:4:
+../src/node-boilerplate/inc/scrypt_common.h:39:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      N(obj->Get(Nan::New("N").ToLocalChecked())->Uint32Value()),
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_kdf_sync.cc:4:
+../src/node-boilerplate/inc/scrypt_common.h:40:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      r(obj->Get(Nan::New("r").ToLocalChecked())->Uint32Value()),
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_kdf_sync.cc:4:
+../src/node-boilerplate/inc/scrypt_common.h:41:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      p(obj->Get(Nan::New("p").ToLocalChecked())->Uint32Value()) {}
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/node-boilerplate/scrypt_kdf_sync.cc:29:48: warning: 'ToObject' is deprecated: Use maybe version [-Wdeprecated-declarations]
+    const NodeScrypt::Params params = info[1]->ToObject();
+                                               ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2549:10: note: 'ToObject' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<Object> ToObject() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+11 warnings generated.
+  CXX(target) Release/obj.target/scrypt/src/node-boilerplate/scrypt_kdf-verify_sync.o
+In file included from ../src/node-boilerplate/scrypt_kdf-verify_sync.cc:1:
+In file included from ../../nan/nan.h:203:
+In file included from ../../nan/nan_new.h:189:
+../../nan/nan_implementation_12_inl.h:337:28: warning: 'New' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+  return v8::StringObject::New(value).As<v8::StringObject>();
+                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:5241:3: note: 'New' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_kdf-verify_sync.cc:1:
+../../nan/nan.h:839:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_kdf-verify_sync.cc:1:
+../../nan/nan.h:854:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:164:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_kdf-verify_sync.cc:1:
+../../nan/nan.h:869:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:157:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_kdf-verify_sync.cc:1:
+../../nan/nan.h:916:44: warning: 'ToString' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      v8::Local<v8::String> string = from->ToString();
+                                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2548:10: note: 'ToString' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<String> ToString() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_kdf-verify_sync.cc:1:
+../../nan/nan.h:926:27: warning: 'WriteUtf8' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+        length_ = string->WriteUtf8(str_, static_cast<int>(len), 0, flags);
+                          ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2753:3: note: 'WriteUtf8' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_kdf-verify_sync.cc:1:
+../../nan/nan.h:1478:31: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return scope.Escape(node::MakeCallback(
+                              ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_kdf-verify_sync.cc:4:
+../src/node-boilerplate/inc/scrypt_common.h:39:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      N(obj->Get(Nan::New("N").ToLocalChecked())->Uint32Value()),
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_kdf-verify_sync.cc:4:
+../src/node-boilerplate/inc/scrypt_common.h:40:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      r(obj->Get(Nan::New("r").ToLocalChecked())->Uint32Value()),
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_kdf-verify_sync.cc:4:
+../src/node-boilerplate/inc/scrypt_common.h:41:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      p(obj->Get(Nan::New("p").ToLocalChecked())->Uint32Value()) {}
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+10 warnings generated.
+  CXX(target) Release/obj.target/scrypt/src/node-boilerplate/scrypt_kdf-verify_async.o
+In file included from ../src/node-boilerplate/scrypt_kdf-verify_async.cc:1:
+In file included from ../../nan/nan.h:203:
+In file included from ../../nan/nan_new.h:189:
+../../nan/nan_implementation_12_inl.h:337:28: warning: 'New' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+  return v8::StringObject::New(value).As<v8::StringObject>();
+                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:5241:3: note: 'New' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_kdf-verify_async.cc:1:
+../../nan/nan.h:839:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_kdf-verify_async.cc:1:
+../../nan/nan.h:854:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:164:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_kdf-verify_async.cc:1:
+../../nan/nan.h:869:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:157:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_kdf-verify_async.cc:1:
+../../nan/nan.h:916:44: warning: 'ToString' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      v8::Local<v8::String> string = from->ToString();
+                                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2548:10: note: 'ToString' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<String> ToString() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_kdf-verify_async.cc:1:
+../../nan/nan.h:926:27: warning: 'WriteUtf8' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+        length_ = string->WriteUtf8(str_, static_cast<int>(len), 0, flags);
+                          ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2753:3: note: 'WriteUtf8' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_kdf-verify_async.cc:1:
+../../nan/nan.h:1478:31: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return scope.Escape(node::MakeCallback(
+                              ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_kdf-verify_async.cc:4:
+In file included from ../src/node-boilerplate/inc/scrypt_kdf-verify_async.h:28:
+In file included from ../src/node-boilerplate/inc/scrypt_async.h:28:
+../src/node-boilerplate/inc/scrypt_common.h:39:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      N(obj->Get(Nan::New("N").ToLocalChecked())->Uint32Value()),
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_kdf-verify_async.cc:4:
+In file included from ../src/node-boilerplate/inc/scrypt_kdf-verify_async.h:28:
+In file included from ../src/node-boilerplate/inc/scrypt_async.h:28:
+../src/node-boilerplate/inc/scrypt_common.h:40:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      r(obj->Get(Nan::New("r").ToLocalChecked())->Uint32Value()),
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_kdf-verify_async.cc:4:
+In file included from ../src/node-boilerplate/inc/scrypt_kdf-verify_async.h:28:
+In file included from ../src/node-boilerplate/inc/scrypt_async.h:28:
+../src/node-boilerplate/inc/scrypt_common.h:41:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      p(obj->Get(Nan::New("p").ToLocalChecked())->Uint32Value()) {}
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+10 warnings generated.
+  CXX(target) Release/obj.target/scrypt/src/node-boilerplate/scrypt_hash_sync.o
+In file included from ../src/node-boilerplate/scrypt_hash_sync.cc:1:
+In file included from ../../nan/nan.h:203:
+In file included from ../../nan/nan_new.h:189:
+../../nan/nan_implementation_12_inl.h:337:28: warning: 'New' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+  return v8::StringObject::New(value).As<v8::StringObject>();
+                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:5241:3: note: 'New' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_hash_sync.cc:1:
+../../nan/nan.h:839:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_hash_sync.cc:1:
+../../nan/nan.h:854:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:164:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_hash_sync.cc:1:
+../../nan/nan.h:869:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:157:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_hash_sync.cc:1:
+../../nan/nan.h:916:44: warning: 'ToString' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      v8::Local<v8::String> string = from->ToString();
+                                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2548:10: note: 'ToString' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<String> ToString() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_hash_sync.cc:1:
+../../nan/nan.h:926:27: warning: 'WriteUtf8' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+        length_ = string->WriteUtf8(str_, static_cast<int>(len), 0, flags);
+                          ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2753:3: note: 'WriteUtf8' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_hash_sync.cc:1:
+../../nan/nan.h:1478:31: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return scope.Escape(node::MakeCallback(
+                              ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_hash_sync.cc:4:
+../src/node-boilerplate/inc/scrypt_common.h:39:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      N(obj->Get(Nan::New("N").ToLocalChecked())->Uint32Value()),
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_hash_sync.cc:4:
+../src/node-boilerplate/inc/scrypt_common.h:40:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      r(obj->Get(Nan::New("r").ToLocalChecked())->Uint32Value()),
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_hash_sync.cc:4:
+../src/node-boilerplate/inc/scrypt_common.h:41:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      p(obj->Get(Nan::New("p").ToLocalChecked())->Uint32Value()) {}
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/node-boilerplate/scrypt_hash_sync.cc:24:46: warning: 'ToObject' is deprecated: Use maybe version [-Wdeprecated-declarations]
+  const NodeScrypt::Params params = info[1]->ToObject();
+                                             ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2549:10: note: 'ToObject' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<Object> ToObject() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/node-boilerplate/scrypt_hash_sync.cc:25:37: warning: 'IntegerValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+  const size_t hash_size = info[2]->IntegerValue();
+                                    ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2570:3: note: 'IntegerValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", int64_t IntegerValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+12 warnings generated.
+  CXX(target) Release/obj.target/scrypt/src/node-boilerplate/scrypt_hash_async.o
+In file included from ../src/node-boilerplate/scrypt_hash_async.cc:25:
+In file included from ../../nan/nan.h:203:
+In file included from ../../nan/nan_new.h:189:
+../../nan/nan_implementation_12_inl.h:337:28: warning: 'New' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+  return v8::StringObject::New(value).As<v8::StringObject>();
+                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:5241:3: note: 'New' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_hash_async.cc:25:
+../../nan/nan.h:839:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_hash_async.cc:25:
+../../nan/nan.h:854:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:164:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_hash_async.cc:25:
+../../nan/nan.h:869:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:157:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_hash_async.cc:25:
+../../nan/nan.h:916:44: warning: 'ToString' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      v8::Local<v8::String> string = from->ToString();
+                                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2548:10: note: 'ToString' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<String> ToString() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_hash_async.cc:25:
+../../nan/nan.h:926:27: warning: 'WriteUtf8' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+        length_ = string->WriteUtf8(str_, static_cast<int>(len), 0, flags);
+                          ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2753:3: note: 'WriteUtf8' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_hash_async.cc:25:
+../../nan/nan.h:1478:31: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return scope.Escape(node::MakeCallback(
+                              ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/node-boilerplate/scrypt_hash_async.cc:28:
+In file included from ../src/node-boilerplate/inc/scrypt_hash_async.h:28:
+In file included from ../src/node-boilerplate/inc/scrypt_async.h:28:
+../src/node-boilerplate/inc/scrypt_common.h:39:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      N(obj->Get(Nan::New("N").ToLocalChecked())->Uint32Value()),
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_hash_async.cc:28:
+In file included from ../src/node-boilerplate/inc/scrypt_hash_async.h:28:
+In file included from ../src/node-boilerplate/inc/scrypt_async.h:28:
+../src/node-boilerplate/inc/scrypt_common.h:40:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      r(obj->Get(Nan::New("r").ToLocalChecked())->Uint32Value()),
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_hash_async.cc:28:
+In file included from ../src/node-boilerplate/inc/scrypt_hash_async.h:28:
+In file included from ../src/node-boilerplate/inc/scrypt_async.h:28:
+../src/node-boilerplate/inc/scrypt_common.h:41:51: warning: 'Uint32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      p(obj->Get(Nan::New("p").ToLocalChecked())->Uint32Value()) {}
+                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2571:3: note: 'Uint32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", uint32_t Uint32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_hash_async.cc:28:
+../src/node-boilerplate/inc/scrypt_hash_async.h:36:23: warning: 'ToObject' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      params(info[1]->ToObject()),
+                      ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2549:10: note: 'ToObject' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<Object> ToObject() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/node-boilerplate/scrypt_hash_async.cc:28:
+../src/node-boilerplate/inc/scrypt_hash_async.h:37:26: warning: 'IntegerValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      hash_size(info[2]->IntegerValue()),
+                         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2570:3: note: 'IntegerValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", int64_t IntegerValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/node-boilerplate/scrypt_hash_async.cc:49:49: warning: 'ToObject' is deprecated: Use maybe version [-Wdeprecated-declarations]
+    GetFromPersistent("ScryptPeristentObject")->ToObject()->Get(Nan::New("HashBuffer").ToLocalChecked())
+                                                ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2549:10: note: 'ToObject' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<Object> ToObject() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+13 warnings generated.
+  CXX(target) Release/obj.target/scrypt/scrypt_node.o
+In file included from ../scrypt_node.cc:28:
+In file included from ../../nan/nan.h:203:
+In file included from ../../nan/nan_new.h:189:
+../../nan/nan_implementation_12_inl.h:337:28: warning: 'New' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+  return v8::StringObject::New(value).As<v8::StringObject>();
+                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:5241:3: note: 'New' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../scrypt_node.cc:28:
+../../nan/nan.h:839:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../scrypt_node.cc:28:
+../../nan/nan.h:854:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:164:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../scrypt_node.cc:28:
+../../nan/nan.h:869:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:157:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../scrypt_node.cc:28:
+../../nan/nan.h:916:44: warning: 'ToString' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      v8::Local<v8::String> string = from->ToString();
+                                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2548:10: note: 'ToString' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<String> ToString() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../scrypt_node.cc:28:
+../../nan/nan.h:926:27: warning: 'WriteUtf8' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+        length_ = string->WriteUtf8(str_, static_cast<int>(len), 0, flags);
+                          ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2753:3: note: 'WriteUtf8' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../scrypt_node.cc:28:
+../../nan/nan.h:1478:31: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return scope.Escape(node::MakeCallback(
+                              ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+7 warnings generated.
+  SOLINK_MODULE(target) Release/scrypt.node
+
+> secp256k1@3.5.0 install /Users/denis/CryptoWallet/node_modules/secp256k1
+> npm run rebuild || echo "Secp256k1 bindings compilation fail. Pure JS implementation will be used."
+
+
+> secp256k1@3.5.0 rebuild /Users/denis/CryptoWallet/node_modules/secp256k1
+> node-gyp rebuild
+
+  CXX(target) Release/obj.target/secp256k1/src/addon.o
+In file included from ../src/addon.cc:2:
+In file included from ../../nan/nan.h:203:
+In file included from ../../nan/nan_new.h:189:
+../../nan/nan_implementation_12_inl.h:337:28: warning: 'New' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+  return v8::StringObject::New(value).As<v8::StringObject>();
+                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:5241:3: note: 'New' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/addon.cc:2:
+../../nan/nan.h:839:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/addon.cc:2:
+../../nan/nan.h:854:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:164:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/addon.cc:2:
+../../nan/nan.h:869:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:157:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/addon.cc:2:
+../../nan/nan.h:916:44: warning: 'ToString' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      v8::Local<v8::String> string = from->ToString();
+                                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2548:10: note: 'ToString' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<String> ToString() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/addon.cc:2:
+../../nan/nan.h:926:27: warning: 'WriteUtf8' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+        length_ = string->WriteUtf8(str_, static_cast<int>(len), 0, flags);
+                          ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2753:3: note: 'WriteUtf8' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/addon.cc:2:
+../../nan/nan.h:1478:31: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return scope.Escape(node::MakeCallback(
+                              ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+7 warnings generated.
+  CXX(target) Release/obj.target/secp256k1/src/privatekey.o
+In file included from ../src/privatekey.cc:2:
+In file included from ../../nan/nan.h:203:
+In file included from ../../nan/nan_new.h:189:
+../../nan/nan_implementation_12_inl.h:337:28: warning: 'New' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+  return v8::StringObject::New(value).As<v8::StringObject>();
+                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:5241:3: note: 'New' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/privatekey.cc:2:
+../../nan/nan.h:839:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/privatekey.cc:2:
+../../nan/nan.h:854:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:164:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/privatekey.cc:2:
+../../nan/nan.h:869:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:157:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/privatekey.cc:2:
+../../nan/nan.h:916:44: warning: 'ToString' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      v8::Local<v8::String> string = from->ToString();
+                                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2548:10: note: 'ToString' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<String> ToString() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/privatekey.cc:2:
+../../nan/nan.h:926:27: warning: 'WriteUtf8' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+        length_ = string->WriteUtf8(str_, static_cast<int>(len), 0, flags);
+                          ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2753:3: note: 'WriteUtf8' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/privatekey.cc:2:
+../../nan/nan.h:1478:31: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return scope.Escape(node::MakeCallback(
+                              ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+../src/privatekey.cc:36:3: warning: 'BooleanValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+  UPDATE_COMPRESSED_VALUE(compressed, info[1], 1, 0);
+  ^
+../src/util.h:14:25: note: expanded from macro 'UPDATE_COMPRESSED_VALUE'
+    compressed = value->BooleanValue() ? v_true : v_false;                     \
+                        ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2568:3: note: 'BooleanValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", bool BooleanValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/privatekey.cc:73:3: warning: ignoring return value of function declared with 'warn_unused_result' attribute [-Wunused-result]
+  secp256k1_ec_privkey_negate(secp256k1ctx, &private_key[0]);
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from ../src/privatekey.cc:4:
+In file included from ../src/secp256k1-src/src/scalar_impl.h:10:
+In file included from ../src/secp256k1-src/src/group.h:11:
+../src/secp256k1-src/src/field.h:36:13: warning: unused function 'secp256k1_fe_normalize' [-Wunused-function]
+static void secp256k1_fe_normalize(secp256k1_fe *r);
+            ^
+../src/secp256k1-src/src/field.h:39:13: warning: unused function 'secp256k1_fe_normalize_weak' [-Wunused-function]
+static void secp256k1_fe_normalize_weak(secp256k1_fe *r);
+            ^
+../src/secp256k1-src/src/field.h:42:13: warning: unused function 'secp256k1_fe_normalize_var' [-Wunused-function]
+static void secp256k1_fe_normalize_var(secp256k1_fe *r);
+            ^
+../src/secp256k1-src/src/field.h:46:12: warning: unused function 'secp256k1_fe_normalizes_to_zero' [-Wunused-function]
+static int secp256k1_fe_normalizes_to_zero(secp256k1_fe *r);
+           ^
+../src/secp256k1-src/src/field.h:50:12: warning: unused function 'secp256k1_fe_normalizes_to_zero_var' [-Wunused-function]
+static int secp256k1_fe_normalizes_to_zero_var(secp256k1_fe *r);
+           ^
+../src/secp256k1-src/src/field.h:53:13: warning: unused function 'secp256k1_fe_set_int' [-Wunused-function]
+static void secp256k1_fe_set_int(secp256k1_fe *r, int a);
+            ^
+../src/secp256k1-src/src/field.h:56:13: warning: unused function 'secp256k1_fe_clear' [-Wunused-function]
+static void secp256k1_fe_clear(secp256k1_fe *a);
+            ^
+../src/secp256k1-src/src/field.h:59:12: warning: unused function 'secp256k1_fe_is_zero' [-Wunused-function]
+static int secp256k1_fe_is_zero(const secp256k1_fe *a);
+           ^
+../src/secp256k1-src/src/field.h:62:12: warning: unused function 'secp256k1_fe_is_odd' [-Wunused-function]
+static int secp256k1_fe_is_odd(const secp256k1_fe *a);
+           ^
+../src/secp256k1-src/src/field.h:65:12: warning: unused function 'secp256k1_fe_equal' [-Wunused-function]
+static int secp256k1_fe_equal(const secp256k1_fe *a, const secp256k1_fe *b);
+           ^
+../src/secp256k1-src/src/field.h:68:12: warning: unused function 'secp256k1_fe_equal_var' [-Wunused-function]
+static int secp256k1_fe_equal_var(const secp256k1_fe *a, const secp256k1_fe *b);
+           ^
+../src/secp256k1-src/src/field.h:71:12: warning: unused function 'secp256k1_fe_cmp_var' [-Wunused-function]
+static int secp256k1_fe_cmp_var(const secp256k1_fe *a, const secp256k1_fe *b);
+           ^
+../src/secp256k1-src/src/field.h:74:12: warning: unused function 'secp256k1_fe_set_b32' [-Wunused-function]
+static int secp256k1_fe_set_b32(secp256k1_fe *r, const unsigned char *a);
+           ^
+../src/secp256k1-src/src/field.h:77:13: warning: unused function 'secp256k1_fe_get_b32' [-Wunused-function]
+static void secp256k1_fe_get_b32(unsigned char *r, const secp256k1_fe *a);
+            ^
+../src/secp256k1-src/src/field.h:81:13: warning: unused function 'secp256k1_fe_negate' [-Wunused-function]
+static void secp256k1_fe_negate(secp256k1_fe *r, const secp256k1_fe *a, int m);
+            ^
+../src/secp256k1-src/src/field.h:85:13: warning: unused function 'secp256k1_fe_mul_int' [-Wunused-function]
+static void secp256k1_fe_mul_int(secp256k1_fe *r, int a);
+            ^
+../src/secp256k1-src/src/field.h:88:13: warning: unused function 'secp256k1_fe_add' [-Wunused-function]
+static void secp256k1_fe_add(secp256k1_fe *r, const secp256k1_fe *a);
+            ^
+../src/secp256k1-src/src/field.h:92:13: warning: unused function 'secp256k1_fe_mul' [-Wunused-function]
+static void secp256k1_fe_mul(secp256k1_fe *r, const secp256k1_fe *a, const secp256k1_fe * SECP256K1_RESTRICT b);
+            ^
+../src/secp256k1-src/src/field.h:96:13: warning: unused function 'secp256k1_fe_sqr' [-Wunused-function]
+static void secp256k1_fe_sqr(secp256k1_fe *r, const secp256k1_fe *a);
+            ^
+../src/secp256k1-src/src/field.h:103:12: warning: unused function 'secp256k1_fe_sqrt' [-Wunused-function]
+static int secp256k1_fe_sqrt(secp256k1_fe *r, const secp256k1_fe *a);
+           ^
+../src/secp256k1-src/src/field.h:106:12: warning: unused function 'secp256k1_fe_is_quad_var' [-Wunused-function]
+static int secp256k1_fe_is_quad_var(const secp256k1_fe *a);
+           ^
+../src/secp256k1-src/src/field.h:110:13: warning: unused function 'secp256k1_fe_inv' [-Wunused-function]
+static void secp256k1_fe_inv(secp256k1_fe *r, const secp256k1_fe *a);
+            ^
+../src/secp256k1-src/src/field.h:113:13: warning: unused function 'secp256k1_fe_inv_var' [-Wunused-function]
+static void secp256k1_fe_inv_var(secp256k1_fe *r, const secp256k1_fe *a);
+            ^
+../src/secp256k1-src/src/field.h:118:13: warning: unused function 'secp256k1_fe_inv_all_var' [-Wunused-function]
+static void secp256k1_fe_inv_all_var(secp256k1_fe *r, const secp256k1_fe *a, size_t len);
+            ^
+../src/secp256k1-src/src/field.h:121:13: warning: unused function 'secp256k1_fe_to_storage' [-Wunused-function]
+static void secp256k1_fe_to_storage(secp256k1_fe_storage *r, const secp256k1_fe *a);
+            ^
+../src/secp256k1-src/src/field.h:124:13: warning: unused function 'secp256k1_fe_from_storage' [-Wunused-function]
+static void secp256k1_fe_from_storage(secp256k1_fe *r, const secp256k1_fe_storage *a);
+            ^
+../src/secp256k1-src/src/field.h:127:13: warning: unused function 'secp256k1_fe_storage_cmov' [-Wunused-function]
+static void secp256k1_fe_storage_cmov(secp256k1_fe_storage *r, const secp256k1_fe_storage *a, int flag);
+            ^
+../src/secp256k1-src/src/field.h:130:13: warning: unused function 'secp256k1_fe_cmov' [-Wunused-function]
+static void secp256k1_fe_cmov(secp256k1_fe *r, const secp256k1_fe *a, int flag);
+            ^
+In file included from ../src/privatekey.cc:4:
+In file included from ../src/secp256k1-src/src/scalar_impl.h:10:
+../src/secp256k1-src/src/group.h:44:13: warning: unused function 'secp256k1_ge_set_xy' [-Wunused-function]
+static void secp256k1_ge_set_xy(secp256k1_ge *r, const secp256k1_fe *x, const secp256k1_fe *y);
+            ^
+../src/secp256k1-src/src/group.h:50:12: warning: unused function 'secp256k1_ge_set_xquad' [-Wunused-function]
+static int secp256k1_ge_set_xquad(secp256k1_ge *r, const secp256k1_fe *x);
+           ^
+../src/secp256k1-src/src/group.h:54:12: warning: unused function 'secp256k1_ge_set_xo_var' [-Wunused-function]
+static int secp256k1_ge_set_xo_var(secp256k1_ge *r, const secp256k1_fe *x, int odd);
+           ^
+../src/secp256k1-src/src/group.h:57:12: warning: unused function 'secp256k1_ge_is_infinity' [-Wunused-function]
+static int secp256k1_ge_is_infinity(const secp256k1_ge *a);
+           ^
+../src/secp256k1-src/src/group.h:60:12: warning: unused function 'secp256k1_ge_is_valid_var' [-Wunused-function]
+static int secp256k1_ge_is_valid_var(const secp256k1_ge *a);
+           ^
+../src/secp256k1-src/src/group.h:62:13: warning: unused function 'secp256k1_ge_neg' [-Wunused-function]
+static void secp256k1_ge_neg(secp256k1_ge *r, const secp256k1_ge *a);
+            ^
+../src/secp256k1-src/src/group.h:65:13: warning: unused function 'secp256k1_ge_set_gej' [-Wunused-function]
+static void secp256k1_ge_set_gej(secp256k1_ge *r, secp256k1_gej *a);
+            ^
+../src/secp256k1-src/src/group.h:68:13: warning: unused function 'secp256k1_ge_set_all_gej_var' [-Wunused-function]
+static void secp256k1_ge_set_all_gej_var(secp256k1_ge *r, const secp256k1_gej *a, size_t len, const secp256k1_callback *cb);
+            ^
+../src/secp256k1-src/src/group.h:73:13: warning: unused function 'secp256k1_ge_set_table_gej_var' [-Wunused-function]
+static void secp256k1_ge_set_table_gej_var(secp256k1_ge *r, const secp256k1_gej *a, const secp256k1_fe *zr, size_t len);
+            ^
+../src/secp256k1-src/src/group.h:80:13: warning: unused function 'secp256k1_ge_globalz_set_table_gej' [-Wunused-function]
+static void secp256k1_ge_globalz_set_table_gej(size_t len, secp256k1_ge *r, secp256k1_fe *globalz, const secp256k1_gej *a, const secp256k1_fe *zr);
+            ^
+../src/secp256k1-src/src/group.h:83:13: warning: unused function 'secp256k1_gej_set_infinity' [-Wunused-function]
+static void secp256k1_gej_set_infinity(secp256k1_gej *r);
+            ^
+../src/secp256k1-src/src/group.h:86:13: warning: unused function 'secp256k1_gej_set_ge' [-Wunused-function]
+static void secp256k1_gej_set_ge(secp256k1_gej *r, const secp256k1_ge *a);
+            ^
+../src/secp256k1-src/src/group.h:89:12: warning: unused function 'secp256k1_gej_eq_x_var' [-Wunused-function]
+static int secp256k1_gej_eq_x_var(const secp256k1_fe *x, const secp256k1_gej *a);
+           ^
+../src/secp256k1-src/src/group.h:92:13: warning: unused function 'secp256k1_gej_neg' [-Wunused-function]
+static void secp256k1_gej_neg(secp256k1_gej *r, const secp256k1_gej *a);
+            ^
+../src/secp256k1-src/src/group.h:95:12: warning: unused function 'secp256k1_gej_is_infinity' [-Wunused-function]
+static int secp256k1_gej_is_infinity(const secp256k1_gej *a);
+           ^
+../src/secp256k1-src/src/group.h:98:12: warning: unused function 'secp256k1_gej_has_quad_y_var' [-Wunused-function]
+static int secp256k1_gej_has_quad_y_var(const secp256k1_gej *a);
+           ^
+../src/secp256k1-src/src/group.h:102:13: warning: unused function 'secp256k1_gej_double_nonzero' [-Wunused-function]
+static void secp256k1_gej_double_nonzero(secp256k1_gej *r, const secp256k1_gej *a, secp256k1_fe *rzr);
+            ^
+../src/secp256k1-src/src/group.h:105:13: warning: unused function 'secp256k1_gej_double_var' [-Wunused-function]
+static void secp256k1_gej_double_var(secp256k1_gej *r, const secp256k1_gej *a, secp256k1_fe *rzr);
+            ^
+../src/secp256k1-src/src/group.h:108:13: warning: unused function 'secp256k1_gej_add_var' [-Wunused-function]
+static void secp256k1_gej_add_var(secp256k1_gej *r, const secp256k1_gej *a, const secp256k1_gej *b, secp256k1_fe *rzr);
+            ^
+../src/secp256k1-src/src/group.h:111:13: warning: unused function 'secp256k1_gej_add_ge' [-Wunused-function]
+static void secp256k1_gej_add_ge(secp256k1_gej *r, const secp256k1_gej *a, const secp256k1_ge *b);
+            ^
+../src/secp256k1-src/src/group.h:116:13: warning: unused function 'secp256k1_gej_add_ge_var' [-Wunused-function]
+static void secp256k1_gej_add_ge_var(secp256k1_gej *r, const secp256k1_gej *a, const secp256k1_ge *b, secp256k1_fe *rzr);
+            ^
+../src/secp256k1-src/src/group.h:119:13: warning: unused function 'secp256k1_gej_add_zinv_var' [-Wunused-function]
+static void secp256k1_gej_add_zinv_var(secp256k1_gej *r, const secp256k1_gej *a, const secp256k1_ge *b, const secp256k1_fe *bzinv);
+            ^
+../src/secp256k1-src/src/group.h:127:13: warning: unused function 'secp256k1_gej_clear' [-Wunused-function]
+static void secp256k1_gej_clear(secp256k1_gej *r);
+            ^
+../src/secp256k1-src/src/group.h:130:13: warning: unused function 'secp256k1_ge_clear' [-Wunused-function]
+static void secp256k1_ge_clear(secp256k1_ge *r);
+            ^
+../src/secp256k1-src/src/group.h:133:13: warning: unused function 'secp256k1_ge_to_storage' [-Wunused-function]
+static void secp256k1_ge_to_storage(secp256k1_ge_storage *r, const secp256k1_ge *a);
+            ^
+../src/secp256k1-src/src/group.h:136:13: warning: unused function 'secp256k1_ge_from_storage' [-Wunused-function]
+static void secp256k1_ge_from_storage(secp256k1_ge *r, const secp256k1_ge_storage *a);
+            ^
+../src/secp256k1-src/src/group.h:139:13: warning: unused function 'secp256k1_ge_storage_cmov' [-Wunused-function]
+static void secp256k1_ge_storage_cmov(secp256k1_ge_storage *r, const secp256k1_ge_storage *a, int flag);
+            ^
+../src/secp256k1-src/src/group.h:142:13: warning: unused function 'secp256k1_gej_rescale' [-Wunused-function]
+static void secp256k1_gej_rescale(secp256k1_gej *r, const secp256k1_fe *b);
+            ^
+In file included from ../src/privatekey.cc:4:
+In file included from ../src/secp256k1-src/src/scalar_impl.h:20:
+../src/secp256k1-src/src/scalar_4x64_impl.h:83:12: warning: unused function 'secp256k1_scalar_add' [-Wunused-function]
+static int secp256k1_scalar_add(secp256k1_scalar *r, const secp256k1_scalar *a, const secp256k1_scalar *b) {
+           ^
+../src/secp256k1-src/src/scalar_4x64_impl.h:897:12: warning: unused function 'secp256k1_scalar_shr_int' [-Wunused-function]
+static int secp256k1_scalar_shr_int(secp256k1_scalar *r, int n) {
+           ^
+In file included from ../src/privatekey.cc:4:
+../src/secp256k1-src/src/scalar_impl.h:225:13: warning: unused function 'secp256k1_scalar_inverse_var' [-Wunused-function]
+static void secp256k1_scalar_inverse_var(secp256k1_scalar *r, const secp256k1_scalar *x) {
+            ^
+In file included from ../src/privatekey.cc:4:
+In file included from ../src/secp256k1-src/src/scalar_impl.h:20:
+../src/secp256k1-src/src/scalar_4x64_impl.h:140:13: warning: unused function 'secp256k1_scalar_negate' [-Wunused-function]
+static void secp256k1_scalar_negate(secp256k1_scalar *r, const secp256k1_scalar *a) {
+            ^
+../src/secp256k1-src/src/scalar_4x64_impl.h:156:12: warning: unused function 'secp256k1_scalar_is_high' [-Wunused-function]
+static int secp256k1_scalar_is_high(const secp256k1_scalar *a) {
+           ^
+../src/secp256k1-src/src/scalar_4x64_impl.h:168:12: warning: unused function 'secp256k1_scalar_cond_negate' [-Wunused-function]
+static int secp256k1_scalar_cond_negate(secp256k1_scalar *r, int flag) {
+           ^
+71 warnings generated.
+  CXX(target) Release/obj.target/secp256k1/src/publickey.o
+In file included from ../src/publickey.cc:3:
+In file included from ../../nan/nan.h:203:
+In file included from ../../nan/nan_new.h:189:
+../../nan/nan_implementation_12_inl.h:337:28: warning: 'New' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+  return v8::StringObject::New(value).As<v8::StringObject>();
+                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:5241:3: note: 'New' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/publickey.cc:3:
+../../nan/nan.h:839:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/publickey.cc:3:
+../../nan/nan.h:854:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:164:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/publickey.cc:3:
+../../nan/nan.h:869:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:157:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/publickey.cc:3:
+../../nan/nan.h:916:44: warning: 'ToString' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      v8::Local<v8::String> string = from->ToString();
+                                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2548:10: note: 'ToString' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<String> ToString() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/publickey.cc:3:
+../../nan/nan.h:926:27: warning: 'WriteUtf8' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+        length_ = string->WriteUtf8(str_, static_cast<int>(len), 0, flags);
+                          ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2753:3: note: 'WriteUtf8' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/publickey.cc:3:
+../../nan/nan.h:1478:31: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return scope.Escape(node::MakeCallback(
+                              ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+../src/publickey.cc:20:3: warning: 'BooleanValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+  UPDATE_COMPRESSED_VALUE(flags, info[1], SECP256K1_EC_COMPRESSED, SECP256K1_EC_UNCOMPRESSED);
+  ^
+../src/util.h:14:25: note: expanded from macro 'UPDATE_COMPRESSED_VALUE'
+    compressed = value->BooleanValue() ? v_true : v_false;                     \
+                        ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2568:3: note: 'BooleanValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", bool BooleanValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/publickey.cc:43:3: warning: 'BooleanValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+  UPDATE_COMPRESSED_VALUE(flags, info[1], SECP256K1_EC_COMPRESSED, SECP256K1_EC_UNCOMPRESSED);
+  ^
+../src/util.h:14:25: note: expanded from macro 'UPDATE_COMPRESSED_VALUE'
+    compressed = value->BooleanValue() ? v_true : v_false;                     \
+                        ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2568:3: note: 'BooleanValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", bool BooleanValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/publickey.cc:84:3: warning: 'BooleanValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+  UPDATE_COMPRESSED_VALUE(flags, info[2], SECP256K1_EC_COMPRESSED, SECP256K1_EC_UNCOMPRESSED);
+  ^
+../src/util.h:14:25: note: expanded from macro 'UPDATE_COMPRESSED_VALUE'
+    compressed = value->BooleanValue() ? v_true : v_false;                     \
+                        ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2568:3: note: 'BooleanValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", bool BooleanValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/publickey.cc:116:3: warning: 'BooleanValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+  UPDATE_COMPRESSED_VALUE(flags, info[2], SECP256K1_EC_COMPRESSED, SECP256K1_EC_UNCOMPRESSED);
+  ^
+../src/util.h:14:25: note: expanded from macro 'UPDATE_COMPRESSED_VALUE'
+    compressed = value->BooleanValue() ? v_true : v_false;                     \
+                        ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2568:3: note: 'BooleanValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", bool BooleanValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/publickey.cc:141:3: warning: 'BooleanValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+  UPDATE_COMPRESSED_VALUE(flags, info[1], SECP256K1_EC_COMPRESSED, SECP256K1_EC_UNCOMPRESSED);
+  ^
+../src/util.h:14:25: note: expanded from macro 'UPDATE_COMPRESSED_VALUE'
+    compressed = value->BooleanValue() ? v_true : v_false;                     \
+                        ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2568:3: note: 'BooleanValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", bool BooleanValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+12 warnings generated.
+  CXX(target) Release/obj.target/secp256k1/src/signature.o
+In file included from ../src/signature.cc:2:
+In file included from ../../nan/nan.h:203:
+In file included from ../../nan/nan_new.h:189:
+../../nan/nan_implementation_12_inl.h:337:28: warning: 'New' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+  return v8::StringObject::New(value).As<v8::StringObject>();
+                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:5241:3: note: 'New' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/signature.cc:2:
+../../nan/nan.h:839:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/signature.cc:2:
+../../nan/nan.h:854:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:164:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/signature.cc:2:
+../../nan/nan.h:869:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:157:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/signature.cc:2:
+../../nan/nan.h:916:44: warning: 'ToString' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      v8::Local<v8::String> string = from->ToString();
+                                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2548:10: note: 'ToString' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<String> ToString() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/signature.cc:2:
+../../nan/nan.h:926:27: warning: 'WriteUtf8' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+        length_ = string->WriteUtf8(str_, static_cast<int>(len), 0, flags);
+                          ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2753:3: note: 'WriteUtf8' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/signature.cc:2:
+../../nan/nan.h:1478:31: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return scope.Escape(node::MakeCallback(
+                              ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+7 warnings generated.
+  CXX(target) Release/obj.target/secp256k1/src/ecdsa.o
+In file included from ../src/ecdsa.cc:2:
+In file included from ../../nan/nan.h:203:
+In file included from ../../nan/nan_new.h:189:
+../../nan/nan_implementation_12_inl.h:337:28: warning: 'New' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+  return v8::StringObject::New(value).As<v8::StringObject>();
+                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:5241:3: note: 'New' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/ecdsa.cc:2:
+../../nan/nan.h:839:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/ecdsa.cc:2:
+../../nan/nan.h:854:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:164:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/ecdsa.cc:2:
+../../nan/nan.h:869:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:157:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/ecdsa.cc:2:
+../../nan/nan.h:916:44: warning: 'ToString' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      v8::Local<v8::String> string = from->ToString();
+                                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2548:10: note: 'ToString' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<String> ToString() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/ecdsa.cc:2:
+../../nan/nan.h:926:27: warning: 'WriteUtf8' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+        length_ = string->WriteUtf8(str_, static_cast<int>(len), 0, flags);
+                          ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2753:3: note: 'WriteUtf8' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/ecdsa.cc:2:
+../../nan/nan.h:1478:31: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return scope.Escape(node::MakeCallback(
+                              ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+../src/ecdsa.cc:132:3: warning: 'IntegerValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+  CHECK_NUMBER_IN_INTERVAL(recid_object, -1, 4, RECOVERY_ID_VALUE_INVALID);
+  ^
+../src/util.h:82:15: note: expanded from macro 'CHECK_NUMBER_IN_INTERVAL'
+  if (number->IntegerValue() <= x || number->IntegerValue() >= y) {            \
+              ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2570:3: note: 'IntegerValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", int64_t IntegerValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/ecdsa.cc:132:3: warning: 'IntegerValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+  CHECK_NUMBER_IN_INTERVAL(recid_object, -1, 4, RECOVERY_ID_VALUE_INVALID);
+  ^
+../src/util.h:82:46: note: expanded from macro 'CHECK_NUMBER_IN_INTERVAL'
+  if (number->IntegerValue() <= x || number->IntegerValue() >= y) {            \
+                                             ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2570:3: note: 'IntegerValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", int64_t IntegerValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/ecdsa.cc:133:35: warning: 'IntegerValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+  int recid = (int) recid_object->IntegerValue();
+                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2570:3: note: 'IntegerValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", int64_t IntegerValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/ecdsa.cc:136:3: warning: 'BooleanValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+  UPDATE_COMPRESSED_VALUE(flags, info[3], SECP256K1_EC_COMPRESSED, SECP256K1_EC_UNCOMPRESSED);
+  ^
+../src/util.h:14:25: note: expanded from macro 'UPDATE_COMPRESSED_VALUE'
+    compressed = value->BooleanValue() ? v_true : v_false;                     \
+                        ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2568:3: note: 'BooleanValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", bool BooleanValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+11 warnings generated.
+  CXX(target) Release/obj.target/secp256k1/src/ecdh.o
+In file included from ../src/ecdh.cc:2:
+In file included from ../../nan/nan.h:203:
+In file included from ../../nan/nan_new.h:189:
+../../nan/nan_implementation_12_inl.h:337:28: warning: 'New' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+  return v8::StringObject::New(value).As<v8::StringObject>();
+                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:5241:3: note: 'New' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/ecdh.cc:2:
+../../nan/nan.h:839:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/ecdh.cc:2:
+../../nan/nan.h:854:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:164:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/ecdh.cc:2:
+../../nan/nan.h:869:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:157:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/ecdh.cc:2:
+../../nan/nan.h:916:44: warning: 'ToString' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      v8::Local<v8::String> string = from->ToString();
+                                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2548:10: note: 'ToString' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<String> ToString() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/ecdh.cc:2:
+../../nan/nan.h:926:27: warning: 'WriteUtf8' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+        length_ = string->WriteUtf8(str_, static_cast<int>(len), 0, flags);
+                          ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2753:3: note: 'WriteUtf8' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/ecdh.cc:2:
+../../nan/nan.h:1478:31: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return scope.Escape(node::MakeCallback(
+                              ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+../src/ecdh.cc:160:3: warning: 'BooleanValue' is deprecated: Use maybe version [-Wdeprecated-declarations]
+  UPDATE_COMPRESSED_VALUE(flags, info[2], SECP256K1_EC_COMPRESSED, SECP256K1_EC_UNCOMPRESSED);
+  ^
+../src/util.h:14:25: note: expanded from macro 'UPDATE_COMPRESSED_VALUE'
+    compressed = value->BooleanValue() ? v_true : v_false;                     \
+                        ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2568:3: note: 'BooleanValue' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", bool BooleanValue() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/ecdh.cc:5:
+In file included from ../src/secp256k1-src/src/field_impl.h:19:
+../src/secp256k1-src/src/field_5x52_impl.h:267:12: warning: unused function 'secp256k1_fe_cmp_var' [-Wunused-function]
+static int secp256k1_fe_cmp_var(const secp256k1_fe *a, const secp256k1_fe *b) {
+           ^
+In file included from ../src/ecdh.cc:7:
+../src/secp256k1-src/src/group_impl.h:287:12: warning: unused function 'secp256k1_ge_is_valid_var' [-Wunused-function]
+static int secp256k1_ge_is_valid_var(const secp256k1_ge *a) {
+           ^
+../src/secp256k1-src/src/group_impl.h:246:12: warning: unused function 'secp256k1_gej_eq_x_var' [-Wunused-function]
+static int secp256k1_gej_eq_x_var(const secp256k1_fe *x, const secp256k1_gej *a) {
+           ^
+../src/secp256k1-src/src/group_impl.h:686:12: warning: unused function 'secp256k1_gej_has_quad_y_var' [-Wunused-function]
+static int secp256k1_gej_has_quad_y_var(const secp256k1_gej *a) {
+           ^
+In file included from ../src/ecdh.cc:6:
+../src/secp256k1-src/src/scalar_impl.h:225:13: warning: unused function 'secp256k1_scalar_inverse_var' [-Wunused-function]
+static void secp256k1_scalar_inverse_var(secp256k1_scalar *r, const secp256k1_scalar *x) {
+            ^
+In file included from ../src/ecdh.cc:7:
+../src/secp256k1-src/src/group_impl.h:113:13: warning: unused function 'secp256k1_ge_set_gej_var' [-Wunused-function]
+static void secp256k1_ge_set_gej_var(secp256k1_ge *r, secp256k1_gej *a) {
+            ^
+../src/secp256k1-src/src/group_impl.h:267:12: warning: unused function 'secp256k1_gej_is_valid_var' [-Wunused-function]
+static int secp256k1_gej_is_valid_var(const secp256k1_gej *a) {
+           ^
+In file included from ../src/ecdh.cc:8:
+In file included from ../src/secp256k1-src/src/ecmult_const_impl.h:13:
+../src/secp256k1-src/src/ecmult_impl.h:164:13: warning: unused function 'secp256k1_ecmult_context_build' [-Wunused-function]
+static void secp256k1_ecmult_context_build(secp256k1_ecmult_context *ctx, const secp256k1_callback *cb) {
+            ^
+../src/secp256k1-src/src/ecmult_impl.h:196:13: warning: unused function 'secp256k1_ecmult_context_clone' [-Wunused-function]
+static void secp256k1_ecmult_context_clone(secp256k1_ecmult_context *dst,
+            ^
+../src/secp256k1-src/src/ecmult_impl.h:220:13: warning: unused function 'secp256k1_ecmult_context_clear' [-Wunused-function]
+static void secp256k1_ecmult_context_clear(secp256k1_ecmult_context *ctx) {
+            ^
+../src/secp256k1-src/src/ecmult_impl.h:216:12: warning: unused function 'secp256k1_ecmult_context_is_built' [-Wunused-function]
+static int secp256k1_ecmult_context_is_built(const secp256k1_ecmult_context *ctx) {
+           ^
+../src/secp256k1-src/src/ecmult_impl.h:286:13: warning: unused function 'secp256k1_ecmult' [-Wunused-function]
+static void secp256k1_ecmult(const secp256k1_ecmult_context *ctx, secp256k1_gej *r, const secp256k1_gej *a, const secp256k1_scalar *na, const secp256k1_scalar *ng) {
+            ^
+In file included from ../src/ecdh.cc:9:
+../src/secp256k1-src/src/ecmult_gen_impl.h:17:13: warning: unused function 'secp256k1_ecmult_gen_context_init' [-Wunused-function]
+static void secp256k1_ecmult_gen_context_init(secp256k1_ecmult_gen_context *ctx) {
+            ^
+../src/secp256k1-src/src/ecmult_gen_impl.h:21:13: warning: unused function 'secp256k1_ecmult_gen_context_build' [-Wunused-function]
+static void secp256k1_ecmult_gen_context_build(secp256k1_ecmult_gen_context *ctx, const secp256k1_callback* cb) {
+            ^
+../src/secp256k1-src/src/ecmult_gen_impl.h:98:13: warning: unused function 'secp256k1_ecmult_gen_context_clone' [-Wunused-function]
+static void secp256k1_ecmult_gen_context_clone(secp256k1_ecmult_gen_context *dst,
+            ^
+../src/secp256k1-src/src/ecmult_gen_impl.h:115:13: warning: unused function 'secp256k1_ecmult_gen_context_clear' [-Wunused-function]
+static void secp256k1_ecmult_gen_context_clear(secp256k1_ecmult_gen_context *ctx) {
+            ^
+../src/secp256k1-src/src/ecmult_gen_impl.h:94:12: warning: unused function 'secp256k1_ecmult_gen_context_is_built' [-Wunused-function]
+static int secp256k1_ecmult_gen_context_is_built(const secp256k1_ecmult_gen_context* ctx) {
+           ^
+../src/ecdh.cc:30:33: warning: unused variable 'default_illegal_callback' [-Wunused-const-variable]
+static const secp256k1_callback default_illegal_callback = {
+                                ^
+../src/ecdh.cc:41:33: warning: unused variable 'default_error_callback' [-Wunused-const-variable]
+static const secp256k1_callback default_error_callback = {
+                                ^
+27 warnings generated.
+  CC(target) Release/obj.target/secp256k1/src/secp256k1-src/src/secp256k1.o
+In file included from ../src/secp256k1-src/src/secp256k1.c:13:
+../src/secp256k1-src/src/group_impl.h:686:12: warning: unused function 'secp256k1_gej_has_quad_y_var' [-Wunused-function]
+static int secp256k1_gej_has_quad_y_var(const secp256k1_gej *a) {
+           ^
+../src/secp256k1-src/src/group_impl.h:267:12: warning: unused function 'secp256k1_gej_is_valid_var' [-Wunused-function]
+static int secp256k1_gej_is_valid_var(const secp256k1_gej *a) {
+           ^
+In file included from ../src/secp256k1-src/src/secp256k1.c:15:
+../src/secp256k1-src/src/ecmult_const_impl.h:122:13: warning: unused function 'secp256k1_ecmult_const' [-Wunused-function]
+static void secp256k1_ecmult_const(secp256k1_gej *r, const secp256k1_ge *a, const secp256k1_scalar *scalar) {
+            ^
+3 warnings generated.
+  CC(target) Release/obj.target/secp256k1/src/secp256k1-src/contrib/lax_der_parsing.o
+  CC(target) Release/obj.target/secp256k1/src/secp256k1-src/contrib/lax_der_privatekey_parsing.o
+  SOLINK_MODULE(target) Release/secp256k1.node
+
+> sha3@1.2.0 install /Users/denis/CryptoWallet/node_modules/sha3
+> node-gyp rebuild
+
+  CXX(target) Release/obj.target/sha3/src/addon.o
+In file included from ../src/addon.cpp:4:
+In file included from ../../nan/nan.h:203:
+In file included from ../../nan/nan_new.h:189:
+../../nan/nan_implementation_12_inl.h:337:28: warning: 'New' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+  return v8::StringObject::New(value).As<v8::StringObject>();
+                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:5241:3: note: 'New' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/addon.cpp:4:
+../../nan/nan.h:839:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/addon.cpp:4:
+../../nan/nan.h:854:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:164:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/addon.cpp:4:
+../../nan/nan.h:869:18: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return node::MakeCallback(
+                 ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:157:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/addon.cpp:4:
+../../nan/nan.h:916:44: warning: 'ToString' is deprecated: Use maybe version [-Wdeprecated-declarations]
+      v8::Local<v8::String> string = from->ToString();
+                                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2548:10: note: 'ToString' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<String> ToString() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/addon.cpp:4:
+../../nan/nan.h:926:27: warning: 'WriteUtf8' is deprecated: Use Isolate* version [-Wdeprecated-declarations]
+        length_ = string->WriteUtf8(str_, static_cast<int>(len), 0, flags);
+                          ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2753:3: note: 'WriteUtf8' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use Isolate* version",
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+In file included from ../src/addon.cpp:4:
+../../nan/nan.h:1478:31: warning: 'MakeCallback' is deprecated: Use MakeCallback(..., async_context) [-Wdeprecated-declarations]
+    return scope.Escape(node::MakeCallback(
+                              ^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:171:1: note: 'MakeCallback' has been explicitly marked deprecated here
+NODE_DEPRECATED("Use MakeCallback(..., async_context)",
+^
+/Users/denis/.node-gyp/11.11.0/include/node/node.h:91:20: note: expanded from macro 'NODE_DEPRECATED'
+    __attribute__((deprecated(message))) declarator
+                   ^
+In file included from ../src/addon.cpp:9:
+In file included from ../src/KeccakNISTInterface.h:17:
+../src/KeccakSponge.h:23:9: warning: 'ALIGN' macro redefined [-Wmacro-redefined]
+#define ALIGN __attribute__ ((aligned(32)))
+        ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/i386/param.h:83:9: note: previous definition is here
+#define ALIGN(p)        __DARWIN_ALIGN(p)
+        ^
+../src/addon.cpp:36:53: warning: 'Int32Value' is deprecated: Use maybe version [-Wdeprecated-declarations]
+                hashlen = info[0]->IsUndefined() ? 512 : info[0]->Int32Value();
+                                                                  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2572:3: note: 'Int32Value' has been explicitly marked deprecated here
+  V8_DEPRECATED("Use maybe version", int32_t Int32Value() const);
+  ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+../src/addon.cpp:59:36: error: no matching member function for call to 'NewInstance'
+                        info.GetReturnValue().Set(cons->NewInstance(argc, argv));
+                                                  ~~~~~~^~~~~~~~~~~
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:4108:44: note: candidate function not viable: requires single argument 'context', but 2 arguments were provided
+  V8_WARN_UNUSED_RESULT MaybeLocal<Object> NewInstance(
+                                           ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:4105:44: note: candidate function not viable: requires 3 arguments, but 2 were provided
+  V8_WARN_UNUSED_RESULT MaybeLocal<Object> NewInstance(
+                                           ^
+../src/addon.cpp:97:40: warning: 'ToObject' is deprecated: Use maybe version [-Wdeprecated-declarations]
+                        Local<Object> buffer_obj = info[0]->ToObject();
+                                                            ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8.h:2549:10: note: 'ToObject' has been explicitly marked deprecated here
+  inline V8_DEPRECATED("Use maybe version", Local<Object> ToObject() const);
+         ^
+/Users/denis/.node-gyp/11.11.0/include/node/v8config.h:326:29: note: expanded from macro 'V8_DEPRECATED'
+  declarator __attribute__((deprecated(message)))
+                            ^
+10 warnings and 1 error generated.
+make: *** [Release/obj.target/sha3/src/addon.o] Error 1
+gyp ERR! build error 
+gyp ERR! stack Error: `make` failed with exit code: 2
+gyp ERR! stack     at ChildProcess.onExit (/usr/local/lib/node_modules/npm/node_modules/node-gyp/lib/build.js:262:23)
+gyp ERR! stack     at ChildProcess.emit (events.js:197:13)
+gyp ERR! stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:254:12)
+gyp ERR! System Darwin 18.2.0
+gyp ERR! command "/usr/local/Cellar/node/11.11.0/bin/node" "/usr/local/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js" "rebuild"
+gyp ERR! cwd /Users/denis/CryptoWallet/node_modules/sha3
+gyp ERR! node -v v11.11.0
+gyp ERR! node-gyp -v v3.8.0
+gyp ERR! not ok 
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: 7zip-bin-linux@1.3.1 (node_modules/7zip-bin-linux):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for 7zip-bin-linux@1.3.1: wanted {"os":"linux","arch":"any"} (current: {"os":"darwin","arch":"x64"})
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: 7zip-bin-win@2.1.1 (node_modules/7zip-bin-win):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for 7zip-bin-win@2.1.1: wanted {"os":"win32","arch":"any"} (current: {"os":"darwin","arch":"x64"})
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.1.3 (node_modules/fsevents):
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.1.3 install: `node install`
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: Exit status 1
+
+npm ERR! code ELIFECYCLE
+npm ERR! errno 1
+npm ERR! sha3@1.2.0 install: `node-gyp rebuild`
+npm ERR! Exit status 1
+npm ERR! 
+npm ERR! Failed at the sha3@1.2.0 install script.
+npm ERR! This is probably not a problem with npm. There is likely additional logging output above.
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /Users/denis/.npm/_logs/2019-03-15T19_24_58_647Z-debug.log
+npm ERR! code ELIFECYCLE
+npm ERR! errno 1
+npm ERR! CryptoWallet@1.0.0 build: `npm install && npm run postinstall && webpack --config webpack.config.js`
+npm ERR! Exit status 1
+npm ERR! 
+npm ERR! Failed at the CryptoWallet@1.0.0 build script.
+npm ERR! This is probably not a problem with npm. There is likely additional logging output above.
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /Users/denis/.npm/_logs/2019-03-15T19_24_58_853Z-debug.log
+npm ERR! code ELIFECYCLE
+npm ERR! errno 1
+npm ERR! CryptoWallet@1.0.0 release:osx: `npm run build && cd dist/ && npm run dist`
+npm ERR! Exit status 1
+npm ERR! 
+npm ERR! Failed at the CryptoWallet@1.0.0 release:osx script.
+npm ERR! This is probably not a problem with npm. There is likely additional logging output above.
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /Users/denis/.npm/_logs/2019-03-15T19_24_58_886Z-debug.log
+    "postcss-loader": "^2.0.10",
+    "react": "^16.1.0",
+    "react-dom": "^16.1.0",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
+    "request-promise": "^4.2.2",
+    "sass-loader": "^6.0.6",
+    "semantic-ui-css": "^2.2.12",
+    "standard": "^10.0.3",
+    "standard-loader": "^6.0.1",
+    "style-loader": "^0.19.1",
+    "svg-inline-loader": "^0.8.0",
+    "ts-loader": "^3.1.1",
+    "tslint": "^5.8.0",
+    "tslint-config-standard": "^7.0.0",
+    "tslint-loader": "^3.5.3",
+    "types-ethereumjs-util": "0.0.5",
+    "typescript": "^2.6.1",
+    "url-loader": "^0.6.2",
+    "web-request": "^1.0.7",
+    "webpack-cli": "^2.0.12",
+    "webpack-dev-server": "^2.9.7",
+    "websocket": "^1.0.25",
+    "win-7zip": "^0.1.1"
+  },
+  "scripts": {
+    "build": "npm install && npm run postinstall && webpack --config webpack.config.js",
+    "prestart": "npm run build",
+    "start": "electron ./dist/main.js",
+    "pretest": "webpack --config webpack.tests.config.js",
+    "test": "jest",
+    "postinstall": "electron-builder install-app-deps",
+    "pack": "electron-builde
+r --dir",
+    "dist": "electron-builder",
+    "rebuild": "electron-rebuild --force",
+    "start:dev": "webpack-dev-server",
+      "release:win": "npm run build && cd dist/ && npm run dist",
+      "release:osx": "npm run build && cd dist/ && npm run dist"
+  },
+  "dependencies": {
+    "@pokusew/pcsclite": "^0.4.18",
+    "@types/bitcoinjs-lib": "^3.0.5",
+    "@types/react-fontawesome": "^1.6.1",
+    "@types/react-redux": "^5.0.15",
+    "@types/react-table": "^6.7.5",
+    "@types/ref-array": "^0.0.28",
+    "@types/request": "^2.0.8",
+    "@types/serialport": "^6.0.1",
+    "async-file": "^2.0.2",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "binary-loader": "0.0.1",
+    "bitcoinjs-lib": "^3.3.0",
+    "ethereumjs-tx": "^1.3.3",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.0.6",
+    "keccak": "^1.4.0",
+    "native-ext-loader": "^2.0.0",
+    "pcsclite": "git+https://github.com/H4lu/node-pcsclite.git",
+    "react-hot-loader": "^3.1.3",
+    "react-redux": "^5.0.7",
+    "react-router-redux": "^5.0.0-alpha.9",
+    "react-table": "^6.8.0",
+    "react-transition-group": "^2.3.0",
+    "ref-array": "^1.2.0",
+    "rlp": "^2.0.0",
+    "satoshi-bitcoin": "^1.0.4",
+    "semantic-ui-react": "^0.78.3",
+    "tapable": "^1.0.0",
+    "web3": "^1.0.0-beta.30",
+    "webpack": "^3.8.1",
+    "wif": "^2.0.6"
+  },
+  "tasks": {},
+  "optionalDependencies": {
+    "bufferutil": "^3.0.3",
+    "utf-8-validate": "^4.0.0"
+  },
+  "build": {
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/H4lu/CryptoWallet/tree/master"
+  }
+}
