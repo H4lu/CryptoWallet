@@ -39,3 +39,5 @@ function copyFolderRecursiveSync( source, target ) {
 }
 
 copyFolderRecursiveSync("./static/", "./dist/")
+copyFileSync("./webpack.config.js", "./dist/")
+copyFileSync("./package.json", "./dist")

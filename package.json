@@ -68,7 +68,7 @@
     "build": "npm install && npm run postinstall && webpack --config webpack.config.js && node setup_build.js",
     "prestart": "npm run build",
     "start": "electron ./dist/main.js",
-    "travisBuild": "npm run build",
+    "travisBuild": "npm run build && npm version patch",
     "pretest": "webpack --config webpack.tests.config.js",
     "test": "jest",
     "postinstall": "electron-builder install-app-deps",
@@ -76,7 +76,7 @@
     "dist": "electron-builder",
     "rebuild": "electron-rebuild --force",
     "start:dev": "webpack-dev-server",
-    "release:win": "npm run travisBuild && electron-builder build --windows -p always",
+    "release:win": "npm run travisBuild  && electron-builder build --windows -p always",
     "release:osx": "npm run travisBuild && electron-builder build --mac -p always",
     "release:linux": "npm run travisBuild && electron-builder build --linux -p always"
   },
@@ -135,7 +135,7 @@
       ]
     },
     "linux": {
-    	"target": "deb"	
+      "target": "deb"
     }
   },
   "repository": {

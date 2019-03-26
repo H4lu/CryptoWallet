@@ -9,7 +9,7 @@
   "files": [
      "dist/**",
      "static/**",
-     "webpack.config.js"
+     "!webpack.config.js"
     "!*.ts",
     "!*.code-workspace",
     "!LICENSE.md",
