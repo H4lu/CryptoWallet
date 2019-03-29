@@ -47,7 +47,7 @@ export class LtcSendWindow extends React.Component<any, ILTCSendState> {
     }
 
     handleClick() {
-        sendTransaction('litcoin', this.state.paymentAddress, this.state.amount, this.state.fee, this.props.redirect)
+        sendTransaction('litecoin', this.state.paymentAddress, this.state.amount, this.state.fee, /*this.props.redirect*/0, this.props.course, this.props.btcBalance)
     }
 
     render() {

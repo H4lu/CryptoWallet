@@ -1,9 +1,8 @@
-// import { port } from './OpenPort'
+
 import { reader } from './Reader'
-import { info } from 'electron-log'
 
 
-//export function UpdateHWStatusPCSC(...data) {
+
 export function UpdateHWStatusPCSC(BTC_BAL: number, BTC_USD: number, ETH_BAL: number, ETH_USD: number, LTC_BAL: number, LTC_USD: number, XRP_BAL: number, XRP_USD: number, ) {
 
     let tempBufferBTC = new Buffer(16)
@@ -11,9 +10,25 @@ export function UpdateHWStatusPCSC(BTC_BAL: number, BTC_USD: number, ETH_BAL: nu
     let tempBufferLTC = new Buffer(16)
     let tempBufferXRP = new Buffer(16)
 
+    let tempBufferWallet = new Buffer(16)
+    let USD = BTC_USD + ETH_USD + LTC_USD + XRP_USD
+    let tempI = Math.floor(USD)
+    let tempF = (USD - tempI)*100
+    for (let i=0; i<4; i++)
+    {
+        tempBufferWallet[3-i]=tempI%256
+        tempI = (tempI - tempI%256)/256
+
+        tempBufferWallet[7-i]=tempF%256
+        tempF = (tempF - tempF%256)/256
+    }
+    tempBufferWallet[11] = 15
+    tempBufferWallet[15] = 4
+
+
     // BTC
-    let tempI = Math.floor(BTC_BAL)
-    let tempF = (BTC_BAL - tempI)*100000000
+    tempI = Math.floor(BTC_BAL)
+    tempF = (BTC_BAL - tempI)*100000000
     for (let i=0; i<4; i++)
     {
       tempBufferBTC[3-i]=tempI%256
@@ -34,7 +49,7 @@ export function UpdateHWStatusPCSC(BTC_BAL: number, BTC_USD: number, ETH_BAL: nu
         tempF = (tempF - tempF%256)/256
     }
 
-    let BuffBTC = Buffer.concat([Buffer.from([0xB0,0x50,0x00]),Buffer.from([0x00]),Buffer.from([0x10]),tempBufferBTC])
+    let BuffBTC = Buffer.concat([Buffer.from([0xB0,0x50,0x00]),Buffer.from([0x00]),Buffer.from([0x10]),tempBufferBTC, tempBufferWallet])
 
     reader.transmit(BuffBTC,20,2, (err, data) => {
     })
@@ -62,7 +77,7 @@ export function UpdateHWStatusPCSC(BTC_BAL: number, BTC_USD: number, ETH_BAL: nu
         tempF = (tempF - tempF%256)/256
     }
 
-    let BuffETH = Buffer.concat([Buffer.from([0xB0,0x50,0x00]),Buffer.from([0x01]),Buffer.from([0x10]),tempBufferETH])
+    let BuffETH = Buffer.concat([Buffer.from([0xB0,0x50,0x00]),Buffer.from([0x01]),Buffer.from([0x10]),tempBufferETH, tempBufferWallet])
 
     reader.transmit(BuffETH,20,2, (err, data) => {
     })
@@ -91,7 +106,7 @@ export function UpdateHWStatusPCSC(BTC_BAL: number, BTC_USD: number, ETH_BAL: nu
         tempF = (tempF - tempF%256)/256
     }
 
-    let BuffLTC = Buffer.concat([Buffer.from([0xB0,0x50,0x00]),Buffer.from([0x02]),Buffer.from([0x10]),tempBufferLTC])
+    let BuffLTC = Buffer.concat([Buffer.from([0xB0,0x50,0x00]),Buffer.from([0x02]),Buffer.from([0x10]),tempBufferLTC, tempBufferWallet])
 
     reader.transmit(BuffLTC,20,2, (err, data) => {
     })
@@ -119,7 +134,7 @@ export function UpdateHWStatusPCSC(BTC_BAL: number, BTC_USD: number, ETH_BAL: nu
         tempF = (tempF - tempF%256)/256
     }
 
-    let BuffXRP = Buffer.concat([Buffer.from([0xB0,0x50,0x00]),Buffer.from([0x03]),Buffer.from([0x10]),tempBufferXRP])
+    let BuffXRP = Buffer.concat([Buffer.from([0xB0,0x50,0x00]),Buffer.from([0x03]),Buffer.from([0x10]),tempBufferXRP, tempBufferWallet])
 
     reader.transmit(BuffXRP,20,2, (err, data) => {
     })

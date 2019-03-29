@@ -47,7 +47,9 @@ export class EthSendWindow extends React.Component<any, IETHSendState> {
     }
 
     handleClick() {
-        sendTransaction('ethereum', this.state.paymentAddress, this.state.amount, this.state.fee, this.props.redirect)
+        if (this.state.paymentAddress != '') {
+            sendTransaction('ethereum', this.state.paymentAddress, this.state.amount, this.state.fee, /*this.props.redirect*/0, this.props.course, this.props.btcBalance)
+        }
     }
 
     render() {

@@ -251,6 +251,7 @@ export default class App extends React.Component<any, IAPPState> {
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
             main: () => <BTCWindow balance={this.state.BTCBalance} price={this.state.BTCPrice}
+                                   course={this.state.BTCCourse}
                                    hourChange={this.state.BTCHourChange} pathState={this.state.stateTransaction}
                                    lastTx={this.state.BTCLastTx.sort((a: any, b: any) => {
                                        let c = new Date(a.Date).getTime()
@@ -265,6 +266,7 @@ export default class App extends React.Component<any, IAPPState> {
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
             main: () => <ETHWIndow balance={this.state.ETHBalance} price={this.state.ETHPrice}
+                                   course={this.state.BTCCourse}
                                    hourChange={this.state.ETHHourChange}
                                    lastTx={this.state.ETHLastTx.sort((a: any, b: any) => {
                                        let c = new Date(a.Date).getTime()
@@ -278,6 +280,7 @@ export default class App extends React.Component<any, IAPPState> {
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
             main: () => <LTCWindow balance={this.state.LTCBalance} price={this.state.LTCPrice}
+                                   course={this.state.BTCCourse}
                                    hourChange={this.state.LTCHourChange}
                                    lastTx={this.state.LTCLastTx.sort((a: any, b: any) => {
                                        let c = new Date(a.Date).getTime()
@@ -355,9 +358,8 @@ export default class App extends React.Component<any, IAPPState> {
         this.getActiveCurrency = this.getActiveCurrency.bind(this)
         this.setActiveCurrency = this.setActiveCurrency.bind(this)
         this.setStateSR = this.setStateSR.bind(this)
-
-
     }
+
 
     getActiveCurrency(): string {
         log("GET ACTIVE CURRENCY")
@@ -452,11 +454,14 @@ export default class App extends React.Component<any, IAPPState> {
                 info('START GETWALLET INFO')
                 let data = await getInfoPCSC()
                 info('GOT THIS DATA', data)
+
                 switch (data) {
                     case 0: {
-                        clearInterval(interval)
+                       clearInterval(interval)
                         info('SETTING WALLET STATUS 0')
-                        this.initAll()
+
+                            this.initAll()
+
                         this.setState({walletStatus: 0})
                         break
                     }
@@ -651,7 +656,7 @@ export default class App extends React.Component<any, IAPPState> {
                                 BTCCourse: Number(parsedValue[item].price_usd),
                                 BTCHourChange: Number(parsedValue[item].percent_change_1h)
                             })
-                            info('RATES', parsedValue[item].price_usd, parsedValue[item].percent_change_1h)
+                            info('BTC PRICE', parsedValue[item].price_usd, parsedValue[item].percent_change_1h)
                             break
                         }
                         case 'ethereum': {
@@ -661,11 +666,10 @@ export default class App extends React.Component<any, IAPPState> {
                                 ETHCourse: Number(parsedValue[item].price_usd),
                                 ETHHourChange: Number(parsedValue[item].percent_change_1h)
                             })
-                            info(this.state.ETHPrice, this.state.ETHHourChange)
+                            info('ETH PRICE',this.state.ETHPrice, this.state.ETHHourChange)
                             break
                         }
                         case 'litecoin': {
-
                             this.setState({
                                 LTCPrice: Number((parsedValue[item].price_usd * this.state.LTCBalance).toFixed(2)),
                                 LTCCourse: Number(parsedValue[item].price_usd),
@@ -675,7 +679,6 @@ export default class App extends React.Component<any, IAPPState> {
                             break
                         }
                         case 'ripple': {
-
                             this.setState({
                                 XRPPrice: Number((parsedValue[item].price_usd * this.state.XRPBalance).toFixed(2)),
                                 XRPCourse: Number(parsedValue[item].price_usd),

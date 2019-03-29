@@ -836,6 +836,7 @@ button {
 .blockFee {
     display: flex;
     margin-top: 20px;
+    visibility: hidden;
 }
 
 .text_Transaction_fee {

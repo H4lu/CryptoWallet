@@ -3,7 +3,6 @@ import * as Request from 'request'
 import * as webRequest from 'web-request'
  import { getSignaturePCSC } from '../hardwareAPI/GetSignature'
 import { getAddressPCSC } from '../hardwareAPI/GetAddress'
-// import getAddress from '../hardwareAPI/GetAddress'
 import * as utils from './utils'
  import * as crypto from 'crypto'
 import * as satoshi from 'satoshi-bitcoin'
@@ -175,7 +174,7 @@ async function getLastTransactionData(): Promise<any> {
 }
 
 async function createTransaction(paymentAdress: string,
-                                 transactionAmount: number,transactionFee: number, redirect: any, utxos: Array<any>) {
+                                 transactionAmount: number,transactionFee: number, redirect: any, utxos: Array<any>, course: number, balance: number) {
     info(redirect)
     info('Tx amount: ' + transactionAmount)
     info('FEE:  ', transactionFee)
@@ -184,7 +183,7 @@ async function createTransaction(paymentAdress: string,
         value: transactionAmount
     }
     info('Got this utxos: ' + utxos)
-    let { inputs, outputs, fee } = coinSelect(utxos, targets, 1)
+    let { inputs, outputs, fee } = coinSelect(utxos, targets, 10)
     info('Got this inputs: ' + inputs)
     // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
     info('FEE_coinSelect', fee)
@@ -228,28 +227,29 @@ async function createTransaction(paymentAdress: string,
 
     info('HASHARRAY: ', hashArray[0])
     info('HASHARRAY len: ', hashArray[0].length)
-    let data = await getSignaturePCSC(0, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.inputs.length)
-
-    transaction.inputs.forEach((input, index) => {
-        info('Input', input)
-        info('Index', index)
-        info('SIGNATURE DATA', data[index].toString('hex'))
-        unbuildedTx = unbuildedTx.replace('00000000ff','000000' + data[index].toString('hex') + 'ff')
-        info('Unbuilded step',index, 'tx', unbuildedTx)
-    })
-    info('UNBUILDED TX: ' + unbuildedTx)
-    //info('DATA: ' + data)
-    sendTransaction(unbuildedTx, redirect)
-    //info('Final sig: ' + sig)
-    // Добавляем вход транзакции в виде хэша предыдущей транзакции и номер выхода с нашим адресом
-    // Добавляем выход транзакции, где указывается адрес и сумма перевода
-    transaction.addOutput(paymentAdress, transactionAmount)
-    // Добавляем адрес для "сдачи"/.
-    // Вычисляем хэш неподписанной транзакции
-    // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
-    // Сериализуем неподписаннуб транзакцию
-    // Добавляем UnlockingScript в транзакцию
-    // Возвращаем готовую к отправке транзакцию
+    let data = await getSignaturePCSC(0, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.inputs.length, course, fee, balance)
+    if (data[0].length != 1) {
+        transaction.inputs.forEach((input, index) => {
+            info('Input', input)
+            info('Index', index)
+            info('SIGNATURE DATA', data[index].toString('hex'))
+            unbuildedTx = unbuildedTx.replace('00000000ff', '000000' + data[index].toString('hex') + 'ff')
+            info('Unbuilded step', index, 'tx', unbuildedTx)
+        })
+        info('UNBUILDED TX: ' + unbuildedTx)
+        //info('DATA: ' + data)
+        sendTransaction(unbuildedTx, redirect)
+        //info('Final sig: ' + sig)
+        // Добавляем вход транзакции в виде хэша предыдущей транзакции и номер выхода с нашим адресом
+        // Добавляем выход транзакции, где указывается адрес и сумма перевода
+        transaction.addOutput(paymentAdress, transactionAmount)
+        // Добавляем адрес для "сдачи"/.
+        // Вычисляем хэш неподписанной транзакции
+        // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
+        // Сериализуем неподписаннуб транзакцию
+        // Добавляем UnlockingScript в транзакцию
+        // Возвращаем готовую к отправке транзакцию
+    }
 }
 
 function sendTransaction(transactionHex: string, redirect: any) {
@@ -264,13 +264,9 @@ function sendTransaction(transactionHex: string, redirect: any) {
   },
   // Обрабатываем ответ
    (res,err,body) => {
-     //info(body)
-     //info(res), info(err)
      let bodyStatus = body.status
      info('RESULT TRANSACTION CHAIN: ', bodyStatus)
      if (bodyStatus === 'fail') {
-       //info('ERROR IN SEND BITCOIN', err)
-      // sendByBlockcypher(transactionHex, redirect)
      } else {
        if (bodyStatus.toString() === 'success') {
          redirect()
@@ -312,7 +308,7 @@ function sendByBlockcypher(transactionHex: string, redirect: any) {
         })
 }
 
-export function handle(paymentAdress: string, amount: number, transactionFee: number, redirect: any) {
+export function handle(paymentAdress: string, amount: number, transactionFee: number, redirect: any, course: number, balance: number) {
    getLastTransactionData().then(Response => {
     let respData = JSON.parse(Response.content)
     info('Resp status: ' + respData.status)
@@ -327,7 +323,7 @@ export function handle(paymentAdress: string, amount: number, transactionFee: nu
         info('Utxos: ' + utxos)
       }
       amount = toSatoshi(amount)
-      createTransaction(paymentAdress, amount, transactionFee, redirect, utxos).catch(err => {
+      createTransaction(paymentAdress, amount, transactionFee, redirect, utxos, course, balance).catch(err => {
         info(err)
       })
     } else {

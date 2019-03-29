@@ -1,6 +1,6 @@
 import * as React from 'react'
 import getBitcoinAddress from "../API/cryptocurrencyAPI/BitCoin";
-import {log} from "electron-log";
+import {info, log} from "electron-log";
 import {sendTransaction} from "../core/SendTransaction";
 import {Link} from "react-router-dom";
 
@@ -43,12 +43,11 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
         this.setState({amount: e.target.value})
         this.setState({usd: (e.target.value * this.props.course)})
         this.setState({feeUSD: (this.state.fee * this.props.course)})
-        log(this.props.course)
     }
 
     handleClick() {
         if (this.state.paymentAddress != '') {
-            sendTransaction('bitcoin', this.state.paymentAddress, this.state.amount, this.state.fee, this.props.redirect)
+            sendTransaction('bitcoin', this.state.paymentAddress, this.state.amount, this.state.fee, /*this.props.redirect*/0, this.props.course, this.props.btcBalance)
         }
     }
 
@@ -65,11 +64,11 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
                     <div className='blockSendTransactionSum'>
                         <div className='iconSum'/>
                         <div className='poleSum'>
-                            <input type='text' pattern="[0-9]*" className='payment_sum' placeholder='0.00'
-                                   onChange={this.handleAmountChange}/>
+                            <input type='text' pattern="[0-9]*" className='payment_sum' id='inputValue' placeholder='0.00' onChange={this.handleAmountChange}/>
                             <p className='payment_sumUSD'>{(this.state.usd).toFixed(2)}</p>
                         </div>
                     </div>
+
                     <div className='blockFee'>
                         <p className='text_Transaction_fee'>Transaction fee</p>
                         <p className='sum_Transaction_fee'>{(this.state.fee).toFixed(8)}</p>
@@ -77,6 +76,7 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
                         <p className='USD_icon'>{'$'}</p>
                         <p className='USD_Transaction_fee'>{(this.state.fee).toFixed(2)}</p>
                     </div>
+
                     <div className='blockBalance'>
                         <p className='text_Transaction_fee'>Avalible</p>
                         <p className='sum_Transaction_balance'>{(this.props.btcBalance).toFixed(8)}</p>

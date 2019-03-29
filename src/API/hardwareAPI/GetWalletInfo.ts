@@ -1,5 +1,3 @@
-// import SerialPort from 'serialport'
-// import { port } from './OpenPort'
 import { reader } from './Reader'
 import { info } from 'electron-log'
 export async function wrapper(): Promise<any> {
@@ -73,23 +71,15 @@ function getRealState() {
     })
   })
 }
-/* export function waitForConnection() {
+ export function waitForConnection() {
   let connection = false
   while (!connection) {
     setTimeout(() => {
-      findDevice().then(value => {
-        if (value !== undefined) {
-          info(value)
-          info('CONNECTED')
-          connection = true
-        } else {
-          info('DISCONNECTED')
-        }
-      }).catch(err => info(err))
+
     },1000)
   }
 }
-*/
+
 /* export async function findDevice(): Promise<any> {
   return new Promise((resolve, reject) => {
     SerialPort.list().then(result => {

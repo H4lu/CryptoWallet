@@ -7,7 +7,7 @@ import {getBalance, getBitcoinPubKey, getBTCPrice} from '../cryptocurrencyAPI/Bi
 import { getETBalance, getETHPrice } from '../cryptocurrencyAPI/Ethereum'
 import { getLTalance,getLTCPrice } from '../cryptocurrencyAPI/Litecoin'
 import {bufferutils} from "bitcoinjs-lib";
-import {getXRPalance, getXRPPrice} from "../cryptocurrencyAPI/Ripple";
+import {getXRPalance, getXRPPrice} from "../cryptocurrencyAPI/Ripple"
 
 
 export function sig(id: number, address: string, amount: number): Promise<Buffer> {
@@ -52,7 +52,7 @@ export function sig(id: number, address: string, amount: number): Promise<Buffer
   })
 
 }
-export function getSignaturePCSC(id: number, message: Array<Buffer>, address: string, amount: number, numberOfInputs: number): Promise<Array<Buffer>> {
+export function getSignaturePCSC(id: number, message: Array<Buffer>, address: string, amount: number, numberOfInputs: number, course: number, fee: number,balance: number): Promise<Array<Buffer>> {
   info("inputs length", numberOfInputs)
   return new Promise((resolve, reject) => {
     let currencyId: number = 0x00
@@ -70,47 +70,67 @@ export function getSignaturePCSC(id: number, message: Array<Buffer>, address: st
       break
     }
     }
-    info('LENGTH OF MESSAGE', message.length)
-    let amountBuf = new Buffer(16)
-    amountBuf.write(amount.toString(),0,amount.toString().length, 'ascii')
     info('Number of inputs:', Number('0x' + numberOfInputs))
-    let xor = 0
-    let data: any = amount.toString() + address
     let numberOfInputsBuf = Buffer.from([numberOfInputs])
-    info('NUMBER OF INPUTS', numberOfInputsBuf)
+
     let idBuf = Buffer.from([currencyId])
     info('ID BUF',idBuf)
-    let Le = Buffer.from(address).length + /*xorBuf.length +*/ amountBuf.length
-    let LeBuf = Buffer.from([Le])
-    info('Le',LeBuf)
-    info('40: ',Buffer.concat([Buffer.from([0xb0,0x40]),Buffer.from([numberOfInputs]),Buffer.from(idBuf),Buffer.from(LeBuf),Buffer.from(amountBuf),Buffer.from(address)]).toString('hex'))
-    reader.transmit(Buffer.concat([Buffer.from([0xb0,0x40]),Buffer.from([numberOfInputs]),Buffer.from(idBuf),Buffer.from(LeBuf),Buffer.from(amountBuf),Buffer.from(address)]), 4, 2, async (err, data) => {
-      if (err) {
-        info('ERROR IN FIRST MMESSAGE',err)
-        reject(err)
-      } else {
-        info('DATA IN FIRST MESSAGE', data.toString('hex'))
-        let sigArray: Array<Buffer> = []
-        info(data)
-        for (let i = 0; i < numberOfInputs; i++) {
-          let answer = await sendDataMessage(Buffer.from([i]), Buffer.from([currencyId]), message[i])
-          sigArray.push(answer)
-        }
-        //sendFinalMessage()
-        resolve(sigArray)
-      }
-    })
+
+    let le = Buffer.from(address).length + 48
+    let leBuf = Buffer.from([le])
+    info('Len data summ', leBuf)
+
+    let amountBuf = getSumAsBuf(amount, course)
+    let feeBuf = getSumAsBuf(fee, course)
+    let balanceBuf = getSumAsBuf(balance, course)
+    info('40: ',Buffer.concat([Buffer.from([0xb0,0x40]), numberOfInputsBuf, idBuf, leBuf, amountBuf, feeBuf, balanceBuf, Buffer.from(address)]).toString('hex'))
+      reader.transmit(Buffer.concat([Buffer.from([0xb0,0x40]), numberOfInputsBuf, idBuf, leBuf, amountBuf, feeBuf, balanceBuf, Buffer.from(address)]), 4, 2, async (err, data) => {
+          if (err) {
+              info('ERROR IN FIRST MMESSAGE',err)
+              reject(err)
+          } else {
+              info('DATA IN FIRST MESSAGE', data.toString('hex'))
+
+            /*  let sigArray: Array<Buffer> = []
+              for (let i = 0; i < numberOfInputs; i++) {
+                  let answer = await sendDataMessage(Buffer.from([i]), Buffer.from([currencyId]), message[i])
+                  sigArray.push(answer)
+              }
+              resolve(sigArray)*/
+                  info('in while')
+                  let timerId = setInterval(()=> {
+                      reader.transmit(Buffer.concat([Buffer.from([0xb0, 0x42, 0x00, 0x00, 0x00])]), 4, 2, async (err, data) => {
+                          if (err) {
+                              info('ERROR IN 42 MMESSAGE', err)
+                              reject(err)
+                          } else {
+                              info('DATA IN 42 MESSAGE', data.toString('hex'))
+                              if (data.toString('hex') == '9000') {
+                                  info('in if send message')
+                                  let sigArray: Array<Buffer> = []
+                                  for (let i = 0; i < numberOfInputs; i++) {
+                                      let answer = await sendDataMessage(Buffer.from([i]), Buffer.from([currencyId]), message[i])
+                                      sigArray.push(answer)
+                                  }
+                                  clearInterval(timerId)
+                                  resolve(sigArray)
+                              } else {
+                                  if (data.toString('hex') == '6b84') {
+                                      let sigArray: Array<Buffer> = []
+                                      let nullBuff = new Buffer(1)
+                                      nullBuff[0] = 0x00;
+                                      resolve(sigArray)
+                                      clearInterval(timerId)
+                                  }
+                              }
+                          }
+                      })
+                  },1000,[])
+          }
+      })
   })
 }
-function sendFinalMessage() {
-  reader.transmit(Buffer.from([0xB0,0x42,0x00,0x00,0x00]),4,2,(err,data) => {
-    if (err) {
-      info(err)
-    } else {
-      info(data)
-    }
-  })
-}
+
 function sendDataMessage(inputNumber: Buffer, currencyId: Buffer, hash: Buffer): Promise<Buffer> {
   info('GOT THIS INPUT NUMBER: ' + inputNumber)
   info('GOT THIS CURRENCY ID: ' + currencyId)
@@ -185,4 +205,32 @@ function transfomS(sign: Buffer): Buffer {
     }
     lo_s[0] = n[0] - sign[0]
     return lo_s
+}
+
+function getSumAsBuf(sum: number, course: number): Buffer{
+    let tempI = Math.floor(sum)
+    let tempF = (sum - tempI)*100000000
+    let returnBuf = new Buffer(16)
+
+    for (let i=0; i<4; i++)
+    {
+        returnBuf[3-i]=tempI%256
+        tempI = (tempI - tempI%256)/256
+
+        returnBuf[7-i]=tempF%256
+        tempF = (tempF - tempF%256)/256
+    }
+
+    tempI = Math.floor(sum*course)
+    tempF = (sum*course - tempI)*100
+    for (let i=0; i<4; i++)
+    {
+        returnBuf[11-i]=tempI%256
+        tempI = (tempI - tempI%256)/256
+
+        returnBuf[15-i]=tempF%256
+        tempF = (tempF - tempF%256)/256
+    }
+
+    return returnBuf
 }

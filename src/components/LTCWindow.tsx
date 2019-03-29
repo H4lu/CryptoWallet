@@ -40,7 +40,7 @@ export class LTCWindow extends React.Component<any, ILTCWindowState> {
     console.log('PROPERTY: ' + this.props.lastTx)
   }
   handleClick() {
-    sendTransaction('litecoin', this.state.paymentAddress, this.state.amount, this.state.fee, this.props.redirect)
+    sendTransaction('litecoin', this.state.paymentAddress, this.state.amount, this.state.fee, this.props.redirect, this.props.course, this.props.balance)
   }
   handleCopyClick() {
     clipboard.writeText(this.state.address)

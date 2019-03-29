@@ -60,7 +60,7 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
     clipboard.writeText(this.state.address)
   }
   handleClick() {
-    sendTransaction('bitcoin', this.state.paymentAddress, this.state.amount, this.state.fee, this.props.redirect)
+    sendTransaction('bitcoin', this.state.paymentAddress, this.state.amount, this.state.fee, this.props.redirect, this.props.course, this.props.balance)
   }
   handleAmountChange(e: any) {
     this.setState({ amount: e.target.value })

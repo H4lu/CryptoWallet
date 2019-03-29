@@ -4,16 +4,21 @@ import * as webRequest from 'web-request'
 import * as utils from './utils'
 // import * as crypto from 'crypto'
 import { getAddressPCSC } from '../hardwareAPI/GetAddress'
-// import { Transaction, TransactionBuilder, networks } from 'bitcoinjs-lib'
-import { sig } from '../hardwareAPI/GetSignature'
+import {getSignaturePCSC, sig} from '../hardwareAPI/GetSignature'
 import * as wif from 'wif'
 import * as satoshi from 'satoshi-bitcoin'
 import { info } from 'electron-log'
+import {Buffer} from "buffer";
 let myAddress = ''
+let wifKey =''
+let myPubKey = new Buffer(64)
 const rootURL = 'https://chain.so/api/v2'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.litecoin
 const NETWORK = 'LTC'
+import Web3 from 'web3'
+import * as crypto from "crypto";
+const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/960cbfb44af74f27ad0e4b070839158a'))
 
 let balance: number
 let price: number
@@ -36,7 +41,6 @@ export default function getAddres() {
 export async function initLitecoinAddress() {
   
   
-  
   info('INITING LTC ADDRESS')
 
   return new Promise(async (resolve) => {
@@ -48,24 +52,31 @@ export async function initLitecoinAddress() {
       if (answer.length > 1 && answer[0].includes('LTC')) {
         status = true
         info('status after reset', status)
-        info('resolving')
+
+          //костыль
+       /*   let tempPriv = web3.utils.soliditySha3(answer[0])
+          let temp = web3.utils.hexToBytes(tempPriv)
+          let privBuf = new Buffer(32)
+          for(let i = 0; i < 32; i++)
+          {
+              privBuf[i] = temp[i]
+          }
+          wifKey = wif.encode(176,privBuf,true)
+          info("LTC wifKey", wifKey)
+
+          let tempLTCData = ECPair.fromWIF(wifKey,network)
+
+          info('LTC ADDRESS', tempLTCData.getAddress())
+          myAddress = tempLTCData.getAddress()*/
+
+          //конец костыля
+
+
         setMyAddress(answer[0].substring(3,answer[0].length))
+        setMyPubKey(answer[1])
         resolve(0)
       }
     }
-    /*
-    let interval = setInterval(async () => {
-      myAddr = await getAddressPCSC(0)
-      if (myAddr.length > 20) {
-        clearInterval(interval)
-        resolve(0)
-        info('MY ADDRESS BITCOIN: ' + myAddr)
-      }
-    },500,[])
-    */
-  //
-// })
-
   })
 }
 function parseValueCrypto(response: webRequest.Response<string>): Array<Number | String> {
@@ -80,6 +91,18 @@ function parseValueCrypto(response: webRequest.Response<string>): Array<Number |
 function setMyAddress(address: string) {
   myAddress = address
   info('MY ADDRESS LITECOIN: ' + myAddress)
+}
+
+export function setMyPubKey(pubKey: Buffer) {
+    for(let i = 0; i < 64; i++)
+    {
+        myPubKey[i] = pubKey[i+1]
+    }
+    info('PUB_KEY_ETHEREUM', myPubKey.toString('hex'))
+}
+
+export function getLitecoinPubKey() {
+    return myPubKey
 }
 
 export async function getLitecoinLastTx(): Promise<any> {
@@ -136,192 +159,97 @@ async function getLastTransactionData(): Promise<any> {
   }
 }
 
-/*function ReplaceAt(input: any, search: any, replace: any, start: any, end: any) {
-  info('FIRST SLICE:' + input.slice(0, start))
-  info('SECOND SLICE ' + input.slice(start, end).replace(search, replace))
-  info('THIRD SLICE: ' + input.slice(end))
-  return input.slice(0, start)
-      + input.slice(start, end).replace(search, replace)
-      + input.slice(end)
-}
-*/
 async function createTransaction(paymentAdress: string,
-    transactionAmount: number,transactionFee: number, redirect: any, utxos: Array<any>) {
-  info(redirect)
-  info('Tx amount: ' + transactionAmount)
-  info(transactionFee)
-  let targets = {
-    address: paymentAdress,
-    value: transactionAmount
-  }
-  info('Got this utxos: ' + utxos)
-  let { inputs, outputs, fee } = coinSelect(utxos, targets, 100)
-  info('Got this inputs: ' + inputs)
-      // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
-  info(fee)
-  let transaction = new TransactionBuilder(network)
-  for (let input in inputs) {
-    transaction.addInput(inputs[input].txid, inputs[input].output_no)
-    info('Tx inputs: ' + transaction.inputs)
-  }
-  for (let out in outputs) {
-    if (!outputs[out].address) {
-      outputs[out].address = myAddress
+                                 transactionAmount: number,transactionFee: number, redirect: any, utxos: Array<any>, course: number, balance: number) {
+    info(redirect)
+    info('Tx amount: ' + transactionAmount)
+    info('FEE:  ', transactionFee)
+    let targets = {
+        address: paymentAdress,
+        value: transactionAmount
     }
-    transaction.addOutput(outputs[out].address, outputs[out].value)
-  }
-  let unbuildedTx = transaction.buildIncomplete().toHex()
-  info('Unbuilded: ' + transaction.buildIncomplete().toHex())
-  // let sig: string = ''
-  for (let tx in inputs) {
-    info('Index: ' + tx)
-    let hashForSig = transaction.tx.hashForSignature(Number(tx), Buffer.from(Object(utxos[Number(tx)]).script_hex),Transaction.SIGHASH_ALL)
-    info('Hash for sig in for: ' + hashForSig.toString('hex'))
-  }
-  transaction.inputs.map(value => {
-    info('MAPPED INPUT: ' + value)
-  })
-  transaction.tx.ins.forEach((value: any) => {
-    info('PROBABLY TX INPUT: ' + JSON.stringify(value))
-  })
-
-  /*let hashArray: Array<any>
-  let lastIndex = 0
-  hashArray = []
-  transaction.inputs.forEach(function(input, index) {
-    info(input)
-    let dataForHash = ReplaceAt(unbuildedTx + '01000000', '00000000ff', '00000019' + Object(utxos[index]).script_hex + 'ff', unbuildedTx.indexOf('00000000ff', lastIndex), unbuildedTx.indexOf('00000000ff', lastIndex) + 50)
-    info('DATA FOR HASH: ' + dataForHash)
-    let firstHash = crypto.createHash('sha256').update(Buffer.from(dataForHash, 'hex')).digest('hex')
-    let secondHash = crypto.createHash('sha256').update(Buffer.from(firstHash, 'hex')).digest('hex')
-    info('SECOND HASH: ' + secondHash)
-    let sigIndex = unbuildedTx.indexOf('00000000ff', lastIndex)
-    info(sigIndex)
-    lastIndex += 90
-      // let hashForSig = transaction.tx.hashForSignature(index, Buffer.from(Object(utxos[index]).script_hex),Transaction.SIGHASH_ALL)
-    hashArray.push(Buffer.from(secondHash,'hex'))
-  })
-  let hashBuffer = Buffer.concat(hashArray)
-  info('HASHBUFFER: ' + hashBuffer + 'LENGTH: ' + hashBuffer.length)
-  info('HASHARRAY: ' + hashArray)
-  let data = await getSignaturePCSC(2, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.tx.ins.length)
-  /*
-  let startIndex = 5
-  let shift = data[4] + 5
-  */
- /*
-  transaction.inputs.forEach((input, index) => {
-    info('Input', input)
-    info('Index', index)
-    info('SIGNATURE DATA', data[index].toString('hex'))
-    unbuildedTx = unbuildedTx.replace('00000000ff','000000' + data[index].toString('hex') + 'ff')
-    info('Unbuilded step', index, 'tx:', unbuildedTx)
-    /*
-    unbuildedTx = unbuildedTx.replace('00000000ff','000000' + data.slice(startIndex, shift).toString('hex') + 'ff')
-    info('INSERT THIS: ' + data.slice(startIndex, shift).toString('hex'))
-    info('STARTINDEX: ' + data[startIndex] + 2)
-    info('DATA OF : ' + data[startIndex])
-    startIndex += (data[startIndex] + 2)
-    shift += data[startIndex] + 2
-    info('SHIFT VALUE: ' + shift)
-    info('DATA OF SHIFT: ' + data[shift])
-    info('START INDEX: ' + startIndex)
-    info('SHIFT: ' + shift)
-    */
-  // })
-  info('UNBUILDED TX: ' + unbuildedTx)
-  let key = await sig(2,paymentAdress,satoshi.toBitcoin(transactionAmount))
-  let wifKey = wif.encode(176,key.slice(3,35),true)
-  let alice = ECPair.fromWIF(wifKey,network)
-  info('LTC ADDRESS', alice.getAddress())
-  transaction.inputs.forEach((value,index) => {
-    transaction.sign(index,alice)
-    info('SIG VALUE', value)
-  })
-  // info('DATA: ' + data)
-  let final = transaction.build().toHex()
-  info('FIANL', final)
-  sendTransaction(final, redirect)
-  info('Final sig: ' + sig)
-
-}
-// Функция отправки транзакции, на вход принимает транзакцию в hex- формате
-/*function sendTransaction(transactionHex: string, redirect: any) {
-  // формируем запрос
-  // Обрабатываем ответ
-  /* Request.post({
-    url: 'https://api.blockcypher.com/v1/ltc/main/txs/push',
-    headers: {
-      'content-type': 'application/json'
-    },
-    body : { 'tx': transactionHex },
-    json: true
-  },
-      (res,err,body) => {
-        info(body)
-        info(res), info(err)
-        let bodyStatus = body
-        info(bodyStatus.tx.hash)
-        try {
-          if (body.tx.confirmations === 0) {
-            redirect()
-            // alert('Transaction sended! Hash: ' + Object(body).tx.hash)
-          }
-        } catch (error) {
-          alert('Error occured: ' + Object(body).error)
+    info('Got this utxos: ' + utxos)
+    let { inputs, outputs, fee } = coinSelect(utxos, targets, 1)
+    info('Got this inputs: ' + inputs)
+    // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
+    info('FEE_coinSelect', fee)
+    let transaction = new TransactionBuilder(network)
+    for (let input in inputs) {
+        transaction.addInput(inputs[input].txid, inputs[input].output_no)
+        info('Tx inputs: ' + transaction.inputs)
+    }
+    for (let out in outputs) {
+        if (!outputs[out].address) {
+            outputs[out].address = myAddress
         }
-      })
-    */
-   /*
-  Request.post({
-    url: urlChainSo + NETWORK,
-    headers: {
-      'content-type': 'application/json'
-    },
-    body : { 'tx_hex': transactionHex },
-    json: true
-  },
-  // Обрабатываем ответ
-   (res,err,body) => {
-     info(body)
-     info(res), info(err)
-     let bodyStatus = body.status
-     info(bodyStatus)
-     if (bodyStatus.toString() === 'success') {
-       redirect()
-     } else {
-       info(body.error.message)
-       alert('Error occured: ' + body.error.message)
-     }
-   })
+        transaction.addOutput(outputs[out].address, outputs[out].value)
+    }
+    let unbuildedTx = transaction.buildIncomplete().toHex()
+    info('Unbuilded: ' + transaction.buildIncomplete().toHex())
+    transaction.inputs.map(value => {
+        info('MAPPED INPUT: ' + value)
+    })
+    transaction.tx.ins.forEach((value: any) => {
+        info('PROBABLY TX INPUT: ' + JSON.stringify(value))
+    })
+
+    let hashArray: Array<Buffer> =[]
+    let lastIndex = 0
+    transaction.inputs.forEach(function(input, index) {
+        info('My index: ' + index)
+        info('For each')
+        info(input)
+        info('Utxo script: ' + Object(utxos[index]).script_hex)
+        let dataForHash = ReplaceAt(unbuildedTx + '01000000', '00000000ff', '00000019' + Object(utxos[index]).script_hex + 'ff', unbuildedTx.indexOf('00000000ff', lastIndex), unbuildedTx.indexOf('00000000ff', lastIndex) + 50)
+        info('DATA FOR HASH: ' + dataForHash)
+        let firstHash = crypto.createHash('sha256').update(Buffer.from(dataForHash, 'hex')).digest('hex')
+        let secondHash = crypto.createHash('sha256').update(Buffer.from(firstHash, 'hex')).digest('hex')
+        info('SECOND HASH: ', secondHash)
+        let sigIndex = unbuildedTx.indexOf('00000000ff', lastIndex)
+        info(sigIndex)
+        lastIndex += 90
+        hashArray.push(Buffer.from(secondHash,'hex'))
+    })
+
+    info('HASHARRAY: ', hashArray[0])
+    info('HASHARRAY len: ', hashArray[0].length)
+    let data = await getSignaturePCSC(2, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.inputs.length, course, fee, balance)
+    if (data[0].length != 1) {
+        transaction.inputs.forEach((input, index) => {
+            info('Input', input)
+            info('Index', index)
+            info('SIGNATURE DATA', data[index].toString('hex'))
+            unbuildedTx = unbuildedTx.replace('00000000ff', '000000' + data[index].toString('hex') + 'ff')
+            info('Unbuilded step', index, 'tx', unbuildedTx)
+        })
+        info('UNBUILDED TX: ' + unbuildedTx)
+        //info('DATA: ' + data)
+        sendTransaction(unbuildedTx, redirect)
+        //info('Final sig: ' + sig)
+        // Добавляем вход транзакции в виде хэша предыдущей транзакции и номер выхода с нашим адресом
+        // Добавляем выход транзакции, где указывается адрес и сумма перевода
+        transaction.addOutput(paymentAdress, transactionAmount)
+        // Добавляем адрес для "сдачи"/.
+        // Вычисляем хэш неподписанной транзакции
+        // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
+        // Сериализуем неподписаннуб транзакцию
+        // Добавляем UnlockingScript в транзакцию
+        // Возвращаем готовую к отправке транзакцию
+    }
 }
-*/
+
+function ReplaceAt(input: any, search: any, replace: any, start: any, end: any) {
+    info('FIRST SLICE:' + input.slice(0, start))
+    info('SECOND SLICE ' + input.slice(start, end).replace(search, replace))
+    info('THIRD SLICE: ' + input.slice(end))
+    return input.slice(0, start)
+        + input.slice(start, end).replace(search, replace)
+        + input.slice(end)
+}
+
 function sendTransaction(transactionHex: string, redirect: any) {
   info('url: ' + urlChainSo + NETWORK)
   // формируем запрос
-  /* Request.post({
-    url: 'https://api.blockcypher.com/v1/btc/test3/txs/push',
-    headers: {
-      'content-type': 'application/json'
-    },
-    body : { 'tx': transactionHex },
-    json: true
-  },
-      (res,err,body) => {
-        info(body)
-        info(res), info(err)
-        let bodyStatus = body
-        info(bodyStatus.tx.confirmations)
-        try {
-          if (body.tx.confirmations === 0) {
-            // alert('Transaction sended! Hash: ' + Object(body).tx.hash)
-            redirect()
-          }
-        } catch (error) {
-          alert('Error occured: ' + Object(body).error)
-        }
-      })
-      */
   Request.post({
     url: urlChainSo + NETWORK,
     headers: {
@@ -380,10 +308,8 @@ function sendByBlockcypher(transactionHex: string, redirect: any) {
         }
       })
 }
-export function handleLitecoin(paymentAdress: string, amount: number, transactionFee: number, redirect: any) {
-  // let code = 239
-  // let code2 = 57
-  // let code = 239
+export function handleLitecoin(paymentAdress: string, amount: number, transactionFee: number, redirect: any, course: number, balance: number) {
+
   getLastTransactionData().then(Response => {
     let respData = JSON.parse(Response.content)
     info('RespData: ' + respData.data)
@@ -400,7 +326,7 @@ export function handleLitecoin(paymentAdress: string, amount: number, transactio
         info('Utxos: ' + utxos)
       }
       amount = toSatoshi(amount)
-      createTransaction(paymentAdress, amount, transactionFee, redirect, utxos).catch(err => {
+      createTransaction(paymentAdress, amount, transactionFee, redirect, utxos, course, balance).catch(err => {
         info(err)
       })
     } else {
