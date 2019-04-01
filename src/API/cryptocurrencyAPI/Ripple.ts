@@ -103,7 +103,7 @@ export async function getXRPBalance(): Promise<Array<Number | String>> {
       address - наш адрес
       0 - количество подтверждений транзакций
     */
-    let requestUrl = 'https://chain.so/api/v2/get_address_balance/' + NETWORK + '/' + myAddr + '/' + 0
+  /*  let requestUrl = 'https://chain.so/api/v2/get_address_balance/' + NETWORK + '/' + myAddr + '/' + 0
     info(requestUrl)
     try {
         // Делаем запрос и отдаём в виде Promise
@@ -113,5 +113,9 @@ export async function getXRPBalance(): Promise<Array<Number | String>> {
         Promise.reject(error).catch(error => {
             info(error)
         })
-    }
+    }*/
+    let arr = []
+    arr.push('XRP')
+    arr.push(0)
+    return arr
 }

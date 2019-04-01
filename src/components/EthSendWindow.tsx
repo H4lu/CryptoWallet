@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { getEthereumAddress } from '../API/cryptocurrencyAPI/Ethereum'
-import {log} from "electron-log";
+import {getEthereumAddress} from '../API/cryptocurrencyAPI/Ethereum'
+import {info, log} from "electron-log";
 import {sendTransaction} from "../core/SendTransaction";
 import {Link} from "react-router-dom";
 
@@ -23,9 +23,9 @@ export class EthSendWindow extends React.Component<any, IETHSendState> {
             address: getEthereumAddress(),
             paymentAddress: '',
             amount: 0,
-            fee: 0.00005,
+            fee: 0.00042,
             usd: 0,
-            feeUSD: 0,
+            feeUSD: 0.00042 * this.props.course,
             balanceUSD: 0
         }
         this.handleAddressChange = this.handleAddressChange.bind(this)
@@ -40,10 +40,25 @@ export class EthSendWindow extends React.Component<any, IETHSendState> {
     }
 
     handleAmountChange(e: any) {
-        this.setState({amount: e.target.value})
-        this.setState({usd: (e.target.value * this.props.course)})
-        this.setState({feeUSD: (this.state.fee * this.props.course)})
-        log(this.props.course)
+        this.setState({amount: e.target.value},
+            () => {
+                info('amount: ', this.state.amount)
+                let sumSum = Number(this.state.amount) + Number(0.0006)
+                info('amount+0.0006: ', sumSum)
+                info('balance: ', this.props.btcBalance)
+                if (Number(sumSum) > Number(this.props.btcBalance)) {
+                    info('in if')
+                    let maxSum = Number(this.props.btcBalance) - 0.0006
+                    info('maxSum', maxSum)
+                    if (maxSum < 0) {
+                        maxSum = 0
+                    }
+                    this.setState({amount: maxSum}, () => {
+                        this.setState({usd: (this.state.amount * this.props.course)})
+                    })
+                }
+            }
+        )
     }
 
     handleClick() {
@@ -65,8 +80,8 @@ export class EthSendWindow extends React.Component<any, IETHSendState> {
                     <div className='blockSendTransactionSum'>
                         <div className='iconSum'/>
                         <div className='poleSumETH'>
-                            <input type='text' pattern="[0-9]*" className='payment_sum' placeholder='0.00'
-                                   onChange={this.handleAmountChange}/>
+                            <input type='text' pattern="[0-9]*" className='payment_sum' onChange={this.handleAmountChange}/>
+                            <div className='payment_sum_' placeholder='0.00'>{this.state.amount}</div>
                             <p className='payment_sumUSD'>{(this.state.usd).toFixed(2)}</p>
                         </div>
                     </div>

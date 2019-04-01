@@ -133,7 +133,7 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
             nonce: web3.utils.toHex(value),
             from: myAdress,
             to: paymentAdress,
-            gasPrice: web3.utils.toHex(web3.utils.toWei('1', 'shannon')),
+            gasPrice: web3.utils.toHex(web3.utils.toWei('20', 'shannon')),
             gasLimit: web3.utils.toHex(24000),
             chainId: web3.utils.toHex(1),
             data: '0x00',
@@ -163,23 +163,25 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
         message[31] = 0x99
         let hashArray: Array<Buffer> =[]
         hashArray.push(message)
-        let data = await getSignaturePCSC(1, hashArray, paymentAdress, amount, 1, course, fee,balance)
-        if (data[0].length != 1) {
-            let temp = web3.utils.hexToBytes(tempEtherData)
-            let privBuf = new Buffer(32)
-            for (let i = 0; i < 32; i++) {
-                privBuf[i] = temp[i]
+
+            let data = await getSignaturePCSC(1, hashArray, paymentAdress, amount, 1, course, fee, balance)
+            if (data[0].length != 1) {
+                let temp = web3.utils.hexToBytes(tempEtherData)
+                let privBuf = new Buffer(32)
+                for (let i = 0; i < 32; i++) {
+                    privBuf[i] = temp[i]
+                }
+
+                tx.sign(privBuf)
+
+                let serTx = '0x' + tx.serialize().toString('hex')
+                info(serTx)
+                web3.eth.sendSignedTransaction(serTx).on('receipt', info).on('transactionHash', function (hash) {
+                    info('Transaction sended: ' + hash)
+                    //redirect()
+                }).on('error', console.error).catch(err => info(err))
             }
 
-            tx.sign(privBuf)
-
-            let serTx = '0x' + tx.serialize().toString('hex')
-            info(serTx)
-            web3.eth.sendSignedTransaction(serTx).on('receipt', info).on('transactionHash', function (hash) {
-                info('Transaction sended: ' + hash)
-                redirect()
-            }).on('error', console.error).catch(err => info(err))
-        }
     }).catch(err => info(err))
 
 }

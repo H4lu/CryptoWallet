@@ -1,13 +1,13 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 import {Table} from './Table'
-import { log } from 'electron-log'
+import {log} from 'electron-log'
 
 export default class MainContent extends React.Component<any, any> {
-    classBTC : string;
-    classETH : string;
-    classLTC : string;
-    classXRP : string;
+    classBTC: string;
+    classETH: string;
+    classLTC: string;
+    classXRP: string;
 
     constructor(props: any) {
         super(props)
@@ -27,33 +27,34 @@ export default class MainContent extends React.Component<any, any> {
     }
 
 
-handleUpdateDataClick() {
-    this.props.refresh()
-}
+    handleUpdateDataClick() {
+        this.props.refresh()
+    }
 
     handleClick() {
         this.props.refresh()
     }
-    componentDidMount() {//TODO maybe avoid implicit call of updateState<curr_name> 
+
+    componentDidMount() {//TODO maybe avoid implicit call of updateState<curr_name>
         let activeCurrency: string = this.props.getActiveCurrency()
         log("ACtive currency: " + activeCurrency)
-        switch(activeCurrency) {
-            case "BTC":{
+        switch (activeCurrency) {
+            case "BTC": {
                 log("IN active currency btc")
                 this.updateStateTransBTC()
                 break
             }
-            case "ETH":{
+            case "ETH": {
                 log("IN active currency eth")
                 this.updateStateTransETH()
                 break
             }
-            case "LTC":{
+            case "LTC": {
                 log("IN active currency ltc")
                 this.updateStateTransLTC()
                 break
             }
-            case "XRP":{
+            case "XRP": {
                 log("IN active currency xrp")
                 this.updateStateTransXRP()
                 break
@@ -61,38 +62,41 @@ handleUpdateDataClick() {
         }
 
     }
-    updateStateTransBTC(){
+
+    updateStateTransBTC() {
         this.props.updateStateBTC()
         this.props.setActiveCurrency("BTC")
         this.classBTC = 'click_img_BTC'
         this.classETH = 'img_ETH'
         this.classLTC = 'img_LTC'
         this.classXRP = 'img_XRP'
-  
+
 
     }
-  
-    updateStateTransETH(){
+
+    updateStateTransETH() {
         this.props.updateStateETH()
         this.props.setActiveCurrency("ETH")
         this.classBTC = 'img_BTC'
         this.classETH = 'click_img_ETH'
         this.classLTC = 'img_LTC'
         this.classXRP = 'img_XRP'
-    
+
 
     }
-    updateStateTransLTC(){
+
+    updateStateTransLTC() {
         this.props.updateStateLTC()
         this.props.setActiveCurrency("LTC")
         this.classBTC = 'img_BTC'
         this.classETH = 'img_ETH'
         this.classLTC = 'click_img_LTC'
         this.classXRP = 'img_XRP'
-      
-     
+
+
     }
-    updateStateTransXRP(){
+
+    updateStateTransXRP() {
         this.props.updateStateXRP()
 
         this.props.setActiveCurrency("XRP")
@@ -101,10 +105,10 @@ handleUpdateDataClick() {
         this.classETH = 'img_ETH'
         this.classLTC = 'img_LTC'
         this.classXRP = 'click_img_XRP'
-      
+
     }
 
-  
+
     render() {
         return (
             <div className='main'>
@@ -117,18 +121,18 @@ handleUpdateDataClick() {
                                     <div className='column_1'>
                                         <div className='column_BTC_ETH'>
                                             <div className='but_BTC'>
-                                                <div className='clickBTC' onClick = {this.updateStateTransBTC}>
+                                                <div className='clickBTC' onClick={this.updateStateTransBTC}>
                                                     <div className={this.classBTC}>
-                                                    <p className='balance'> {this.props.btcBalance}</p>
-                                                    <p className='fiat'>{this.props.btcPrice}</p>
+                                                        <p className='balance'> {this.props.btcBalance}</p>
+                                                        <p className='fiat'>{this.props.btcPrice}</p>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div className='but_ETH'>
-                                                <div className='clickETH' onClick = {this.updateStateTransETH}>
+                                                <div className='clickETH' onClick={this.updateStateTransETH}>
                                                     <div className={this.classETH}>
-                                                    <p className='balance'> {this.props.ethBalance}</p>
-                                                    <p className='fiat'>{this.props.ethPrice}</p>
+                                                        <p className='balance'> {this.props.ethBalance}</p>
+                                                        <p className='fiat'>{this.props.ethPrice}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -137,18 +141,18 @@ handleUpdateDataClick() {
                                     <div className='column_2'>
                                         <div className='column_LTC_XRP'>
                                             <div className='but_LTC'>
-                                                <div className= 'clickLTC' onClick = {this.updateStateTransLTC}>
+                                                <div className='clickLTC' onClick={this.updateStateTransLTC}>
                                                     <div className={this.classLTC}>
-                                                    <p className='balance'> {this.props.ltcBalance}</p>
-                                                    <p className='fiat'>{this.props.ltcPrice}</p>
+                                                        <p className='balance'> {this.props.ltcBalance}</p>
+                                                        <p className='fiat'>{this.props.ltcPrice}</p>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div className='but_XRP'>
-                                                <div className='clickXRP' onClick = {this.updateStateTransXRP}>
+                                                <div className='clickXRP' onClick={this.updateStateTransXRP}>
                                                     <div className={this.classXRP}>
-                                                    <p className='balance'> {this.props.xrpBalance}</p>
-                                                    <p className='fiat'>{this.props.xrpPrice}</p>
+                                                        <p className='balance'> {this.props.xrpBalance}</p>
+                                                        <p className='fiat'>{this.props.xrpPrice}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -163,15 +167,15 @@ handleUpdateDataClick() {
                         <div className='tran_cur_info'>
                             <div className='overwiewUpdate'>
                                 <div className='overwiewUpdateFlex'>
-                                      <div className='overwiew'>Overview</div>
-                                      <div className='update' onClick = {this.handleUpdateDataClick}/>
+                                    <div className='overwiew'>Overview</div>
+                                    <div className='update' onClick={this.handleUpdateDataClick}/>
                                 </div>
                             </div>
                             <div className='current_balance'>
-                                <p className='num_transaction'>0</p>
+                                <p className='num_transaction'>{this.props.numTr}</p>
                                 <p className='general_usd_balance'>{this.props.total}</p>
                             </div>
-                            <div className = 'cryptoCurrency_chart'>
+                            <div className='cryptoCurrency_chart'>
                             </div>
                         </div>
                     </div>

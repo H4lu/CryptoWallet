@@ -809,6 +809,19 @@ button {
     font-family: Lato;
     font-weight: bold;
     font-size: 22px;
+    color: rgba(0, 0, 0, 0);
+    background-color: rgba(0, 0, 0, 0);
+    height: 44px;
+    width: 418px;
+}
+
+.payment_sum_ {
+    margin-top: -36px;
+    margin-left: 9px;
+    border: 0px solid black;
+    font-family: Lato;
+    font-weight: bold;
+    font-size: 22px;
     color: rgba(255, 255, 255, 0.8);
     background-color: rgba(0, 0, 0, 0);
     height: 44px;

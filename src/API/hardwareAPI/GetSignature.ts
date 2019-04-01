@@ -39,7 +39,7 @@ export function sig(id: number, address: string, amount: number): Promise<Buffer
             if (res[35] === 33) {
               status = true
               getAnswer(id).then(data => info(data)).catch(err => info(err))
-              UpdateHWStatusPCSC(getBalance(),getBTCPrice(),getETBalance(),getETHPrice(),getLTalance(),getLTCPrice(),getXRPalance(),getXRPPrice())
+             // UpdateHWStatusPCSC(getBalance(),getBTCPrice(),getETBalance(),getETHPrice(),getLTalance(),getLTCPrice(),getXRPalance(),getXRPPrice(),getNumTransactions())
               resolve(res)
             } else if (res[35] === 63) {
               status = true

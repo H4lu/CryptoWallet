@@ -68,6 +68,7 @@ import {
     setXRPBalance,
     setXRPPrice
 } from "../API/cryptocurrencyAPI/Ripple";
+import {getRate} from "../API/cryptocurrencyAPI/Exchange";
 
 
 
@@ -107,6 +108,7 @@ interface IAPPState {
     XRPCourse: number,
     SR: boolean,
     SideBarLeftState: number
+    numTransactions: number
 }
 
 
@@ -119,7 +121,7 @@ export default class App extends React.Component<any, IAPPState> {
             sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
             main: () => <MainContent btcBalance={this.state.BTCBalance} ltcBalance={this.state.LTCBalance}
                                      ethBalance={this.state.ETHBalance} xrpBalance={this.state.XRPBalance}
-                                     total={this.state.totalBalance}
+                                     total={this.state.totalBalance} numTr={this.state.numTransactions}
                                      btcPrice={this.state.BTCPrice} ltcPrice={this.state.LTCPrice}
                                      ethPrice={this.state.ETHPrice} xrpPrice={this.state.XRPPrice}
                                      btcHourChange={this.state.BTCHourChange}
@@ -329,7 +331,8 @@ export default class App extends React.Component<any, IAPPState> {
             ETHCourse: 0,
             XRPCourse: 0,
             SR: false,
-            SideBarLeftState: 1
+            SideBarLeftState: 1,
+            numTransactions: 0
         }
  
         this.resetRedirect = this.resetRedirect.bind(this)
@@ -358,6 +361,12 @@ export default class App extends React.Component<any, IAPPState> {
         this.getActiveCurrency = this.getActiveCurrency.bind(this)
         this.setActiveCurrency = this.setActiveCurrency.bind(this)
         this.setStateSR = this.setStateSR.bind(this)
+        this.setNumTransactions = this.setNumTransactions.bind(this)
+    }
+
+    setNumTransactions(num: number) {
+        let old = this.state.numTransactions
+        this.setState({numTransactions:  old + num})
     }
 
 
@@ -377,7 +386,6 @@ export default class App extends React.Component<any, IAPPState> {
                 return "XRP"
             }
         }
-
     }
 
     setActiveCurrency(currency: string) {
@@ -562,10 +570,10 @@ export default class App extends React.Component<any, IAPPState> {
     }
 
     initAll() {
-        info('INITING')
+        info('initAll')
         if (this.state.allowInit) {
             this.setState({allowInit: false})
-            initBitcoinAddress().then(initEthereumAddress).then(initLitecoinAddress).then(initRippleAddress).then(this.getRates).then(this.getBalances).then(this.getTransactions).then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice)).then(() => {
+            initBitcoinAddress().then(initEthereumAddress).then(initLitecoinAddress).then(initRippleAddress).then(this.getRates).then(this.getBalances).then(this.getTransactions).then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions)).then(() => {
                 this.setRedirectToMain()
                 this.setValues()
             })
@@ -585,10 +593,11 @@ export default class App extends React.Component<any, IAPPState> {
 
     updateData() {
         info('REFRESHING')
-        this.getTransactions().then(this.getBalances)
+        this.setState({numTransactions: 0})
+        this.getTransactions().then(this.getBalances).then(this.getRates)
             .then(() => {
-                UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice)
-            }).then(this.getRates)
+                UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions)
+            })
     }
 
     changeBalance(currency: string, amount: number) {
@@ -758,22 +767,35 @@ export default class App extends React.Component<any, IAPPState> {
     }
 
     parseETHTransactions(value: any) {
+
         let transactionsObject = JSON.parse(value)
         if (transactionsObject === undefined) {
             info('RETURNING')
             return
         }
+
         transactionsObject.map((value: any) => {
+
             let parsedTx = this.parseTransactionDataETH(value, getEthereumAddress())
             let findResp = this.state.ETHLastTx.find(function (obj) {
+
+
                 return obj.Hash === Object(parsedTx).Hash
             })
             if (findResp === undefined) {
                 this.setState({ETHLastTx: [...this.state.ETHLastTx, parsedTx]})
+
+                this.setNumTransactions(1)
+                info('numTransaction: ', this.state.numTransactions)
             } else if (Object(parsedTx).Status !== findResp.Status) {
                 for (let index in this.state.ETHLastTx) {
-                    if (this.state.ETHLastTx[index].Hash === Object(parsedTx).Hash) this.state.ETHLastTx[index].Status = Object(parsedTx).Status
+                    if (this.state.ETHLastTx[index].Hash === Object(parsedTx).Hash) {
+                        this.state.ETHLastTx[index].Status = Object(parsedTx).Status
+                    }
                 }
+            }else{
+                this.setNumTransactions(1)
+                info('numTransaction: ', this.state.numTransactions)
             }
         })
 
@@ -782,6 +804,8 @@ export default class App extends React.Component<any, IAPPState> {
     parseBTCLikeTransactions(value: any) {
         let parsedResponse = JSON.parse(value).data
         for (let tx in parsedResponse.txs) {
+            this.setNumTransactions(1)
+            info('numTransaction: ', this.state.numTransactions)
             switch (parsedResponse.network) {
                 case 'BTC': {
                     let parsedTx = this.parseTransactionDataBTC(parsedResponse.txs[tx], 'BTC')

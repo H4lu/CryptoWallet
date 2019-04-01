@@ -3,7 +3,7 @@ import { reader } from './Reader'
 
 
 
-export function UpdateHWStatusPCSC(BTC_BAL: number, BTC_USD: number, ETH_BAL: number, ETH_USD: number, LTC_BAL: number, LTC_USD: number, XRP_BAL: number, XRP_USD: number, ) {
+export function UpdateHWStatusPCSC(BTC_BAL: number, BTC_USD: number, ETH_BAL: number, ETH_USD: number, LTC_BAL: number, LTC_USD: number, XRP_BAL: number, XRP_USD: number, numTr:number) {
 
     let tempBufferBTC = new Buffer(16)
     let tempBufferETH = new Buffer(16)
@@ -14,6 +14,8 @@ export function UpdateHWStatusPCSC(BTC_BAL: number, BTC_USD: number, ETH_BAL: nu
     let USD = BTC_USD + ETH_USD + LTC_USD + XRP_USD
     let tempI = Math.floor(USD)
     let tempF = (USD - tempI)*100
+
+    let numTrans = numTr
     for (let i=0; i<4; i++)
     {
         tempBufferWallet[3-i]=tempI%256
@@ -21,8 +23,11 @@ export function UpdateHWStatusPCSC(BTC_BAL: number, BTC_USD: number, ETH_BAL: nu
 
         tempBufferWallet[7-i]=tempF%256
         tempF = (tempF - tempF%256)/256
+
+        tempBufferWallet[11-i] = numTrans%256
+        numTrans = (numTrans - numTrans%256)/256
     }
-    tempBufferWallet[11] = 15
+
     tempBufferWallet[15] = 4
 
 

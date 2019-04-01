@@ -183,7 +183,7 @@ async function createTransaction(paymentAdress: string,
         value: transactionAmount
     }
     info('Got this utxos: ' + utxos)
-    let { inputs, outputs, fee } = coinSelect(utxos, targets, 10)
+    let { inputs, outputs, fee } = coinSelect(utxos, targets, 20)
     info('Got this inputs: ' + inputs)
     // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
     info('FEE_coinSelect', fee)
@@ -225,30 +225,32 @@ async function createTransaction(paymentAdress: string,
         hashArray.push(Buffer.from(secondHash,'hex'))
     })
 
-    info('HASHARRAY: ', hashArray[0])
-    info('HASHARRAY len: ', hashArray[0].length)
-    let data = await getSignaturePCSC(0, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.inputs.length, course, fee, balance)
-    if (data[0].length != 1) {
-        transaction.inputs.forEach((input, index) => {
-            info('Input', input)
-            info('Index', index)
-            info('SIGNATURE DATA', data[index].toString('hex'))
-            unbuildedTx = unbuildedTx.replace('00000000ff', '000000' + data[index].toString('hex') + 'ff')
-            info('Unbuilded step', index, 'tx', unbuildedTx)
-        })
-        info('UNBUILDED TX: ' + unbuildedTx)
-        //info('DATA: ' + data)
-        sendTransaction(unbuildedTx, redirect)
-        //info('Final sig: ' + sig)
-        // Добавляем вход транзакции в виде хэша предыдущей транзакции и номер выхода с нашим адресом
-        // Добавляем выход транзакции, где указывается адрес и сумма перевода
-        transaction.addOutput(paymentAdress, transactionAmount)
-        // Добавляем адрес для "сдачи"/.
-        // Вычисляем хэш неподписанной транзакции
-        // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
-        // Сериализуем неподписаннуб транзакцию
-        // Добавляем UnlockingScript в транзакцию
-        // Возвращаем готовую к отправке транзакцию
+    if(lastIndex != 0) {
+        info('HASHARRAY: ', hashArray[0])
+        info('HASHARRAY len: ', hashArray[0].length)
+        let data = await getSignaturePCSC(0, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.inputs.length, course, fee, balance)
+        if (data[0].length != 1) {
+            transaction.inputs.forEach((input, index) => {
+                info('Input', input)
+                info('Index', index)
+                info('SIGNATURE DATA', data[index].toString('hex'))
+                unbuildedTx = unbuildedTx.replace('00000000ff', '000000' + data[index].toString('hex') + 'ff')
+                info('Unbuilded step', index, 'tx', unbuildedTx)
+            })
+            info('UNBUILDED TX: ' + unbuildedTx)
+            //info('DATA: ' + data)
+            sendTransaction(unbuildedTx, redirect)
+            //info('Final sig: ' + sig)
+            // Добавляем вход транзакции в виде хэша предыдущей транзакции и номер выхода с нашим адресом
+            // Добавляем выход транзакции, где указывается адрес и сумма перевода
+            transaction.addOutput(paymentAdress, transactionAmount)
+            // Добавляем адрес для "сдачи"/.
+            // Вычисляем хэш неподписанной транзакции
+            // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
+            // Сериализуем неподписаннуб транзакцию
+            // Добавляем UnlockingScript в транзакцию
+            // Возвращаем готовую к отправке транзакцию
+        }
     }
 }
 
