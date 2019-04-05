@@ -119,7 +119,7 @@ export default class MainContent extends React.Component<any, any> {
                             <div className='cryptocurrency'>
                                 <div className='cryptocurrency_flex'>
                                     <div className='column_1'>
-                                        <div className='column_BTC_ETH'>
+                                        <div className='column_BTC_LTC'>
                                             <div className='but_BTC'>
                                                 <div className='clickBTC' onClick={this.updateStateTransBTC}>
                                                     <div className={this.classBTC}>
@@ -128,23 +128,24 @@ export default class MainContent extends React.Component<any, any> {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className='but_ETH'>
-                                                <div className='clickETH' onClick={this.updateStateTransETH}>
-                                                    <div className={this.classETH}>
-                                                        <p className='balance'> {this.props.ethBalance}</p>
-                                                        <p className='fiat'>{this.props.ethPrice}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className='column_2'>
-                                        <div className='column_LTC_XRP'>
                                             <div className='but_LTC'>
                                                 <div className='clickLTC' onClick={this.updateStateTransLTC}>
                                                     <div className={this.classLTC}>
                                                         <p className='balance'> {this.props.ltcBalance}</p>
                                                         <p className='fiat'>{this.props.ltcPrice}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div className='column_2'>
+                                        <div className='column_ETH_XRP'>
+                                            <div className='but_ETH'>
+                                                <div className='clickETH' onClick={this.updateStateTransETH}>
+                                                    <div className={this.classETH}>
+                                                        <p className='balance'> {this.props.ethBalance}</p>
+                                                        <p className='fiat'>{this.props.ethPrice}</p>
                                                     </div>
                                                 </div>
                                             </div>

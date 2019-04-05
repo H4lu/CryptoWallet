@@ -23,7 +23,7 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
             address: getBitcoinAddress(),
             paymentAddress: '',
             amount: 0,
-            fee: 0.00000226,
+            fee: 0.00012,
             usd: 0,
             feeUSD: 0,
             balanceUSD: 0
@@ -40,9 +40,10 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
     }
 
     handleAmountChange(e: any) {
-        this.setState({amount: e.target.value})
-        this.setState({usd: (e.target.value * this.props.course)})
+        this.setState({amount: e.target.value.toString().replace(',','.')})
+        this.setState({usd: (e.target.value.toString().replace(',','.') * this.props.course)})
         this.setState({feeUSD: (this.state.fee * this.props.course)})
+        log(this.props.course)
     }
 
     handleClick() {
@@ -64,7 +65,8 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
                     <div className='blockSendTransactionSum'>
                         <div className='iconSum'/>
                         <div className='poleSum'>
-                            <input type='text' pattern="[0-9]*" className='payment_sum' id='inputValue' placeholder='0.00' onChange={this.handleAmountChange}/>
+                            <input type='text' pattern="[0-9]*" className='payment_sum' placeholder='0.00'
+                                   onChange={this.handleAmountChange}/>
                             <p className='payment_sumUSD'>{(this.state.usd).toFixed(2)}</p>
                         </div>
                     </div>

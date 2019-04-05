@@ -183,7 +183,7 @@ async function createTransaction(paymentAdress: string,
         value: transactionAmount
     }
     info('Got this utxos: ' + utxos)
-    let { inputs, outputs, fee } = coinSelect(utxos, targets, 20)
+    let { inputs, outputs, fee } = coinSelect(utxos, targets, 93)
     info('Got this inputs: ' + inputs)
     // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
     info('FEE_coinSelect', fee)
@@ -228,7 +228,7 @@ async function createTransaction(paymentAdress: string,
     if(lastIndex != 0) {
         info('HASHARRAY: ', hashArray[0])
         info('HASHARRAY len: ', hashArray[0].length)
-        let data = await getSignaturePCSC(0, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.inputs.length, course, fee, balance)
+        let data = await getSignaturePCSC(0, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.inputs.length, course, fee/100000000, balance)
         if (data[0].length != 1) {
             transaction.inputs.forEach((input, index) => {
                 info('Input', input)

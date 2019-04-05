@@ -241,7 +241,7 @@
     order: 2;
 }
 
-.column_BTC_ETH {
+.column_BTC_LTC {
     display: flex;
     flex-direction: column;
 }
@@ -299,7 +299,7 @@
 }
 
 .but_ETH {
-    order: 2;
+    order: 1;
 }
 
 .img_ETH {
@@ -307,7 +307,7 @@
     border: 0px solid black;
     height: 150px;
     width: 230px;
-    margin-top: -8px;
+    margin-top: 10px;
     margin-left: 10px;
 }
 
@@ -324,17 +324,17 @@
     border: 0px solid black;
     height: 150px;
     width: 230px;
-    margin-top: -8px;
+    margin-top: 10px;
     margin-left: 10px;
 }
 
-.column_LTC_XPR {
+.column_ETH_XRP {
     display: flex;
     flex-direction: column;
 }
 
 .but_LTC {
-    order: 1;
+    order: 2;
 }
 
 .img_LTC {
@@ -342,8 +342,8 @@
     border: 0px solid black;
     height: 150px;
     width: 230px;
-    margin-top: 10px;
-    margin-left: 9px;
+    margin-top: -8px;
+    margin-left: 10px;
     opacity: 42%;
 }
 
@@ -360,8 +360,8 @@
     border: 0px solid black;
     height: 150px;
     width: 230px;
-    margin-top: 10px;
-    margin-left: 9px;
+    margin-top: -8px;
+    margin-left: 10px;
     opacity: 42%;
 }
 
@@ -375,7 +375,7 @@
     height: 150px;
     width: 230px;
     margin-top: -8px;
-    margin-left: 9px;
+    margin-left: 10px;
     opacity: 42%;
 }
 
@@ -393,7 +393,7 @@
     height: 150px;
     width: 230px;
     margin-top: -8px;
-    margin-left: 9px;
+    margin-left: 10px;
     opacity: 42%;
 }
 
@@ -809,7 +809,7 @@ button {
     font-family: Lato;
     font-weight: bold;
     font-size: 22px;
-    color: rgba(0, 0, 0, 0);
+    color: rgba(255, 255, 255, 0.8);
     background-color: rgba(0, 0, 0, 0);
     height: 44px;
     width: 418px;

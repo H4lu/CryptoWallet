@@ -23,7 +23,7 @@ export class LtcSendWindow extends React.Component<any, ILTCSendState> {
             address: getLitecoinAddress(),
             paymentAddress: '',
             amount: 0,
-            fee: 0.00005,
+            fee: 0.00012,
             usd: 0,
             feeUSD: 0,
             balanceUSD: 0

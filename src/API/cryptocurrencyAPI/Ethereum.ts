@@ -133,7 +133,7 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
             nonce: web3.utils.toHex(value),
             from: myAdress,
             to: paymentAdress,
-            gasPrice: web3.utils.toHex(web3.utils.toWei('20', 'shannon')),
+            gasPrice: web3.utils.toHex(web3.utils.toWei('25', 'shannon')),
             gasLimit: web3.utils.toHex(24000),
             chainId: web3.utils.toHex(1),
             data: '0x00',
