@@ -1,0 +1,21 @@
+<svg width="4" height="18" viewBox="0 0 4 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<title>btn_menu</title>
+<desc>Created using Figma</desc>
+<g id="Canvas" transform="translate(-6003 463)">
+<g id="btn_menu">
+<g id="Ellipse">
+<use xlink:href="#path0_fill" transform="translate(6003 -463)" fill="#7EAEE5"/>
+</g>
+<g id="Ellipse">
+<use xlink:href="#path0_fill" transform="translate(6003 -456)" fill="#7EAEE5"/>
+</g>
+<g id="Ellipse">
+<use xlink:href="#path1_fill" transform="translate(6003 -449)" fill="#7EAEE5"/>
+</g>
+</g>
+</g>
+<defs>
+<path id="path0_fill" d="M 4 2C 4 3.10457 3.10457 4 2 4C 0.895431 4 0 3.10457 0 2C 0 0.895431 0.895431 0 2 0C 3.10457 0 4 0.895431 4 2Z"/>
+<path id="path1_fill" d="M 4 2C 4 3.10457 3.10457 4 2 4C 0.89543 4 0 3.10457 0 2C 0 0.89543 0.89543 0 2 0C 3.10457 0 4 0.89543 4 2Z"/>
+</defs>
+</svg>

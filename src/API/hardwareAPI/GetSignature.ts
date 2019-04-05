@@ -1,59 +1,57 @@
 import { Buffer } from 'buffer'
 import { reader } from '../hardwareAPI/Reader'
 import { info } from 'electron-log'
-import { getAnswer } from './GetAddress'
+// import { getAnswer } from './GetAddress'
 import { UpdateHWStatusPCSC } from './UpdateHWStatus'
-import {getBalance, getBitcoinPubKey, getBTCPrice} from '../cryptocurrencyAPI/BitCoin'
+import { getBalance, getBitcoinPubKey, getBTCPrice } from '../cryptocurrencyAPI/BitCoin'
 import { getETBalance, getETHPrice } from '../cryptocurrencyAPI/Ethereum'
 import { getLTalance,getLTCPrice } from '../cryptocurrencyAPI/Litecoin'
-import {bufferutils} from "bitcoinjs-lib";
-import {getXRPalance, getXRPPrice} from "../cryptocurrencyAPI/Ripple"
+import { getXRPalance, getXRPPrice } from '../cryptocurrencyAPI/Ripple'
 
+// export function sig(id: number, address: string, amount: number): Promise<Buffer> {
+//   return new Promise((resolve, reject) => {
+//     if (address.length !== 34 && id !== 1) {
+//       address = address + '0'
+//     }
 
-export function sig(id: number, address: string, amount: number): Promise<Buffer> {
-  return new Promise((resolve, reject) => {
-    if (address.length !== 34 && id !== 1) {
-      address = address + '0'
-    }
+//     let amountBuf = new Buffer(16)
+//     amountBuf.write(amount.toString(),0,amount.toString().length, 'ascii')
+//     let code = 33
+//     let message = Buffer.concat([Buffer.from([0xB0,0x40,0x00]),Buffer.from([0x01]),Buffer.from([0x60]),Buffer.from([code]),Buffer.from([id]),amountBuf,Buffer.from(address)])
+//     info('MESSAGE TO SEND',message)
+//     getAnswer(id).then(data => info(data)).catch((err: any) => info(err))
+//     reader.transmit(message, 4,2, async (err: any,data: any) => {
+//       if (err) {
+//         info(err)
+//         reject(err)
+//       } else {
+//         info(data)
+//         let status = false
+//         let timeout = setTimeout(async () => {
+//           clearTimeout(timeout)
+//           while (!status) {
+//             let res = await getAnswer(id)
+//             info('GOT PRIVATE RESP', res)
+//             info('TO HEX', res.toString('hex'))
+//             info(res[35])
+//             if (res[35] === 33) {
+//               status = true
+//               getAnswer(id).then(data => info(data)).catch(err => info(err))
+//              // UpdateHWStatusPCSC(getBalance(),getBTCPrice(),getETBalance(),getETHPrice(),getLTalance(),getLTCPrice(),getXRPalance(),getXRPPrice(),getNumTransactions())
+//               resolve(res)
+//             } else if (res[35] === 63) {
+//               status = true
+//               reject()
+//             }
+//           }
+//         },1000 ,[])
+//       }
+//     })
+//   })
 
-    let amountBuf = new Buffer(16)
-    amountBuf.write(amount.toString(),0,amount.toString().length, 'ascii')
-    let code = 33
-    let message = Buffer.concat([Buffer.from([0xB0,0x40,0x00]),Buffer.from([0x01]),Buffer.from([0x60]),Buffer.from([code]),Buffer.from([id]),amountBuf,Buffer.from(address)])
-    info('MESSAGE TO SEND',message)
-    getAnswer(id).then(data => info(data)).catch(err => info(err))
-    reader.transmit(message, 4,2, async (err,data) => {
-      if (err) {
-        info(err)
-        reject(err)
-      } else {
-        info(data)
-        let status = false
-        let timeout = setTimeout(async () => {
-          clearTimeout(timeout)
-          while (!status) {
-            let res = await getAnswer(id)
-            info('GOT PRIVATE RESP', res)
-            info('TO HEX', res.toString('hex'))
-            info(res[35])
-            if (res[35] === 33) {
-              status = true
-              getAnswer(id).then(data => info(data)).catch(err => info(err))
-             // UpdateHWStatusPCSC(getBalance(),getBTCPrice(),getETBalance(),getETHPrice(),getLTalance(),getLTCPrice(),getXRPalance(),getXRPPrice(),getNumTransactions())
-              resolve(res)
-            } else if (res[35] === 63) {
-              status = true
-              reject()
-            }
-          }
-        },1000 ,[])
-      }
-    })
-  })
-
-}
+// }
 export function getSignaturePCSC(id: number, message: Array<Buffer>, address: string, amount: number, numberOfInputs: number, course: number, fee: number,balance: number): Promise<Array<Buffer>> {
-  info("inputs length", numberOfInputs)
+  info('inputs length', numberOfInputs)
   return new Promise((resolve, reject) => {
     let currencyId: number = 0x00
     switch (id) {
@@ -84,12 +82,12 @@ export function getSignaturePCSC(id: number, message: Array<Buffer>, address: st
     let feeBuf = getSumAsBuf(fee, course)
     let balanceBuf = getSumAsBuf(balance, course)
     info('40: ',Buffer.concat([Buffer.from([0xb0,0x40]), numberOfInputsBuf, idBuf, leBuf, amountBuf, feeBuf, balanceBuf, Buffer.from(address)]).toString('hex'))
-      reader.transmit(Buffer.concat([Buffer.from([0xb0,0x40]), numberOfInputsBuf, idBuf, leBuf, amountBuf, feeBuf, balanceBuf, Buffer.from(address)]), 4, 2, async (err, data) => {
-          if (err) {
-              info('ERROR IN FIRST MMESSAGE',err)
-              reject(err)
-          } else {
-              info('DATA IN FIRST MESSAGE', data.toString('hex'))
+    reader.transmit(Buffer.concat([Buffer.from([0xb0,0x40]), numberOfInputsBuf, idBuf, leBuf, amountBuf, feeBuf, balanceBuf, Buffer.from(address)]), 4, 2, async (err, data) => {
+      if (err) {
+        info('ERROR IN FIRST MMESSAGE',err)
+        reject(err)
+      } else {
+        info('DATA IN FIRST MESSAGE', data.toString('hex'))
 
             /*  let sigArray: Array<Buffer> = []
               for (let i = 0; i < numberOfInputs; i++) {
@@ -97,44 +95,44 @@ export function getSignaturePCSC(id: number, message: Array<Buffer>, address: st
                   sigArray.push(answer)
               }
               resolve(sigArray)*/
-                  info('in while')
-                  let timerId = setInterval(()=> {
-                      reader.transmit(Buffer.concat([Buffer.from([0xb0, 0x42, 0x00, 0x00, 0x00])]), 4, 2, async (err, data) => {
-                          if (err) {
-                              info('ERROR IN 42 MMESSAGE', err)
-                              reject(err)
-                          } else {
-                              info('DATA IN 42 MESSAGE', data.toString('hex'))
-                              if (data.toString('hex') == '9000') {
-                                  info('in if send message')
-                                  let sigArray: Array<Buffer> = []
-                                  for (let i = 0; i < numberOfInputs; i++) {
-                                      let answer = await sendDataMessage(Buffer.from([i]), Buffer.from([currencyId]), message[i])
-                                      sigArray.push(answer)
-                                  }
-                                  clearInterval(timerId)
-                                  resolve(sigArray)
-                              } else {
-                                  if (data.toString('hex') == '6b84') {
-                                      let sigArray: Array<Buffer> = []
-                                      let nullBuff = new Buffer(1)
-                                      nullBuff[0] = 0x00;
-                                      resolve(sigArray)
-                                      clearInterval(timerId)
-                                  }
-                              }
-                          }
-                      })
-                  },1000,[])
-          }
-      })
+        info('in while')
+        let timerId = setInterval(() => {
+          reader.transmit(Buffer.concat([Buffer.from([0xb0, 0x42, 0x00, 0x00, 0x00])]), 4, 2, async (err: any, data: { toString: { (arg0: string): void; (arg0: string): string; (arg0: string): string; }; }) => {
+            if (err) {
+              info('ERROR IN 42 MMESSAGE', err)
+              reject(err)
+            } else {
+              info('DATA IN 42 MESSAGE', data.toString('hex'))
+              if (String(data.toString('hex')) === String('9000')) {
+                info('in if send message')
+                let sigArray: Array<Buffer> = []
+                for (let i = 0; i < numberOfInputs; i++) {
+                  let answer = await sendDataMessage(Buffer.from([i]), Buffer.from([currencyId]), message[i])
+                  sigArray.push(answer)
+                }
+                clearInterval(timerId)
+                resolve(sigArray)
+              } else {
+                if (String(data.toString('hex')) === '6b84') {
+                  let sigArray: Array<Buffer> = []
+                  let nullBuff = new Buffer(1)
+                  nullBuff[0] = 0x00
+                  resolve(sigArray)
+                  clearInterval(timerId)
+                }
+              }
+            }
+          })
+        },1000,[])
+      }
+    })
   })
 }
 
 function sendDataMessage(inputNumber: Buffer, currencyId: Buffer, hash: Buffer): Promise<Buffer> {
   info('GOT THIS INPUT NUMBER: ' + inputNumber)
   info('GOT THIS CURRENCY ID: ' + currencyId)
-    info('41: ', Buffer.concat([Buffer.from([0xb0,0x41]),Buffer.from(inputNumber), Buffer.from(currencyId), Buffer.from([0x20]), Buffer.from(hash)]).toString('hex'))
+   info('41: ', Buffer.concat([Buffer.from([0xb0,0x41]),Buffer.from(inputNumber), Buffer.from(currencyId), Buffer.from([0x20]), Buffer.from(hash)]).toString('hex'))
   return new Promise((resolve, reject) => {
     reader.transmit(Buffer.concat([Buffer.from([0xb0,0x41]),Buffer.from(inputNumber), Buffer.from(currencyId), Buffer.from([0x20]), Buffer.from(hash)]), 110, 2, (err, data) => {
       if (err) {
