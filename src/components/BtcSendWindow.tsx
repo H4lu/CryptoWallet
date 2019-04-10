@@ -76,7 +76,7 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
                         <p className='sum_Transaction_fee'>{(this.state.fee).toFixed(8)}</p>
                         <p className='NameCrypto_Transaction_fee'>{' BTC'}</p>
                         <p className='USD_icon'>{'$'}</p>
-                        <p className='USD_Transaction_fee'>{(this.state.fee).toFixed(2)}</p>
+                        <p className='USD_Transaction_fee'>{(this.state.fee * this.props.course).toFixed(2)}</p>
                     </div>
 
                     <div className='blockBalance'>
@@ -84,7 +84,7 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
                         <p className='sum_Transaction_balance'>{(this.props.btcBalance).toFixed(8)}</p>
                         <p className='NameCrypto_Transaction_fee'>{' BTC'}</p>
                         <p className='USD_icon'>{'$'}</p>
-                        <p className='USD_Transaction_fee'>{(this.state.balanceUSD).toFixed(2)}</p>
+                        <p className='USD_Transaction_fee'>{(this.props.btcBalance * this.props.course).toFixed(2)}</p>
                     </div>
                     <div className='buttonSendCancelFlex'>
                         <div className='buttonSendBig'>

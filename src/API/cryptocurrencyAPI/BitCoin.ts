@@ -10,7 +10,7 @@ const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.bitcoin
 const NETWORK = 'BTC'
 const rootURL = 'https://chain.so/api/v2'
-let myAddr = ''
+let myAddr = '1KcyDktpTPWJDqCyQ2RU8xGhAyazLpX85z'
 let myPubKey = new Buffer(33)
 let balance: number
 let price: number

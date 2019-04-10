@@ -1,12 +1,9 @@
 import {info, log} from 'electron-log'
 import React from 'react'
 import {Header} from '../components/Header'
-// import { Switch, Route } from 'react-router'
 import {Route, Redirect} from 'react-router'
 import {SidebarContent} from '../components/SidebarContent'
-// import { ERC20 } from '../components/ERC20'
-// import {Main} from '../components/Main'
-// import { TransactionComponent } from '../components/TransactionComponent'
+
 import {BTCWindow} from '../components/BTCWindow'
 import {ETHWIndow} from '../components/ETHWindow'
 import {LTCWindow} from '../components/LTCWindow'
@@ -39,11 +36,7 @@ import {
 import GetCurrencyRate from '../core/GetCurrencyRate'
 import {SidebarNoButtons} from '../components/SidebarNoButtons'
 import {MainWindow} from '../components/MainWindow'
-// import { checkPin } from '../API/hardwareAPI/GetWalletInfo'
-// import { wrapper } from '../API/hardwareAPI/GetWalletInfo'
 import {TransactionSuccess} from '../components/TransactionSuccess'
-// import SerialPort from 'serialport'
-// import { loadBitcoinBalance } from '../core/actions/load'
 import pcsclite from 'pcsclite'
 import {reader, setReader} from '../API/hardwareAPI/Reader'
 
@@ -69,6 +62,7 @@ import {
     setXRPPrice
 } from "../API/cryptocurrencyAPI/Ripple";
 import {getRate} from "../API/cryptocurrencyAPI/Exchange";
+import {ModeWindow} from "../components/ModeWindow";
 
 
 
@@ -109,6 +103,7 @@ interface IAPPState {
     SR: boolean,
     SideBarLeftState: number
     numTransactions: number
+    transactionFee: number
 }
 
 
@@ -141,6 +136,13 @@ export default class App extends React.Component<any, IAPPState> {
                                          return d - c
                                      })} transactions={this.getTransactions}
                                      refresh={this.updateData} stateSR={this.setStateSR}/>
+        },
+        {
+            path: '/mode-window',
+            exact: true,
+            sidebar: () => <SidebarContent/>,
+            sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
+            main: () => <ModeWindow setFee={this.setTransactionFee} trFee = {this.state.transactionFee}/>
         },
         {
             path: '/currency-carousel',
@@ -332,7 +334,8 @@ export default class App extends React.Component<any, IAPPState> {
             XRPCourse: 0,
             SR: false,
             SideBarLeftState: 1,
-            numTransactions: 0
+            numTransactions: 0,
+            transactionFee: 2
         }
  
         this.resetRedirect = this.resetRedirect.bind(this)
@@ -362,6 +365,13 @@ export default class App extends React.Component<any, IAPPState> {
         this.setActiveCurrency = this.setActiveCurrency.bind(this)
         this.setStateSR = this.setStateSR.bind(this)
         this.setNumTransactions = this.setNumTransactions.bind(this)
+        this.setTransactionFee = this.setTransactionFee.bind(this)
+    }
+
+    setTransactionFee(num: number)
+    {
+        this.setState({transactionFee:  num})
+        info('FEE:  ', this.state.transactionFee)
     }
 
     setNumTransactions(num: number) {
@@ -462,7 +472,6 @@ export default class App extends React.Component<any, IAPPState> {
                 info('START GETWALLET INFO')
                 let data = await getInfoPCSC()
                 info('GOT THIS DATA', data)
-
                 switch (data) {
                     case 0: {
                        clearInterval(interval)
@@ -505,7 +514,6 @@ export default class App extends React.Component<any, IAPPState> {
         info('APP:', App)
         pcsc.on('reader', async (reader) => {
             info('READER DETECTED', reader.name)
-            if (/*reader.name.includes('PN7462AU')*/true) {
                 info('setting')
                 setReader(reader)
                 reader.on('status', (status) => {
@@ -549,7 +557,7 @@ export default class App extends React.Component<any, IAPPState> {
                         }
                     }
                 })
-            }
+
             reader.on('error', function (err) {
                 info('Error(', this.name, '):', err.message)
             })

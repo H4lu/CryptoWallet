@@ -11,7 +11,7 @@ import {Buffer} from "buffer";
 const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/960cbfb44af74f27ad0e4b070839158a'))
 
 
-let myAdress = ''
+let myAdress = '0x3E8BC0B896b0798f99C9924a662976719b103b9e'
 let myPubKey = new Buffer(64)
 let tempEtherData = ''
 let balance: number

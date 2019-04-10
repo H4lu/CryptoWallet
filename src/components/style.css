@@ -849,7 +849,7 @@ button {
 .blockFee {
     display: flex;
     margin-top: 20px;
-    visibility: hidden;
+   /* visibility: hidden; */
 }
 
 .text_Transaction_fee {
@@ -1342,4 +1342,56 @@ button {
     letter-spacing: 1px;
     padding-top: 450px;
     text-align: center;
+}
+
+.Fee1{
+    font-family: Lato;
+    font-weight: bold;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 1px;
+    text-align: center;
+}
+.Fee2{
+    font-family: Lato;
+    font-weight: bold;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 1px;
+    text-align: center;
+}
+.Fee3{
+    font-family: Lato;
+    font-weight: bold;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 1px;
+    text-align: center;
+}
+.clickFee1{
+    font-family: Lato;
+    font-weight: bold;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 1px;
+    text-align: center;
+    background-color: rgba(100, 100, 100, 0.5);
+}
+.clickFee2{
+    font-family: Lato;
+    font-weight: bold;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 1px;
+    text-align: center;
+    background-color: rgba(100, 100, 100, 0.5);
+}
+.clickFee3{
+    font-family: Lato;
+    font-weight: bold;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 1px;
+    text-align: center;
+    background-color: rgba(100, 100, 100, 0.5);
 }

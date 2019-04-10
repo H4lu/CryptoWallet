@@ -9,7 +9,7 @@ import * as wif from 'wif'
 import * as satoshi from 'satoshi-bitcoin'
 import { info } from 'electron-log'
 import {Buffer} from "buffer";
-let myAddress = ''
+let myAddress = 'LLywTi8TF1eGjAzAjpyA3HHwcBt1rgReNG'
 let wifKey =''
 let myPubKey = new Buffer(64)
 const rootURL = 'https://chain.so/api/v2'
@@ -169,7 +169,7 @@ async function createTransaction(paymentAdress: string,
         value: transactionAmount
     }
     info('Got this utxos: ' + utxos)
-    let { inputs, outputs, fee } = coinSelect(utxos, targets, 30)
+    let { inputs, outputs, fee } = coinSelect(utxos, targets, 35)
     info('Got this inputs: ' + inputs)
     // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
     info('FEE_coinSelect', fee)

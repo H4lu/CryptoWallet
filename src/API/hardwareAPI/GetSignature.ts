@@ -91,41 +91,46 @@ export function getSignaturePCSC(id: number, message: Array<Buffer>, address: st
           } else {
               info('DATA IN FIRST MESSAGE', data.toString('hex'))
 
-            /*  let sigArray: Array<Buffer> = []
-              for (let i = 0; i < numberOfInputs; i++) {
-                  let answer = await sendDataMessage(Buffer.from([i]), Buffer.from([currencyId]), message[i])
-                  sigArray.push(answer)
-              }
-              resolve(sigArray)*/
-                  info('in while')
-                  let timerId = setInterval(()=> {
-                      reader.transmit(Buffer.concat([Buffer.from([0xb0, 0x42, 0x00, 0x00, 0x00])]), 4, 2, async (err, data) => {
-                          if (err) {
-                              info('ERROR IN 42 MMESSAGE', err)
-                              reject(err)
-                          } else {
-                              info('DATA IN 42 MESSAGE', data.toString('hex'))
-                              if (data.toString('hex') == '9000') {
-                                  info('in if send message')
-                                  let sigArray: Array<Buffer> = []
-                                  for (let i = 0; i < numberOfInputs; i++) {
-                                      let answer = await sendDataMessage(Buffer.from([i]), Buffer.from([currencyId]), message[i])
-                                      sigArray.push(answer)
-                                  }
-                                  clearInterval(timerId)
-                                  resolve(sigArray)
+                  if(data.toString('hex') == '6b84')
+                  {
+                      info('6b84')
+                      let sigArray: Array<Buffer> = []
+                      let nullBuff = new Buffer(1)
+                      nullBuff[0] = 0x00;
+                      sigArray.push(nullBuff)
+                      resolve(sigArray)
+                  }else {
+                      info('in while')
+                      let timerId = setInterval(() => {
+                          reader.transmit(Buffer.concat([Buffer.from([0xb0, 0x42, 0x00, 0x00, 0x00])]), 4, 2, async (err, data) => {
+                              if (err) {
+                                  info('ERROR IN 42 MMESSAGE', err)
+                                  reject(err)
                               } else {
-                                  if (data.toString('hex') == '6b84') {
+                                  info('DATA IN 42 MESSAGE', data.toString('hex'))
+                                  if (data.toString('hex') == '9000') {
+                                      info('in if send message')
                                       let sigArray: Array<Buffer> = []
-                                      let nullBuff = new Buffer(1)
-                                      nullBuff[0] = 0x00;
-                                      resolve(sigArray)
+                                      for (let i = 0; i < numberOfInputs; i++) {
+                                          let answer = await sendDataMessage(Buffer.from([i]), Buffer.from([currencyId]), message[i])
+                                          sigArray.push(answer)
+                                      }
                                       clearInterval(timerId)
+                                      resolve(sigArray)
+                                  } else {
+                                      if (data.toString('hex') == '6b84') {
+                                          let sigArray: Array<Buffer> = []
+                                          let nullBuff = new Buffer(1)
+                                          nullBuff[0] = 0x00;
+                                          sigArray.push(nullBuff)
+                                          resolve(sigArray)
+                                          clearInterval(timerId)
+                                      }
                                   }
                               }
-                          }
-                      })
-                  },1000,[])
+                          })
+                      }, 1000, [])
+                  }
           }
       })
   })

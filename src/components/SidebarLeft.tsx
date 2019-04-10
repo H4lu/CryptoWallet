@@ -18,7 +18,6 @@ export class SidebarLeft extends React.Component<any, any> {
                 <div className='nav-buttons-Left'>
                     <Link to='/main' className='but_home'/>
 
-                    {/* <Link to={this.props.pathState} className = 'but_pay'/>*/}
                     <Link to='/currency-carousel' className='but_pay'/>
 
                     <Link to='/history-carousel' className='but_history'/>
@@ -27,7 +26,7 @@ export class SidebarLeft extends React.Component<any, any> {
 
                     <button className='but_info'/>
 
-                    <button className='but_menu'/>
+                    <Link to='/mode-window' className='but_menu'/>
                 </div>
             </div>
         )
