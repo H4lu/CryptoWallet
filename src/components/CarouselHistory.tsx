@@ -74,7 +74,8 @@ export class CarouselHistory extends React.PureComponent<any, any> {
     }
 
     render() {
-        {log("History carousel update")}
+        console.log("History carousel update")
+    
         return (
             <div className='windowPay'>
                 <div className='payWindowTable'>

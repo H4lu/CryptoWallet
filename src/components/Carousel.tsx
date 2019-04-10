@@ -1,6 +1,5 @@
 import * as React from 'react'
 //import Coverflow from 'react-coverflow'
-import { log } from 'electron-log'
 import { BTC_ICON, LTC_ICON, XRP_ICON } from "../core/paths"
 import CarouselElement from './CarouselElement'
 import Coverflow from "../../react-coverflow.js"

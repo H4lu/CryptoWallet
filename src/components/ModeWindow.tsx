@@ -12,10 +12,10 @@ export class ModeWindow extends React.Component<any, any> {
         this.changeFee1 = this.changeFee1.bind(this)
         this.changeFee2 = this.changeFee2.bind(this)
         this.changeFee3 = this.changeFee3.bind(this)
-       // this.setClass1 = this.setClass1.bind(this)
-       // this.setClass2 = this.setClass2.bind(this)
-       // this.setClass3 = this.setClass3.bind(this)
-       // this.setClass = this.setClass.bind(this)
+       this.setClass1 = this.setClass1.bind(this)
+       this.setClass2 = this.setClass2.bind(this)
+       this.setClass3 = this.setClass3.bind(this)
+       this.setClass = this.setClass.bind(this)
 
 
         this.classFee1 = this.setClass1()
@@ -25,17 +25,17 @@ export class ModeWindow extends React.Component<any, any> {
 
     changeFee1() {
         this.props.setFee(1)
-        this.setClass()
+        //this.setClass()
     }
 
     changeFee2() {
         this.props.setFee(2)
-        this.setClass()
+       // this.setClass()
     }
 
     changeFee3() {
         this.props.setFee(3)
-        this.setClass()
+       // this.setClass()
     }
 
     setClass1(): string
@@ -71,6 +71,8 @@ export class ModeWindow extends React.Component<any, any> {
 
 
     render() {
+        this.setClass()
+        console.log("rerender", this.props.trFee)
         return (
             <div className='main'>
                 <div className='rectangleSR'>

@@ -370,8 +370,9 @@ export default class App extends React.Component<any, IAPPState> {
 
     setTransactionFee(num: number)
     {
-        this.setState({transactionFee:  num})
-        info('FEE:  ', this.state.transactionFee)
+        this.setState({transactionFee:  num}, 
+            () => {console.log('FEE:  ', this.state.transactionFee)})
+        
     }
 
     setNumTransactions(num: number) {

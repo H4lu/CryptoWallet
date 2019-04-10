@@ -11,7 +11,7 @@ interface ITableProps {
     activeCurrency: string
 }
 
-export class Table extends React.PureComponent<ITableProps, ITableClass> {
+export class Table extends React.Component<ITableProps, ITableClass> {
     constructor(props: any) {
         super(props)
 
@@ -22,6 +22,7 @@ export class Table extends React.PureComponent<ITableProps, ITableClass> {
     }
 
     render() {
+        console.log("rerender table")
         let tableType = (this.props.type === 'normal') ? 'transaction-history' : 'transaction-history-small'
         return (
             <div className={tableType}>

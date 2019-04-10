@@ -21,6 +21,7 @@ export class TableRow extends React.PureComponent<any, ITableRowState> {
 
     render() {
         {
+            console.log("rerender table row")
             this.updateCryptoimg()
         }
         return (
