@@ -1,11 +1,15 @@
 {
   "name": "CryptoWallet",
-  "version": "1.0.0",
-  "main": "main.js",
+  "version": "1.1.1",
+  "main": "dist/main.js",
   "license": "MIT",
+  "author": "Denis Golovkov <halurecht@gmail.com>",
+  "description": "CET CryptoWallet application",
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.5",
+    "@types/jest": "^21.1.5",
+    "@types/node-fetch": "^1.6.7",
     "@types/react": "^16.0.22",
     "@types/react-dom": "^16.0.4",
     "@types/react-router-dom": "^4.2.1",
@@ -57,15 +61,20 @@
     "win-7zip": "^0.1.1"
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js",
+    "build": "npm install && npm run postinstall && webpack --config webpack.config.js && node setup_build.js",
     "prestart": "npm run build",
     "start": "electron ./dist/main.js",
     "test": "mocha -r ts-node/register 'tests/*.spec.ts'",
+    "travisBuild": "npm run build",
+    "pretest": "webpack --config webpack.tests.config.js",
     "postinstall": "electron-builder install-app-deps",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "rebuild": "electron-rebuild --force",
-    "start:dev": "webpack-dev-server"
+    "start:dev": "webpack-dev-server",
+    "release:win": "npm run travisBuild  && electron-builder build --windows",
+    "release:osx": "npm run travisBuild && electron-builder build --mac -p always",
+    "release:linux": "npm run travisBuild && electron-builder build --linux -p always"
   },
   "dependencies": {
     "@types/bitcoinjs-lib": "^3.0.5",
@@ -101,6 +110,9 @@
     "utf-8-validate": "^4.0.0"
   },
   "build": {
+    "files": [
+      "dist/**"
+    ],
     "win": {
       "target": [
         {
@@ -111,10 +123,13 @@
           ]
         }
       ]
+    },
+    "linux": {
+      "target": "deb"
     }
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/H4lu/CryptoWallet/tree/master"
+    "url": "https://github.com/H4lu/CryptoWallet/"
   }
 }

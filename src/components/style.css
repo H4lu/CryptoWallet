@@ -1,6 +1,6 @@
 
 .background-start {
-    background: url('file://../../../static/backgroundStart.svg') no-repeat center;
+    background: url("./static/backgroundStart.svg") no-repeat center;
     background-size: cover;
     height: 744px;
     width: 1366px;
@@ -69,14 +69,14 @@
 
 .main_container {
     display: flex;
-    background: url('file://../../../static/backgroundMain.svg') no-repeat center;
+    background: url('./static/backgroundMain.svg') no-repeat center;
     background-size: cover;
     height: 97vh;
 }
 
 .main_container_blur {
     display: flex;
-    background: url('file://../../../static/backgroundMain.svg') no-repeat center;
+    background: url('./static/backgroundMain.svg') no-repeat center;
     background-size: cover;
     height: 97vh;
     filter: blur(4px);
@@ -105,7 +105,7 @@
 }
 
 .but_home {
-    background: url('file://../../../static/home_p.svg') no-repeat center;
+    background: url('./static/home_p.svg') no-repeat center;
     border: 0px solid black;
     height: 42px;
     width: 42px;
@@ -116,11 +116,11 @@
 }
 
 .but_home:hover {
-    background: url('file://../../../static/home_a.svg') no-repeat center;
+    background: url('./static/home_a.svg') no-repeat center;
 }
 
 .but_pay {
-    background: url('file://../../../static/pay_p.svg') no-repeat center;
+    background: url('./static/pay_p.svg') no-repeat center;
     border: 0px solid black;
     height: 42px;
     width: 42px;
@@ -131,11 +131,11 @@
 }
 
 .but_pay:hover {
-    background: url('file://../../../static/pay_a.svg') no-repeat center;
+    background: url('./static/pay_a.svg') no-repeat center;
 }
 
 .but_history {
-    background: url('file://../../../static/refresh_p.svg') no-repeat center;
+    background: url('./static/refresh_p.svg') no-repeat center;
     border: 0px solid black;
     height: 42px;
     width: 42px;
@@ -146,11 +146,11 @@
 }
 
 .but_history:hover {
-    background: url('file://../../../static/refresh_a.svg') no-repeat center;
+    background: url('./static/refresh_a.svg') no-repeat center;
 }
 
 .but_exchange {
-    background: url('file://../../../static/exchange_p.svg') no-repeat center;
+    background: url('./static/exchange_p.svg') no-repeat center;
     border: 0px solid black;
     height: 42px;
     width: 42px;
@@ -161,11 +161,11 @@
 }
 
 .but_exchange:hover {
-    background: url('file://../../../static/exchange_a.svg') no-repeat center;
+    background: url('./static/exchange_a.svg') no-repeat center;
 }
 
 .but_info {
-    background: url('file://../../../static/info_p.svg') no-repeat center;
+    background: url('./static/info_p.svg') no-repeat center;
     border: 0px solid black;
     height: 42px;
     width: 42px;
@@ -176,11 +176,11 @@
 }
 
 .but_info:hover {
-    background: url('file://../../../static/info_a.svg') no-repeat center;
+    background: url('./static/info_a.svg') no-repeat center;
 }
 
 .but_menu {
-    background: url('file://../../../static/menu_p.svg') no-repeat center;
+    background: url('./static/menu_p.svg') no-repeat center;
     border: 0px solid black;
     height: 42px;
     width: 42px;
@@ -191,7 +191,7 @@
 }
 
 .but_menu:hover {
-    background: url('file://../../../static/menu_a.svg') no-repeat center;
+    background: url('./static/menu_a.svg') no-repeat center;
 }
 
 .main-content {
@@ -273,7 +273,7 @@
 }
 
 .img_BTC {
-    background: url('file://../../../static/but_BTC_p.svg') no-repeat center;
+    background: url('./static/but_BTC_p.svg') no-repeat center;
     border: 0px solid black;
     height: 150px;
     width: 230px;
@@ -282,7 +282,7 @@
 }
 
 .img_BTC:hover {
-    background: url('file://../../../static/but_BTC.svg') no-repeat center;
+    background: url('./static/but_BTC.svg') no-repeat center;
 }
 
 .but_BTC:hover p {
@@ -290,7 +290,7 @@
 }
 
 .click_img_BTC {
-    background: url('file://../../../static/but_BTC.svg') no-repeat center;
+    background: url('./static/but_BTC.svg') no-repeat center;
     border: 0px solid black;
     height: 150px;
     width: 230px;
@@ -303,7 +303,7 @@
 }
 
 .img_ETH {
-    background: url('file://../../../static/but_ETH_p.svg') no-repeat center;
+    background: url('./static/but_ETH_p.svg') no-repeat center;
     border: 0px solid black;
     height: 150px;
     width: 230px;
@@ -312,7 +312,7 @@
 }
 
 .img_ETH:hover {
-    background: url('file://../../../static/but_ETH.svg') no-repeat center;
+    background: url('./static/but_ETH.svg') no-repeat center;
 }
 
 .but_ETH:hover p {
@@ -320,7 +320,7 @@
 }
 
 .click_img_ETH {
-    background: url('file://../../../static/but_ETH.svg') no-repeat center;
+    background: url('./static/but_ETH.svg') no-repeat center;
     border: 0px solid black;
     height: 150px;
     width: 230px;
@@ -338,7 +338,7 @@
 }
 
 .img_LTC {
-    background: url('file://../../../static/but_LTC_p.svg') no-repeat center;
+    background: url('./static/but_LTC_p.svg') no-repeat center;
     border: 0px solid black;
     height: 150px;
     width: 230px;
@@ -348,7 +348,7 @@
 }
 
 .img_LTC:hover {
-    background: url('file://../../../static/but_LTC.svg') no-repeat center;
+    background: url('./static/but_LTC.svg') no-repeat center;
 }
 
 .but_LTC:hover p {
@@ -356,7 +356,7 @@
 }
 
 .click_img_LTC {
-    background: url('file://../../../static/but_LTC.svg') no-repeat center;
+    background: url('./static/but_LTC.svg') no-repeat center;
     border: 0px solid black;
     height: 150px;
     width: 230px;
@@ -370,7 +370,7 @@
 }
 
 .img_XRP {
-    background: url('file://../../../static/but_XRP_p.svg') no-repeat center;
+    background: url('./static/but_XRP_p.svg') no-repeat center;
     border: 0px solid black;
     height: 150px;
     width: 230px;
@@ -380,7 +380,7 @@
 }
 
 .img_XRP:hover {
-    background: url('file://../../../static/but_XRP.svg') no-repeat center;
+    background: url('./static/but_XRP.svg') no-repeat center;
 }
 
 .but_XRP:hover p {
@@ -388,7 +388,7 @@
 }
 
 .click_img_XRP {
-    background: url('file://../../../static/but_XRP.svg') no-repeat center;
+    background: url('./static/but_XRP.svg') no-repeat center;
     border: 0px solid black;
     height: 150px;
     width: 230px;
@@ -398,7 +398,7 @@
 }
 
 .Block_explorer {
-    background: url('file://../../../static/blockExpl.svg') no-repeat center;
+    background: url('./static/blockExpl.svg') no-repeat center;
     border: 0px solid black;
     height: 124px;
     width: 470px;
@@ -433,7 +433,7 @@
 
 .update {
     order: 2;
-    background: url('file://../../../static/but_update_p.svg') no-repeat center;
+    background: url('./static/but_update_p.svg') no-repeat center;
     border: 0px solid black;
     height: 22px;
     width: 22px;
@@ -441,12 +441,12 @@
 }
 
 .update:hover {
-    background: url('file://../../../static/but_update_a.svg') no-repeat center;
+    background: url('./static/but_update_a.svg') no-repeat center;
 }
 
 .current_balance {
     order: 2;
-    background: url('file://../../../static/tr_cur_bal.svg') no-repeat center;
+    background: url('./static/tr_cur_bal.svg') no-repeat center;
     border: 0px solid black;
     height: 235px;
     width: 401px;
@@ -475,7 +475,7 @@
 
 .cryptoCurrency_chart {
     order: 2;
-    background: url('file://../../../static/chart.svg') no-repeat center;
+    background: url('./static/chart.svg') no-repeat center;
     border: 0px solid black;
     height: 316px;
     width: 401px;
@@ -489,7 +489,7 @@
 }
 
 .payWindow {
-    background: url('file://../../../static/Rectangle.svg') no-repeat center;
+    background: url('./static/Rectangle.svg') no-repeat center;
     border: 0px solid black;
     height: 612px;
     width: 894px;
@@ -498,7 +498,7 @@
 }
 
 .payWindowTable {
-    background: url('file://../../../static/RectangleTable.svg') no-repeat center;
+    background: url('./static/RectangleTable.svg') no-repeat center;
     border: 0px solid black;
     height: 690px;
     width: 894px;
@@ -570,7 +570,7 @@ button {
 }
 
 .sendCurrencybutton {
-    background: url('file://../../../static/buttonSend_p.svg') no-repeat center;
+    background: url('./static/buttonSend_p.svg') no-repeat center;
     border: 0px solid black;
     height: 38px;
     width: 147px;
@@ -579,7 +579,7 @@ button {
 }
 
 .recieveCurrencybutton {
-    background: url('file://../../../static/buttonRecieve_p.svg') no-repeat center;
+    background: url('./static/buttonRecieve_p.svg') no-repeat center;
     border: 0px solid black;
     height: 38px;
     width: 147px;
@@ -588,11 +588,11 @@ button {
 }
 
 .sendCurrencybutton:hover {
-    background: url('file://../../../static/buttonSend_a.svg') no-repeat center;
+    background: url('./static/buttonSend_a.svg') no-repeat center;
 }
 
 .recieveCurrencybutton:hover {
-    background: url('file://../../../static/buttonRecieve_a.svg') no-repeat center;
+    background: url('./static/buttonRecieve_a.svg') no-repeat center;
 }
 
 .sidebar-content {
@@ -622,7 +622,7 @@ button {
 
 .NotificationsNumber {
     order: 2;
-    background: url('file://../../../static/numNotif.svg') no-repeat center;
+    background: url('./static/numNotif.svg') no-repeat center;
     border: 0px solid black;
     height: 24px;
     width: 21px;
@@ -643,7 +643,7 @@ button {
 
 .notificationContent {
     order: 2;
-    background: url('file://../../../static/notificationsGroup.svg') no-repeat center;
+    background: url('./static/notificationsGroup.svg') no-repeat center;
     border: 0px solid black;
     height: 637px;
     width: 312px;
@@ -653,7 +653,7 @@ button {
 
 .rectangleSR {
     filter: inherit;
-    background: url('file://../../../static/RectangleSR.svg') no-repeat center;
+    background: url('./static/RectangleSR.svg') no-repeat center;
     border: 0px solid black;
     height: 540px;
     width: 612px;
@@ -663,7 +663,7 @@ button {
 }
 
 .iconCryptoCurrency {
-    background: url('file://../../../static/icon_BTC.svg') no-repeat center;
+    background: url('./static/icon_BTC.svg') no-repeat center;
     border: 0px solid black;
     height: 106px;
     width: 106px;
@@ -675,7 +675,7 @@ button {
 }
 
 .iconCryptoCurrencyLTC {
-    background: url('file://../../../static/icon_LTC.svg') no-repeat center;
+    background: url('./static/icon_LTC.svg') no-repeat center;
     border: 0px solid black;
     height: 106px;
     width: 106px;
@@ -687,7 +687,7 @@ button {
 }
 
 .iconCryptoCurrencyETH {
-    background: url('file://../../../static/icon_ETH.svg') no-repeat center;
+    background: url('./static/icon_ETH.svg') no-repeat center;
     border: 0px solid black;
     height: 106px;
     width: 106px;
@@ -699,7 +699,7 @@ button {
 }
 
 .iconCryptoCurrencyXRP {
-    background: url('file://../../../static/icon_XRP.svg') no-repeat center;
+    background: url('./static/icon_XRP.svg') no-repeat center;
     border: 0px solid black;
     height: 106px;
     width: 106px;
@@ -718,7 +718,7 @@ button {
 
 .iconQr {
     order: 1;
-    background: url('file://../../../static/icon_QR.svg') no-repeat center;
+    background: url('./static/icon_QR.svg') no-repeat center;
     border: 0px solid black;
     height: 58px;
     width: 58px;
@@ -754,7 +754,7 @@ button {
 
 .iconSum {
     order: 1;
-    background: url('file://../../../static/icon_Sum.svg') no-repeat center;
+    background: url('./static/icon_Sum.svg') no-repeat center;
     border: 0px solid black;
     height: 58px;
     width: 58px;
@@ -766,7 +766,7 @@ button {
     order: 2;
     margin-top: 15px;
     margin-left: 20px;
-    background: url('file://../../../static/fonSendBTC.svg') no-repeat center;
+    background: url('./static/fonSendBTC.svg') no-repeat center;
     border: 0px solid black;
     height: 89px;
     width: 419px;
@@ -776,7 +776,7 @@ button {
     order: 2;
     margin-top: 15px;
     margin-left: 20px;
-    background: url('file://../../../static/fonSendLTC.svg') no-repeat center;
+    background: url('./static/fonSendLTC.svg') no-repeat center;
     border: 0px solid black;
     height: 89px;
     width: 419px;
@@ -786,7 +786,7 @@ button {
     order: 2;
     margin-top: 15px;
     margin-left: 20px;
-    background: url('file://../../../static/fonSendETH.svg') no-repeat center;
+    background: url('./static/fonSendETH.svg') no-repeat center;
     border: 0px solid black;
     height: 89px;
     width: 419px;
@@ -796,7 +796,7 @@ button {
     order: 2;
     margin-top: 15px;
     margin-left: 20px;
-    background: url('file://../../../static/fonSendXRP.svg') no-repeat center;
+    background: url('./static/fonSendXRP.svg') no-repeat center;
     border: 0px solid black;
     height: 89px;
     width: 419px;
@@ -931,7 +931,7 @@ button {
 }
 
 .button-send-transaction {
-    background: url('file://../../../static/buttonSendBig_p.svg') no-repeat center;
+    background: url('./static/buttonSendBig_p.svg') no-repeat center;
     border: 0px solid black;
     height: 43px;
     width: 166px;
@@ -940,7 +940,7 @@ button {
 }
 
 .button-cancel-transaction {
-    background: url('file://../../../static/buttonCancelBig_p.svg') no-repeat center;
+    background: url('./static/buttonCancelBig_p.svg') no-repeat center;
     border: 0px solid black;
     height: 43px;
     width: 166px;
@@ -949,11 +949,11 @@ button {
 }
 
 .button-send-transaction:hover {
-    background: url('file://../../../static/buttonSendBig_a.svg') no-repeat center;
+    background: url('./static/buttonSendBig_a.svg') no-repeat center;
 }
 
 .button-cancel-transaction:hover {
-    background: url('file://../../../static/buttonCancelBig_a.svg') no-repeat center;
+    background: url('./static/buttonCancelBig_a.svg') no-repeat center;
 }
 
 .containerData {
@@ -1005,7 +1005,7 @@ button {
 
 .copy_to_buffer {
     order: 1;
-    background: url('file://../../../static/copyToBuffer_p.svg') no-repeat center;
+    background: url('./static/copyToBuffer_p.svg') no-repeat center;
     border: 0px solid black;
     height: 60px;
     width: 60px;
@@ -1016,12 +1016,12 @@ button {
 }
 
 .copy_to_buffer:active {
-    background: url('file://../../../static/copyToBuffer_a.svg') no-repeat center;
+    background: url('./static/copyToBuffer_a.svg') no-repeat center;
 }
 
 .sent_to_print {
     order: 2;
-    background: url('file://../../../static/sentToPrint_p.svg') no-repeat center;
+    background: url('./static/sentToPrint_p.svg') no-repeat center;
     border: 0px solid black;
     height: 60px;
     width: 60px;
@@ -1032,12 +1032,12 @@ button {
 }
 
 .sent_to_print:active {
-    background: url('file://../../../static/sentToPrint_a.svg') no-repeat center;
+    background: url('./static/sentToPrint_a.svg') no-repeat center;
 }
 
 .sent_to_email {
     order: 3;
-    background: url('file://../../../static/sentToEmail_p.svg') no-repeat center;
+    background: url('./static/sentToEmail_p.svg') no-repeat center;
     border: 0px solid black;
     height: 60px;
     width: 60px;
@@ -1048,12 +1048,12 @@ button {
 }
 
 .sent_to_email:active {
-    background: url('file://../../../static/sentToEmail_a.svg') no-repeat center;
+    background: url('./static/sentToEmail_a.svg') no-repeat center;
 }
 
 .view_on_blockchain {
     order: 4;
-    background: url('file://../../../static/viewOnBlockchain_p.svg') no-repeat center;
+    background: url('./static/viewOnBlockchain_p.svg') no-repeat center;
     border: 0px solid black;
     height: 60px;
     width: 60px;
@@ -1064,11 +1064,11 @@ button {
 }
 
 .view_on_blockchain:active {
-    background: url('file://../../../static/viewOnBlockchain_a.svg') no-repeat center;
+    background: url('./static/viewOnBlockchain_a.svg') no-repeat center;
 }
 
 .button-cancel-ricieve {
-    background: url('file://../../../static/buttonCancelBig_p.svg') no-repeat center;
+    background: url('./static/buttonCancelBig_p.svg') no-repeat center;
     border: 0px solid black;
     height: 43px;
     width: 166px;
@@ -1077,7 +1077,7 @@ button {
 }
 
 .button-cancel-ricieve:hover {
-    background: url('file://../../../static/buttonCancelBig_a.svg') no-repeat center;
+    background: url('./static/buttonCancelBig_a.svg') no-repeat center;
 }
 
 .buttonHistoryFlex {
@@ -1187,7 +1187,7 @@ button {
 }
 
 .updateTable {
-    background: url('file://../../../static/but_update_p.svg') no-repeat center;
+    background: url('./static/but_update_p.svg') no-repeat center;
     border: 0px solid black;
     height: 22px;
     width: 22px;
@@ -1196,7 +1196,7 @@ button {
 }
 
 .updateTable:hover {
-    background: url('file://../../../static/but_update_a.svg') no-repeat center;
+    background: url('./static/but_update_a.svg') no-repeat center;
 }
 
 .transaction-history {
@@ -1237,7 +1237,7 @@ button {
 }
 
 .BTCimg {
-    background: url('file://../../../static/tableBTCico.svg') no-repeat center;
+    background: url('./static/tableBTCico.svg') no-repeat center;
     border: 0px solid black;
     height: 29px;
     width: 29px;
@@ -1246,7 +1246,7 @@ button {
 }
 
 .ETHimg {
-    background: url('file://../../../static/tableETHico.svg') no-repeat center;
+    background: url('./static/tableETHico.svg') no-repeat center;
     border: 0px solid black;
     height: 29px;
     width: 29px;
@@ -1255,7 +1255,7 @@ button {
 }
 
 .LTCimg {
-    background: url('file://../../../static/tableLTCico.svg') no-repeat center;
+    background: url('./static/tableLTCico.svg') no-repeat center;
     border: 0px solid black;
     height: 29px;
     width: 29px;
@@ -1264,7 +1264,7 @@ button {
 }
 
 .XRPimg {
-    background: url('file://../../../static/tableXRPico.svg') no-repeat center;
+    background: url('./static/tableXRPico.svg') no-repeat center;
     border: 0px solid black;
     height: 29px;
     width: 29px;
@@ -1272,14 +1272,14 @@ button {
     margin-top: 2px
 }
 .income{
-    background: url('file://../../../static/txIn.svg') no-repeat center;
+    background: url('./static/txIn.svg') no-repeat center;
     border: 0px solid black;
     height: 12px;
     width: 14px;
     margin-left: 25px;
 }
 .outcome{
-    background: url('file://../../../static/txOut.svg') no-repeat center;
+    background: url('./static/txOut.svg') no-repeat center;
     border: 0px solid black;
     height: 12px;
     width: 14px;
