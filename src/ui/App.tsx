@@ -165,7 +165,8 @@ export default class App extends React.Component<any, IAPPState> {
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeftBlur/>,
             main: () => <BtcSendWindow stateSR={this.setStateSR} course={this.state.BTCCourse}
-                                       btcBalance={this.state.BTCBalance}/>
+                                       btcBalance={this.state.BTCBalance} trFee = {this.state.transactionFee}
+                                       setFee={this.setTransactionFee}/>
         },
         {
             path: '/btc-window-recieve',
@@ -180,7 +181,8 @@ export default class App extends React.Component<any, IAPPState> {
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeftBlur/>,
             main: () => <LtcSendWindow stateSR={this.setStateSR} course={this.state.LTCCourse}
-                                       btcBalance={this.state.LTCBalance}/>
+                                       btcBalance={this.state.LTCBalance} trFee = {this.state.transactionFee}
+                                       setFee={this.setTransactionFee}/>
         },
         {
             path: '/ltc-window-recieve',
@@ -195,7 +197,8 @@ export default class App extends React.Component<any, IAPPState> {
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeftBlur/>,
             main: () => <EthSendWindow stateSR={this.setStateSR} course={this.state.ETHCourse}
-                                       btcBalance={this.state.ETHBalance}/>
+                                       btcBalance={this.state.ETHBalance} trFee = {this.state.transactionFee}
+                                       setFee={this.setTransactionFee}/>
         },
         {
             path: '/eth-window-recieve',
@@ -210,7 +213,8 @@ export default class App extends React.Component<any, IAPPState> {
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeftBlur/>,
             main: () => <XrpSendWindow stateSR={this.setStateSR} course={this.state.XRPCourse}
-                                       btcBalance={this.state.XRPBalance}/>
+                                       btcBalance={this.state.XRPBalance} trFee = {this.state.transactionFee}
+                                       setFee={this.setTransactionFee}/>
         },
         {
             path: '/xrp-window-recieve',
@@ -585,7 +589,7 @@ export default class App extends React.Component<any, IAPPState> {
             initBitcoinAddress().then(initEthereumAddress).then(initLitecoinAddress).then(initRippleAddress).then(this.getRates).then(this.getBalances).then(this.getTransactions).then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions)).then(() => {
                 this.setRedirectToMain()
                 this.setValues()
-            })
+            }).then(this.updateData)
         }
     }
 

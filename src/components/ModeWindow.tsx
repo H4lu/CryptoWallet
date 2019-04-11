@@ -16,8 +16,6 @@ export class ModeWindow extends React.Component<any, any> {
        this.setClass2 = this.setClass2.bind(this)
        this.setClass3 = this.setClass3.bind(this)
        this.setClass = this.setClass.bind(this)
-
-
         this.classFee1 = this.setClass1()
         this.classFee2 = this.setClass2()
         this.classFee3 = this.setClass3()

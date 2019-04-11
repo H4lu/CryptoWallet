@@ -769,7 +769,7 @@ button {
     background: url('./static/fonSendBTC.svg') no-repeat center;
     border: 0px solid black;
     height: 89px;
-    width: 419px;
+    width: 355px;
 }
 
 .poleSumLTC {
@@ -779,7 +779,7 @@ button {
     background: url('./static/fonSendLTC.svg') no-repeat center;
     border: 0px solid black;
     height: 89px;
-    width: 419px;
+    width: 355px;
 }
 
 .poleSumETH {
@@ -789,7 +789,7 @@ button {
     background: url('./static/fonSendETH.svg') no-repeat center;
     border: 0px solid black;
     height: 89px;
-    width: 419px;
+    width: 355px;
 }
 
 .poleSumXRP {
@@ -799,20 +799,20 @@ button {
     background: url('./static/fonSendXRP.svg') no-repeat center;
     border: 0px solid black;
     height: 89px;
-    width: 419px;
+    width: 355px;
 }
 
 .payment_sum {
-    margin-top: 0px;
+    margin-top: 2px;
     margin-left: 9px;
     border: 0px solid black;
     font-family: Lato;
     font-weight: bold;
     font-size: 22px;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(0, 0, 0, 0);
     background-color: rgba(0, 0, 0, 0);
     height: 44px;
-    width: 418px;
+    width: 355px;
 }
 
 .payment_sum_ {
@@ -825,7 +825,7 @@ button {
     color: rgba(255, 255, 255, 0.8);
     background-color: rgba(0, 0, 0, 0);
     height: 44px;
-    width: 418px;
+    width: 355px;
 }
 
 .payment_sum:focus {
@@ -834,7 +834,7 @@ button {
 }
 
 .payment_sumUSD {
-    margin-top: 5px;
+    margin-top: -30px;
     margin-left: 9px;
     border: 0px solid black;
     font-family: Lato;
@@ -843,7 +843,21 @@ button {
     color: rgba(255, 255, 255, 0.3);
     background-color: rgba(0, 0, 0, 0);
     height: 44px;
-    width: 418px;
+    width: 355px;
+}
+
+.setMaxSum{
+    order: 3;
+    background: url('./static/maxsum_p.svg') no-repeat center;
+    border: 0px solid black;
+    height: 74px;
+    width: 72px;
+    margin-top: 23px;
+    margin-left: -4px;
+}
+
+.setMaxSum:hover {
+    background: url('./static/maxsum_a.svg') no-repeat center;
 }
 
 .blockFee {
@@ -862,9 +876,66 @@ button {
     color: rgba(255, 255, 255, 0.6);
 }
 
-.sum_Transaction_fee {
+.Fee1{
     order: 2;
-    margin-left: 180px;
+    background: url('./static/low_p.svg') no-repeat center;
+    border: 0px solid black;
+    height: 14px;
+    width: 40px;
+    margin-top: 0px;
+    margin-left: 30px;
+}
+.clickFee1{
+    order: 2;
+    background: url('./static/low_a.svg') no-repeat center;
+    border: 0px solid black;
+    height: 14px;
+    width: 40px;
+    margin-top: 0px;
+    margin-left: 30px;
+}
+
+.Fee2{
+    order: 3;
+    background: url('./static/normal_p.svg') no-repeat center;
+    border: 0px solid black;
+    height: 14px;
+    width: 40px;
+    margin-top: 0px;
+    margin-left: 0px;
+}
+.clickFee2{
+    order: 3;
+    background: url('./static/normal_a.svg') no-repeat center;
+    border: 0px solid black;
+    height: 14px;
+    width: 40px;
+    margin-top: 0px;
+    margin-left: 0px;
+}
+
+.Fee3{
+    order: 4;
+    background: url('./static/high_p.svg') no-repeat center;
+    border: 0px solid black;
+    height: 14px;
+    width: 40px;
+    margin-top: 0px;
+    margin-left: 0px;
+}
+.clickFee3{
+    order: 4;
+    background: url('./static/high_a.svg') no-repeat center;
+    border: 0px solid black;
+    height: 14px;
+    width: 40px;
+    margin-top: 0px;
+    margin-left: 0px;
+}
+
+.sum_Transaction_fee {
+    order: 5;
+    margin-left: 29px;
     margin-top: 0px;
     border: 0px solid black;
     font-family: Lato;
@@ -873,7 +944,7 @@ button {
 }
 
 .NameCrypto_Transaction_fee {
-    order: 3;
+    order: 6;
     margin-left: 3px;
     margin-top: 0px;
     border: 0px solid black;
@@ -883,7 +954,7 @@ button {
 }
 
 .USD_icon {
-    order: 4;
+    order: 7;
     margin-left: 15px;
     margin-top: 0px;
     border: 0px solid black;
@@ -893,7 +964,7 @@ button {
 }
 
 .USD_Transaction_fee {
-    order: 5;
+    order: 8;
     margin-top: 0px;
     border: 0px solid black;
     font-family: Lato;
@@ -1342,56 +1413,4 @@ button {
     letter-spacing: 1px;
     padding-top: 450px;
     text-align: center;
-}
-
-.Fee1{
-    font-family: Lato;
-    font-weight: bold;
-    font-size: 20px;
-    color: rgba(255, 255, 255, 0.8);
-    letter-spacing: 1px;
-    text-align: center;
-}
-.Fee2{
-    font-family: Lato;
-    font-weight: bold;
-    font-size: 20px;
-    color: rgba(255, 255, 255, 0.8);
-    letter-spacing: 1px;
-    text-align: center;
-}
-.Fee3{
-    font-family: Lato;
-    font-weight: bold;
-    font-size: 20px;
-    color: rgba(255, 255, 255, 0.8);
-    letter-spacing: 1px;
-    text-align: center;
-}
-.clickFee1{
-    font-family: Lato;
-    font-weight: bold;
-    font-size: 20px;
-    color: rgba(255, 255, 255, 0.8);
-    letter-spacing: 1px;
-    text-align: center;
-    background-color: rgba(100, 100, 100, 0.5);
-}
-.clickFee2{
-    font-family: Lato;
-    font-weight: bold;
-    font-size: 20px;
-    color: rgba(255, 255, 255, 0.8);
-    letter-spacing: 1px;
-    text-align: center;
-    background-color: rgba(100, 100, 100, 0.5);
-}
-.clickFee3{
-    font-family: Lato;
-    font-weight: bold;
-    font-size: 20px;
-    color: rgba(255, 255, 255, 0.8);
-    letter-spacing: 1px;
-    text-align: center;
-    background-color: rgba(100, 100, 100, 0.5);
 }

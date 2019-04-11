@@ -126,22 +126,15 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
   web3.eth.getTransactionCount(myAdress).then(async (value) => {
         // Получаем порядковый номер транзакции, т.н nonce
     info('Got this values: ' + 'gasPrice: ' + gasPrice + 'gasLimit: ' + gasLimit)
-        /* Создаём неподписанную транзакцию. Она включает в себя:
-           nonce - порядковый номер
-           gasPrice и gasLimit - константы, использующиеся для подсчёта комиссии
-           value - сумма транзакции в wei
-           to - адрес получателя
-           chainId - обозначает сеть, в которой будет отправлена траназкция
-           К примеру, ropsten - 3, mainnet - 1, значение согласно EIP155
-           data - содержит собой код, но т.к у нас обычная транзакция, то это поле пусто
-           v,r,s - данные цифровой подписи, согласно EIP155 r и s - 0, v  = chainId
-        */
+
+      console.log('gasprice:  ', (7.125 * gasPrice).toString())
+      let gas = (7.125 * gasPrice).toString()
     let rawtx = {
       value: web3.utils.toHex(web3.utils.toWei(amount.toString(), 'ether')),
       nonce: web3.utils.toHex(value),
       from: myAdress,
       to: paymentAdress,
-      gasPrice: web3.utils.toHex(web3.utils.toWei('25', 'shannon')),
+      gasPrice: web3.utils.toHex(web3.utils.toWei(gas, 'shannon')),
       gasLimit: web3.utils.toHex(24000),
       chainId: web3.utils.toHex(1),
       data: '0x00',
@@ -149,7 +142,7 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
       r: 0,
       s: 0
     }
-    info('Gas price: ' + rawtx.gasPrice)
+    console.log('Gas price: ', rawtx.gasPrice)
     info('tx value: ' + rawtx.value)
     for (let item in rawtx) {
       info('item : ' + Object(rawtx)[item])
@@ -159,13 +152,14 @@ function createTransaction (paymentAdress: string, amount: number, gasPrice: num
     info('OK')
     let txCost = tx.getUpfrontCost()
     let txfee = web3.utils.toDecimal(web3.utils.toHex(tx.getDataFee()))
-    info('Transaction cost: ', txfee)
+    console.log('Transaction fee: ', txfee)
     info('Unsigned: ' + tx.serialize().toString('hex'))
 
     info('Pass this to amount: ' + amount)
     info('Amount type: ' + typeof(amount))
 
-    let fee = txfee / 100000000000
+    let fee = (7.125 * gasPrice * 24000)/1000000000
+      console.log('Transaction cost/: ', fee)
     let message = new Buffer(32)
     message[0] = 0x99
     message[31] = 0x99
