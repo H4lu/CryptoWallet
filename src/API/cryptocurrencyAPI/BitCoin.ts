@@ -15,8 +15,6 @@ let myPubKey = new Buffer(33)
 let balance: number
 let price: number
 import { info } from 'electron-log'
-import number = script.number;
-import {types} from "util";
 import {Buffer} from "buffer";
 //import isUint8Array =
 export function setBTCBalance(bal: number) {
@@ -127,23 +125,57 @@ export async function getFee() {
 }
 // We`re Bob. Bob send`s BTC to Alice
 export async function getBTCBalance(): Promise<Array<any>> {
-  /* Задаём параметры запроса
-    Network - тип сети, testnet или mainnet
-    myAddr - наш адрес
-    0 - количество подтверждений транзакций
-  */
-  // rootURL + 'get_address_balance/' + myAddr
-  let requestUrl = 'https://chain.so/api/v2/get_address_balance/' + NETWORK + '/' + myAddr + '/' + 0
-  info(requestUrl)
-  try {
-    // Делаем запрос и отдаём в виде Promise
-    const response = await webRequest.get(requestUrl)
-    return parseValueCrypto(response)
-  } catch (error) {
-    Promise.reject(error).catch(error => {
-      info(error)
-    })
-  }
+    /* Задаём параметры запроса
+      Network - тип сети, testnet или mainnet
+      myAddr - наш адрес
+      0 - количество подтверждений транзакций
+    */
+    // rootURL + 'get_address_balance/' + myAddr
+    let requestUrl = 'https://chain.so/api/v2/get_address_balance/' + NETWORK + '/' + myAddr + '/' + 0
+    info(requestUrl)
+    try {
+        // Делаем запрос и отдаём в виде Promise
+        const response = await webRequest.get(requestUrl)
+        return parseValueCrypto(response)
+    } catch (error) {
+        Promise.reject(error).catch(error => {
+            info(error)
+        })
+    }
+}
+
+export async function getBTCBalanceTarns(address: string): Promise<Array<any>> {
+    /* Задаём параметры запроса
+      Network - тип сети, testnet или mainnet
+      myAddr - наш адрес
+      0 - количество подтверждений транзакций
+    */
+    // rootURL + 'get_address_balance/' + myAddr
+    let requestUrl = 'https://blockchain.info/rawaddr/' +address
+
+    info(requestUrl)
+    try {
+        // Делаем запрос и отдаём в виде Promise
+        const response = await webRequest.get(requestUrl)
+
+        return parseValueBalanceTrans(response)
+    } catch (error) {
+        Promise.reject(error).catch(error => {
+            info(error)
+        })
+    }
+}
+function parseValueBalanceTrans(response: webRequest.Response<string>): Array<any> {
+    let parsedResponse = JSON.parse(response.content)
+
+    let balance = Number(parsedResponse.final_balance) / 100000000
+
+    let transactions = Number(parsedResponse.n_tx)
+
+    let arr = []
+    arr.push(Number(balance.toFixed(8)))
+    arr.push(transactions)
+    return arr
 }
 
 function toSatoshi(BTC: number): number {

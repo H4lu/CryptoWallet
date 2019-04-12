@@ -113,11 +113,26 @@ export async function getLitecoinLastTx(): Promise<any> {
   }
 }
 
-// const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
+export async function getLTCBalanceTrans(address: string): Promise<Array<any>> {
 
-// export const address: string = 'mhyUjiGtUvKQc5EuBAYxxE2NTojZywJ7St'
+    let requestUrl = 'https://chain.so/api/v2/address/' + NETWORK + '/' + address
 
-// We`re Bob. Bob send`s BTC to Alice
+    try {
+        // Делаем запрос и отдаём в виде Promise
+        const response = await webRequest.get(requestUrl)
+        let arr = []
+        let parsedResponse = JSON.parse(response.content).data
+        let balance = Number(parsedResponse.balance).toFixed(8)
+        let transactions = Number(parsedResponse.total_txs)
+        arr.push(balance)
+        arr.push(transactions)
+        return arr
+    } catch (error) {
+        Promise.reject(error).catch(error => {
+            info(error)
+        })
+    }
+}
 
 export async function getLTCBalance(): Promise<Array<Number | String>> {
   /* Задаём параметры запроса

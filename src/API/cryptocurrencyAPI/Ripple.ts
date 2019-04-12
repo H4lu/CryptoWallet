@@ -1,22 +1,15 @@
-import {TransactionBuilder, networks, Transaction, ECPair, address, script} from 'bitcoinjs-lib'
-import * as Request from 'request'
+import {networks} from 'bitcoinjs-lib'
 import * as webRequest from 'web-request'
-import { getSignaturePCSC } from '../hardwareAPI/GetSignature'
 import { getAddressPCSC } from '../hardwareAPI/GetAddress'
-import * as utils from './utils'
-import * as crypto from 'crypto'
-import * as satoshi from 'satoshi-bitcoin'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.bitcoin
-const NETWORK = 'BTC'                                          // change XRP
+const NETWORK = 'XRP'                                          // change XRP
 const rootURL = 'https://chain.so/api/v2'
 let myAddr = ''
 let myPubKey = new Buffer(33)
 let balance: number
 let price: number
 import { info } from 'electron-log'
-import number = script.number;
-import {types} from "util";
 import {Buffer} from "buffer";
 
 export function setXRPBalance(bal: number) {
@@ -118,4 +111,38 @@ export async function getXRPBalance(): Promise<Array<Number | String>> {
     arr.push('XRP')
     arr.push(0)
     return arr
+}
+
+export async function getXRPBalanceTrans(address: string): Promise<Array<any>> {
+
+    let requestUrl = 'https://data.ripple.com/v2/accounts/' + address + '/balances?'
+    let arr = []
+    try {
+        // Делаем запрос и отдаём в виде Promise
+        const response = await webRequest.get(requestUrl)
+
+        let parsedResponse = JSON.parse(response.content).balances
+        let balance = Number(parsedResponse[0].value).toFixed(8)
+        arr.push(balance)
+        console.log('1: ', balance)
+    } catch (error) {
+        Promise.reject(error).catch(error => {
+            info(error)
+        })
+    }
+
+    requestUrl = 'https://data.ripple.com/v2/accounts/' + address + '/transactions?'
+    try {
+        // Делаем запрос и отдаём в виде Promise
+        const response = await webRequest.get(requestUrl)
+        let parsedResponse = JSON.parse(response.content)
+        let transactions = Number(parsedResponse.count)
+        arr.push(transactions)
+        console.log('2: ', transactions)
+        return arr
+    } catch (error) {
+        Promise.reject(error).catch(error => {
+            info(error)
+        })
+    }
 }

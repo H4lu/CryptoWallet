@@ -97,11 +97,26 @@ export async function getEthereumLastTx(): Promise<any> {
   }
 }
 
+export async function getETHBalanceTrans(address: string): Promise<Array<any>> {
+  let respB = await web3.eth.getBalance(address)
+
+    let ethValue = convertFromWei(Number(respB))
+    console.log('1', ethValue)
+    let arr = []
+    arr.push(Number(Number(ethValue).toFixed(8)))
+
+  let respT = await web3.eth.getTransactionCount(address)
+
+    arr.push(Number(respT))
+    console.log('2', respT)
+    return arr
+}
+
 export async function getETHBalance() {
-  web3.eth.getGasPrice().then(value => info(value)).catch(err => info(err))
-  let resp = await web3.eth.getBalance(myAdress)
-  info('ETH balance: ' + resp)
-  return parseValueCrypto(Number(resp))
+    web3.eth.getGasPrice().then(value => info(value)).catch(err => info(err))
+    let resp = await web3.eth.getBalance(myAdress)
+    info('ETH balance: ' + resp)
+    return parseValueCrypto(Number(resp))
 }
 
 function parseValueCrypto(amount: number): Array<Number | String> {

@@ -1,16 +1,31 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
-import {Table} from './Table'
 import {log} from 'electron-log'
+import {getBTCBalanceTarns} from "../API/cryptocurrencyAPI/BitCoin";
 
-export default class MainContent extends React.Component<any, any> {
+import {getETHBalanceTrans} from "../API/cryptocurrencyAPI/Ethereum";
+import {getLTCBalanceTrans} from "../API/cryptocurrencyAPI/Litecoin";
+import {getXRPBalanceTrans} from "../API/cryptocurrencyAPI/Ripple";
+
+interface IMainContent {
+    exAddress: string,
+    balance: string,
+    transactions: string
+}
+
+export default class MainContent extends React.Component<any, IMainContent> {
     classBTC: string;
     classETH: string;
     classLTC: string;
     classXRP: string;
+    classActive: string;
 
     constructor(props: any) {
         super(props)
+        this.state = {
+            exAddress: '',
+            balance: '',
+            transactions: ''
+        }
 
         this.props.stateSR(false)
         this.handleClick = this.handleClick.bind(this)
@@ -19,13 +34,54 @@ export default class MainContent extends React.Component<any, any> {
         this.updateStateTransLTC = this.updateStateTransLTC.bind(this)
         this.updateStateTransXRP = this.updateStateTransXRP.bind(this)
         this.handleUpdateDataClick = this.handleUpdateDataClick.bind(this)
+        this.handleAddressChange = this.handleAddressChange.bind(this)
+        this.ex_button = this.ex_button.bind(this)
 
         this.classBTC = 'click_img_BTC'
         this.classETH = 'img_ETH'
         this.classLTC = 'img_LTC'
         this.classXRP = 'img_XRP'
+        this.classActive = 'ex_BTC'
+
     }
 
+    handleAddressChange(e: any) {
+        this.setState({exAddress: e.target.value})
+    }
+
+    async ex_button(){
+        if(this.state.exAddress != '') {
+            switch (this.classActive) {
+                case 'ex_BTC': {
+                    let arr = await getBTCBalanceTarns(this.state.exAddress)
+                    this.setState({balance: (arr[0]).toString() + ' BTC'})
+                    this.setState({transactions: (arr[1]).toString()})
+                    break
+                }
+                case 'ex_ETH': {
+                    let arr = await getETHBalanceTrans(this.state.exAddress)
+                    console.log('3', arr[0])
+                    console.log('4', arr[1])
+                    this.setState({balance: (arr[0]) + ' ETH'})
+                    this.setState({transactions: (arr[1]).toString()})
+                    break
+                }
+                case 'ex_LTC': {
+                    let arr = await getLTCBalanceTrans(this.state.exAddress)
+                    this.setState({balance: (arr[0]).toString() + ' LTC'})
+                    this.setState({transactions: (arr[1]).toString()})
+                    break
+                }
+                case 'ex_XRP': {
+                    let arr = await getXRPBalanceTrans(this.state.exAddress)
+                    this.setState({balance: (arr[0]).toString() + ' LTC'})
+                    this.setState({transactions: (arr[1]).toString()})
+                    break
+                    break
+                }
+            }
+        }
+    }
 
     handleUpdateDataClick() {
         this.props.refresh()
@@ -70,30 +126,27 @@ export default class MainContent extends React.Component<any, any> {
         this.classETH = 'img_ETH'
         this.classLTC = 'img_LTC'
         this.classXRP = 'img_XRP'
-
-
+        this.classActive = 'ex_BTC'
     }
 
-    updateStateTransETH() {
+    updateStateTransETH(){
         this.props.updateStateETH()
         this.props.setActiveCurrency("ETH")
         this.classBTC = 'img_BTC'
         this.classETH = 'click_img_ETH'
         this.classLTC = 'img_LTC'
         this.classXRP = 'img_XRP'
-
-
+        this.classActive = 'ex_ETH'
     }
 
-    updateStateTransLTC() {
+    updateStateTransLTC(){
         this.props.updateStateLTC()
         this.props.setActiveCurrency("LTC")
         this.classBTC = 'img_BTC'
         this.classETH = 'img_ETH'
         this.classLTC = 'click_img_LTC'
         this.classXRP = 'img_XRP'
-
-
+        this.classActive = 'ex_LTC'
     }
 
     updateStateTransXRP() {
@@ -105,7 +158,7 @@ export default class MainContent extends React.Component<any, any> {
         this.classETH = 'img_ETH'
         this.classLTC = 'img_LTC'
         this.classXRP = 'click_img_XRP'
-
+        this.classActive = 'ex_XRP'
     }
 
 
@@ -161,7 +214,16 @@ export default class MainContent extends React.Component<any, any> {
                                     </div>
                                 </div>
                             </div>
-                            <div className='Block_explorer'/>
+                            <div className='Block_explorer'>
+                                <div className='ex_enter_address'>
+                                    <div className={this.classActive}/>
+                                    <input type='text' className='ex_address' placeholder=' Enter address '
+                                           value={this.state.exAddress} onChange={this.handleAddressChange}/>
+                                    <button className='ex_button_find' onClick={this.ex_button}/>
+                                </div>
+                                <p className='ex_balance'>{this.state.balance}</p>
+                                <p className='ex_transactions'>{this.state.transactions}</p>
+                            </div>
                         </div>
                     </div>
                     <div className='transaction_info'>

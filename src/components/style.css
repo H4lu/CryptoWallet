@@ -400,11 +400,109 @@
 .Block_explorer {
     background: url('./static/blockExpl.svg') no-repeat center;
     border: 0px solid black;
-    height: 124px;
+    height: 240px;
     width: 470px;
     margin-top: 18px;
     margin-left: 10px;
     opacity: 42%;
+}
+
+.ex_enter_address{
+    display: flex;
+}
+
+.ex_BTC{
+    order: 1;
+    background: url('./static/exBTC.svg') no-repeat center;
+    border: 0px solid black;
+    height: 36px;
+    width: 36px;
+    margin-top: 68px;
+    margin-left: 17px;
+    opacity: 50%;
+}
+.ex_LTC{
+    order: 1;
+    background: url('./static/exLTC.svg') no-repeat center;
+    border: 0px solid black;
+    height: 36px;
+    width: 36px;
+    margin-top: 68px;
+    margin-left: 17px;
+    opacity: 50%;
+}
+.ex_ETH{
+    order: 1;
+    background: url('./static/exETH.svg') no-repeat center;
+    border: 0px solid black;
+    height: 36px;
+    width: 36px;
+    margin-top: 68px;
+    margin-left: 17px;
+    opacity: 50%;
+}
+.ex_XRP{
+    order: 1;
+    background: url('./static/exXRP.svg') no-repeat center;
+    border: 0px solid black;
+    height: 36px;
+    width: 36px;
+    margin-top: 68px;
+    margin-left: 17px;
+    opacity: 50%;
+}
+
+.ex_address{
+    order: 2;
+    margin-top: 69px;
+    margin-left: 27px;
+    border: 0px solid black;
+    font-family: Lato;
+    font-weight: bold;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(0, 0, 0, 0);
+    height: 32px;
+    width: 350px;
+}
+
+.ex_address:focus {
+    outline: none;
+    border: none;
+}
+
+.ex_button_find{
+    order: 3;
+    background: url('./static/search.svg') no-repeat center;
+    border: 0px solid black;
+    height: 20px;
+    width: 20px;
+    margin-top: 78px;
+    margin-left: 1px;
+}
+
+.ex_button_find:hover {
+    background: url('./static/search_a.svg') no-repeat center;
+}
+
+.ex_balance{
+    margin-top: 26px;
+    margin-left: 170px;
+    border: 0px solid black;
+    font-family: Lato;
+    font-weight: bold;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.ex_transactions{
+    margin-top: 26px;
+    margin-left: 170px;
+    border: 0px solid black;
+    font-family: Lato;
+    font-weight: bold;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .tran_cur_info {
