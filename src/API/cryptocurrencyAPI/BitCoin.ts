@@ -42,20 +42,11 @@ export async function getBitcoinSmartBitBalance(): Promise<webRequest.Response<s
 }
 function parseValueCrypto(response: webRequest.Response<string>): Array<any> {
   let parsedResponse = JSON.parse(response.content).data
-  info('PARSED RESP IN PARSE', parsedResponse)
-  info('CONFIRMED BALANCE',Number(parsedResponse.confirmed_balance),parsedResponse.confirmed_balance)
-  info('UNCONFIRMED',Number(parsedResponse.unconfirmed_balance),parsedResponse.unconfirmed_balance)
   let balance = Number(parsedResponse.confirmed_balance) + Number(parsedResponse.unconfirmed_balance)
-  info('BALANCE', balance)
-  info('BALANCE TO STRING', String(balance))
-  info(balance.toString())
-  info(Number(balance).toString(10))
-  info(Number(balance).toString())
   let arr = []
   arr.push('BTC')
   arr.push(Number(balance.toFixed(8)))
   let answer = { 'BTC': balance }
-  info('ANSWERING IN PARSEVALUE CRYPTO',arr,answer,arr[1])
   return arr
 }
 
@@ -132,11 +123,29 @@ export async function getBTCBalance(): Promise<Array<any>> {
     */
     // rootURL + 'get_address_balance/' + myAddr
     let requestUrl = 'https://chain.so/api/v2/get_address_balance/' + NETWORK + '/' + myAddr + '/' + 0
-    info(requestUrl)
+
     try {
         // Делаем запрос и отдаём в виде Promise
         const response = await webRequest.get(requestUrl)
         return parseValueCrypto(response)
+    } catch (error) {
+        Promise.reject(error).catch(error => {
+            info(error)
+        })
+    }
+}
+
+export async function getChartBTC(end: string, start: string): Promise<Array<any>>{
+    let requestUrl = 'https://api.coindesk.com/v1/bpi/historical/close.json?start=' + start + '&end=' + end
+    try {
+        // Делаем запрос и отдаём в виде Promise
+        const response = await webRequest.get(requestUrl)
+        let parsedResponse = JSON.parse(response.content).bpi
+        let arr = []
+        for (let count in parsedResponse) {
+            arr.push(parsedResponse[count])
+        }
+        return arr
     } catch (error) {
         Promise.reject(error).catch(error => {
             info(error)

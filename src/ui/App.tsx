@@ -16,7 +16,7 @@ import {
     initBitcoinAddress,
     getBTCBalance,
     setBTCBalance,
-    setBTCPrice
+    setBTCPrice, getChartBTC
 } from '../API/cryptocurrencyAPI/BitCoin'
 import {
     getLTCBalance,
@@ -65,7 +65,6 @@ import {getRate} from "../API/cryptocurrencyAPI/Exchange";
 import {ModeWindow} from "../components/ModeWindow";
 
 
-
 interface IAPPState {
     BTCBalance: number,
     ETHBalance: number,
@@ -101,9 +100,12 @@ interface IAPPState {
     ETHCourse: number,
     XRPCourse: number,
     SR: boolean,
-    SideBarLeftState: number
-    numTransactions: number
-    transactionFee: number
+    SideBarLeftState: number,
+    numTransactions: number,
+    transactionFee: number,
+    chartBTC: Array<any>,
+    chartBTCc: Array<any>,
+    chartLen: number
 }
 
 
@@ -135,14 +137,15 @@ export default class App extends React.Component<any, IAPPState> {
                                          let d = new Date(b.Date).getTime()
                                          return d - c
                                      })} transactions={this.getTransactions}
-                                     refresh={this.updateData} stateSR={this.setStateSR}/>
+                                     refresh={this.updateData} stateSR={this.setStateSR}
+                                     chartBTC={this.state.chartBTCc} setChartLen={this.setChartLen}/>
         },
         {
             path: '/mode-window',
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
-            main: () => <ModeWindow setFee={this.setTransactionFee} trFee = {this.state.transactionFee}/>
+            main: () => <ModeWindow setFee={this.setTransactionFee} trFee={this.state.transactionFee}/>
         },
         {
             path: '/currency-carousel',
@@ -165,7 +168,7 @@ export default class App extends React.Component<any, IAPPState> {
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeftBlur/>,
             main: () => <BtcSendWindow stateSR={this.setStateSR} course={this.state.BTCCourse}
-                                       btcBalance={this.state.BTCBalance} trFee = {this.state.transactionFee}
+                                       btcBalance={this.state.BTCBalance} trFee={this.state.transactionFee}
                                        setFee={this.setTransactionFee}/>
         },
         {
@@ -181,7 +184,7 @@ export default class App extends React.Component<any, IAPPState> {
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeftBlur/>,
             main: () => <LtcSendWindow stateSR={this.setStateSR} course={this.state.LTCCourse}
-                                       btcBalance={this.state.LTCBalance} trFee = {this.state.transactionFee}
+                                       btcBalance={this.state.LTCBalance} trFee={this.state.transactionFee}
                                        setFee={this.setTransactionFee}/>
         },
         {
@@ -197,7 +200,7 @@ export default class App extends React.Component<any, IAPPState> {
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeftBlur/>,
             main: () => <EthSendWindow stateSR={this.setStateSR} course={this.state.ETHCourse}
-                                       btcBalance={this.state.ETHBalance} trFee = {this.state.transactionFee}
+                                       btcBalance={this.state.ETHBalance} trFee={this.state.transactionFee}
                                        setFee={this.setTransactionFee}/>
         },
         {
@@ -213,7 +216,7 @@ export default class App extends React.Component<any, IAPPState> {
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeftBlur/>,
             main: () => <XrpSendWindow stateSR={this.setStateSR} course={this.state.XRPCourse}
-                                       btcBalance={this.state.XRPBalance} trFee = {this.state.transactionFee}
+                                       btcBalance={this.state.XRPBalance} trFee={this.state.transactionFee}
                                        setFee={this.setTransactionFee}/>
         },
         {
@@ -237,19 +240,23 @@ export default class App extends React.Component<any, IAPPState> {
                                          lastTxBTC={this.state.BTCLastTx.sort((a: any, b: any) => {
                                              let c = new Date(a.Date).getTime()
                                              let d = new Date(b.Date).getTime()
-                                             return d - c})}
+                                             return d - c
+                                         })}
                                          lastTxETH={this.state.ETHLastTx.sort((a: any, b: any) => {
                                              let c = new Date(a.Date).getTime()
                                              let d = new Date(b.Date).getTime()
-                                             return d - c})}
+                                             return d - c
+                                         })}
                                          lastTxLTC={this.state.LTCLastTx.sort((a: any, b: any) => {
                                              let c = new Date(a.Date).getTime()
                                              let d = new Date(b.Date).getTime()
-                                             return d - c})}
+                                             return d - c
+                                         })}
                                          lastTxXRP={this.state.XRPLastTx.sort((a: any, b: any) => {
                                              let c = new Date(a.Date).getTime()
                                              let d = new Date(b.Date).getTime()
-                                             return d - c})}
+                                             return d - c
+                                         })}
             />
         },
 
@@ -339,9 +346,12 @@ export default class App extends React.Component<any, IAPPState> {
             SR: false,
             SideBarLeftState: 1,
             numTransactions: 0,
-            transactionFee: 2
+            transactionFee: 2,
+            chartBTC: [],
+            chartBTCc: [],
+            chartLen: 360
         }
- 
+
         this.resetRedirect = this.resetRedirect.bind(this)
         this.redirectToTransactionsuccess = this.redirectToTransactionsuccess.bind(this)
         this.parseETHTransactions = this.parseETHTransactions.bind(this)
@@ -370,18 +380,82 @@ export default class App extends React.Component<any, IAPPState> {
         this.setStateSR = this.setStateSR.bind(this)
         this.setNumTransactions = this.setNumTransactions.bind(this)
         this.setTransactionFee = this.setTransactionFee.bind(this)
+        this.setChartBTC = this.setChartBTC.bind(this)
+        this.setChartLen = this.setChartLen.bind(this)
     }
 
-    setTransactionFee(num: number)
-    {
-        this.setState({transactionFee:  num}, 
-            () => {console.log('FEE:  ', this.state.transactionFee)})
-        
+    setChartLen(len: number) {
+        this.setState({chartLen: len}, () => {
+            this.setChartBTCnoRequest(this.state.chartLen)
+        })
+
+    }
+
+    setChartBTCnoRequest(len: number) {
+        console.log(len)
+        this.setState({chartBTCc: []})
+
+        let arr = []
+        for (let index = 0; index < len; index++) {
+            let temp = this.state.chartBTC[365 - len + index]
+            arr.push(temp)
+        }
+
+        for (let index = 0; index < len; index++) {
+            this.setState({chartBTCc: [...this.state.chartBTCc, arr[index]]})
+        }
+        console.log(this.state.chartBTCc)
+    }
+
+    async setChartBTC() {
+        let currentDate = new Date()
+        let month = currentDate.getMonth() + 1
+        let monthStr: string
+        if (month < 10) {
+            monthStr = '0' + month.toString()
+        } else {
+            monthStr = month.toString()
+        }
+        let day = currentDate.getDate()
+        let dayStr: string
+        if (day < 10) {
+            dayStr = '0' + day.toString()
+        } else {
+            dayStr = day.toString()
+        }
+        let dataend = currentDate.getFullYear().toString() + '-' + monthStr + '-' + dayStr
+        let datastart = (currentDate.getFullYear() - 1).toString() + '-' + monthStr + '-' + dayStr
+
+        let arrData = await getChartBTC(dataend, datastart);
+        let arr = []
+
+        for (let index = 0; index < 365; index++) {
+            let dataN = new Date(Date.now() - 86400000 * (364 - index))
+            let dat = dataN.getDate().toString() + '.' + (dataN.getMonth() + 1).toString()
+            let temp = {date: dat, pv: arrData[index]}
+            arr.push(temp)
+        }
+
+        this.setState({chartBTC: []})
+
+        for (let index = 0; index < arr.length; index++) {
+            this.setState({chartBTC: [...this.state.chartBTC, arr[index]]})
+        }
+        this.setChartBTCnoRequest(this.state.chartLen)
+    }
+
+
+    setTransactionFee(num: number) {
+        this.setState({transactionFee: num},
+            () => {
+                console.log('FEE:  ', this.state.transactionFee)
+            })
+
     }
 
     setNumTransactions(num: number) {
         let old = this.state.numTransactions
-        this.setState({numTransactions:  old + num})
+        this.setState({numTransactions: old + num})
     }
 
 
@@ -470,7 +544,7 @@ export default class App extends React.Component<any, IAPPState> {
     connectionERROR() {
         this.setState({connection: false})
     }
-    
+
     getWalletInfo() {
         let interval = setInterval(async () => {
             try {
@@ -479,10 +553,10 @@ export default class App extends React.Component<any, IAPPState> {
                 info('GOT THIS DATA', data)
                 switch (data) {
                     case 0: {
-                       clearInterval(interval)
+                        clearInterval(interval)
                         info('SETTING WALLET STATUS 0')
 
-                            this.initAll()
+                        this.initAll()
 
                         this.setState({walletStatus: 0})
                         break
@@ -512,56 +586,58 @@ export default class App extends React.Component<any, IAPPState> {
     }
 
 
-
-        async componentDidMount() {
+    async componentDidMount() {
 
         info('APP PROPS:', this.props)
         info('APP:', App)
         pcsc.on('reader', async (reader) => {
             info('READER DETECTED', reader.name)
-                info('setting')
-                setReader(reader)
-                reader.on('status', (status) => {
-                    info('READER STATE', reader.state)
-                    let changes = reader.state ^ status.state
-                    info(status)
-                    if (changes) {
-                        if ((changes & reader.SCARD_STATE_EMPTY) && (status.state & reader.SCARD_STATE_EMPTY)) {
-                            info('ASD')
-                        } else if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
-                            info('card inserted')
-                            reader.connect({share_mode: reader.SCARD_SHARE_SHARED, protocol: reader.SCARD_PROTOCOL_T1}, async (err, protocol) => {
-                                if (err) {
-                                    info('ERROR OCCURED', err)
-                                    info(err)
-                                } else {
-                                    info('CONNECTED')
-                                    this.setState({connection: true})
+            info('setting')
+            setReader(reader)
+            reader.on('status', (status) => {
+                info('READER STATE', reader.state)
+                let changes = reader.state ^ status.state
+                info(status)
+                if (changes) {
+                    if ((changes & reader.SCARD_STATE_EMPTY) && (status.state & reader.SCARD_STATE_EMPTY)) {
+                        info('ASD')
+                    } else if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
+                        info('card inserted')
+                        reader.connect({
+                            share_mode: reader.SCARD_SHARE_SHARED,
+                            protocol: reader.SCARD_PROTOCOL_T1
+                        }, async (err, protocol) => {
+                            if (err) {
+                                info('ERROR OCCURED', err)
+                                info(err)
+                            } else {
+                                info('CONNECTED')
+                                this.setState({connection: true})
 
-                                    this.getWalletInfo()
-                                    /*reader.transmit(Buffer.from([0x00,0xA4,0x04,0x00,0x08,0x48,0x65,0x6C,0x6C, 0x6F, 0x41, 0x70, 0x70]), 4,2,(err,data) => {
-                                        if (err) {
-                                            info('ERROR IN APLET', err)
-                                        } else {
-                                            info('SETAPLET', data.toString('hex'))
-                                            reader.transmit(Buffer.from([0xB0,0x60,0x00,0x00,0x04,0x31,0x32,0x33,0x34]), 100,2,(err,data) => {
-                                                if (err) {
-                                                    info('ERROR IN SETPIN', err)
-                                                } else {
-                                                    info('SETPIN', data.toString('hex'))
+                                this.getWalletInfo()
+                                /*reader.transmit(Buffer.from([0x00,0xA4,0x04,0x00,0x08,0x48,0x65,0x6C,0x6C, 0x6F, 0x41, 0x70, 0x70]), 4,2,(err,data) => {
+                                    if (err) {
+                                        info('ERROR IN APLET', err)
+                                    } else {
+                                        info('SETAPLET', data.toString('hex'))
+                                        reader.transmit(Buffer.from([0xB0,0x60,0x00,0x00,0x04,0x31,0x32,0x33,0x34]), 100,2,(err,data) => {
+                                            if (err) {
+                                                info('ERROR IN SETPIN', err)
+                                            } else {
+                                                info('SETPIN', data.toString('hex'))
 
-                                                    this.getWalletInfo()
-                                                }
-                                            })
-                                        }
-                                    })*/
+                                                this.getWalletInfo()
+                                            }
+                                        })
+                                    }
+                                })*/
 
-                                    info('Protocol(', reader.name, '):', protocol)
-                                }
-                            })
-                        }
+                                info('Protocol(', reader.name, '):', protocol)
+                            }
+                        })
                     }
-                })
+                }
+            })
 
             reader.on('error', function (err) {
                 info('Error(', this.name, '):', err.message)
@@ -607,7 +683,7 @@ export default class App extends React.Component<any, IAPPState> {
     updateData() {
         info('REFRESHING')
         this.setState({numTransactions: 0})
-        this.getTransactions().then(this.getBalances).then(this.getRates)
+        this.getTransactions().then(this.getBalances).then(this.getRates).then(this.setChartBTC)
             .then(() => {
                 UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions)
             })
@@ -688,7 +764,7 @@ export default class App extends React.Component<any, IAPPState> {
                                 ETHCourse: Number(parsedValue[item].price_usd),
                                 ETHHourChange: Number(parsedValue[item].percent_change_1h)
                             })
-                            info('ETH PRICE',this.state.ETHPrice, this.state.ETHHourChange)
+                            info('ETH PRICE', this.state.ETHPrice, this.state.ETHHourChange)
                             break
                         }
                         case 'litecoin': {
@@ -806,7 +882,7 @@ export default class App extends React.Component<any, IAPPState> {
                         this.state.ETHLastTx[index].Status = Object(parsedTx).Status
                     }
                 }
-            }else{
+            } else {
                 this.setNumTransactions(1)
                 info('numTransaction: ', this.state.numTransactions)
             }
@@ -855,7 +931,7 @@ export default class App extends React.Component<any, IAPPState> {
 
     parseTransactionDataETH(transaction: any, ethAddress: string) {
         let date = new Date(transaction.timestamp * 1000)
-        let dateCell = date.getHours() + ':' + ((date.getMinutes() >= 10) ? date.getMinutes(): '0' + date.getMinutes()) + ' ' + ' ' + ' ' + date.getDate() + ' ' + (date.getMonth() + 1) + ' ' + date.getFullYear()
+        let dateCell = date.getHours() + ':' + ((date.getMinutes() >= 10) ? date.getMinutes() : '0' + date.getMinutes()) + ' ' + ' ' + ' ' + date.getDate() + ' ' + (date.getMonth() + 1) + ' ' + date.getFullYear()
         let amount = transaction.value
         let type = ''
         let hash = transaction.hash
@@ -884,7 +960,7 @@ export default class App extends React.Component<any, IAPPState> {
         let returnedObject = {}
         if (transaction.outgoing !== undefined) {
             let date = new Date(transaction.time * 1000)
-            let dateCell = date.getHours() + ':' + ((date.getMinutes() >= 10) ? date.getMinutes(): '0' + date.getMinutes()) + ' ' + ' ' + ' ' + date.getDate() + ' ' + (date.getMonth() + 1) + ' ' + date.getFullYear()
+            let dateCell = date.getHours() + ':' + ((date.getMinutes() >= 10) ? date.getMinutes() : '0' + date.getMinutes()) + ' ' + ' ' + ' ' + date.getDate() + ' ' + (date.getMonth() + 1) + ' ' + date.getFullYear()
             let amount = transaction.outgoing.outputs[0].value
             let address = transaction.outgoing.outputs[0].address
             let type = 'outgoing'
@@ -902,7 +978,7 @@ export default class App extends React.Component<any, IAPPState> {
             returnedObject = dataToPass
         } else {
             let date = new Date(transaction.time * 1000)
-            let dateCell = date.getHours() + ':' + ((date.getMinutes() >= 10) ? date.getMinutes(): '0' + date.getMinutes()) + ' ' + ' ' + ' ' + date.getDate() + ' ' + (date.getMonth() + 1) + ' ' + date.getFullYear()
+            let dateCell = date.getHours() + ':' + ((date.getMinutes() >= 10) ? date.getMinutes() : '0' + date.getMinutes()) + ' ' + ' ' + ' ' + date.getDate() + ' ' + (date.getMonth() + 1) + ' ' + date.getFullYear()
             let amount = transaction.incoming.value
             let address = transaction.incoming.inputs[0].address
             let type = 'incoming'

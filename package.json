@@ -94,6 +94,7 @@
     "react-router-redux": "^5.0.0-alpha.9",
     "react-table": "^6.8.0",
     "react-transition-group": "^2.3.0",
+    "recharts": "^1.5.0",
     "rlp": "^2.0.0",
     "satoshi-bitcoin": "^1.0.4",
     "tapable": "^1.0.0",

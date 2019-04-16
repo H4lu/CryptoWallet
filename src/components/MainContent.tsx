@@ -5,6 +5,7 @@ import {getBTCBalanceTarns} from "../API/cryptocurrencyAPI/BitCoin";
 import {getETHBalanceTrans} from "../API/cryptocurrencyAPI/Ethereum";
 import {getLTCBalanceTrans} from "../API/cryptocurrencyAPI/Litecoin";
 import {getXRPBalanceTrans} from "../API/cryptocurrencyAPI/Ripple";
+import Chart from "./Chart";
 
 interface IMainContent {
     exAddress: string,
@@ -35,6 +36,10 @@ export default class MainContent extends React.Component<any, IMainContent> {
         this.updateStateTransXRP = this.updateStateTransXRP.bind(this)
         this.handleUpdateDataClick = this.handleUpdateDataClick.bind(this)
         this.handleAddressChange = this.handleAddressChange.bind(this)
+        this.month1 = this.month1.bind(this)
+        this.month3 = this.month3.bind(this)
+        this.month6 = this.month6.bind(this)
+        this.month12 = this.month12.bind(this)
         this.ex_button = this.ex_button.bind(this)
 
         this.classBTC = 'click_img_BTC'
@@ -43,6 +48,19 @@ export default class MainContent extends React.Component<any, IMainContent> {
         this.classXRP = 'img_XRP'
         this.classActive = 'ex_BTC'
 
+    }
+
+    month1(){
+        this.props.setChartLen(30)
+    }
+    month3(){
+        this.props.setChartLen(90)
+    }
+    month6(){
+        this.props.setChartLen(180)
+    }
+    month12(){
+        this.props.setChartLen(360)
     }
 
     handleAddressChange(e: any) {
@@ -239,6 +257,11 @@ export default class MainContent extends React.Component<any, IMainContent> {
                                 <p className='general_usd_balance'>{this.props.total}</p>
                             </div>
                             <div className='cryptoCurrency_chart'>
+                                <button className='month1' onClick={this.month1}/>
+                                <button className='month3' onClick={this.month3}/>
+                                <button className='month6' onClick={this.month6}/>
+                                <button className='month12' onClick={this.month12}/>
+                                <Chart chartBTC = {this.props.chartBTC}/>
                             </div>
                         </div>
                     </div>
