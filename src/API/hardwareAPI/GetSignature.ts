@@ -1,55 +1,9 @@
 import { Buffer } from 'buffer'
 import { reader } from '../hardwareAPI/Reader'
 import { info } from 'electron-log'
-// import { getAnswer } from './GetAddress'
-import { UpdateHWStatusPCSC } from './UpdateHWStatus'
-import { getBalance, getBitcoinPubKey, getBTCPrice } from '../cryptocurrencyAPI/BitCoin'
-import { getETBalance, getETHPrice } from '../cryptocurrencyAPI/Ethereum'
-import { getLTalance,getLTCPrice } from '../cryptocurrencyAPI/Litecoin'
-import { getXRPalance, getXRPPrice } from '../cryptocurrencyAPI/Ripple'
+import {getBitcoinPubKey} from "../cryptocurrencyAPI/BitCoin";
 
-// export function sig(id: number, address: string, amount: number): Promise<Buffer> {
-//   return new Promise((resolve, reject) => {
-//     if (address.length !== 34 && id !== 1) {
-//       address = address + '0'
-//     }
 
-//     let amountBuf = new Buffer(16)
-//     amountBuf.write(amount.toString(),0,amount.toString().length, 'ascii')
-//     let code = 33
-//     let message = Buffer.concat([Buffer.from([0xB0,0x40,0x00]),Buffer.from([0x01]),Buffer.from([0x60]),Buffer.from([code]),Buffer.from([id]),amountBuf,Buffer.from(address)])
-//     info('MESSAGE TO SEND',message)
-//     getAnswer(id).then(data => info(data)).catch((err: any) => info(err))
-//     reader.transmit(message, 4,2, async (err: any,data: any) => {
-//       if (err) {
-//         info(err)
-//         reject(err)
-//       } else {
-//         info(data)
-//         let status = false
-//         let timeout = setTimeout(async () => {
-//           clearTimeout(timeout)
-//           while (!status) {
-//             let res = await getAnswer(id)
-//             info('GOT PRIVATE RESP', res)
-//             info('TO HEX', res.toString('hex'))
-//             info(res[35])
-//             if (res[35] === 33) {
-//               status = true
-//               getAnswer(id).then(data => info(data)).catch(err => info(err))
-//              // UpdateHWStatusPCSC(getBalance(),getBTCPrice(),getETBalance(),getETHPrice(),getLTalance(),getLTCPrice(),getXRPalance(),getXRPPrice(),getNumTransactions())
-//               resolve(res)
-//             } else if (res[35] === 63) {
-//               status = true
-//               reject()
-//             }
-//           }
-//         },1000 ,[])
-//       }
-//     })
-//   })
-
-// }
 export function getSignaturePCSC(id: number, message: Array<Buffer>, address: string, amount: number, numberOfInputs: number, course: number, fee: number,balance: number): Promise<Array<Buffer>> {
   info('inputs length', numberOfInputs)
   return new Promise((resolve, reject) => {
@@ -130,10 +84,8 @@ export function getSignaturePCSC(id: number, message: Array<Buffer>, address: st
 }
 
 function sendDataMessage(inputNumber: Buffer, currencyId: Buffer, hash: Buffer): Promise<Buffer> {
-  info('GOT THIS INPUT NUMBER: ' + inputNumber)
-  info('GOT THIS CURRENCY ID: ' + currencyId)
-   info('41: ', Buffer.concat([Buffer.from([0xb0,0x41]),Buffer.from(inputNumber), Buffer.from(currencyId), Buffer.from([0x20]), Buffer.from(hash)]).toString('hex'))
-  return new Promise((resolve, reject) => {
+
+ return new Promise((resolve, reject) => {
     reader.transmit(Buffer.concat([Buffer.from([0xb0,0x41]),Buffer.from(inputNumber), Buffer.from(currencyId), Buffer.from([0x20]), Buffer.from(hash)]), 110, 2, (err, data) => {
       if (err) {
         info('ERROR IN SEND HASH',err)

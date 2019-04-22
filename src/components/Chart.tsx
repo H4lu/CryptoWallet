@@ -5,13 +5,14 @@ import {
 
 
 
-
 export default class Chart extends React.PureComponent<any, any> {
 
     constructor(props: any) {
         super(props)
 
     }
+
+
 
     render() {
         return (

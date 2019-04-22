@@ -42,7 +42,7 @@ import {reader, setReader} from '../API/hardwareAPI/Reader'
 
 let pcsc = new pcsclite()
 import {getInfoPCSC} from '../API/hardwareAPI/GetWalletInfo'
-import {UpdateHWStatusPCSC} from '../API/hardwareAPI/UpdateHWStatus'
+import {UpdateHWStatusPCSC, updateTransactionsPCSC} from '../API/hardwareAPI/UpdateHWStatus'
 import {SidebarLeft} from "../components/SidebarLeft";
 import {BtcRecieveWindow} from "../components/BtcRecieveWindow";
 import {BtcSendWindow} from "../components/BtcSendWindow";
@@ -104,12 +104,12 @@ interface IAPPState {
     numTransactions: number,
     transactionFee: number,
     chartBTC: Array<any>,
-    chartBTCc: Array<any>,
     chartLen: number
 }
 
 
 export default class App extends React.Component<any, IAPPState> {
+
     routes = [
         {
             path: '/main',
@@ -138,7 +138,8 @@ export default class App extends React.Component<any, IAPPState> {
                                          return d - c
                                      })} transactions={this.getTransactions}
                                      refresh={this.updateData} stateSR={this.setStateSR}
-                                     chartBTC={this.state.chartBTCc} setChartLen={this.setChartLen}/>
+                                     chartBTC={this.state.chartBTC} setChartLen={this.setChartLen}
+                                      chartLen={this.state.chartLen} />
         },
         {
             path: '/mode-window',
@@ -348,7 +349,6 @@ export default class App extends React.Component<any, IAPPState> {
             numTransactions: 0,
             transactionFee: 2,
             chartBTC: [],
-            chartBTCc: [],
             chartLen: 360
         }
 
@@ -385,27 +385,9 @@ export default class App extends React.Component<any, IAPPState> {
     }
 
     setChartLen(len: number) {
-        this.setState({chartLen: len}, () => {
-            this.setChartBTCnoRequest(this.state.chartLen)
-        })
-
+        this.setState({chartLen: len})
     }
 
-    setChartBTCnoRequest(len: number) {
-        console.log(len)
-        this.setState({chartBTCc: []})
-
-        let arr = []
-        for (let index = 0; index < len; index++) {
-            let temp = this.state.chartBTC[365 - len + index]
-            arr.push(temp)
-        }
-
-        for (let index = 0; index < len; index++) {
-            this.setState({chartBTCc: [...this.state.chartBTCc, arr[index]]})
-        }
-        console.log(this.state.chartBTCc)
-    }
 
     async setChartBTC() {
         let currentDate = new Date()
@@ -428,20 +410,66 @@ export default class App extends React.Component<any, IAPPState> {
 
         let arrData = await getChartBTC(dataend, datastart);
         let arr = []
-
         for (let index = 0; index < 365; index++) {
             let dataN = new Date(Date.now() - 86400000 * (364 - index))
-            let dat = dataN.getDate().toString() + '.' + (dataN.getMonth() + 1).toString()
+            let mon: string
+            switch (dataN.getMonth() + 1){
+                case 1:{
+                    mon = 'jan'
+                    break
+                }
+                case 2:{
+                    mon = 'feb'
+                    break
+                }
+                case 3:{
+                    mon = 'mar'
+                    break
+                }
+                case 4:{
+                    mon = 'apr'
+                    break
+                }
+                case 5:{
+                    mon = 'may'
+                    break
+                }
+                case 6:{
+                    mon = 'jun'
+                    break
+                }
+                case 7:{
+                    mon = 'jul'
+                    break
+                }
+                case 8:{
+                    mon = 'aug'
+                    break
+                }
+                case 9:{
+                    mon = 'sep'
+                    break
+                }
+                case 10:{
+                    mon = 'oct'
+                    break
+                }
+                case 11:{
+                    mon = 'nov'
+                    break
+                }
+                case 12:{
+                    mon = 'dec'
+                    break
+                }
+            }
+            let dat = dataN.getDate().toString() + '.' + mon
             let temp = {date: dat, pv: arrData[index]}
             arr.push(temp)
         }
-
-        this.setState({chartBTC: []})
-
-        for (let index = 0; index < arr.length; index++) {
+        for (let index = 0; index < 365; index++) {
             this.setState({chartBTC: [...this.state.chartBTC, arr[index]]})
         }
-        this.setChartBTCnoRequest(this.state.chartLen)
     }
 
 
@@ -665,7 +693,7 @@ export default class App extends React.Component<any, IAPPState> {
             initBitcoinAddress().then(initEthereumAddress).then(initLitecoinAddress).then(initRippleAddress).then(this.getRates).then(this.getBalances).then(this.getTransactions).then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions)).then(() => {
                 this.setRedirectToMain()
                 this.setValues()
-            }).then(this.updateData)
+            }).then(this.updateData).then(this.setChartBTC).then(() =>updateTransactionsPCSC(this.state.BTCLastTx, this.state.ETHLastTx,this.state.LTCLastTx,this.state.XRPLastTx))
         }
     }
 
@@ -683,11 +711,13 @@ export default class App extends React.Component<any, IAPPState> {
     updateData() {
         info('REFRESHING')
         this.setState({numTransactions: 0})
-        this.getTransactions().then(this.getBalances).then(this.getRates).then(this.setChartBTC)
+        this.getTransactions().then(this.getBalances).then(this.getRates)
             .then(() => {
                 UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions)
             })
     }
+
+
 
     changeBalance(currency: string, amount: number) {
         switch (currency) {
@@ -944,6 +974,7 @@ export default class App extends React.Component<any, IAPPState> {
         }
         let status = transaction.success ? 'Finished' : 'Active'
         let returnedObject = {
+            DateUnix: date,
             Date: dateCell,
             Currency: 'ETH',
             Amount: amount,
@@ -967,6 +998,7 @@ export default class App extends React.Component<any, IAPPState> {
             let status = (transaction.confirmations === 0) ? 'Active' : 'Finished'
             let hash = transaction.txid
             let dataToPass = {
+                DateUnix: date,
                 Date: dateCell,
                 Currency: currency,
                 Amount: amount,
@@ -985,6 +1017,7 @@ export default class App extends React.Component<any, IAPPState> {
             let status = (transaction.confirmations === 0) ? 'Active' : 'Finished'
             let hash = transaction.txid
             let dataToPass = {
+                DateUnix: date,
                 Date: dateCell,
                 Currency: currency,
                 Amount: amount,

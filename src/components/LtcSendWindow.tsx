@@ -37,16 +37,16 @@ export class LtcSendWindow extends React.Component<any, ILTCSendState> {
             amount: 0,
             fee: (431 * 20 * this.props.trFee) / 100000000,
             usd: 0,
-            feeUSD: this.props.course * (431 * 20 * this.props.trFee) / 100000000,
+            feeUSD: this.props.course * (431 * 40 * this.props.trFee) / 100000000,
             balance: this.props.btcBalance,
             balanceUSD: this.props.btcBalance * this.props.course,
-            maxSum: this.props.btcBalance - (431 * 20 * this.props.trFee) / 100000000,
+            maxSum: this.props.btcBalance - (431 * 40 * this.props.trFee) / 100000000,
             amountS: ''
         }
         this.handleAddressChange = this.handleAddressChange.bind(this)
         this.handleAmountChange = this.handleAmountChange.bind(this)
         this.handleClick = this.handleClick.bind(this)
-        this.setState({feeUSD: (this.props.course * (431 * 20 * this.props.trFee) / 100000000)})
+        this.setState({feeUSD: (this.props.course * (431 * 40 * this.props.trFee) / 100000000)})
         this.strSum = ''
         this.point = 0
         this.setMax = this.setMax.bind(this)
@@ -103,9 +103,9 @@ export class LtcSendWindow extends React.Component<any, ILTCSendState> {
 
     setMax() {
         this.strSum = this.state.maxSum.toFixed(6).toString()
-        this.setState({amount: this.state.maxSum})
+        this.setState({amount: (Math.floor(this.state.maxSum*1000000)/1000000)})
         this.setState({usd: (Number(this.state.maxSum) * this.props.course)})
-        this.setState({amountS: this.state.maxSum.toFixed(6).toString()})
+        this.setState({amountS: (Math.floor(this.state.maxSum*1000000)/1000000).toString()})
     }
 
     changeFee1() {

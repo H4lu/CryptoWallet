@@ -11,6 +11,7 @@ interface IMainContent {
     exAddress: string,
     balance: string,
     transactions: string
+
 }
 
 export default class MainContent extends React.Component<any, IMainContent> {
@@ -19,6 +20,7 @@ export default class MainContent extends React.Component<any, IMainContent> {
     classLTC: string;
     classXRP: string;
     classActive: string;
+
 
     constructor(props: any) {
         super(props)
@@ -29,17 +31,13 @@ export default class MainContent extends React.Component<any, IMainContent> {
         }
 
         this.props.stateSR(false)
-        this.handleClick = this.handleClick.bind(this)
         this.updateStateTransBTC = this.updateStateTransBTC.bind(this)
         this.updateStateTransETH = this.updateStateTransETH.bind(this)
         this.updateStateTransLTC = this.updateStateTransLTC.bind(this)
         this.updateStateTransXRP = this.updateStateTransXRP.bind(this)
         this.handleUpdateDataClick = this.handleUpdateDataClick.bind(this)
         this.handleAddressChange = this.handleAddressChange.bind(this)
-        this.month1 = this.month1.bind(this)
-        this.month3 = this.month3.bind(this)
-        this.month6 = this.month6.bind(this)
-        this.month12 = this.month12.bind(this)
+
         this.ex_button = this.ex_button.bind(this)
 
         this.classBTC = 'click_img_BTC'
@@ -50,18 +48,7 @@ export default class MainContent extends React.Component<any, IMainContent> {
 
     }
 
-    month1(){
-        this.props.setChartLen(30)
-    }
-    month3(){
-        this.props.setChartLen(90)
-    }
-    month6(){
-        this.props.setChartLen(180)
-    }
-    month12(){
-        this.props.setChartLen(360)
-    }
+
 
     handleAddressChange(e: any) {
         this.setState({exAddress: e.target.value})
@@ -95,7 +82,6 @@ export default class MainContent extends React.Component<any, IMainContent> {
                     this.setState({balance: (arr[0]).toString() + ' LTC'})
                     this.setState({transactions: (arr[1]).toString()})
                     break
-                    break
                 }
             }
         }
@@ -105,9 +91,6 @@ export default class MainContent extends React.Component<any, IMainContent> {
         this.props.refresh()
     }
 
-    handleClick() {
-        this.props.refresh()
-    }
 
     componentDidMount() {//TODO maybe avoid implicit call of updateState<curr_name>
         let activeCurrency: string = this.props.getActiveCurrency()
@@ -257,10 +240,6 @@ export default class MainContent extends React.Component<any, IMainContent> {
                                 <p className='general_usd_balance'>{this.props.total}</p>
                             </div>
                             <div className='cryptoCurrency_chart'>
-                                <button className='month1' onClick={this.month1}/>
-                                <button className='month3' onClick={this.month3}/>
-                                <button className='month6' onClick={this.month6}/>
-                                <button className='month12' onClick={this.month12}/>
                                 <Chart chartBTC = {this.props.chartBTC}/>
                             </div>
                         </div>
