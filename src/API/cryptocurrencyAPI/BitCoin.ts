@@ -255,73 +255,79 @@ async function createTransaction(paymentAdress: string,
 
         /***************parsing***************/
         let dataForHashB = Buffer.from(dataForHash, 'hex')
-        let dataToParsing = []
+        let dataToParsing40 = []
+        let dataToParsing41 = []
         let len_data = 5
-        let len_parsing = 0
+        let len_parsing40 = 0
+        let len_parsing41 = 0
+
         let numInput = dataForHashB[4];
-        dataToParsing[len_parsing] = numInput
-        len_parsing +=1
+        dataToParsing41[len_parsing41] = numInput
+        len_parsing41 +=1
         let courseP = Math.floor(course);
         for(let i = 0; i < 4; i++)
         {
-            dataToParsing[i + len_parsing] = courseP%256
+            dataToParsing40[i + len_parsing40] = courseP%256
             courseP= Math.floor(courseP>>8)
         }
-        len_parsing +=4
+        len_parsing40 +=4
         let feeP = fee
-        for(let i = 0; i < 8; i++)
+        for(let i = 0; i < 4; i++)
         {
-            dataToParsing[i + len_parsing] = feeP%256
+            dataToParsing40[i + len_parsing40] = feeP%256
             feeP = Math.floor(feeP>>8)
         }
-        len_parsing +=8
+        len_parsing40 +=4
         let balanceP = balance*100000000
         for(let i = 0; i < 8; i++)
         {
-            dataToParsing[i + len_parsing] = balanceP%256
+            dataToParsing40[i + len_parsing40] = balanceP%256
             balanceP= Math.floor(balanceP>>8)
         }
-        len_parsing +=8
+        len_parsing40 +=8
 
 
         for (let i = 0; i < 36; i++) //first input hash+numout - 32+4 bytes
         {
-            dataToParsing[len_parsing + i] = dataForHashB[len_data+i]
+            dataToParsing41[len_parsing41 + i] = dataForHashB[len_data+i]
         }
-        len_parsing +=36
+        len_parsing41 +=36
         len_data +=36
-        len_data +=30
+        len_data +=4 + 1 + dataForHashB[len_data]
         for (let i = 0; i < numInput-1; i++)
         {
             for (let j = 0; j < 36; j++) //first input hash+numout - 32+4 bytes
             {
-                dataToParsing[len_parsing + j] = dataForHashB[len_data + j]
+                dataToParsing41[len_parsing41 + j] = dataForHashB[len_data + j]
             }
-            len_parsing +=36
+            len_parsing41 +=36
             len_data+=41
         }
-        dataToParsing[len_parsing] = dataForHashB[len_data]
-        let numOutput = dataForHashB[len_data];
-        len_parsing +=1
+
         len_data+=1
-        for (let i = 0; i < numOutput; i++) {
+
+        for (let i = 0; i < 2; i++) {
             for (let j = 0; j < 8; j++) //first input hash+numout - 32+4 bytes
             {
-                dataToParsing[len_parsing + j] = dataForHashB[len_data + j]
+                dataToParsing40[len_parsing40 + j] = dataForHashB[len_data + j]
             }
-            len_parsing +=8
+            len_parsing40 +=8
             len_data+=8
             let lenAddr = dataForHashB[len_data]+1
             for (let j = 0; j < lenAddr; j++) //first input hash+numout - 32+4 bytes
             {
-                dataToParsing[len_parsing + j] = dataForHashB[len_data + j]
+                dataToParsing40[len_parsing40 + j] = dataForHashB[len_data + j]
             }
-            len_parsing +=lenAddr
+            len_parsing40 +=lenAddr
             len_data+=lenAddr
         }
 
-        console.log('len_parsing', len_parsing)
-        console.log('parsing_data', Buffer.from(dataToParsing).toString('hex'))
+        console.log('len_parsing40', len_parsing40)
+        console.log('parsing_data40', Buffer.from(dataToParsing40).toString('hex'))
+
+        console.log('len_parsing41', len_parsing41)
+        console.log('parsing_data41', Buffer.from(dataToParsing41).toString('hex'))
+
         /***************parsing***************/
 
         let firstHash = crypto.createHash('sha256').update(Buffer.from(dataForHash, 'hex')).digest('hex')

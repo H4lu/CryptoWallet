@@ -7,8 +7,8 @@
   "description": "CET CryptoWallet application",
   "devDependencies": {
     "@types/chai": "^4.1.7",
-    "@types/mocha": "^5.2.5",
     "@types/jest": "^21.1.5",
+    "@types/mocha": "^5.2.5",
     "@types/node-fetch": "^1.6.7",
     "@types/react": "^16.0.22",
     "@types/react-dom": "^16.0.4",
@@ -24,7 +24,7 @@
     "clean-webpack-plugin": "^1.0.0",
     "css-loader": "^0.28.8",
     "electron": "^3.0.10",
-    "electron-builder": "^20.38.0",
+    "electron-builder": "^20.40.2",
     "electron-devtools-installer": "^2.2.3",
     "electron-log": "^2.2.14",
     "electron-rebuild": "^1.7.3",

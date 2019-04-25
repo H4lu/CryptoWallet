@@ -212,81 +212,111 @@ async function createTransaction(paymentAdress: string,
     info('Utxo script: ' + Object(utxos[index]).script_hex)
     let dataForHash = ReplaceAt(unbuildedTx + '01000000', '00000000ff', '00000019' + Object(utxos[index]).script_hex + 'ff', unbuildedTx.indexOf('00000000ff', lastIndex), unbuildedTx.indexOf('00000000ff', lastIndex) + 50)
     console.log('DATA FOR HASH: ', dataForHash)
-      /***************parsing***************/
 
+      /************sha256******************/
+        let buf = Buffer.from(dataForHash, 'hex')
+        let len_buf = buf.length
+        let part64 = Math.ceil(len_buf/64)
+        let buf1 = []
+        for(let i = 0; i<(part64-2)*64; i++)
+        {
+            buf1[i] = buf[i]
+        }
+        let buf2 = []
+      for(let i = (part64-2)*64; i<len_buf; i++)
+      {
+          buf2[i - (part64-2)*64] = buf[i]
+      }
+      let forHashbuf = Buffer.from(buf1)
+
+      let first_Hash = crypto.createHash('sha256').update(forHashbuf).digest('hex')
+      console.log('first prat hash: ', first_Hash)
+      console.log('second_ part', Buffer.from(buf2).toString('hex'))
+      console.log( 'len2', len_buf - (part64-2)*64)
+
+
+      /************sha256******************/
+
+      /***************parsing***************/
       let dataForHashB = Buffer.from(dataForHash, 'hex')
-      let dataToParsing = []
+      let dataToParsing40 = []
+      let dataToParsing41 = []
       let len_data = 5
-      let len_parsing = 0
+      let len_parsing40 = 0
+      let len_parsing41 = 0
+
       let numInput = dataForHashB[4];
-      dataToParsing[len_parsing] = numInput
-      len_parsing +=1
+
       let courseP = Math.floor(course);
       for(let i = 0; i < 4; i++)
       {
-          dataToParsing[i + len_parsing] = courseP%256
+          dataToParsing40[i + len_parsing40] = courseP%256
           courseP= Math.floor(courseP>>8)
       }
-      len_parsing +=4
+      len_parsing40 +=4
       let feeP = fee
-      for(let i = 0; i < 8; i++)
+      for(let i = 0; i < 4; i++)
       {
-          dataToParsing[i + len_parsing] = feeP%256
+          dataToParsing40[i + len_parsing40] = feeP%256
           feeP = Math.floor(feeP>>8)
       }
-      len_parsing +=8
+      len_parsing40 +=4
       let balanceP = balance*100000000
       for(let i = 0; i < 8; i++)
       {
-          dataToParsing[i + len_parsing] = balanceP%256
+          dataToParsing40[i + len_parsing40] = balanceP%256
           balanceP= Math.floor(balanceP>>8)
       }
-      len_parsing +=8
+      len_parsing40 +=8
 
 
       for (let i = 0; i < 36; i++) //first input hash+numout - 32+4 bytes
       {
-          dataToParsing[len_parsing + i] = dataForHashB[len_data+i]
+          dataToParsing41[len_parsing41 + i] = dataForHashB[len_data+i]
       }
-      len_parsing +=36
+      len_parsing41 +=36
       len_data +=36
-      len_data +=30
+      len_data +=4 + 1 + dataForHashB[len_data]
       for (let i = 0; i < numInput-1; i++)
       {
           for (let j = 0; j < 36; j++) //first input hash+numout - 32+4 bytes
           {
-              dataToParsing[len_parsing + j] = dataForHashB[len_data + j]
+              dataToParsing41[len_parsing41 + j] = dataForHashB[len_data + j]
           }
-          len_parsing +=36
+          len_parsing41 +=36
           len_data+=41
       }
-      dataToParsing[len_parsing] = dataForHashB[len_data]
-      let numOutput = dataForHashB[len_data];
-      len_parsing +=1
+
       len_data+=1
-      for (let i = 0; i < numOutput; i++) {
-          for (let j = 0; j < 8; j++) //first input hash+numout - 32+4 bytes
+
+      for (let i = 0; i < 2; i++) {
+          for (let j = 0; j < 8; j++)
           {
-              dataToParsing[len_parsing + j] = dataForHashB[len_data + j]
+              dataToParsing40[len_parsing40 + j] = dataForHashB[len_data + j]
           }
-          len_parsing +=8
+          len_parsing40 +=8
           len_data+=8
           let lenAddr = dataForHashB[len_data]+1
-          for (let j = 0; j < lenAddr; j++) //first input hash+numout - 32+4 bytes
+          for (let j = 0; j < lenAddr; j++)
           {
-              dataToParsing[len_parsing + j] = dataForHashB[len_data + j]
+              dataToParsing40[len_parsing40 + j] = dataForHashB[len_data + j]
           }
-          len_parsing +=lenAddr
+          len_parsing40 +=lenAddr
           len_data+=lenAddr
       }
 
-      console.log('len_parsing', len_parsing)
-      console.log('parsing_data', Buffer.from(dataToParsing).toString('hex'))
+      console.log('len_parsing40', len_parsing40)
+      console.log('parsing_data40', Buffer.from(dataToParsing40).toString('hex'))
+
+      console.log('len_parsing41', len_parsing41)
+      console.log('parsing_data41', Buffer.from(dataToParsing41).toString('hex'))
 
       /***************parsing***************/
+
     let firstHash = crypto.createHash('sha256').update(Buffer.from(dataForHash, 'hex')).digest('hex')
     let secondHash = crypto.createHash('sha256').update(Buffer.from(firstHash, 'hex')).digest('hex')
-    console.log('SECOND HASH: ', secondHash)
+      console.log('FIRST HASH: ', firstHash)
+      console.log('SECOND HASH: ', secondHash)
     let sigIndex = unbuildedTx.indexOf('00000000ff', lastIndex)
     info(sigIndex)
     lastIndex += 90

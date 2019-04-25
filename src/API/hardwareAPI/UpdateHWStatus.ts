@@ -148,7 +148,6 @@ export async function updateTransactionsPCSC(txBTC: Array<any>, txETH: Array<any
         } else {
             type[0] = 0x00
         }
-        console.log('txBTC.Type ', txBTC[index].Type, '  ', type)
 
         let status = new Buffer(1)
         if (txBTC[index].Status === 'Finished') {
@@ -156,16 +155,12 @@ export async function updateTransactionsPCSC(txBTC: Array<any>, txETH: Array<any
         } else {
             status[0] = 0x00
         }
-        console.log('txBTC[index].Status ', txBTC[index].Status, '  ', status)
-
         let unixTime = new Buffer(4)
         let time = txBTC[index].DateUnix
         for (let i = 0; i < 4; i++) {
             unixTime[3 - i] = time % 256
             time = (time - time % 256) / 256
         }
-
-        console.log('txBTC[index].DateUnix ', txBTC[index].DateUnix, '  ', unixTime)
 
         let amount = new Buffer(8)
         let tempI = Math.floor(txBTC[index].Amount)
@@ -177,16 +172,99 @@ export async function updateTransactionsPCSC(txBTC: Array<any>, txETH: Array<any
             amount[7 - i] = tempF % 256
             tempF = (tempF - tempF % 256) / 256
         }
-        console.log('txBTC[index].Amount ', txBTC[index].Amount, '  ', amount)
 
 
         let address = Buffer.from(txBTC[index].Address)
-        console.log('txBTC[index].Address ', txBTC[index].Address, '  ', address)
+        let len = address.length
+        len = len + 15
+
+        arrTx.push(Buffer.concat([Buffer.from([0xB0, 0x90, 0x00, 0x00, len]), code, type, status, unixTime, amount, address]))
+    }
+
+    for (let index in txETH) {
+        let code = Buffer.from([0x01])
+
+        let type = new Buffer(1)
+        if (txETH[index].Type === 'incoming') {
+            type[0] = 0x01
+        } else {
+            type[0] = 0x00
+        }
+
+        let status = new Buffer(1)
+        if (txETH[index].Status === 'Finished') {
+            status[0] = 0x01
+        } else {
+            status[0] = 0x00
+        }
+
+        let unixTime = new Buffer(4)
+        let time = txETH[index].DateUnix
+        for (let i = 0; i < 4; i++) {
+            unixTime[3 - i] = time % 256
+            time = (time - time % 256) / 256
+        }
+
+        let amount = new Buffer(8)
+        let tempI = Math.floor(txETH[index].Amount)
+        let tempF = (txETH[index].Amount - tempI) * 100000000
+        for (let i = 0; i < 4; i++) {
+            amount[3 - i] = tempI % 256
+            tempI = (tempI - tempI % 256) / 256
+
+            amount[7 - i] = tempF % 256
+            tempF = (tempF - tempF % 256) / 256
+        }
+
+        let address = Buffer.from(txETH[index].Address)
 
         let len = address.length
         len = len + 15
 
-        arrTx.push(Buffer.concat([Buffer.from([0xB0, 0x90, 0x00, 0x00]), code, type, status, unixTime, amount, address, Buffer.from([len])]))
+        arrTx.push(Buffer.concat([Buffer.from([0xB0, 0x90, 0x00, 0x00, len]), code, type, status, unixTime, amount, address]))
+    }
+
+    for (let index in txLTC) {
+        let code = Buffer.from([0x02])
+
+        let type = new Buffer(1)
+        if (txLTC[index].Type === 'incoming') {
+            type[0] = 0x01
+        } else {
+            type[0] = 0x00
+        }
+
+        let status = new Buffer(1)
+        if (txLTC[index].Status === 'Finished') {
+            status[0] = 0x01
+        } else {
+            status[0] = 0x00
+        }
+
+        let unixTime = new Buffer(4)
+        let time = txLTC[index].DateUnix
+        for (let i = 0; i < 4; i++) {
+            unixTime[3 - i] = time % 256
+            time = (time - time % 256) / 256
+        }
+
+        let amount = new Buffer(8)
+        let tempI = Math.floor(txLTC[index].Amount)
+        let tempF = (txLTC[index].Amount - tempI) * 100000000
+        for (let i = 0; i < 4; i++) {
+            amount[3 - i] = tempI % 256
+            tempI = (tempI - tempI % 256) / 256
+
+            amount[7 - i] = tempF % 256
+            tempF = (tempF - tempF % 256) / 256
+        }
+
+        let address = Buffer.from(txLTC[index].Address)
+
+        let len = address.length
+        len = len + 15
+
+        arrTx.push(Buffer.concat([Buffer.from([0xB0, 0x90, 0x00, 0x00, len]), code, type, status, unixTime, amount, address]))
     }
 
     for (let i = 0; i < arrTx.length; i++) {
