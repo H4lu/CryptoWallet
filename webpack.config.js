@@ -8,7 +8,10 @@ const threadLoader = require('thread-loader');
 
 
 const commonConfig = {
-
+  // mode: "development",
+  optimization: {
+    minimize: false
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js'
