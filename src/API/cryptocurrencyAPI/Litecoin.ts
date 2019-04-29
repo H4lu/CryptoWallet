@@ -2,7 +2,6 @@ import { TransactionBuilder, networks, Transaction, ECPair } from 'bitcoinjs-lib
 import * as Request from 'request'
 import * as webRequest from 'web-request'
 import * as utils from './utils'
-// import * as crypto from 'crypto'
 import { getAddressPCSC } from '../hardwareAPI/GetAddress'
 import {getSignaturePCSC } from '../hardwareAPI/GetSignature'
 import * as satoshi from 'satoshi-bitcoin'
@@ -17,6 +16,12 @@ const NETWORK = 'LTC'
 import Web3 from 'web3'
 import * as crypto from 'crypto'
 const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/960cbfb44af74f27ad0e4b070839158a'))
+
+
+import * as ffi from 'ffi'
+//import * as Path from 'path'
+//const path = Path.join(__dirname,'../..','lib_dll.dll')
+const libdll = ffi.Library('lib_dll', { 'get_data_for_sign_bl': ['int', ['string','int','string']] })
 
 let balance: number
 let price: number
@@ -214,31 +219,34 @@ async function createTransaction(paymentAdress: string,
     console.log('DATA FOR HASH: ', dataForHash)
 
       /************sha256******************/
-        let buf = Buffer.from(dataForHash, 'hex')
+     /*   let buf = Buffer.from(dataForHash, 'hex')
         let len_buf = buf.length
         let part64 = Math.ceil(len_buf/64)
-        let buf1 = []
-        for(let i = 0; i<(part64-2)*64; i++)
-        {
-            buf1[i] = buf[i]
-        }
+
         let buf2 = []
       for(let i = (part64-2)*64; i<len_buf; i++)
       {
           buf2[i - (part64-2)*64] = buf[i]
       }
-      let forHashbuf = Buffer.from(buf1)
 
-      let first_Hash = crypto.createHash('sha256').update(forHashbuf).digest('hex')
+
+     // let first_Hash = crypto.createHash('sha256').update(forHashbuf).digest('hex')
+      let first_Hash = hash(buf, (part64-2))
+
       console.log('first prat hash: ', first_Hash)
       console.log('second_ part', Buffer.from(buf2).toString('hex'))
       console.log( 'len2', len_buf - (part64-2)*64)
 
+      let LL = 2 + 32 + len_buf - (part64-2)*64
+      let hh1 = (part64-2)*64%256
+      let hh2 = ((part64-2)*64 - hh1)/256
+      let for41 = Buffer. concat([Buffer.from([LL]), Buffer.from([hh2]), Buffer.from([hh1]), Buffer.from(first_Hash, 'hex'), Buffer.from(buf2)])
+        console.log('for41 ', for41.toString('hex'))*/
 
       /************sha256******************/
 
       /***************parsing***************/
-      let dataForHashB = Buffer.from(dataForHash, 'hex')
+      /*let dataForHashB = Buffer.from(dataForHash, 'hex')
       let dataToParsing40 = []
       let dataToParsing41 = []
       let len_data = 5
@@ -310,7 +318,7 @@ async function createTransaction(paymentAdress: string,
 
       console.log('len_parsing41', len_parsing41)
       console.log('parsing_data41', Buffer.from(dataToParsing41).toString('hex'))
-
+*/
       /***************parsing***************/
 
     let firstHash = crypto.createHash('sha256').update(Buffer.from(dataForHash, 'hex')).digest('hex')
