@@ -223,6 +223,7 @@ async function createTransaction(paymentAdress: string,
         if (!outputs[out].address) {
             outputs[out].address = myAddr
         }
+
         transaction.addOutput(outputs[out].address, outputs[out].value)
     }
     let unbuildedTx = transaction.buildIncomplete().toHex()
