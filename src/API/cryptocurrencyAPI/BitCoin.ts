@@ -4,7 +4,6 @@ import * as webRequest from 'web-request'
  import { getSignaturePCSC } from '../hardwareAPI/GetSignature'
 import { getAddressPCSC } from '../hardwareAPI/GetAddress'
 import * as utils from './utils'
- import * as crypto from 'crypto'
 import * as satoshi from 'satoshi-bitcoin'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.bitcoin
@@ -16,7 +15,12 @@ let balance: number
 let price: number
 import { info } from 'electron-log'
 import {Buffer} from "buffer";
-//import isUint8Array =
+
+import * as ffi from 'ffi'
+// import * as Path from 'path'
+// const path = Path.join(__dirname,'../..','lib32.dll')
+const libdll = ffi.Library('lib32.dll', {'forSign': ['void', ['string', 'int', 'string']]})
+
 export function setBTCBalance(bal: number) {
   balance = bal
 }
@@ -26,20 +30,7 @@ export function getBalance() {
 export function setBTCPrice(priceToSet: number) {
   price = priceToSet
 }
-export function getBTCPrice() {
-  return price
-}
-export async function getBitcoinSmartBitBalance(): Promise<webRequest.Response<string>> {
 
-  let url = 'https://testnet-api.smartbit.com.au/v1/blockchain/address/' + myAddr
-  try {
-    const response = await webRequest.get(url)
-    info('RESPONSE OF SMARTBIT',response)
-    return (response)
-  } catch (error) {
-    return error
-  }
-}
 function parseValueCrypto(response: webRequest.Response<string>): Array<any> {
   let parsedResponse = JSON.parse(response.content).data
   let balance = Number(parsedResponse.confirmed_balance) + Number(parsedResponse.unconfirmed_balance)
@@ -82,8 +73,6 @@ export function setMyPubKey(pubKey: Buffer) {
     {
         myPubKey[i+1] = pubKey[i+1]
     }
-    info('MY PUBKEY BITCOIN FULL:', pubKey.toString('hex'))
-    info('MY PUBKEY BITCOIN     :', myPubKey.toString('hex'))
 }
 
 export default function getBitcoinAddress() {
@@ -114,14 +103,9 @@ export async function getFee() {
     info(error)
   }
 }
-// We`re Bob. Bob send`s BTC to Alice
+
 export async function getBTCBalance(): Promise<Array<any>> {
-    /* Задаём параметры запроса
-      Network - тип сети, testnet или mainnet
-      myAddr - наш адрес
-      0 - количество подтверждений транзакций
-    */
-    // rootURL + 'get_address_balance/' + myAddr
+
     let requestUrl = 'https://chain.so/api/v2/get_address_balance/' + NETWORK + '/' + myAddr + '/' + 0
 
     try {
@@ -215,23 +199,17 @@ async function getLastTransactionData(): Promise<any> {
 }
 
 async function createTransaction(paymentAdress: string,
-                                 transactionAmount: number,transactionFee: number, redirect: any, utxos: Array<any>, course: number, balance: number) {
-    info(redirect)
-    info('Tx amount: ' + transactionAmount)
-    info('FEE:  ', transactionFee)
+                                 transactionAmount: number, transactionFee: number, redirect: any, utxos: Array<any>, course: number, balance: number) {
     let targets = {
         address: paymentAdress,
         value: transactionAmount
     }
-    info('Got this utxos: ' + utxos)
-    let { inputs, outputs, fee } = coinSelect(utxos, targets, (25 * transactionFee))
-    info('Got this inputs: ' + inputs)
-    // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
-    info('FEE_coinSelect', fee)
+    let {inputs, outputs, fee} = coinSelect(utxos, targets, 35 * transactionFee)
+
+    console.log('FEE_coinSelect: ', fee)
     let transaction = new TransactionBuilder(network)
     for (let input in inputs) {
         transaction.addInput(inputs[input].txid, inputs[input].output_no)
-        info('Tx inputs: ' + transaction.inputs)
     }
     for (let out in outputs) {
         if (!outputs[out].address) {
@@ -247,123 +225,48 @@ async function createTransaction(paymentAdress: string,
         info('PROBABLY TX INPUT: ' + JSON.stringify(value))
     })
 
-    let hashArray: Array<Buffer> =[]
-    let lastIndex = 0
-    transaction.inputs.forEach(function(input, index) {
-        let dataForHash = ReplaceAt(unbuildedTx + '01000000', '00000000ff', '00000019' + Object(utxos[index]).script_hex + 'ff', unbuildedTx.indexOf('00000000ff', lastIndex), unbuildedTx.indexOf('00000000ff', lastIndex) + 50)
-        console.log('DATA FOR HASH: ', dataForHash)
+    let hashArray: Array<Buffer> = []
 
-        /***************parsing***************/
-        let dataForHashB = Buffer.from(dataForHash, 'hex')
-        let dataToParsing40 = []
-        let dataToParsing41 = []
-        let len_data = 5
-        let len_parsing40 = 0
-        let len_parsing41 = 0
+    let dataForHash = ReplaceAt(unbuildedTx + '01000000', '00000000ff', '00000019' + Object(utxos[0]).script_hex + 'ff', unbuildedTx.indexOf('00000000ff', 0), unbuildedTx.indexOf('00000000ff', 0) + 50)
+    console.log('DATA FOR HASH: ', dataForHash)
 
-        let numInput = dataForHashB[4];
-        dataToParsing41[len_parsing41] = numInput
-        len_parsing41 +=1
-        let courseP = Math.floor(course);
-        for(let i = 0; i < 4; i++)
-        {
-            dataToParsing40[i + len_parsing40] = courseP%256
-            courseP= Math.floor(courseP>>8)
+
+    /************ lib dll *****************/
+    let dataIn = Buffer.from(dataForHash, 'hex')
+    let lenData = dataIn.length
+    let numInputs = transaction.inputs.length
+    let num64 = Math.floor(lenData / 64) - 1
+    let lenEnd = lenData - num64 * 64
+    let lenMess = 32 + lenEnd
+
+    let dataOut = new Buffer(numInputs * lenMess)
+    libdll.forSign(dataIn, lenData, dataOut)
+    console.log('OUT: ', dataOut.toString('hex'))
+
+    for (let j = 0; j < numInputs; j++) {
+        let arr = new Array(lenMess)
+        for (let i = 0; i < lenMess; i++) {
+            arr[i] = dataOut[j * lenMess + i]
         }
-        len_parsing40 +=4
-        let feeP = fee
-        for(let i = 0; i < 4; i++)
-        {
-            dataToParsing40[i + len_parsing40] = feeP%256
-            feeP = Math.floor(feeP>>8)
-        }
-        len_parsing40 +=4
-        let balanceP = balance*100000000
-        for(let i = 0; i < 8; i++)
-        {
-            dataToParsing40[i + len_parsing40] = balanceP%256
-            balanceP= Math.floor(balanceP>>8)
-        }
-        len_parsing40 +=8
+        let LL = 2 + lenMess
+        let hh1 = num64 * 64 % 256
+        let hh2 = (num64 * 64 - hh1) / 256
+        let for41 = Buffer.concat([Buffer.from([LL]), Buffer.from([hh2]), Buffer.from([hh1]), Buffer.from(arr)])
+        console.log('for41 ', for41.toString('hex'))
 
+        hashArray.push(for41)
+    }
+    /************ lib dll ******************/
 
-        for (let i = 0; i < 36; i++) //first input hash+numout - 32+4 bytes
-        {
-            dataToParsing41[len_parsing41 + i] = dataForHashB[len_data+i]
-        }
-        len_parsing41 +=36
-        len_data +=36
-        len_data +=4 + 1 + dataForHashB[len_data]
-        for (let i = 0; i < numInput-1; i++)
-        {
-            for (let j = 0; j < 36; j++) //first input hash+numout - 32+4 bytes
-            {
-                dataToParsing41[len_parsing41 + j] = dataForHashB[len_data + j]
-            }
-            len_parsing41 +=36
-            len_data+=41
-        }
+    let data = await getSignaturePCSC(0, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.inputs.length, course, fee / 100000000, balance)
+    if (data[0].length !== 1) {
+        transaction.inputs.forEach((input, index) => {
 
-        len_data+=1
+            unbuildedTx = unbuildedTx.replace('00000000ff', '000000' + data[index].toString('hex') + 'ff')
 
-        for (let i = 0; i < 2; i++) {
-            for (let j = 0; j < 8; j++) //first input hash+numout - 32+4 bytes
-            {
-                dataToParsing40[len_parsing40 + j] = dataForHashB[len_data + j]
-            }
-            len_parsing40 +=8
-            len_data+=8
-            let lenAddr = dataForHashB[len_data]+1
-            for (let j = 0; j < lenAddr; j++) //first input hash+numout - 32+4 bytes
-            {
-                dataToParsing40[len_parsing40 + j] = dataForHashB[len_data + j]
-            }
-            len_parsing40 +=lenAddr
-            len_data+=lenAddr
-        }
-
-        console.log('len_parsing40', len_parsing40)
-        console.log('parsing_data40', Buffer.from(dataToParsing40).toString('hex'))
-
-        console.log('len_parsing41', len_parsing41)
-        console.log('parsing_data41', Buffer.from(dataToParsing41).toString('hex'))
-
-        /***************parsing***************/
-
-        let firstHash = crypto.createHash('sha256').update(Buffer.from(dataForHash, 'hex')).digest('hex')
-        let secondHash = crypto.createHash('sha256').update(Buffer.from(firstHash, 'hex')).digest('hex')
-        console.log('SECOND HASH: ', secondHash)
-        let sigIndex = unbuildedTx.indexOf('00000000ff', lastIndex)
-        lastIndex += 90
-        hashArray.push(Buffer.from(secondHash,'hex'))
-    })
-
-    if(lastIndex != 0) {
-        info('HASHARRAY: ', hashArray[0])
-        info('HASHARRAY len: ', hashArray[0].length)
-        let data = await getSignaturePCSC(0, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.inputs.length, course, fee/100000000, balance)
-        if (data[0].length != 1) {
-            transaction.inputs.forEach((input, index) => {
-                info('Input', input)
-                info('Index', index)
-                info('SIGNATURE DATA', data[index].toString('hex'))
-                unbuildedTx = unbuildedTx.replace('00000000ff', '000000' + data[index].toString('hex') + 'ff')
-                info('Unbuilded step', index, 'tx', unbuildedTx)
-            })
-            info('UNBUILDED TX: ' + unbuildedTx)
-            //info('DATA: ' + data)
-            sendTransaction(unbuildedTx, redirect)
-            //info('Final sig: ' + sig)
-            // Добавляем вход транзакции в виде хэша предыдущей транзакции и номер выхода с нашим адресом
-            // Добавляем выход транзакции, где указывается адрес и сумма перевода
-            transaction.addOutput(paymentAdress, transactionAmount)
-            // Добавляем адрес для "сдачи"/.
-            // Вычисляем хэш неподписанной транзакции
-            // Вызываем функции подписи на криптоустройстве, передаём хэш и номер адреса
-            // Сериализуем неподписаннуб транзакцию
-            // Добавляем UnlockingScript в транзакцию
-            // Возвращаем готовую к отправке транзакцию
-        }
+        })
+        sendTransaction(unbuildedTx, redirect)
+        transaction.addOutput(paymentAdress, transactionAmount)
     }
 }
 

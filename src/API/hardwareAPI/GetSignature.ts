@@ -2,10 +2,17 @@ import { Buffer } from 'buffer'
 import { reader } from '../hardwareAPI/Reader'
 import { info } from 'electron-log'
 import {getBitcoinPubKey} from "../cryptocurrencyAPI/BitCoin";
+import {getEthereumPubKey} from "../cryptocurrencyAPI/Ethereum";
+import {getLitecoinPubKey} from "../cryptocurrencyAPI/Litecoin";
+
+import * as ffi from 'ffi'
+// import * as Path from 'path'
+// const path = Path.join(__dirname,'../..','lib32.dll')
+const libdll = ffi.Library('lib32.dll', {'signParse': ['void', ['string', 'int', 'string', 'string', 'string']]})
 
 
 export function getSignaturePCSC(id: number, message: Array<Buffer>, address: string, amount: number, numberOfInputs: number, course: number, fee: number,balance: number): Promise<Array<Buffer>> {
-  info('inputs length', numberOfInputs)
+  console.log('inputs length', numberOfInputs)
   return new Promise((resolve, reject) => {
     let currencyId: number = 0x00
     switch (id) {
@@ -38,22 +45,13 @@ export function getSignaturePCSC(id: number, message: Array<Buffer>, address: st
     info('40: ',Buffer.concat([Buffer.from([0xb0,0x40]), numberOfInputsBuf, idBuf, leBuf, amountBuf, feeBuf, balanceBuf, Buffer.from(address)]).toString('hex'))
     reader.transmit(Buffer.concat([Buffer.from([0xb0,0x40]), numberOfInputsBuf, idBuf, leBuf, amountBuf, feeBuf, balanceBuf, Buffer.from(address)]), 4, 2, async (err, data) => {
       if (err) {
-        info('ERROR IN FIRST MMESSAGE',err)
+        console.log('ERROR IN FIRST MMESSAGE 40', err)
         reject(err)
       } else {
-        info('DATA IN FIRST MESSAGE', data.toString('hex'))
-
-            /*  let sigArray: Array<Buffer> = []
-              for (let i = 0; i < numberOfInputs; i++) {
-                  let answer = await sendDataMessage(Buffer.from([i]), Buffer.from([currencyId]), message[i])
-                  sigArray.push(answer)
-              }
-              resolve(sigArray)*/
-        info('in while')
-        let timerId = setInterval(() => {
+          let timerId = setInterval(() => {
           reader.transmit(Buffer.concat([Buffer.from([0xb0, 0x42, 0x00, 0x00, 0x00])]), 4, 2, async (err: any, data: { toString: { (arg0: string): void; (arg0: string): string; (arg0: string): string; }; }) => {
             if (err) {
-              info('ERROR IN 42 MMESSAGE', err)
+              console.log('ERROR IN 42 MMESSAGE', err)
               reject(err)
             } else {
               info('DATA IN 42 MESSAGE', data.toString('hex'))
@@ -86,75 +84,45 @@ export function getSignaturePCSC(id: number, message: Array<Buffer>, address: st
 function sendDataMessage(inputNumber: Buffer, currencyId: Buffer, hash: Buffer): Promise<Buffer> {
 
  return new Promise((resolve, reject) => {
-    reader.transmit(Buffer.concat([Buffer.from([0xb0,0x41]),Buffer.from(inputNumber), Buffer.from(currencyId), Buffer.from([0x20]), Buffer.from(hash)]), 110, 2, (err, data) => {
+    reader.transmit(Buffer.concat([Buffer.from([0xb0,0x41]),Buffer.from(inputNumber), Buffer.from(currencyId), Buffer.from(hash)]), 110, 2, (err, data) => {
       if (err) {
         info('ERROR IN SEND HASH',err)
         reject(err)
       } else {
-        info('TO STRING',data.toString('hex'))
-          let lenData = data[1] + 2
-          info('len data', lenData)
-          let publicKey = getBitcoinPubKey()
+        console.log('Answer 41', data.toString('hex'))
+          let curId = currencyId[0]
+          console.log('curId ', curId)
+          let pubKey
+          if(curId == 0)
+          {
+              pubKey = getBitcoinPubKey()
+          }
+          if(curId == 1)
+          {
+              pubKey = getEthereumPubKey()
+          }
+          if(curId == 2)
+          {
+              pubKey = getLitecoinPubKey()
+          }
+          let outData = Buffer.allocUnsafe(110)
+          libdll.signParse(data, curId, pubKey, hash, outData)
 
-          if((data[5+data[3]]) == 0x21)
-          {
-            info('S_LEN:  ', data[5+data[3]])
-            data[5+data[3]] = 0x20
-            let hi_s = Buffer.alloc(32)
-            for (let i = 0; i<32; i++)
-            {
-              hi_s[i] = data[6+data[3] +i+1]
-            }
-            let lo_s = transfomS(hi_s)
-            for (let i = 0; i<32; i++)
-            {
-                data[6+data[3] +i] = lo_s[i]
-            }
-            lenData--
-            data[1]--
+          let lenOut: number
+          if(curId != 1) {
+              lenOut = outData[0] + 1
+          }else{
+              lenOut = 65
           }
-
-          let datas = Buffer.allocUnsafe(lenData+2+35)
-          datas[0]=(0x6a + lenData - 0x46)
-          datas[1]=(1 + lenData)
-          for( let i = 0; i < lenData; i++)
+          let sig = Buffer.allocUnsafe(lenOut)
+          for( let i = 0; i < lenOut; i++)
           {
-              datas[i+2] = data[i]
+              sig[i] = outData[i]
           }
-          datas[lenData + 2] = 0x01;
-          datas[lenData + 3] = 0x021;
-          for( let i = 0; i < 33; i++)
-          {
-              datas[lenData + 4 + i] = publicKey[i]
-          }
-          info('sign transaction ', datas.toString('hex'))
-        resolve(datas)
+          resolve(sig)
       }
     })
   })
-}
-
-
-function transfomS(sign: Buffer): Buffer {
-
-    let n = Buffer.from([0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-        0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFE,
-        0xBA, 0xAE, 0xDC, 0xE6, 0xAF, 0x48, 0xA0, 0x3B,
-        0xBF, 0xD2, 0x5E, 0x8C, 0xD0, 0x36, 0x41, 0x41])
-
-    let lo_s = Buffer.alloc(32)
-
-    for (let i = 31; i > 0; i--) {
-        if (n[i] < sign[i]) {
-            lo_s[i] = 256 + n[i] - sign[i]
-            n[i - 1]--
-        }
-        else {
-            lo_s[i] = n[i] - sign[i]
-        }
-    }
-    lo_s[0] = n[0] - sign[0]
-    return lo_s
 }
 
 function getSumAsBuf(sum: number, course: number): Buffer{

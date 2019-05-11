@@ -21,10 +21,10 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
 
     strSum: string
     point: number
-
     classFee1: string;
     classFee2: string;
     classFee3: string;
+    feeCoeff = 37
 
     constructor(props: any) {
         super(props)
@@ -34,18 +34,18 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
             address: getBitcoinAddress(),
             paymentAddress: '',
             amount: 0,
-            fee: (226 * 40 * this.props.trFee) / 100000000,
+            fee: (431 * this.feeCoeff * this.props.trFee) / 100000000,
             usd: 0,
-            feeUSD: this.props.course * (431 * 40 * this.props.trFee) / 100000000,
+            feeUSD: this.props.course * (431 * this.feeCoeff * this.props.trFee) / 100000000,
             balance: this.props.btcBalance,
             balanceUSD: this.props.btcBalance * this.props.course,
-            maxSum: (this.props.btcBalance - (431 * 40 * this.props.trFee) / 100000000),
+            maxSum: (this.props.btcBalance - (431 * this.feeCoeff * this.props.trFee) / 100000000),
             amountS: ''
         }
         this.handleAddressChange = this.handleAddressChange.bind(this)
         this.handleAmountChange = this.handleAmountChange.bind(this)
         this.handleClick = this.handleClick.bind(this)
-        this.setState({feeUSD: (this.props.course * (431 * 40 * this.props.trFee) / 100000000)})
+        this.setState({feeUSD: (this.props.course * (431 * this.feeCoeff * this.props.trFee) / 100000000)})
         this.strSum = ''
         this.point = 0
         this.setMax = this.setMax.bind(this)
@@ -102,33 +102,39 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
     }
 
     setMax() {
-        this.strSum = this.state.maxSum.toFixed(6).toString()
-        this.setState({amount: (Math.floor(this.state.maxSum*1000000)/1000000)})
-        this.setState({usd: (Number(this.state.maxSum) * this.props.course)})
-        this.setState({amountS: (Math.floor(this.state.maxSum*1000000)/1000000).toString()})
+        let sum = (Math.floor(this.state.maxSum*1000000))/1000000
+        if(sum < 0)
+        {
+            sum = 0
+        }
+
+        this.strSum = sum.toFixed(6).toString()
+        this.setState({amount: sum})
+        this.setState({usd: (Number(sum) * this.props.course)})
+        this.setState({amountS: sum.toFixed(6).toString()})
     }
 
     changeFee1() {
         this.props.setFee(1)
-        this.setState({fee: (431 * 40 * 1) / 100000000})
-        this.setState({maxSum: (this.props.btcBalance - (431 * 40 * 1) / 100000000)})
-        this.setState({feeUSD: this.props.course * (431 * 40 * 1) / 100000000})
+        this.setState({fee: (431 * this.feeCoeff * 1) / 100000000})
+        this.setState({maxSum: (this.props.btcBalance - (431 * this.feeCoeff * 1) / 100000000)})
+        this.setState({feeUSD: this.props.course * (431 * this.feeCoeff * 1) / 100000000})
 
     }
 
     changeFee2() {
         this.props.setFee(2)
-        this.setState({fee: (431* 40 * 2) / 100000000})
-        this.setState({maxSum: (this.props.btcBalance - (431 * 40 * 2) / 100000000)}),
-        this.setState({feeUSD: this.props.course * (431 * 40 * 2) / 100000000})
+        this.setState({fee: (431* this.feeCoeff * 2) / 100000000})
+        this.setState({maxSum: (this.props.btcBalance - (431 * this.feeCoeff * 2) / 100000000)}),
+        this.setState({feeUSD: this.props.course * (431 * this.feeCoeff * 2) / 100000000})
 
     }
 
     changeFee3() {
         this.props.setFee(3)
         this.setState({fee: (431 * 40 * 3) / 100000000})
-        this.setState({maxSum: (this.props.btcBalance - (431 * 40 * 3) / 100000000)})
-        this.setState({feeUSD: this.props.course * (431 * 40 * 3) / 100000000})
+        this.setState({maxSum: (this.props.btcBalance - (431 * this.feeCoeff * 3) / 100000000)})
+        this.setState({feeUSD: this.props.course * (431 * this.feeCoeff * 3) / 100000000})
 
     }
 

@@ -14,10 +14,6 @@ const rootURL = 'https://chain.so/api/v2'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.litecoin
 const NETWORK = 'LTC'
-import Web3 from 'web3'
-import * as crypto from 'crypto'
-
-const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/960cbfb44af74f27ad0e4b070839158a'))
 
 
 import * as ffi from 'ffi'
@@ -33,18 +29,9 @@ export function setLTCBalance(bal: number) {
     balance = bal
 }
 
-export function getLTalance() {
-    return balance
-}
-
 export function setLTCPrice(priceToSet: number) {
     price = priceToSet
 }
-
-export function getLTCPrice() {
-    return price
-}
-
 export default function getAddres() {
     return myAddress
 }
@@ -85,10 +72,12 @@ function setMyAddress(address: string) {
 }
 
 export function setMyPubKey(pubKey: Buffer) {
-    for (let i = 0; i < 64; i++) {
-        myPubKey[i] = pubKey[i + 1]
+    myPubKey[0] = 0x02 + pubKey[64]%2
+
+    for(let i = 0; i < 32; i++)
+    {
+        myPubKey[i+1] = pubKey[i+1]
     }
-    info('PUB_KEY_ETHEREUM', myPubKey.toString('hex'))
 }
 
 export function getLitecoinPubKey() {
@@ -170,7 +159,7 @@ async function createTransaction(paymentAdress: string,
         address: paymentAdress,
         value: transactionAmount
     }
-    let {inputs, outputs, fee} = coinSelect(utxos, targets, 20 * transactionFee)
+    let {inputs, outputs, fee} = coinSelect(utxos, targets, 23 * transactionFee)
 
     console.log('FEE_coinSelect: ', fee)
     let transaction = new TransactionBuilder(network)

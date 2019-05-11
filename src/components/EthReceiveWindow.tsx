@@ -19,7 +19,7 @@ export class EthRecieveWindow extends React.Component<any, IETHRecieveState> {
 
         this.props.stateSR(true)
         this.state = {
-            address: getEthereumAddress(),
+            address: getEthereumAddress().toLowerCase(),
             qrcodeAddress: '',
         }
     }

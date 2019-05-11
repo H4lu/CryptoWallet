@@ -1,6 +1,5 @@
 import * as React from 'react'
 import {getEthereumAddress} from '../API/cryptocurrencyAPI/Ethereum'
-import {info, log} from "electron-log";
 import {sendTransaction} from "../core/SendTransaction";
 import {Link} from "react-router-dom";
 
@@ -26,6 +25,8 @@ export class EthSendWindow extends React.Component<any, IETHSendState> {
     classFee2: string;
     classFee3: string;
 
+    feeCoeff = 491
+
     constructor(props: any) {
         super(props)
 
@@ -35,18 +36,18 @@ export class EthSendWindow extends React.Component<any, IETHSendState> {
             address: getEthereumAddress(),
             paymentAddress: '',
             amount: 0,
-            fee: (7.125 * this.props.trFee * 24) / 1000000,
+            fee: (this.props.trFee * this.feeCoeff) / 1000000,
             usd: 0,
-            feeUSD: this.props.course * (7.125 * this.props.trFee * 24) / 1000000,
+            feeUSD: this.props.course * (this.props.trFee * this.feeCoeff) / 1000000,
             balance: this.props.btcBalance,
             balanceUSD: this.props.btcBalance * this.props.course,
-            maxSum: this.props.btcBalance - (7.125 * this.props.trFee * 24) / 1000000,
+            maxSum: this.props.btcBalance - (this.feeCoeff * this.props.trFee ) / 1000000,
             amountS: ''
         }
         this.handleAddressChange = this.handleAddressChange.bind(this)
         this.handleAmountChange = this.handleAmountChange.bind(this)
         this.handleClick = this.handleClick.bind(this)
-        this.setState({feeUSD: (this.props.course * 7.125 * this.props.trFee * 24 / 1000000)})
+        this.setState({feeUSD: (this.props.course * this.props.trFee * this.feeCoeff / 1000000)})
         this.strSum = ''
         this.point = 0
         this.setMax = this.setMax.bind(this)
@@ -98,38 +99,44 @@ export class EthSendWindow extends React.Component<any, IETHSendState> {
 
     handleClick() {
         if (this.state.paymentAddress != '') {
-            sendTransaction('ethereum', this.state.paymentAddress, this.state.amount, this.props.trFee, /*this.props.redirect*/0, this.props.course, this.props.btcBalance)
+            sendTransaction('ethereum', this.state.paymentAddress, this.state.amount, this.props.trFee, 0, this.props.course, this.props.btcBalance)
         }
     }
 
     setMax(){
-        this.strSum = this.state.maxSum.toFixed(6).toString()
-        this.setState({amount: this.state.maxSum})
-        this.setState({usd: (Number(this.state.maxSum) * this.props.course)})
-        this.setState({amountS: this.state.maxSum.toFixed(6).toString()})
+        let sum = (Math.floor(this.state.maxSum*1000000))/1000000
+        if(sum < 0)
+        {
+            sum = 0
+        }
+
+        this.strSum = sum.toFixed(6).toString()
+        this.setState({amount: sum})
+        this.setState({usd: (Number(sum) * this.props.course)})
+        this.setState({amountS: sum.toFixed(6).toString()})
     }
 
     changeFee1() {
         this.props.setFee(1)
-        this.setState({fee: (431 * 40 * 1) / 100000000})
-        this.setState({maxSum: this.props.btcBalance - (431 * 40 * 1) / 100000000})
-        this.setState({feeUSD: this.props.course * (431 * 40 * 1) / 100000000})
+        this.setState({fee: (this.feeCoeff * 1) / 1000000})
+        this.setState({maxSum: this.props.btcBalance - (this.feeCoeff * 1) / 1000000})
+        this.setState({feeUSD: this.props.course * (this.feeCoeff * 1) / 1000000})
 
     }
 
     changeFee2() {
         this.props.setFee(2)
-        this.setState({fee: (431 * 40 * 2) / 100000000})
-        this.setState({maxSum: this.props.btcBalance - (431 * 40 * 2) / 100000000}),
-            this.setState({feeUSD: this.props.course * (431 * 40 * 2) / 100000000})
+        this.setState({fee: (this.feeCoeff * 2) / 1000000})
+        this.setState({maxSum: this.props.btcBalance - (this.feeCoeff * 2) / 1000000}),
+            this.setState({feeUSD: this.props.course * (this.feeCoeff * 2) / 1000000})
 
     }
 
     changeFee3() {
         this.props.setFee(3)
-        this.setState({fee: (431 * 40 * 3) / 100000000})
-        this.setState({maxSum: this.props.btcBalance - (431 * 40 * 3) / 100000000})
-        this.setState({feeUSD: this.props.course * (431 * 40 * 3) / 100000000})
+        this.setState({fee: (this.feeCoeff * 3) / 1000000})
+        this.setState({maxSum: this.props.btcBalance - (this.feeCoeff * 3) / 1000000})
+        this.setState({feeUSD: this.props.course * (this.feeCoeff * 3) / 1000000})
 
     }
 
