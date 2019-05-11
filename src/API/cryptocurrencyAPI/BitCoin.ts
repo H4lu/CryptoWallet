@@ -20,7 +20,7 @@ import {Buffer} from "buffer";
 import * as ffi from 'ffi'
 // import * as Path from 'path'
 // const path = Path.join(__dirname,'../..','lib32.dll')
-const libdll = ffi.Library('lib32.dll', {'forSign': ['void', ['string', 'int', 'string']]})
+const libdll = ffi.Library('./resources/lib32.dll', {'forSign': ['void', ['string', 'int', 'string']]})
 
 export function setBTCBalance(bal: number) {
   balance = bal
