@@ -1,6 +1,5 @@
 import * as React from 'react'
-import getBitcoinAddress from "../API/cryptocurrencyAPI/BitCoin";
-import {info, log} from "electron-log";
+import getBitcoinAddress, {getFee} from "../API/cryptocurrencyAPI/BitCoin";
 import {sendTransaction} from "../core/SendTransaction";
 import {Link} from "react-router-dom";
 
@@ -21,10 +20,10 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
 
     strSum: string
     point: number
-    classFee1: string;
-    classFee2: string;
-    classFee3: string;
-    feeCoeff = 37
+    classFee1: string
+    classFee2: string
+    classFee3: string
+    feeCoeff: number
 
     constructor(props: any) {
         super(props)
@@ -60,6 +59,7 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
         this.classFee1 = this.setClass1()
         this.classFee2 = this.setClass2()
         this.classFee3 = this.setClass3()
+        this.feeCoeff = Math.floor(getFee()*0.7)+1
     }
 
     handleAddressChange(e: any) {
@@ -166,7 +166,7 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
         this.classFee1 = this.setClass1()
         this.classFee2 = this.setClass2()
         this.classFee3 = this.setClass3()
-
+        console.log('fee ', this.feeCoeff)
     }
 
 

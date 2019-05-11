@@ -13,6 +13,7 @@ let myAddr = '1KcyDktpTPWJDqCyQ2RU8xGhAyazLpX85z'
 let myPubKey = new Buffer(33)
 let balance: number
 let price: number
+let basicFee: number
 import { info } from 'electron-log'
 import {Buffer} from "buffer";
 
@@ -56,6 +57,7 @@ export async function initBitcoinAddress() {
         info('MY ADDRESS BITCOIN: ' + myAddr)
         setMyAddress(answer[0].substring(3,answer[0].length))
         setMyPubKey(answer[1])
+        setFee()
         resolve(0)
       }
     }
@@ -94,14 +96,19 @@ export async function getBitcoinLastTx(): Promise<any> {
     info(err)
   }
 }
-export async function getFee() {
+async function setFee() {
   const requestUrl = 'https://bitcoinfees.earn.com/api/v1/fees/recommended'
   try {
     const response = await webRequest.get(requestUrl)
-    return response.content
+      let parsedResponse = JSON.parse(response.content)
+      basicFee = Number(parsedResponse.hourFee)
+      console.log("basicFee ", basicFee)
   } catch (error) {
     info(error)
   }
+}
+export function getFee(): number {
+    return(basicFee)
 }
 
 export async function getBTCBalance(): Promise<Array<any>> {
@@ -204,7 +211,8 @@ async function createTransaction(paymentAdress: string,
         address: paymentAdress,
         value: transactionAmount
     }
-    let {inputs, outputs, fee} = coinSelect(utxos, targets, 35 * transactionFee)
+
+    let {inputs, outputs, fee} = coinSelect(utxos, targets, (Math.floor(getFee()*0.7)+1) * transactionFee)
 
     console.log('FEE_coinSelect: ', fee)
     let transaction = new TransactionBuilder(network)
