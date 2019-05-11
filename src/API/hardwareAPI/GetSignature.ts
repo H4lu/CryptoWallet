@@ -8,7 +8,7 @@ import {getLitecoinPubKey} from "../cryptocurrencyAPI/Litecoin";
 import * as ffi from 'ffi'
 // import * as Path from 'path'
 // const path = Path.join(__dirname,'../..','lib32.dll')
-const libdll = ffi.Library('lib32.dll', {'signParse': ['void', ['string', 'int', 'string', 'string', 'string']]})
+const libdll = ffi.Library('./resources/lib32.dll', {'signParse': ['void', ['string', 'int', 'string', 'string', 'string']]})
 
 
 export function getSignaturePCSC(id: number, message: Array<Buffer>, address: string, amount: number, numberOfInputs: number, course: number, fee: number,balance: number): Promise<Array<Buffer>> {
