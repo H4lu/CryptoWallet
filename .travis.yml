@@ -18,7 +18,7 @@ addons:
 os:
  # windows
  - linux
- - osx
+ #- osx
 
 script:
 #  - echo "Deploy windows build"
