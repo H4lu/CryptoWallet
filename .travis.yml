@@ -23,8 +23,10 @@ os:
 script:
 #  - echo "Deploy windows build"
  # - if [[ "$TRAVIS_BRANCH" == "$BRANCH" ]] && [[ "$TRAVIS_OS_NAME" == "windows" ]]; then npm run release:win; fi
+  # - echo "Deploy linux build"
   - echo "Deploy linux build"
-  - if [[ "$TRAVIS_BRANCH" == "$BRANCH" ]] && [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run release:linux; fi
-  - echo "Deploy osx build"
-  - if [[ "$TRAVIS_BRANCH" == "$BRANCH" ]] && [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run release:osx; fi
+   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then npm run release:linux; fi
+  # - if [[ "$TRAVIS_BRANCH" == "$BRANCH" ]] && [[ "$TRAVIS_OS_NAME" == "linux" ]]; then npm run release:linux; fi
+  # - echo "Deploy osx build"
+  # - if [[ "$TRAVIS_BRANCH" == "$BRANCH" ]] && [[ "$TRAVIS_OS_NAME" == "osx" ]]; then npm run release:osx; fi
 
