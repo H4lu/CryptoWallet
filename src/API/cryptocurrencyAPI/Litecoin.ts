@@ -50,6 +50,7 @@ export async function initLitecoinAddress() {
                 status = true
                 info('status after reset', status)
                 setMyAddress(answer[0].substring(3, answer[0].length))
+                console.log("address LTC: ", answer[0].substring(3, answer[0].length))
                 setMyPubKey(answer[1])
                 resolve(0)
             }
@@ -58,11 +59,14 @@ export async function initLitecoinAddress() {
 }
 
 function parseValueCrypto(response: webRequest.Response<string>): Array<Number | String> {
-    let parsedResponse = JSON.parse(response.content).data
-    let balance: Number = Number(parsedResponse.confirmed_balance) + Number(parsedResponse.unconfirmed_balance)
+   // let parsedResponse = JSON.parse(response.content).data
+   // let balance: Number = Number(parsedResponse.confirmed_balance) + Number(parsedResponse.unconfirmed_balance)
+    let parsedResponse = JSON.parse(response.content)
+    let balance = Number(parsedResponse.final_balance)
+    //console.log('test1 ', balance)
     let arr = []
     arr.push('LTC')
-    arr.push(Number(balance.toFixed(8)))
+    arr.push(Number((balance/100000000).toFixed(8)))
     return arr
 }
 
@@ -117,12 +121,9 @@ export async function getLTCBalanceTrans(address: string): Promise<Array<any>> {
 }
 
 export async function getLTCBalance(): Promise<Array<Number | String>> {
-    /* Задаём параметры запроса
-      Network - тип сети, testnet или mainnet
-      address - наш адрес
-      0 - количество подтверждений транзакций
-    */
-    let requestUrl = 'https://chain.so/api/v2/get_address_balance/' + NETWORK + '/' + myAddress + '/' + 0
+
+    //let requestUrl = 'https://chain.so/api/v2/get_address_balance/' + NETWORK + '/' + myAddress + '/' + 0
+    let requestUrl = 'https://api.blockcypher.com/v1/ltc/main/addrs/' + myAddress + '/balance'
     info(requestUrl)
     try {
         // Делаем запрос и отдаём в виде Promise

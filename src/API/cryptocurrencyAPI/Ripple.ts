@@ -38,6 +38,7 @@ export async function initRippleAddress() {
                 status = true
                 info('MY ADDRESS XRP: ' + myAddr)
                 setMyAddress(answer[0].substring(3,answer[0].length))
+                console.log("address XRP: ", answer[0].substring(3, answer[0].length))
                 setMyPubKey(answer[1])
                 resolve(0)
             }

@@ -1,10 +1,11 @@
 import {TransactionBuilder, networks, Transaction, ECPair, address, script} from 'bitcoinjs-lib'
 import * as Request from 'request'
 import * as webRequest from 'web-request'
- import { getSignaturePCSC } from '../hardwareAPI/GetSignature'
-import { getAddressPCSC } from '../hardwareAPI/GetAddress'
+import {getSignaturePCSC} from '../hardwareAPI/GetSignature'
+import {getAddressPCSC} from '../hardwareAPI/GetAddress'
 import * as utils from './utils'
 import * as satoshi from 'satoshi-bitcoin'
+
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.bitcoin
 const NETWORK = 'BTC'
@@ -13,8 +14,13 @@ let myAddr = '1KcyDktpTPWJDqCyQ2RU8xGhAyazLpX85z'
 let myPubKey = new Buffer(33)
 let balance: number
 let price: number
-let basicFee: number
-import { info } from 'electron-log'
+let basicFee1: number
+let basicFee2: number
+let basicFee3: number
+let TXarr = []
+let numTx: number
+
+import {info} from 'electron-log'
 import {Buffer} from "buffer";
 
 import * as ffi from 'ffi'
@@ -22,111 +28,164 @@ import * as ffi from 'ffi'
 // const path = Path.join(__dirname,'../..','lib32.dll')
 const libdll = ffi.Library('./resources/lib32.dll', {'forSign': ['void', ['string', 'int', 'string']]})
 
+
+export async function getUnspentTx(): Promise<number> {
+    numTx=0
+    await getLastTransactionData().then(Response => {
+        let respData = JSON.parse(Response.content)
+        if (respData.status === 'success') {
+            for (let iTX in respData.data.txs) {
+                numTx = numTx + 1
+                let temp = respData.data.txs[iTX].value
+                respData.data.txs[iTX].value = toSatoshi(temp)
+                TXarr.push(respData.data.txs[iTX])
+                console.log('TX', iTX, ':')
+                console.log('tx: ', TXarr[iTX])
+            }
+        } else {
+            alert('Error provided by internet connection')
+        }
+    }).catch((error: any) => {
+        info(error)
+    })
+
+    console.log("numTX_in_btc: ", numTx)
+    return numTx
+}
+
 export function setBTCBalance(bal: number) {
-  balance = bal
+    balance = bal
 }
+
 export function getBalance() {
-  return balance
+    return balance
 }
+
 export function setBTCPrice(priceToSet: number) {
-  price = priceToSet
+    price = priceToSet
 }
 
 function parseValueCrypto(response: webRequest.Response<string>): Array<any> {
-  let parsedResponse = JSON.parse(response.content).data
-  let balance = Number(parsedResponse.confirmed_balance) + Number(parsedResponse.unconfirmed_balance)
-  let arr = []
-  arr.push('BTC')
-  arr.push(Number(balance.toFixed(8)))
-  let answer = { 'BTC': balance }
-  return arr
+    //let parsedResponse = JSON.parse(response.content).data
+    //let balance = Number(parsedResponse.confirmed_balance) + Number(parsedResponse.unconfirmed_balance)
+    let parsedResponse = JSON.parse(response.content)
+    let balance = Number(parsedResponse.final_balance)
+    //console.log('test1 ', balance)
+    let arr = []
+    arr.push('BTC')
+    arr.push(Number((balance/100000000).toFixed(8)))
+    return arr
 }
 
 export async function initBitcoinAddress() {
-  info('INITING BTC ADDRESS')
+    info('INITING BTC ADDRESS')
 
-  return new Promise(async (resolve) => {
-    let status = false
-    while (!status) {
-      info('Status', status)
-      let answer = await getAddressPCSC(0)
-      info('GOT MYADDR ANSWER', answer)
-        if (answer[0].length > 16 && answer[0].includes('BTC')) {
-        status = true
-        info('status after reset', status)
-        info('MY ADDRESS BITCOIN: ' + myAddr)
-        setMyAddress(answer[0].substring(3,answer[0].length))
-        setMyPubKey(answer[1])
-        setFee()
-        resolve(0)
-      }
-    }
-  })
+    return new Promise(async (resolve) => {
+        let status = false
+        while (!status) {
+            info('Status', status)
+            let answer = await getAddressPCSC(0)
+            info('GOT MYADDR ANSWER', answer)
+            if (answer[0].length > 16 && answer[0].includes('BTC')) {
+                status = true
+                info('status after reset', status)
+                info('MY ADDRESS BITCOIN: ' + myAddr)
+                setMyAddress(answer[0].substring(3, answer[0].length))
+                setMyPubKey(answer[1])
+                setFee()
+                resolve(0)
+            }
+        }
+    })
 }
+
 export function setMyAddress(address: string) {
-  myAddr = address
-  info('MY ADDRESS BITCOIN:' + myAddr)
+    myAddr = address
+    info('MY ADDRESS BITCOIN:' + myAddr)
 }
+
 export function setMyPubKey(pubKey: Buffer) {
 
-    myPubKey[0] = 0x02 + pubKey[64]%2
+    myPubKey[0] = 0x02 + pubKey[64] % 2
 
-    for(let i = 0; i < 32; i++)
-    {
-        myPubKey[i+1] = pubKey[i+1]
+    for (let i = 0; i < 32; i++) {
+        myPubKey[i + 1] = pubKey[i + 1]
     }
 }
 
 export default function getBitcoinAddress() {
-  return myAddr
+    return myAddr
 }
+
 export function getBitcoinPubKey() {
     return myPubKey
 }
 
 
 export async function getBitcoinLastTx(): Promise<any> {
-  info('CALLING BTC')
-  try {
-    const requestUrl = rootURL + '/address/' + NETWORK + '/' + myAddr
-    info('My req url: ' + requestUrl)
-    let response = await webRequest.get(requestUrl)
-    return response
-  } catch (err) {
-    info(err)
-  }
+    info('CALLING BTC')
+    try {
+        const requestUrl = rootURL + '/address/' + NETWORK + '/' + myAddr
+        info('My req url: ' + requestUrl)
+        let response = await webRequest.get(requestUrl)
+        return response
+    } catch (err) {
+        info(err)
+    }
 }
+
 async function setFee() {
-  const requestUrl = 'https://bitcoinfees.earn.com/api/v1/fees/recommended'
-  try {
-    const response = await webRequest.get(requestUrl)
-      let parsedResponse = JSON.parse(response.content)
-      basicFee = Number(parsedResponse.hourFee)
-      console.log("basicFee ", basicFee)
-  } catch (error) {
-    info(error)
-  }
+    const requestUrl = 'https://bitcoinfees.earn.com/api/v1/fees/recommended'
+    try {
+        const response = await webRequest.get(requestUrl)
+        let parsedResponse = JSON.parse(response.content)
+        basicFee1 = Number(parsedResponse.hourFee)
+        basicFee2 = Number(parsedResponse.halfHourFee)
+        basicFee3 = Number(parsedResponse.fastestFee)
+    } catch (error) {
+        info(error)
+    }
 }
-export function getFee(): number {
-    return(basicFee)
+
+export function getFee(transactionFee: number): number {
+
+    let basicFee = 25
+    switch (transactionFee) {
+        case 1: {
+
+            basicFee = basicFee1
+            break
+        }
+        case 2: {
+            basicFee = basicFee2
+            break
+        }
+        case 3: {
+            basicFee = basicFee3 + 5
+            break
+        }
+    }
+    return (basicFee)
 }
 
 export async function getBTCBalance(): Promise<Array<any>> {
 
-    let requestUrl = 'https://chain.so/api/v2/get_address_balance/' + NETWORK + '/' + myAddr + '/' + 0
-
+    //let requestUrl = 'https://chain.so/api/v2/get_address_balance/' + NETWORK + '/' + myAddr + '/' + 0
+    let requestUrl = 'https://api.blockcypher.com/v1/btc/main/addrs/' + myAddr + '/balance'
+    //console.log('url btc balance', requestUrl)
     try {
         // Делаем запрос и отдаём в виде Promise
         const response = await webRequest.get(requestUrl)
+        console.log('json btc balance', response)
         return parseValueCrypto(response)
     } catch (error) {
         Promise.reject(error).catch(error => {
-            info(error)
+            console.log('error btc balance', error)
         })
     }
 }
 
-export async function getChartBTC(end: string, start: string): Promise<Array<any>>{
+export async function getChartBTC(end: string, start: string): Promise<Array<any>> {
     let requestUrl = 'https://api.coindesk.com/v1/bpi/historical/close.json?start=' + start + '&end=' + end
     try {
         // Делаем запрос и отдаём в виде Promise
@@ -151,7 +210,7 @@ export async function getBTCBalanceTarns(address: string): Promise<Array<any>> {
       0 - количество подтверждений транзакций
     */
     // rootURL + 'get_address_balance/' + myAddr
-    let requestUrl = 'https://blockchain.info/rawaddr/' +address
+    let requestUrl = 'https://blockchain.info/rawaddr/' + address
 
     info(requestUrl)
     try {
@@ -165,6 +224,7 @@ export async function getBTCBalanceTarns(address: string): Promise<Array<any>> {
         })
     }
 }
+
 function parseValueBalanceTrans(response: webRequest.Response<string>): Array<any> {
     let parsedResponse = JSON.parse(response.content)
 
@@ -179,30 +239,30 @@ function parseValueBalanceTrans(response: webRequest.Response<string>): Array<an
 }
 
 function toSatoshi(BTC: number): number {
-  return satoshi.toSatoshi(BTC)
+    return satoshi.toSatoshi(BTC)
 }
 
 async function getLastTransactionData(): Promise<any> {
-  let requestUrl = 'https://chain.so/api/v2/get_tx_unspent/' + NETWORK + '/' + myAddr
-  try {
-    const response = await webRequest.get(requestUrl)
-    info('Raw response: ' + response.content)
-    info('Response of last tx: ' + JSON.parse(response.content).data.txs)
-    return response
-  } catch (error) {
-    Promise.reject(error).catch(error => {
-      info(error)
-    })
-  }
+    let requestUrl = 'https://chain.so/api/v2/get_tx_unspent/' + NETWORK + '/' + myAddr
+    try {
+        const response = await webRequest.get(requestUrl)
+        info('Raw response: ' + response.content)
+        info('Response of last tx: ' + JSON.parse(response.content).data.txs)
+        return response
+    } catch (error) {
+        Promise.reject(error).catch(error => {
+            info(error)
+        })
+    }
 }
 
- function ReplaceAt(input: any, search: any, replace: any, start: any, end: any) {
-  info('FIRST SLICE:' + input.slice(0, start))
-  info('SECOND SLICE ' + input.slice(start, end).replace(search, replace))
-  info('THIRD SLICE: ' + input.slice(end))
-  return input.slice(0, start)
-      + input.slice(start, end).replace(search, replace)
-      + input.slice(end)
+function ReplaceAt(input: any, search: any, replace: any, start: any, end: any) {
+    info('FIRST SLICE:' + input.slice(0, start))
+    info('SECOND SLICE ' + input.slice(start, end).replace(search, replace))
+    info('THIRD SLICE: ' + input.slice(end))
+    return input.slice(0, start)
+        + input.slice(start, end).replace(search, replace)
+        + input.slice(end)
 }
 
 async function createTransaction(paymentAdress: string,
@@ -211,12 +271,14 @@ async function createTransaction(paymentAdress: string,
         address: paymentAdress,
         value: transactionAmount
     }
+    let feeRate = getFee(transactionFee)
 
-    let {inputs, outputs, fee} = coinSelect(utxos, targets, (Math.floor(getFee()*0.7)+1) * transactionFee)
+    let {inputs, outputs, fee} = coinSelect(utxos, targets, feeRate)
 
     console.log('FEE_coinSelect: ', fee)
     let transaction = new TransactionBuilder(network)
     for (let input in inputs) {
+
         transaction.addInput(inputs[input].txid, inputs[input].output_no)
     }
     for (let out in outputs) {
@@ -280,160 +342,160 @@ async function createTransaction(paymentAdress: string,
 }
 
 function sendTransaction(transactionHex: string, redirect: any) {
-  info('url transaction: ' + urlChainSo + NETWORK)
-  Request.post({
-    url: urlChainSo + NETWORK,
-    headers: {
-      'content-type': 'application/json'
-    },
-    body : { 'tx_hex': transactionHex },
-    json: true
-  },
-  // Обрабатываем ответ
-   (res,err,body) => {
-     let bodyStatus = body.status
-     info('RESULT TRANSACTION CHAIN: ', bodyStatus)
-     if (bodyStatus === 'fail') {
-     } else {
-       if (bodyStatus.toString() === 'success') {
-         redirect()
-       } else {
-         //info(body.error.message)
-         //alert('Error occured: ' + body.error.message)
-       }
-     }
-   })
+    info('url transaction: ' + urlChainSo + NETWORK)
+    Request.post({
+            url: urlChainSo + NETWORK,
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: {'tx_hex': transactionHex},
+            json: true
+        },
+        // Обрабатываем ответ
+        (res, err, body) => {
+            let bodyStatus = body.status
+            info('RESULT TRANSACTION CHAIN: ', bodyStatus)
+            if (bodyStatus === 'fail') {
+            } else {
+                if (bodyStatus.toString() === 'success') {
+                    redirect()
+                } else {
+                    //info(body.error.message)
+                    //alert('Error occured: ' + body.error.message)
+                }
+            }
+        })
 }
 
 function sendByBlockcypher(transactionHex: string, redirect: any) {
-  Request.post({
-    url: 'https://api.blockcypher.com/v1/btc/main/txs/push',
-    headers: {
-      'content-type': 'application/json'
-    },
-    body : { 'tx': transactionHex },
-    json: true
-  },
-        (res,err,body) => {
-          //info(body)
-          //info(res), info(err)
-          let bodyStatus = body
-          info('RESULT TRANSACTION BLOCK : ', bodyStatus.tx.confirmations)
-          if (res !== null) {
-            //info('ERROR IN SEND BY BLOCKCYPHER', err)
-            //alert(err)
-          } else {
-            try {
-              if (body.tx.confirmations === 0) {
-                 alert('Transaction sended! Hash: ' + Object(body).tx.hash)
-                redirect()
-              }
-            } catch (error) {
-              //alert('Error occured: ' + Object(body).error)
+    Request.post({
+            url: 'https://api.blockcypher.com/v1/btc/main/txs/push',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: {'tx': transactionHex},
+            json: true
+        },
+        (res, err, body) => {
+            //info(body)
+            //info(res), info(err)
+            let bodyStatus = body
+            info('RESULT TRANSACTION BLOCK : ', bodyStatus.tx.confirmations)
+            if (res !== null) {
+                //info('ERROR IN SEND BY BLOCKCYPHER', err)
+                //alert(err)
+            } else {
+                try {
+                    if (body.tx.confirmations === 0) {
+                        alert('Transaction sended! Hash: ' + Object(body).tx.hash)
+                        redirect()
+                    }
+                } catch (error) {
+                    //alert('Error occured: ' + Object(body).error)
+                }
             }
-          }
         })
 }
 
 export function handle(paymentAdress: string, amount: number, transactionFee: number, redirect: any, course: number, balance: number) {
-   getLastTransactionData().then(Response => {
-    let respData = JSON.parse(Response.content)
-    info('Resp status: ' + respData.status)
-    if (respData.status === 'success') {
-      let utxos = []
-      for (let utxo in respData.data.txs) {
-        let temp = respData.data.txs[utxo].value
-        respData.data.txs[utxo].value = toSatoshi(temp)
-        info('My value: ' + respData.data.txs[utxo].value)
-        utxos.push(respData.data.txs[utxo])
-        info('Utxo: ' + utxo)
-        info('Utxos: ' + utxos)
-      }
-      amount = toSatoshi(amount)
-      createTransaction(paymentAdress, amount, transactionFee, redirect, utxos, course, balance).catch(err => {
-        info(err)
-      })
-    } else {
-      alert('Error provided by internet connection')
+    getLastTransactionData().then(Response => {
+        let respData = JSON.parse(Response.content)
+        info('Resp status: ' + respData.status)
+        if (respData.status === 'success') {
+            let utxos = []
+            for (let utxo in respData.data.txs) {
+                let temp = respData.data.txs[utxo].value
+                respData.data.txs[utxo].value = toSatoshi(temp)
+                info('My value: ' + respData.data.txs[utxo].value)
+                utxos.push(respData.data.txs[utxo])
+                info('Utxo: ' + utxo)
+                info('Utxos: ' + utxos)
+            }
+            amount = toSatoshi(amount)
+            createTransaction(paymentAdress, amount, transactionFee, redirect, utxos, course, balance).catch(err => {
+                info(err)
+            })
+        } else {
+            alert('Error provided by internet connection')
+        }
+    }).catch((error: any) => {
+        info(error)
+    })
+}
+
+function accumulative(utxos: any, outputs: any, feeRate: any) {
+    if (!isFinite(utils.uintOrNaN(feeRate))) return {}
+    let bytesAccum = utils.transactionBytes([], outputs)
+
+    let inAccum = 0
+    let inputs = []
+    let outAccum = utils.sumOrNaN(outputs)
+
+    for (let i = 0; i < utxos.length; ++i) {
+        let utxo = utxos[i]
+        let utxoBytes = utils.inputBytes(utxo)
+        let utxoFee = feeRate * utxoBytes
+        let utxoValue = utils.uintOrNaN(Number(utxo.value))
+
+        // skip detrimental input
+        if (utxoFee > utxo.value) {
+            if (i === utxos.length - 1) return {fee: feeRate * (bytesAccum + utxoBytes)}
+            continue
+        }
+
+        bytesAccum += utxoBytes
+        inAccum += utxoValue
+        inputs.push(utxo)
+
+        let fee = feeRate * bytesAccum
+
+        // go again?
+        if (inAccum < outAccum + fee) continue
+
+        return utils.finalize(inputs, outputs, feeRate)
     }
-  }).catch((error: any) => {
-    info(error)
-  })
+
+    return {fee: feeRate * bytesAccum}
 }
 
-function accumulative (utxos: any, outputs: any, feeRate: any) {
-  if (!isFinite(utils.uintOrNaN(feeRate))) return {}
-  let bytesAccum = utils.transactionBytes([], outputs)
+function blackjack(utxos: any, outputs: any, feeRate: any) {
+    if (!isFinite(utils.uintOrNaN(feeRate))) return {}
 
-  let inAccum = 0
-  let inputs = []
-  let outAccum = utils.sumOrNaN(outputs)
+    let bytesAccum = utils.transactionBytes([], outputs)
 
-  for (let i = 0; i < utxos.length; ++i) {
-    let utxo = utxos[i]
-    let utxoBytes = utils.inputBytes(utxo)
-    let utxoFee = feeRate * utxoBytes
-    let utxoValue = utils.uintOrNaN(Number(utxo.value))
+    let inAccum = 0
+    let inputs = []
+    let outAccum = utils.sumOrNaN(outputs)
+    let threshold = utils.dustThreshold({}, feeRate)
 
-    // skip detrimental input
-    if (utxoFee > utxo.value) {
-      if (i === utxos.length - 1) return { fee: feeRate * (bytesAccum + utxoBytes) }
-      continue
+    for (let i = 0; i < utxos.length; ++i) {
+        let input = utxos[i]
+        let inputBytes = utils.inputBytes(input)
+        let fee = feeRate * (bytesAccum + inputBytes)
+        let inputValue = utils.uintOrNaN(Number(input.value))
+
+        // would it waste value?
+        if ((inAccum + inputValue) > (outAccum + fee + threshold)) continue
+
+        bytesAccum += inputBytes
+        inAccum += inputValue
+        inputs.push(input)
+
+        // go again?
+        if (inAccum < outAccum + fee) continue
+
+        return utils.finalize(inputs, outputs, feeRate)
     }
 
-    bytesAccum += utxoBytes
-    inAccum += utxoValue
-    inputs.push(utxo)
-
-    let fee = feeRate * bytesAccum
-
-    // go again?
-    if (inAccum < outAccum + fee) continue
-
-    return utils.finalize(inputs, outputs, feeRate)
-  }
-
-  return { fee: feeRate * bytesAccum }
+    return {fee: feeRate * bytesAccum}
 }
 
-function blackjack (utxos: any, outputs: any, feeRate: any) {
-  if (!isFinite(utils.uintOrNaN(feeRate))) return {}
+function coinSelect(utxos: any, outputs: any, feeRate: any) {
 
-  let bytesAccum = utils.transactionBytes([], outputs)
+    // attempt to use the blackjack strategy first (no change output)
+    let base = blackjack(utxos, outputs, feeRate)
+    if (Object(base).inputs) return base
 
-  let inAccum = 0
-  let inputs = []
-  let outAccum = utils.sumOrNaN(outputs)
-  let threshold = utils.dustThreshold({}, feeRate)
-
-  for (let i = 0; i < utxos.length; ++i) {
-    let input = utxos[i]
-    let inputBytes = utils.inputBytes(input)
-    let fee = feeRate * (bytesAccum + inputBytes)
-    let inputValue = utils.uintOrNaN(Number(input.value))
-
-    // would it waste value?
-    if ((inAccum + inputValue) > (outAccum + fee + threshold)) continue
-
-    bytesAccum += inputBytes
-    inAccum += inputValue
-    inputs.push(input)
-
-    // go again?
-    if (inAccum < outAccum + fee) continue
-
-    return utils.finalize(inputs, outputs, feeRate)
-  }
-
-  return { fee: feeRate * bytesAccum }
-}
-
-function coinSelect (utxos: any, outputs: any, feeRate: any) {
-
-  // attempt to use the blackjack strategy first (no change output)
-  let base = blackjack(utxos, outputs, feeRate)
-  if (Object(base).inputs) return base
-
-  // else, try the accumulative strategy
-  return Object(accumulative(utxos, outputs, feeRate))
+    // else, try the accumulative strategy
+    return Object(accumulative(utxos, outputs, feeRate))
 }

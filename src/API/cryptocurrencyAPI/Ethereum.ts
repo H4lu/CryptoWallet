@@ -46,6 +46,7 @@ export function setMyPubKey(pubKey: Buffer) {
     }
     console.log('PUB_KEY_ETHEREUM', myPubKey.toString('hex'))
     let address = '0x' + keccak256(myPubKey).substr(24, 40).toLowerCase()
+    console.log('PUB_KEY_ETHEREUM', address)
     setAddress(address)
 }
 
