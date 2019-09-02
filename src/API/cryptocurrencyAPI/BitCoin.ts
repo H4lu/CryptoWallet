@@ -134,7 +134,7 @@ export async function getBTCBalance(): Promise<Array<any>> {
     0 - количество подтверждений транзакций
   */
   // rootURL + 'get_address_balance/' + myAddr
-  let requestUrl = 'https://chain.so/api/v2/get_address_balance/' + NETWORK + '/' + myAddr + '/' + 0
+  let requestUrl = 'https://api.blockcypher.com/v1/btc/main/addrs/' + myAddr + '/balance'
   info(requestUrl)
   try {
     // Делаем запрос и отдаём в виде Promise
@@ -273,7 +273,7 @@ async function createTransaction(paymentAdress: string,
   // transaction.addOutput(paymentAdress, transactionAmount)
   let final = transaction.build().toHex()
   info('FINAL', final)
-  sendTransaction(final, redirect)
+  sendByBlockcypher(final, redirect)
   // info('Final sig: ' + sig)
   // Добавляем вход транзакции в виде хэша предыдущей транзакции и номер выхода с нашим адресом
   // Добавляем выход транзакции, где указывается адрес и сумма перевода

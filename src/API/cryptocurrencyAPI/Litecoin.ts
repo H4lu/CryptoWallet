@@ -17,15 +17,19 @@ const NETWORK = 'LTC'
 
 let balance: number
 let price: number
+
 export function setLTCBalance(bal: number) {
   balance = bal
 }
+
 export function getLTalance() {
   return balance
 }
+
 export function setLTCPrice(priceToSet: number) {
   price = priceToSet
 }
+
 export function getLTCPrice() {
   return price
 }
@@ -33,6 +37,7 @@ export function getLTCPrice() {
 export default function getAddres() {
   return myAddress
 }
+
 export async function initLitecoinAddress() {
   /*
   myAddr = await getAddressPCSC(0)
@@ -69,12 +74,23 @@ export async function initLitecoinAddress() {
 
   })
 }
+
 function parseValueCrypto(response: webRequest.Response<string>): Array<Number | String> {
   let parsedResponse = JSON.parse(response.content).data
-  let balance: Number = Number(parsedResponse.confirmed_balance) + Number(parsedResponse.unconfirmed_balance)
+  info('PARSED RESP IN PARSE', parsedResponse)
+  info('CONFIRMED BALANCE',Number(parsedResponse.confirmed_balance),parsedResponse.confirmed_balance)
+  info('UNCONFIRMED',Number(parsedResponse.unconfirmed_balance),parsedResponse.unconfirmed_balance)
+  let balance = Number(parsedResponse.confirmed_balance) + Number(parsedResponse.unconfirmed_balance)
+  info('BALANCE', balance)
+  info('BALANCE TO STRING', String(balance))
+  info(balance.toString())
+  info(Number(balance).toString(10))
+  info(Number(balance).toString())
   let arr = []
   arr.push('LTC')
   arr.push(Number(balance.toFixed(8)))
+  let answer = { 'LTC': balance }
+  info('ANSWERING IN PARSEVALUE CRYPTO',arr,answer,arr[1])
   return arr
 }
 
@@ -107,7 +123,7 @@ export async function getLTCBalance(): Promise<Array<Number | String>> {
     address - наш адрес
     0 - количество подтверждений транзакций
   */
-  let requestUrl = 'https://chain.so/api/v2/get_address_balance/' + NETWORK + '/' + myAddress + '/' + 0
+  let requestUrl = 'https://api.blockcypher.com/v1/ltc/main/addrs/' + myAddress + '/balance'
   info(requestUrl)
   try {
     // Делаем запрос и отдаём в виде Promise
@@ -243,7 +259,7 @@ async function createTransaction(paymentAdress: string,
   // info('DATA: ' + data)
   let final = transaction.build().toHex()
   info('FIANL', final)
-  sendTransaction(final, redirect)
+  sendByBlockcypher(final, redirect)
   info('Final sig: ' + sig)
   // Добавляем вход транзакции в виде хэша предыдущей транзакции и номер выхода с нашим адресом
   // Добавляем выход транзакции, где указывается адрес и сумма перевода
@@ -390,6 +406,7 @@ function sendByBlockcypher(transactionHex: string, redirect: any) {
         }
       })
 }
+
 export function handleLitecoin(paymentAdress: string, amount: number, transactionFee: number, redirect: any) {
   // let code = 239
   // let code2 = 57
@@ -420,6 +437,7 @@ export function handleLitecoin(paymentAdress: string, amount: number, transactio
     info(error)
   })
 }
+
 function accumulative (utxos: any, outputs: any, feeRate: any) {
   if (!isFinite(utils.uintOrNaN(feeRate))) return {}
   let bytesAccum = utils.transactionBytes([], outputs)
