@@ -249,41 +249,43 @@ export default class App extends React.Component<any, IAPPState> {
     this.setState({ connection: false })
   }
   getWalletInfo() {
-    let interval = setInterval(async () => {
-      try {
-        info('START GETWALLET INFO')
-        let data = await getInfoPCSC()
-        info('GOT THIS DATA',data)
-        switch (data) {
-        case 0: {
-          clearInterval(interval)
-          info('SETTING WALLET STATUS 0')
-          this.initAll()
-          this.setState({ walletStatus: 0 })
-          break
-        }
-        case 1: {
-          this.setState({ walletStatus: 1 })
-          break
-        }
-        case 2: {
-          this.setState({ walletStatus: 2 })
-          break
-        }
-        case 3: {
-          this.setState({ walletStatus: 3 })
-          break
-        }
-        case 4: {
-          this.setState({ walletStatus: 4 })
-          break
-        }
-        }
-      } catch (error) {
-        info('GOT ERROR',error)
-        clearInterval(interval)
-      }
-    },500,[])
+    this.initAll()
+    this.setState({ walletStatus: 0 })
+    // let interval = setInterval(async () => {
+    //   try {
+    //     info('START GETWALLET INFO')
+    //     let data = await getInfoPCSC()
+    //     info('GOT THIS DATA',data)
+    //     switch (data) {
+    //     case 0: {
+    //       clearInterval(interval)
+    //       info('SETTING WALLET STATUS 0')
+    //       this.initAll()
+    //       this.setState({ walletStatus: 0 })
+    //       break
+    //     }
+    //     case 1: {
+    //       this.setState({ walletStatus: 1 })
+    //       break
+    //     }
+    //     case 2: {
+    //       this.setState({ walletStatus: 2 })
+    //       break
+    //     }
+    //     case 3: {
+    //       this.setState({ walletStatus: 3 })
+    //       break
+    //     }
+    //     case 4: {
+    //       this.setState({ walletStatus: 4 })
+    //       break
+    //     }
+    //     }
+    //   } catch (error) {
+    //     info('GOT ERROR',error)
+    //     clearInterval(interval)
+    //   }
+    // },500,[])
   }
 
   componentDidMount() {
@@ -320,43 +322,45 @@ export default class App extends React.Component<any, IAPPState> {
 
     info('APP PROPS:', this.props)
     info('APP:', App)
-    pcsc.on('reader', async (reader) => {
-      info('READER DETECTED', reader.name)
-      if (reader.name.includes('PN7462AU')) {
-        info('setting')
-        setReader(reader)
-        reader.on('status', (status) => {
-          info('READER STATE', reader.state)
-          let changes = reader.state ^ status.state
-          info(status)
-          if (changes) {
-            if ((changes & reader.SCARD_STATE_EMPTY) && (status.state & reader.SCARD_STATE_EMPTY)) {
-              info('ASD')
-            } else if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
-              info('card inserted')
-              reader.connect({ share_mode : reader.SCARD_SHARE_SHARED }, async (err, protocol) => {
-                if (err) {
-                  info('ERROR OCCURED', err)
-                  info(err)
-                } else {
-                  info('CONNECTED')
-                  this.setState({ connection: true })
-                  this.getWalletInfo()
-                  info('Protocol(', reader.name, '):', protocol)
-                }
-              })
-            }
-          }
-        })
-      }
-      reader.on('error', function(err) {
-        info('Error(', this.name, '):', err.message)
-      })
-      reader.on('end', () => {
-        info('Reader', reader.name, 'removed')
-        this.setState({ connection: false })
-      })
-    })
+    this.setState({ connection: true })
+    this.getWalletInfo()
+    // pcsc.on('reader', async (reader) => {
+    //   info('READER DETECTED', reader.name)
+    //   if (reader.name.includes('PN7462AU')) {
+    //     info('setting')
+    //     setReader(reader)
+    //     reader.on('status', (status) => {
+    //       info('READER STATE', reader.state)
+    //       let changes = reader.state ^ status.state
+    //       info(status)
+    //       if (changes) {
+    //         if ((changes & reader.SCARD_STATE_EMPTY) && (status.state & reader.SCARD_STATE_EMPTY)) {
+    //           info('ASD')
+    //         } else if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
+    //           info('card inserted')
+    //           reader.connect({ share_mode : reader.SCARD_SHARE_SHARED }, async (err, protocol) => {
+    //             if (err) {
+    //               info('ERROR OCCURED', err)
+    //               info(err)
+    //             } else {
+    //               info('CONNECTED')
+    //               this.setState({ connection: true })
+    //               this.getWalletInfo()
+    //               info('Protocol(', reader.name, '):', protocol)
+    //             }
+    //           })
+    //         }
+    //       }
+    //     })
+    //   }
+    //   reader.on('error', function(err) {
+    //     info('Error(', this.name, '):', err.message)
+    //   })
+    //   reader.on('end', () => {
+    //     info('Reader', reader.name, 'removed')
+    //     this.setState({ connection: false })
+    //   })
+//    })
 
       /*reader.on('status', (status) => {
         log('Status(', status.name, '):', status)
@@ -388,9 +392,9 @@ export default class App extends React.Component<any, IAPPState> {
       })
       */
 
-    pcsc.on('error', function(err) {
-      info('PCSC error', err.message)
-    })
+    // pcsc.on('error', function(err) {
+    //   info('PCSC error', err.message)
+    // })
   }
   setRedirectToMain() {
     this.setState({ redirectToMain: true })

@@ -68,20 +68,22 @@ export async function initBitcoinAddress() {
   info('INITING BTC ADDRESS')
 
   return new Promise(async (resolve) => {
-    let status = false
-    while (!status) {
-      info('Status', status)
-      let answer = await getAddressPCSC(0)
-      info('GOT MYADDR ANSWER', answer)
-      info('My addr length', answer.length)
-      if (answer.length > 16 && answer.includes('BTC')) {
-        status = true
-        info('status after reset', status)
-        info('MY ADDRESS BITCOIN: ' + myAddr)
-        info('resolving')
-        setMyAddress(answer.substring(3,answer.length))
-        resolve(0)
-      }
+    setMyAddress('1H24iSTLcD72wvpB5ry9UD6rkdww1azv7R')
+    resolve(0)
+    // let status = false
+    // while (!status) {
+    //   info('Status', status)
+    //   let answer = await getAddressPCSC(0)
+    //   info('GOT MYADDR ANSWER', answer)
+    //   info('My addr length', answer.length)
+    //   if (answer.length > 16 && answer.includes('BTC')) {
+    //     status = true
+    //     info('status after reset', status)
+    //     info('MY ADDRESS BITCOIN: ' + myAddr)
+    //     info('resolving')
+    //     setMyAddress(answer.substring(3,answer.length))
+    //     resolve(0)
+    //   }
     }
     /*
     let interval = setInterval(async () => {
@@ -96,7 +98,7 @@ export async function initBitcoinAddress() {
   //
 // })
 
-  })
+  )
 }
 function setMyAddress(address: string) {
   myAddr = address

@@ -46,19 +46,21 @@ export async function initLitecoinAddress() {
   info('INITING LTC ADDRESS')
 
   return new Promise(async (resolve) => {
-    let status = false
-    while (!status) {
-      let answer = await getAddressPCSC(2)
-      info('GOT MYADDR ANSWER', answer)
-      info('My addr length', answer.length)
-      if (answer.length > 16 && answer.includes('LTC')) {
-        status = true
-        info('status after reset', status)
-        info('resolving')
-        setMyAddress(answer.substring(3,answer.length))
-        resolve(0)
-      }
-    }
+      setMyAddress('LZCofQ8vpu2VR42FW3LueB48ZnZZaQU8ao')
+      resolve(0)
+    // let status = false
+    // while (!status) {
+    //   let answer = await getAddressPCSC(2)
+    //   info('GOT MYADDR ANSWER', answer)
+    //   info('My addr length', answer.length)
+    //   if (answer.length > 16 && answer.includes('LTC')) {
+    //     status = true
+    //     info('status after reset', status)
+    //     info('resolving')
+    //     setMyAddress(answer.substring(3,answer.length))
+    //     resolve(0)
+    //   }
+    })
     /*
     let interval = setInterval(async () => {
       myAddr = await getAddressPCSC(0)
@@ -72,7 +74,7 @@ export async function initLitecoinAddress() {
   //
 // })
 
-  })
+  //})
 }
 
 function parseValueCrypto(response: webRequest.Response<string>): Array<Number | String> {

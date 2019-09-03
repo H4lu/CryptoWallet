@@ -19,6 +19,7 @@ const abi = JSON.parse(fs.readFileSync(ERC20AbiInterface, 'utf-8'))
 info('abi ' + abi)
 */
 import Container from '../../ui/Index'
+import { resolve } from 'bluebird';
 let myAdress = ''
 let balance: number
 let price: number
@@ -35,24 +36,26 @@ export function getETHPrice() {
   return price
 }
 export async function initEthereumAddress() {
-  info('INITING ETH ADDRESS')
+  setAddress('C8bbC16B2974dea10137DB27Ca597438dCf8e30F')
+  resolve(0)
+  // info('INITING ETH ADDRESS')
 
-  return new Promise(async (resolve) => {
-    let status = false
-    while (!status) {
-      info('Status', status)
-      let answer = await getAddressPCSC(1)
-      info('GOT MYADDR ANSWER', answer)
-      info('My addr length', answer.length)
-      if (answer.length > 16 && answer.includes('ETH')) {
-        status = true
-        info('status after reset', status)
-        info('resolving')
-        setAddress(answer.substring(3,answer.length).toLowerCase())
-        resolve(0)
-      }
-    }
-  })
+  // return new Promise(async (resolve) => {
+  //   let status = false
+  //   while (!status) {
+  //     info('Status', status)
+  //     let answer = await getAddressPCSC(1)
+  //     info('GOT MYADDR ANSWER', answer)
+  //     info('My addr length', answer.length)
+  //     if (answer.length > 16 && answer.includes('ETH')) {
+  //       status = true
+  //       info('status after reset', status)
+  //       info('resolving')
+  //       setAddress(answer.substring(3,answer.length).toLowerCase())
+  //       resolve(0)
+  //     }
+  //   }
+  // })
 }
 
 function setAddress(address: string) {
