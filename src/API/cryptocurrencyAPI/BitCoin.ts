@@ -13,7 +13,7 @@ import { sig } from '../hardwareAPI/GetSignature'
 // const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.bitcoin
-const NETWORK = 'test3'//test3 for testnet; main for mainnet
+const NETWORK = 'main'//test3 for testnet; main for mainnet
 const rootURL = 'https://chain.so/api/v2'
 const token = '4f92f3ddb25241c2a31a7673f824f815'
 const BLOCKCYPHER_URL = 'https://api.blockcypher.com/v1/btc/'

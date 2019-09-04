@@ -94,7 +94,7 @@ export function sig(id: number, address: string, amount: number): Promise<Buffer
       }
     })
   })
-  })
+  
 
 }
 export function getSignaturePCSC(id: number, message: Array<Buffer>, address: string, amount: number, numberOfInputs: number): Promise<Array<Buffer>> {
