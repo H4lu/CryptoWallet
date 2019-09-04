@@ -51,51 +51,49 @@ export function openPort(portName: string): Promise<SerialPort> {
 export function sig(id: number, address: string, amount: number): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     
-
-
-  //   if (address.length !== 34 && id !== 1) {
-  //     address = address + '0'
-  //   }
-  //   let xorData: any = address + amount.toString()
-  //   let xor = 0
-  //   for (let i in xorData) {
-  //     xor = xor ^ xorData[i].charCodeAt(0)
-  //   }
-  //   info('FINAL XOR', xor)
-  //   let amountBuf = new Buffer(16)
-  //   amountBuf.write(amount.toString(),0,amount.toString().length, 'ascii')
-  //   let code = 33
-  //   let message = Buffer.concat([Buffer.from([0xB1,0x50,0x00]),Buffer.from([xor]),Buffer.from([0x60]),Buffer.from([code]),Buffer.from([id]),amountBuf,Buffer.from(address)])
-  //   info('MESSAGE TO SEND',message)
-  //   getAnswer(id).then(data => info(data)).catch(err => info(err))
-  //   reader.transmit(message, 4,2, async (err,data) => {
-  //     if (err) {
-  //       info(err)
-  //       reject(err)
-  //     } else {
-  //       info(data)
-  //       let status = false
-  //       let timeout = setTimeout(async () => {
-  //         clearTimeout(timeout)
-  //         while (!status) {
-  //           let res = await getAnswer(id)
-  //           info('GOT PRIVATE RESP', res)
-  //           info('TO HEX', res.toString('hex'))
-  //           info(res[35])
-  //           if (res[35] === 33) {
-  //             status = true
-  //             getAnswer(id).then(data => info(data)).catch(err => info(err))
-  //             UpdateHWStatusPCSC(getBalance(),getBTCPrice(),getETBalance(),getETHPrice(),getLTalance(),getLTCPrice())
-  //             resolve(res)
-  //           } else if (res[35] === 63) {
-  //             status = true
-  //             reject()
-  //           }
-  //         }
-  //       },1000 ,[])
-  //     }
-  //   })
-  // })
+    if (address.length !== 34 && id !== 1) {
+      address = address + '0'
+    }
+    let xorData: any = address + amount.toString()
+    let xor = 0
+    for (let i in xorData) {
+      xor = xor ^ xorData[i].charCodeAt(0)
+    }
+    info('FINAL XOR', xor)
+    let amountBuf = new Buffer(16)
+    amountBuf.write(amount.toString(),0,amount.toString().length, 'ascii')
+    let code = 33
+    let message = Buffer.concat([Buffer.from([0xB1,0x50,0x00]),Buffer.from([xor]),Buffer.from([0x60]),Buffer.from([code]),Buffer.from([id]),amountBuf,Buffer.from(address)])
+    info('MESSAGE TO SEND',message)
+    getAnswer(id).then(data => info(data)).catch(err => info(err))
+    reader.transmit(message, 4,2, async (err,data) => {
+      if (err) {
+        info(err)
+        reject(err)
+      } else {
+        info(data)
+        let status = false
+        let timeout = setTimeout(async () => {
+          clearTimeout(timeout)
+          while (!status) {
+            let res = await getAnswer(id)
+            info('GOT PRIVATE RESP', res)
+            info('TO HEX', res.toString('hex'))
+            info(res[35])
+            if (res[35] === 33) {
+              status = true
+              getAnswer(id).then(data => info(data)).catch(err => info(err))
+              UpdateHWStatusPCSC(getBalance(),getBTCPrice(),getETBalance(),getETHPrice(),getLTalance(),getLTCPrice())
+              resolve(res)
+            } else if (res[35] === 63) {
+              status = true
+              reject()
+            }
+          }
+        },1000 ,[])
+      }
+    })
+  })
   })
 
 }
