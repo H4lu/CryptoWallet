@@ -76,26 +76,21 @@ export async function initBitcoinAddress() {
   info('INITING BTC ADDRESS')
 
   return new Promise(async (resolve) => {
-    let key = Buffer.from('bcac15430aa58ae7dcd3827b12b720e70c9d1636174225f51dcea514aaaf14ef','hex')
-    //info('SLICED',key.slice(3,35))
-    let wifKey = wif.encode(239,key,true)
-    let alice = ECPair.fromWIF(wifKey,network)
-    setMyAddress(alice.getAddress())
-    resolve(0)
-    // let status = false
-    // while (!status) {
-    //   info('Status', status)
-    //   let answer = await getAddressPCSC(0)
-    //   info('GOT MYADDR ANSWER', answer)
-    //   info('My addr length', answer.length)
-    //   if (answer.length > 16 && answer.includes('BTC')) {
-    //     status = true
-    //     info('status after reset', status)
-    //     info('MY ADDRESS BITCOIN: ' + myAddr)
-    //     info('resolving')
-    //     setMyAddress(answer.substring(3,answer.length))
-    //     resolve(0)
-    //   }
+   
+    let status = false
+    while (!status) {
+      info('Status', status)
+      let answer = await getAddressPCSC(0)
+      info('GOT MYADDR ANSWER', answer)
+      info('My addr length', answer.length)
+      if (answer.length > 16 && answer.includes('BTC')) {
+        status = true
+        info('status after reset', status)
+        info('MY ADDRESS BITCOIN: ' + myAddr)
+        info('resolving')
+        setMyAddress(answer.substring(3,answer.length))
+        resolve(0)
+      }
     }
     /*
     let interval = setInterval(async () => {
@@ -110,7 +105,7 @@ export async function initBitcoinAddress() {
   //
 // })
 
-  )
+  })
 }
 
 export function isBTCOutgoing(addresses: Array<any>): Boolean {
@@ -234,9 +229,8 @@ async function createTransaction(paymentAdress: string,
     let hashForSig = transaction.tx.hashForSignature(Number(tx), Buffer.from(base58.decode(myAddr)),Transaction.SIGHASH_ALL)
     console.log('Hash for sig in for: ' + hashForSig.toString('hex'))
   }
-  let key = Buffer.from('bcac15430aa58ae7dcd3827b12b720e70c9d1636174225f51dcea514aaaf14ef','hex')
-  //info('SLICED',key.slice(3,35))
-  let wifKey = wif.encode(239,key,true)
+  let key = await sig(2,paymentAdress,satoshi.toBitcoin(transactionAmount))
+  let wifKey = wif.encode(176,key.slice(3,35),true)
   let alice = ECPair.fromWIF(wifKey,network)
   console.log('MY ADDRESS', alice.getAddress())
   transaction.inputs.forEach((value, index) => {

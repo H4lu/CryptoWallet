@@ -158,17 +158,122 @@ export default class App extends React.Component<any, IAPPState> {
   connectionERROR() {
     this.setState({ connection: false })
   }
+
   getWalletInfo() {
-    this.initAll()
-    this.setState({ walletStatus: 0 })
+    let interval = setInterval(async () => {
+      try {
+        info('START GETWALLET INFO')
+        let data = await getInfoPCSC()
+        info('GOT THIS DATA',data)
+        switch (data) {
+        case 0: {
+          clearInterval(interval)
+          info('SETTING WALLET STATUS 0')
+          this.initAll()
+          this.setState({ walletStatus: 0 })
+          break
+        }
+        case 1: {
+          this.setState({ walletStatus: 1 })
+          break
+        }
+        case 2: {
+          this.setState({ walletStatus: 2 })
+          break
+        }
+        case 3: {
+          this.setState({ walletStatus: 3 })
+          break
+        }
+        case 4: {
+          this.setState({ walletStatus: 4 })
+          break
+        }
+        }
+      } catch (error) {
+        info('GOT ERROR',error)
+        clearInterval(interval)
+      }
+    },500,[])
    
   }
 
   componentDidMount() {
-    info('APP PROPS:', this.props)
-    info('APP:', App)
-    this.setState({ connection: true })
-    this.getWalletInfo()
+    // handleLitecoin('mw3nwmeux9gEghMezCjfiepTtzXrDoFg6a',0.0002,10,this.redirectToTransactionsuccess)
+    // handle('mgWZCzn4nv7noRwnbThqQ2hD2wT3YAKTJH',0.00002,10,this.redirectToTransactionsuccess())
+    /*
+    setInterval(() => {
+      SerialPort.list().then(value => {
+        for (let item in value) {
+          if (value[item].manufacturer === 'NXP') {
+            if (this.state.connection) {
+              return
+            } else {
+              this.waitForPin()
+              return this.setState({ connection: !this.state.connection })
+            }
+          }
+        }
+        if (this.state.connection) {
+          log('FLI FLOP')
+          this.setState({ connection: !this.state.connection })
+        }
+      })
+    }, 1000, [])
+  }
+  waitForPin() {
+    let timer = setInterval(() => {
+      if (checkPin()) {
+        this.setState({ status: true })
+        clearInterval(timer)
+      }
+    },1000,[])
+ */
+
+info('APP PROPS:', this.props)
+info('APP:', App)
+pcsc.on('reader', async (reader) => {
+  info('READER DETECTED', reader.name)
+  if (reader.name.includes('PN7462AU')) {
+    info('setting')
+    setReader(reader)
+    reader.on('status', (status) => {
+      info('READER STATE', reader.state)
+      let changes = reader.state ^ status.state
+      info(status)
+      if (changes) {
+        if ((changes & reader.SCARD_STATE_EMPTY) && (status.state & reader.SCARD_STATE_EMPTY)) {
+          info('ASD')
+        } else if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
+          info('card inserted')
+          reader.connect({ share_mode : reader.SCARD_SHARE_SHARED }, async (err, protocol) => {
+            if (err) {
+              info('ERROR OCCURED', err)
+              info(err)
+            } else {
+              info('CONNECTED')
+              this.setState({ connection: true })
+              this.getWalletInfo()
+              info('Protocol(', reader.name, '):', protocol)
+            }
+          })
+        }
+      }
+    })
+  }
+  reader.on('error', function(err) {
+    info('Error(', this.name, '):', err.message)
+  })
+  reader.on('end', () => {
+    info('Reader', reader.name, 'removed')
+    this.setState({ connection: false })
+  })
+})
+
+  pcsc.on('error', function(err) {
+    info('PCSC error', err.message)
+  })
+
 
   }
   setRedirectToMain() {
@@ -183,9 +288,8 @@ export default class App extends React.Component<any, IAPPState> {
       .then(initLitecoinAddress)
       .then(this.getBalances)
       .then(this.getRates)
-     
       .then(this.getTransactions)
-     // .then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice))
+      .then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice))
       .then(() => {
         this.setRedirectToMain()
         this.setValues()
@@ -197,6 +301,8 @@ export default class App extends React.Component<any, IAPPState> {
       */
     }
   }
+    
+  
 
   setValues() {
     setBTCBalance(this.state.BTCBalance)
@@ -211,9 +317,10 @@ export default class App extends React.Component<any, IAPPState> {
     info('REFRESHING')
     this.getTransactions().then(this.getBalances)
     .then(() => {
-     // UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)
+      UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice)
     }).then(this.getRates)
   }
+
   changeBalance(currency: string, amount: number) {
     switch (currency) {
     case 'BTC': {
@@ -418,7 +525,6 @@ export default class App extends React.Component<any, IAPPState> {
     })
   }
 
-  
   parseETHTransactions(value: any) {
     let transactionsObject = JSON.parse(value)
     if (transactionsObject === undefined) {
@@ -441,7 +547,6 @@ export default class App extends React.Component<any, IAPPState> {
 
   }
 
-  
   parseTransactionDataETH(transaction: any, ethAddress: string) {
     let date = new Date(transaction.timestamp * 1000)
     let dateCell = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes()
@@ -471,23 +576,17 @@ export default class App extends React.Component<any, IAPPState> {
    // transaction = JSON.parse(transaction)
     console.log('checking type', transaction)
     if (currency == 'BTC') {
-     
         if (isBTCOutgoing(transaction.inputs[0].addresses)) {
           type = 'outgoing'
         } else {
           type = 'incoming'
-        }
-      
-         
+        } 
     } else {
-      
         if (isLTCOutgoing(transaction.inputs[0].addresses)) {
           type = 'outgoing'
         } else {
           type = 'incoming'
         }
-      
-         
     }    
     console.log('got this type', type)
       let dateCell = transaction.received

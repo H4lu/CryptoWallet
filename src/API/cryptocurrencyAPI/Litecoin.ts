@@ -57,20 +57,20 @@ export async function initLitecoinAddress() {
   info('INITING LTC ADDRESS')
 
   return new Promise(async (resolve) => {
-      setMyAddress('LWg6S6nuMvF24FHQ3X4rm8p9WVYbFHB8fb')
-      resolve(0)
-    // let status = false
-    // while (!status) {
-    //   let answer = await getAddressPCSC(2)
-    //   info('GOT MYADDR ANSWER', answer)
-    //   info('My addr length', answer.length)
-    //   if (answer.length > 16 && answer.includes('LTC')) {
-    //     status = true
-    //     info('status after reset', status)
-    //     info('resolving')
-    //     setMyAddress(answer.substring(3,answer.length))
-    //     resolve(0)
-    //   }
+    
+    let status = false
+    while (!status) {
+      let answer = await getAddressPCSC(2)
+      info('GOT MYADDR ANSWER', answer)
+      info('My addr length', answer.length)
+      if (answer.length > 16 && answer.includes('LTC')) {
+        status = true
+        info('status after reset', status)
+        info('resolving')
+        setMyAddress(answer.substring(3,answer.length))
+        resolve(0)
+      }
+    }
     })
     /*
     let interval = setInterval(async () => {
