@@ -18,6 +18,15 @@ const NETWORK = 'LTC'
 let balance: number
 let price: number
 
+export function isLTCOutgoing(addresses: Array<any>) {
+  console.log('got this addrsses', addresses)
+  return addresses.indexOf(myAddress) > -1
+}
+
+export function getLitecoinAddress() {
+  return myAddress
+}
+
 export function setLTCBalance(bal: number) {
   balance = bal
 }
@@ -78,21 +87,21 @@ export async function initLitecoinAddress() {
 }
 
 function parseValueCrypto(response: webRequest.Response<string>): Array<Number | String> {
-  let parsedResponse = JSON.parse(response.content).data
-  info('PARSED RESP IN PARSE', parsedResponse)
-  info('CONFIRMED BALANCE',Number(parsedResponse.confirmed_balance),parsedResponse.confirmed_balance)
-  info('UNCONFIRMED',Number(parsedResponse.unconfirmed_balance),parsedResponse.unconfirmed_balance)
-  let balance = Number(parsedResponse.confirmed_balance) + Number(parsedResponse.unconfirmed_balance)
-  info('BALANCE', balance)
-  info('BALANCE TO STRING', String(balance))
-  info(balance.toString())
-  info(Number(balance).toString(10))
-  info(Number(balance).toString())
+  let parsedResponse = JSON.parse(response.content)
+  // info('PARSED RESP IN PARSE', parsedResponse)
+  // info('CONFIRMED BALANCE',Number(parsedResponse.confirmed_balance),parsedResponse.confirmed_balance)
+  // info('UNCONFIRMED',Number(parsedResponse.unconfirmed_balance),parsedResponse.unconfirmed_balance)
+  // let balance = Number(parsedResponse.confirmed_balance) + Number(parsedResponse.unconfirmed_balance)
+  // info('BALANCE', balance)
+  // info('BALANCE TO STRING', String(balance))
+  // info(balance.toString())
+  // info(Number(balance).toString(10))
+  // info(Number(balance).toString())
   let arr = []
   arr.push('LTC')
-  arr.push(Number(balance.toFixed(8)))
-  let answer = { 'LTC': balance }
-  info('ANSWERING IN PARSEVALUE CRYPTO',arr,answer,arr[1])
+  arr.push(Number(parsedResponse.final_balance))
+  // let answer = { 'LTC': balance }
+  // info('ANSWERING IN PARSEVALUE CRYPTO',arr,answer,arr[1])
   return arr
 }
 

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import CreateQR from '../core/CreateQR'
-import getBitcoinAddress from '../API/cryptocurrencyAPI/BitCoin'
+import { getBitcoinAddress } from '../API/cryptocurrencyAPI/BitCoin'
 import { clipboard } from 'electron'
 import { Table } from './Table'
 import { sendTransaction } from '../core/SendTransaction'
