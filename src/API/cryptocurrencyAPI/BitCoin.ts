@@ -127,7 +127,7 @@ export function getBitcoinAddress() {
 export async function getBitcoinLastTx(): Promise<any> {
   console.log('CALLING BTC')
   try {
-    const requestUrl = BLOCKCYPHER_URL + NETWORK + '/addrs/' + myAddr + '/full?limit=20'
+    const requestUrl = BLOCKCYPHER_URL + NETWORK + '/addrs/' + myAddr + '/full?limit=50'
    // const requestUrl = rootURL + '/address/' + NETWORK + '/' + myAddr
     console.log('My req url: ' + requestUrl)
     let response = await webRequest.get(requestUrl)
