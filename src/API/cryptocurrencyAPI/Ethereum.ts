@@ -36,7 +36,7 @@ export function getETHPrice() {
   return price
 }
 export async function initEthereumAddress() {
-  setAddress('C8bbC16B2974dea10137DB27Ca597438dCf8e30F')
+  setAddress('00D29E0E2A2871C28CE9EFDd121AFC8D9eceefFE')
   resolve(0)
   // info('INITING ETH ADDRESS')
 

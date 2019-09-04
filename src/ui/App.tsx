@@ -340,54 +340,72 @@ export default class App extends React.Component<any, IAPPState> {
   getTransactions() {
     return Promise.all([getBitcoinLastTx(), getLitecoinLastTx(), getEthereumLastTx()]).then(value => {
       console.log('PROMISE ALL VALUE', value)
+      console.log('value length', value.length)
       for (let index in value) {
         console.log('looping', index)
-        switch(Number(index)) {
-          case 0: {
-              console.log('parsing btc tx')
-              let parsed = JSON.parse(value[index].content)
-              console.log('got this parsed', parsed)
-              console.log('txs', parsed.txs)
-              for (let i in parsed.txs) {
-                console.log('tx in txs', parsed.txs[i])
-                let parsedTx = this.parseTransactionDataBTC(parsed.txs[i], 'BTC')
-                console.log('got this parsed tx', parsedTx)
-                let findResp = this.state.BTCLastTx.find(function (obj) {
-                  return obj.Hash === Object(parsedTx).Hash
-                })
-                if (findResp === undefined) {
-                  this.setState({ BTCLastTx: [...this.state.BTCLastTx, parsedTx] })
-                } else if (Object(parsedTx).Status !== findResp.Status) {
-                  for (let index in this.state.BTCLastTx) {
-                    if (this.state.BTCLastTx[index].Hash === Object(parsedTx).Hash) this.state.BTCLastTx[index].Status = Object(parsedTx).Status
-                  }
-                }
-                console.log('last tx state', this.state.BTCLastTx)
+        if (Number(index) == 0) {
+          let parsed = JSON.parse(value[index].content)
+          for (let i in parsed.txs) {
+            if (parsed.txs[i].inputs[0].addresses == undefined) {
+              continue
+            }
+            console.log('tx in txs', parsed.txs[i])
+            let parsedTx = this.parseTransactionDataBTC(parsed.txs[i], 'BTC')
+            console.log('got this parsed tx', parsedTx)
+            let findResp = this.state.BTCLastTx.find(function (obj) {
+              return obj.Hash === Object(parsedTx).Hash
+            })
+            if (findResp === undefined) {
+              this.setState({ BTCLastTx: [...this.state.BTCLastTx, parsedTx] })
+            } else if (Object(parsedTx).Status !== findResp.Status) {
+              for (let index in this.state.BTCLastTx) {
+                if (this.state.BTCLastTx[index].Hash === Object(parsedTx).Hash) this.state.BTCLastTx[index].Status = Object(parsedTx).Status
               }
-              
-              break
+            }
+            console.log('last tx state', this.state.BTCLastTx)
           }
-          case 1: {
-              console.log('PArsing eth tx')
-              this.parseETHTransactions(value[index].content)
-              break
-          }
-          case 2: { 
-              let parsedTx = this.parseTransactionDataBTC(value[index].content, 'LTC')
-              let findResp = this.state.LTCLastTx.find(function (obj) {
-                return obj.Hash === Object(parsedTx).Hash
-              })
-              if (findResp === undefined) {
-                this.setState({ LTCLastTx: [...this.state.LTCLastTx, parsedTx] })
-              } else if (Object(parsedTx).Status !== findResp.Status) {
-                for (let index in this.state.LTCLastTx) {
-                  if (this.state.LTCLastTx[index].Hash === Object(parsedTx).Hash) this.state.LTCLastTx[index].Status = Object(parsedTx).Status
-                }
+          
+        } else if (Number(index) == 1) {
+          let parsed = JSON.parse(value[index].content)
+          for (let i in parsed.txs) {
+            console.log('tx in txs', parsed.txs[i])
+            if (parsed.txs[i].inputs[0].addresses == undefined) {
+              continue
+            }
+            let parsedTx = this.parseTransactionDataBTC(parsed.txs[i], 'LTC')
+           
+            let findResp = this.state.LTCLastTx.find(function (obj) {
+              return obj.Hash === Object(parsedTx).Hash
+            })
+            if (findResp === undefined) {
+              this.setState({ LTCLastTx: [...this.state.LTCLastTx, parsedTx] })
+            } else if (Object(parsedTx).Status !== findResp.Status) {
+              for (let index in this.state.BTCLastTx) {
+                if (this.state.LTCLastTx[index].Hash === Object(parsedTx).Hash) this.state.BTCLastTx[index].Status = Object(parsedTx).Status
               }
-              break
+            }
+         
           }
-
+        } else {
+          console.log('PArsing eth tx', value[index].content)
+          this.parseETHTransactions(value[index].content)
         }
+        // switch(Number(index)) {
+        //   case 0: {
+             
+        //       break
+        //   }
+        //   case 1: {
+           
+        //       break
+              
+        //   }
+        //   case 2: { 
+           
+        //     break
+        //   }
+
+        // }
         // if (Object.prototype.hasOwnProperty.call(JSON.parse(value[index].content),'txs')) {
         //   console.log('Parsing btc-like tx')
         //   this.parseBTCLikeTransactions(value[index].content)
@@ -449,20 +467,27 @@ export default class App extends React.Component<any, IAPPState> {
   parseTransactionDataBTC(transaction: any, currency: string): Object {
     let returnedObject = {}
     let type = ''
+ 
    // transaction = JSON.parse(transaction)
     console.log('checking type', transaction)
     if (currency == 'BTC') {
-         if (isBTCOutgoing(transaction.inputs[0].addresses)) {
-           type = 'outgoing'
-         } else {
-           type = 'incoming'
-         }
+     
+        if (isBTCOutgoing(transaction.inputs[0].addresses)) {
+          type = 'outgoing'
+        } else {
+          type = 'incoming'
+        }
+      
+         
     } else {
-         if (isLTCOutgoing(transaction.inputs[0].addresses)) {
-           type = 'outgoing'
-         } else {
-           type = 'incoming'
-         }
+      
+        if (isLTCOutgoing(transaction.inputs[0].addresses)) {
+          type = 'outgoing'
+        } else {
+          type = 'incoming'
+        }
+      
+         
     }    
     console.log('got this type', type)
       let dateCell = transaction.received

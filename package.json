@@ -1,6 +1,6 @@
 {
   "name": "CryptoWallet",
-  "version": "1.0.5a",
+  "version": "1.0.5b",
   "main": "dist/main.js",
   "license": "MIT",
   "author": "Denis Golovkov <halurecht@gmail.com>",

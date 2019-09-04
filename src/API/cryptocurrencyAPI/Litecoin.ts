@@ -2,6 +2,7 @@ import { TransactionBuilder, networks, Transaction, ECPair } from 'bitcoinjs-lib
 import * as Request from 'request'
 import * as webRequest from 'web-request'
 import * as utils from './utils'
+import * as base58 from 'bs58'
 // import * as crypto from 'crypto'
 import { getAddressPCSC } from '../hardwareAPI/GetAddress'
 // import { Transaction, TransactionBuilder, networks } from 'bitcoinjs-lib'
@@ -13,8 +14,9 @@ let myAddress = ''
 const rootURL = 'https://chain.so/api/v2'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.litecoin
-const NETWORK = 'LTC'
-
+const NETWORK = 'main'//test3 for testnet; main for mainnet
+const token = '4f92f3ddb25241c2a31a7673f824f815'
+const BLOCKCYPHER_URL = 'https://api.blockcypher.com/v1/ltc/'
 let balance: number
 let price: number
 
@@ -55,7 +57,7 @@ export async function initLitecoinAddress() {
   info('INITING LTC ADDRESS')
 
   return new Promise(async (resolve) => {
-      setMyAddress('LZCofQ8vpu2VR42FW3LueB48ZnZZaQU8ao')
+      setMyAddress('LWg6S6nuMvF24FHQ3X4rm8p9WVYbFHB8fb')
       resolve(0)
     // let status = false
     // while (!status) {
@@ -99,7 +101,7 @@ function parseValueCrypto(response: webRequest.Response<string>): Array<Number |
   // info(Number(balance).toString())
   let arr = []
   arr.push('LTC')
-  arr.push(Number(parsedResponse.final_balance))
+  arr.push(Number(satoshi.toBitcoin(parsedResponse.final_balance)))
   // let answer = { 'LTC': balance }
   // info('ANSWERING IN PARSEVALUE CRYPTO',arr,answer,arr[1])
   return arr
@@ -113,7 +115,7 @@ function setMyAddress(address: string) {
 export async function getLitecoinLastTx(): Promise<any> {
   info('CALLING LTC')
   try {
-    const requestUrl = rootURL + '/address/' + NETWORK + '/' + myAddress
+    const requestUrl = BLOCKCYPHER_URL + NETWORK + '/addrs/' + myAddress + '/full?limit=50'
     let response = await webRequest.get(requestUrl)
     info('GOT THIS',response)
     return response
@@ -134,7 +136,7 @@ export async function getLTCBalance(): Promise<Array<Number | String>> {
     address - наш адрес
     0 - количество подтверждений транзакций
   */
-  let requestUrl = 'https://api.blockcypher.com/v1/ltc/main/addrs/' + myAddress + '/balance'
+  const requestUrl = BLOCKCYPHER_URL + NETWORK + '/addrs/' + myAddress + '/balance'
   info(requestUrl)
   try {
     // Делаем запрос и отдаём в виде Promise
@@ -152,7 +154,7 @@ function toSatoshi(BTC: number): number {
 }
 
 async function getLastTransactionData(): Promise<any> {
-  let requestUrl = 'https://chain.so/api/v2/get_tx_unspent/' + NETWORK + '/' + myAddress
+  const requestUrl = BLOCKCYPHER_URL + NETWORK + '/addrs/' + myAddress + '?unspentOnly=true'
   try {
     const response = await webRequest.get(requestUrl)
     info('Raw response: ' + response.content)
@@ -184,13 +186,13 @@ async function createTransaction(paymentAdress: string,
     value: transactionAmount
   }
   info('Got this utxos: ' + utxos)
-  let { inputs, outputs, fee } = coinSelect(utxos, targets, 100)
+  let { inputs, outputs, fee } = coinSelect(utxos, targets, 70)
   info('Got this inputs: ' + inputs)
       // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
   info(fee)
   let transaction = new TransactionBuilder(network)
   for (let input in inputs) {
-    transaction.addInput(inputs[input].txid, inputs[input].output_no)
+    transaction.addInput(inputs[input].tx_hash, inputs[input].tx_output_n)
     info('Tx inputs: ' + transaction.inputs)
   }
   for (let out in outputs) {
@@ -204,7 +206,7 @@ async function createTransaction(paymentAdress: string,
   // let sig: string = ''
   for (let tx in inputs) {
     info('Index: ' + tx)
-    let hashForSig = transaction.tx.hashForSignature(Number(tx), Buffer.from(Object(utxos[Number(tx)]).script_hex),Transaction.SIGHASH_ALL)
+    let hashForSig = transaction.tx.hashForSignature(Number(tx), Buffer.from(base58.decode(myAddress)),Transaction.SIGHASH_ALL)
     info('Hash for sig in for: ' + hashForSig.toString('hex'))
   }
   transaction.inputs.map(value => {
@@ -389,7 +391,7 @@ function sendTransaction(transactionHex: string, redirect: any) {
 
 function sendByBlockcypher(transactionHex: string, redirect: any) {
   Request.post({
-    url: 'https://api.blockcypher.com/v1/ltc/main/txs/push',
+    url: BLOCKCYPHER_URL + NETWORK + '/txs/push?token=' + token,
     headers: {
       'content-type': 'application/json'
     },
@@ -401,20 +403,13 @@ function sendByBlockcypher(transactionHex: string, redirect: any) {
         info(res), info(err)
         let bodyStatus = body
         info(bodyStatus.tx.hash)
-        if (err !== null) {
-          if (err.statusMessage === 'Conflict') {
-            alert('Conflict')
-            return
-          }
+        if (err == null) {
+          redirect()
+        } else {
+          console.log('ERROR IN SEND BY BLOCKCYPHER', err)
+          alert(err.body.error)
         }
-        try {
-          if (body.tx.confirmations === 0) {
-            redirect()
-            // alert('Transaction sended! Hash: ' + Object(body).tx.hash)
-          }
-        } catch (error) {
-          alert('Error occured: ' + Object(body).error)
-        }
+        
       })
 }
 
@@ -424,28 +419,23 @@ export function handleLitecoin(paymentAdress: string, amount: number, transactio
   // let code = 239
   getLastTransactionData().then(Response => {
     let respData = JSON.parse(Response.content)
-    info('RespData: ' + respData.data)
-    info('Resp status: ' + respData.status)
-    if (respData.status === 'success') {
-      info('In success')
-      let utxos = []
-      for (let utxo in respData.data.txs) {
-        let temp = respData.data.txs[utxo].value
-        respData.data.txs[utxo].value = toSatoshi(temp)
-        info('My value: ' + respData.data.txs[utxo].value)
-        utxos.push(respData.data.txs[utxo])
-        info('Utxo: ' + utxo)
-        info('Utxos: ' + utxos)
-      }
-      amount = toSatoshi(amount)
-      createTransaction(paymentAdress, amount, transactionFee, redirect, utxos).catch(err => {
-        info(err)
-      })
-    } else {
-      alert('Error provided by internet connection')
+    info('In success')
+    let utxos = []
+    for (let utxo in respData.txrefs) {
+      let temp = respData.txrefs[utxo].value
+     // respData.txrefs[utxo].value = toSatoshi(temp)
+      console.log('My value: ' + respData.txrefs[utxo].value)
+      utxos.push(respData.txrefs[utxo])
+      console.log('Utxo: ' + utxo)
+      console.log('Utxos: ' + utxos)
     }
+    amount = toSatoshi(amount)
+    createTransaction(paymentAdress, amount, transactionFee, redirect, utxos).catch(err => {
+      info(err)
+    })
+   
   }).catch((error: any) => {
-    info(error)
+    console.log(error)
   })
 }
 
