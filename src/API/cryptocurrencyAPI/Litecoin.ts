@@ -157,8 +157,7 @@ async function getLastTransactionData(): Promise<any> {
   const requestUrl = BLOCKCYPHER_URL + NETWORK + '/addrs/' + myAddress + '?unspentOnly=true'
   try {
     const response = await webRequest.get(requestUrl)
-    info('Raw response: ' + response.content)
-    info('Response of last tx: ' + JSON.parse(response.content).data.txs)
+
     return response
   } catch (error) {
     Promise.reject(error).catch(error => {
@@ -178,18 +177,16 @@ async function getLastTransactionData(): Promise<any> {
 */
 async function createTransaction(paymentAdress: string,
     transactionAmount: number,transactionFee: number, redirect: any, utxos: Array<any>) {
-  info(redirect)
-  info('Tx amount: ' + transactionAmount)
-  info(transactionFee)
+  
   let targets = {
     address: paymentAdress,
     value: transactionAmount
   }
-  info('Got this utxos: ' + utxos)
+ 
   let { inputs, outputs, fee } = coinSelect(utxos, targets, 70)
-  info('Got this inputs: ' + inputs)
+
       // Создаём новый объект транзакции. Используется библиотека bitcoinjs-lib
-  info(fee)
+ 
   let transaction = new TransactionBuilder(network)
   for (let input in inputs) {
     transaction.addInput(inputs[input].tx_hash, inputs[input].tx_output_n)
@@ -202,12 +199,12 @@ async function createTransaction(paymentAdress: string,
     transaction.addOutput(outputs[out].address, outputs[out].value)
   }
   let unbuildedTx = transaction.buildIncomplete().toHex()
-  info('Unbuilded: ' + transaction.buildIncomplete().toHex())
+ 
   // let sig: string = ''
   for (let tx in inputs) {
-    info('Index: ' + tx)
+    
     let hashForSig = transaction.tx.hashForSignature(Number(tx), Buffer.from(base58.decode(myAddress)),Transaction.SIGHASH_ALL)
-    info('Hash for sig in for: ' + hashForSig.toString('hex'))
+    
   }
   transaction.inputs.map(value => {
     info('MAPPED INPUT: ' + value)
@@ -260,20 +257,20 @@ async function createTransaction(paymentAdress: string,
     info('SHIFT: ' + shift)
     */
   // })
-  info('UNBUILDED TX: ' + unbuildedTx)
+ 
   let key = await sig(2,paymentAdress,satoshi.toBitcoin(transactionAmount))
   let wifKey = wif.encode(176,key.slice(3,35),true)
   let alice = ECPair.fromWIF(wifKey,network)
-  info('LTC ADDRESS', alice.getAddress())
+  
   transaction.inputs.forEach((value,index) => {
     transaction.sign(index,alice)
     info('SIG VALUE', value)
   })
   // info('DATA: ' + data)
   let final = transaction.build().toHex()
-  info('FIANL', final)
+ 
   sendByBlockcypher(final, redirect)
-  info('Final sig: ' + sig)
+  
   // Добавляем вход транзакции в виде хэша предыдущей транзакции и номер выхода с нашим адресом
   // Добавляем выход транзакции, где указывается адрес и сумма перевода
   // transaction.addOutput(paymentAdress, transactionAmount)
@@ -424,10 +421,9 @@ export function handleLitecoin(paymentAdress: string, amount: number, transactio
     for (let utxo in respData.txrefs) {
       let temp = respData.txrefs[utxo].value
      // respData.txrefs[utxo].value = toSatoshi(temp)
-      console.log('My value: ' + respData.txrefs[utxo].value)
+   
       utxos.push(respData.txrefs[utxo])
-      console.log('Utxo: ' + utxo)
-      console.log('Utxos: ' + utxos)
+
     }
     amount = toSatoshi(amount)
     createTransaction(paymentAdress, amount, transactionFee, redirect, utxos).catch(err => {

@@ -12,7 +12,7 @@ import * as wif from 'wif'
 import { sig } from '../hardwareAPI/GetSignature'
 // const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
-const network = networks.testnet
+const network = networks.bitcoin
 const NETWORK = 'test3'//test3 for testnet; main for mainnet
 const rootURL = 'https://chain.so/api/v2'
 const token = '4f92f3ddb25241c2a31a7673f824f815'
@@ -229,8 +229,8 @@ async function createTransaction(paymentAdress: string,
     let hashForSig = transaction.tx.hashForSignature(Number(tx), Buffer.from(base58.decode(myAddr)),Transaction.SIGHASH_ALL)
     console.log('Hash for sig in for: ' + hashForSig.toString('hex'))
   }
-  let key = await sig(2,paymentAdress,satoshi.toBitcoin(transactionAmount))
-  let wifKey = wif.encode(176,key.slice(3,35),true)
+  let key = await sig(0,paymentAdress,satoshi.toBitcoin(transactionAmount))
+  let wifKey = wif.encode(128,key.slice(3,35),true)
   let alice = ECPair.fromWIF(wifKey,network)
   console.log('MY ADDRESS', alice.getAddress())
   transaction.inputs.forEach((value, index) => {

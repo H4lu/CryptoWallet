@@ -36,26 +36,22 @@ export function getETHPrice() {
   return price
 }
 export async function initEthereumAddress() {
-  setAddress('00D29E0E2A2871C28CE9EFDd121AFC8D9eceefFE')
-  resolve(0)
-  // info('INITING ETH ADDRESS')
-
-  // return new Promise(async (resolve) => {
-  //   let status = false
-  //   while (!status) {
-  //     info('Status', status)
-  //     let answer = await getAddressPCSC(1)
-  //     info('GOT MYADDR ANSWER', answer)
-  //     info('My addr length', answer.length)
-  //     if (answer.length > 16 && answer.includes('ETH')) {
-  //       status = true
-  //       info('status after reset', status)
-  //       info('resolving')
-  //       setAddress(answer.substring(3,answer.length).toLowerCase())
-  //       resolve(0)
-  //     }
-  //   }
-  // })
+  return new Promise(async (resolve) => {
+    let status = false
+    while (!status) {
+      info('Status', status)
+      let answer = await getAddressPCSC(1)
+      info('GOT MYADDR ANSWER', answer)
+      info('My addr length', answer.length)
+      if (answer.length > 16 && answer.includes('ETH')) {
+        status = true
+        info('status after reset', status)
+        info('resolving')
+        setAddress(answer.substring(3,answer.length).toLowerCase())
+        resolve(0)
+      }
+    }
+  })
 }
 
 function setAddress(address: string) {
