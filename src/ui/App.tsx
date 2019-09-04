@@ -520,7 +520,9 @@ export default class App extends React.Component<any, IAPPState> {
   }
   getBalances() {
     return Promise.all([getBTCBalance(),getETHBalance(), getLTCBalance()]).then(value => {
+      info(value)
       for (let item in value) {
+        info(item)
         info('SUBSTRING' + value[item][0])
         info('VALUE OF SUB', value[item][1])
         switch (value[item][0]) {

@@ -5,11 +5,11 @@
   "directories": {
     "output": "dist"
   },
-  "main": "/dist/main.js"
+  "main": "/dist/main.js",
   "files": [
-     "dist/**",
-     "static/**",
-     "!webpack.config.js"
+    "dist/**",
+    "static/**",
+    "!webpack.config.js",
     "!*.ts",
     "!*.code-workspace",
     "!LICENSE.md",

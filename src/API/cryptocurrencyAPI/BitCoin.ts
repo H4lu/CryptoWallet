@@ -43,15 +43,15 @@ export async function getBitcoinSmartBitBalance(): Promise<webRequest.Response<s
 }
 function parseValueCrypto(response: webRequest.Response<string>): Array<any> {
   let parsedResponse = JSON.parse(response.content).data
-  info('PARSED RESP IN PARSE', parsedResponse)
-  info('CONFIRMED BALANCE',Number(parsedResponse.confirmed_balance),parsedResponse.confirmed_balance)
-  info('UNCONFIRMED',Number(parsedResponse.unconfirmed_balance),parsedResponse.unconfirmed_balance)
+  console.log('PARSED RESP IN PARSE', parsedResponse)
+  console.log('CONFIRMED BALANCE',Number(parsedResponse.confirmed_balance),parsedResponse.confirmed_balance)
+  console.log('UNCONFIRMED',Number(parsedResponse.unconfirmed_balance),parsedResponse.unconfirmed_balance)
   let balance = Number(parsedResponse.confirmed_balance) + Number(parsedResponse.unconfirmed_balance)
-  info('BALANCE', balance)
-  info('BALANCE TO STRING', String(balance))
-  info(balance.toString())
-  info(Number(balance).toString(10))
-  info(Number(balance).toString())
+  console.log('BALANCE', balance)
+  console.log('BALANCE TO STRING', String(balance))
+  console.log(balance.toString())
+  console.log(Number(balance).toString(10))
+  console.log(Number(balance).toString())
   let arr = []
   arr.push('BTC')
   arr.push(Number(balance.toFixed(8)))
