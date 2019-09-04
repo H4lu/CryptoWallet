@@ -50,6 +50,7 @@ export function openPort(portName: string): Promise<SerialPort> {
 */
 export function sig(id: number, address: string, amount: number): Promise<Buffer> {
   return new Promise((resolve, reject) => {
+    
     if (address.length !== 34 && id !== 1) {
       address = address + '0'
     }
@@ -93,6 +94,7 @@ export function sig(id: number, address: string, amount: number): Promise<Buffer
       }
     })
   })
+  
 
 }
 export function getSignaturePCSC(id: number, message: Array<Buffer>, address: string, amount: number, numberOfInputs: number): Promise<Array<Buffer>> {

@@ -91,15 +91,5 @@ class MainContent extends React.Component<any, any> {
   }
 }
 
-function mapStateToProps(state: any, IMainContentProps) {
-  console.log('MY STATE: ' + state)
-  console.log(state)
-  console.log(JSON.stringify(state))
-  console.log(IMainContentProps)
-  console.log('BALANCE STATE: ' + state.getBalance)
-  return {
-    balance: state.getBalance
-  }
-}
 
-export default connect(mapStateToProps)(MainContent)
+export default MainContent

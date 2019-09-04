@@ -19,6 +19,7 @@ const abi = JSON.parse(fs.readFileSync(ERC20AbiInterface, 'utf-8'))
 info('abi ' + abi)
 */
 import Container from '../../ui/Index'
+import { resolve } from 'bluebird';
 let myAdress = ''
 let balance: number
 let price: number
@@ -35,8 +36,6 @@ export function getETHPrice() {
   return price
 }
 export async function initEthereumAddress() {
-  info('INITING ETH ADDRESS')
-
   return new Promise(async (resolve) => {
     let status = false
     while (!status) {
