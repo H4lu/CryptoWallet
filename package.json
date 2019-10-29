@@ -60,7 +60,7 @@
     "url-loader": "^0.6.2",
     "web-request": "^1.0.7",
     "webpack-cli": "^2.0.12",
-    "webpack-dev-server": "^2.9.7",
+    "webpack-dev-server": "^3.1.11",
     "websocket": "^1.0.25",
     "win-7zip": "^0.1.1"
   },
