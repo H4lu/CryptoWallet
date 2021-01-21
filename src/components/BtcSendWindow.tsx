@@ -59,7 +59,7 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
         this.classFee1 = this.setClass1()
         this.classFee2 = this.setClass2()
         this.classFee3 = this.setClass3()
-        this.feeCoeff = Math.floor(getFee()*0.7)+1
+        this.feeCoeff = Math.floor(getFee(1)*0.7)+1
     }
 
     handleAddressChange(e: any) {

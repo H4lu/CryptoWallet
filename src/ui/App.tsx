@@ -615,9 +615,6 @@ export default class App extends React.Component<any, IAPPState> {
 
 
     async componentDidMount() {
-
-        info('APP PROPS:', this.props)
-        info('APP:', App)
         pcsc.on('reader', async (reader) => {
             info('READER DETECTED', reader.name)
             info('setting')
@@ -689,8 +686,9 @@ export default class App extends React.Component<any, IAPPState> {
     initAll() {
         info('initAll')
         if (this.state.allowInit) {
+            info('initing')
             this.setState({allowInit: false})
-            initBitcoinAddress().then(initEthereumAddress).then(initLitecoinAddress).then(initRippleAddress).then(this.getRates).then(this.getBalances).then(this.getTransactions).then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions)).then(() => {
+            initBitcoinAddress().then(initEthereumAddress).then(initLitecoinAddress).then(initRippleAddress).then(this.getBalances).then(this.getTransactions).then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions)).then(() => {
                 this.setRedirectToMain()
                 this.setValues()
             }).then(this.updateData).then(this.setChartBTC).then(() =>updateTransactionsPCSC(this.state.BTCLastTx, this.state.ETHLastTx,this.state.LTCLastTx,this.state.XRPLastTx))
@@ -711,7 +709,7 @@ export default class App extends React.Component<any, IAPPState> {
     updateData() {
         info('REFRESHING')
         this.setState({numTransactions: 0})
-        this.getTransactions().then(this.getBalances).then(this.getRates)
+        this.getTransactions().then(this.getBalances)
             .then(() => {
                 UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions)
             })
@@ -830,6 +828,7 @@ export default class App extends React.Component<any, IAPPState> {
     }
 
     getBalances() {
+        info('getting balances')
         return Promise.all([getBTCBalance(), getETHBalance(), getLTCBalance(), getXRPBalance()]).then(value => {
             for (let item in value) {
                 info('SUBSTRING' + value[item][0])

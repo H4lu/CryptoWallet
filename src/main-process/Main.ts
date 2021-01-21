@@ -2,7 +2,11 @@ import { app, BrowserWindow, Menu, ipcMain } from 'electron'
 // import installExtension , { REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } from 'electron-devtools-installer'
 /*import * as url from 'url'
 import * as path from 'path'*/
-// import * as log from 'electron-log'
+import * as log from 'electron-log'
+
+log.transports.console.format = '{h}:{i}:{s} {text}'
+
+
 declare var __dirname: string
 let mainWindow: BrowserWindow
 ipcMain.once('close', () => {
@@ -17,6 +21,7 @@ app.on('ready', () => {
   mainWindow = new BrowserWindow({ width: 1366, height: 768, resizable: false,
     fullscreen: false, frame: false })
   mainWindow.loadURL(`file:///${__dirname}/index.html`)
+  mainWindow.webContents.toggleDevTools()
 //  setupLogger()
   mainWindow.once('ready-to-show', () => mainWindow.show())
 

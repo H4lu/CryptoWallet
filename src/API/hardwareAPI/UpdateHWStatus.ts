@@ -1,6 +1,6 @@
 import {reader} from './Reader'
 import {Buffer} from "buffer";
-
+import {info, log} from 'electron-log'
 
 export function UpdateHWStatusPCSC(BTC_BAL: number, BTC_USD: number, ETH_BAL: number, ETH_USD: number, LTC_BAL: number, LTC_USD: number, XRP_BAL: number, XRP_USD: number, numTr: number) {
 
@@ -53,6 +53,9 @@ export function UpdateHWStatusPCSC(BTC_BAL: number, BTC_USD: number, ETH_BAL: nu
     let BuffBTC = Buffer.concat([Buffer.from([0xB0, 0x50, 0x00]), Buffer.from([0x00]), Buffer.from([0x10]), tempBufferBTC, tempBufferWallet])
 
     reader.transmit(BuffBTC, 20, 2, (err, data) => {
+        info('transmitted update hwpcsc')
+        info(err)
+        info(data)
     })
 
     // ETH
@@ -79,6 +82,9 @@ export function UpdateHWStatusPCSC(BTC_BAL: number, BTC_USD: number, ETH_BAL: nu
     let BuffETH = Buffer.concat([Buffer.from([0xB0, 0x50, 0x00]), Buffer.from([0x01]), Buffer.from([0x10]), tempBufferETH, tempBufferWallet])
 
     reader.transmit(BuffETH, 20, 2, (err, data) => {
+        info('transmitted update hwpcsc')
+        info(err)
+        info(data)
     })
 
 
@@ -132,12 +138,13 @@ export function UpdateHWStatusPCSC(BTC_BAL: number, BTC_USD: number, ETH_BAL: nu
     let BuffXRP = Buffer.concat([Buffer.from([0xB0, 0x50, 0x00]), Buffer.from([0x03]), Buffer.from([0x10]), tempBufferXRP, tempBufferWallet])
 
     reader.transmit(BuffXRP, 20, 2, (err, data) => {
+        console.log
     })
 
 }
 
 export async function updateTransactionsPCSC(txBTC: Array<any>, txETH: Array<any>, txLTC: Array<any>, txXRP: Array<any>) {
-
+    info('updating tx pcsc')
     let arrTx: Array<Buffer> = []
     for (let index in txBTC) {
         let code = Buffer.from([0x00])
