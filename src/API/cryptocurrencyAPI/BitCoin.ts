@@ -10,7 +10,7 @@ import * as satoshi from 'satoshi-bitcoin'
 import * as wif from 'wif'
 import { sig } from '../hardwareAPI/GetSignature'
 // const urlSmartbit = 'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx'
-const urlChainSo = 'https://chain.so/api/v2/send_tx/'
+// const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.bitcoin
 const NETWORK = 'BTC'
 const rootURL = 'https://chain.so/api/v2'
@@ -42,11 +42,8 @@ export async function getBitcoinSmartBitBalance(): Promise<webRequest.Response<s
   }
 }
 function parseValueCrypto(response: webRequest.Response<string>): Array<any> {
-  let parsedResponse = JSON.parse(response.content).data
-  info('PARSED RESP IN PARSE', parsedResponse)
-  info('CONFIRMED BALANCE',Number(parsedResponse.confirmed_balance),parsedResponse.confirmed_balance)
-  info('UNCONFIRMED',Number(parsedResponse.unconfirmed_balance),parsedResponse.unconfirmed_balance)
-  let balance = Number(parsedResponse.confirmed_balance) + Number(parsedResponse.unconfirmed_balance)
+  let parsedResponse = JSON.parse(response.content)
+  let balance = satoshi.toBitcoin(parsedResponse.final_balance)
   info('BALANCE', balance)
   info('BALANCE TO STRING', String(balance))
   info(balance.toString())
@@ -135,7 +132,7 @@ export async function getBTCBalance(): Promise<Array<any>> {
   */
   // rootURL + 'get_address_balance/' + myAddr
   let requestUrl = 'https://api.blockcypher.com/v1/btc/main/addrs/' + myAddr + '/balance'
-  info(requestUrl)
+  console.log(requestUrl)
   try {
     // Делаем запрос и отдаём в виде Promise
     const response = await webRequest.get(requestUrl)
@@ -327,59 +324,59 @@ async function createTransaction(paymentAdress: string,
 */
 // Функция отправки транзакции, на вход принимает транзакцию в hex- формате
 
-function sendTransaction(transactionHex: string, redirect: any) {
-  info('url: ' + urlChainSo + NETWORK)
-  // формируем запрос
-  /* Request.post({
-    url: 'https://api.blockcypher.com/v1/btc/test3/txs/push',
-    headers: {
-      'content-type': 'application/json'
-    },
-    body : { 'tx': transactionHex },
-    json: true
-  },
-      (res,err,body) => {
-        info(body)
-        info(res), info(err)
-        let bodyStatus = body
-        info(bodyStatus.tx.confirmations)
-        try {
-          if (body.tx.confirmations === 0) {
-            // alert('Transaction sended! Hash: ' + Object(body).tx.hash)
-            redirect()
-          }
-        } catch (error) {
-          alert('Error occured: ' + Object(body).error)
-        }
-      })
-      */
-  Request.post({
-    url: urlChainSo + NETWORK,
-    headers: {
-      'content-type': 'application/json'
-    },
-    body : { 'tx_hex': transactionHex },
-    json: true
-  },
-  // Обрабатываем ответ
-   (res,err,body) => {
-     info(body)
-     info(res), info(err)
-     let bodyStatus = body.status
-     info(bodyStatus)
-     if (bodyStatus === 'fail') {
-       info('ERROR IN SEND BITCOIN', err)
-       sendByBlockcypher(transactionHex, redirect)
-     } else {
-       if (bodyStatus.toString() === 'success') {
-         redirect()
-       } else {
-         info(body.error.message)
-         alert('Error occured: ' + body.error.message)
-       }
-     }
-   })
-}
+// function sendTransaction(transactionHex: string, redirect: any) {
+//   info('url: ' + urlChainSo + NETWORK)
+//   // формируем запрос
+//   /* Request.post({
+//     url: 'https://api.blockcypher.com/v1/btc/test3/txs/push',
+//     headers: {
+//       'content-type': 'application/json'
+//     },
+//     body : { 'tx': transactionHex },
+//     json: true
+//   },
+//       (res,err,body) => {
+//         info(body)
+//         info(res), info(err)
+//         let bodyStatus = body
+//         info(bodyStatus.tx.confirmations)
+//         try {
+//           if (body.tx.confirmations === 0) {
+//             // alert('Transaction sended! Hash: ' + Object(body).tx.hash)
+//             redirect()
+//           }
+//         } catch (error) {
+//           alert('Error occured: ' + Object(body).error)
+//         }
+//       })
+//       */
+//   Request.post({
+//     url: urlChainSo + NETWORK,
+//     headers: {
+//       'content-type': 'application/json'
+//     },
+//     body : { 'tx_hex': transactionHex },
+//     json: true
+//   },
+//   // Обрабатываем ответ
+//    (res,err,body) => {
+//      info(body)
+//      info(res), info(err)
+//      let bodyStatus = body.status
+//      info(bodyStatus)
+//      if (bodyStatus === 'fail') {
+//        info('ERROR IN SEND BITCOIN', err)
+//        sendByBlockcypher(transactionHex, redirect)
+//      } else {
+//        if (bodyStatus.toString() === 'success') {
+//          redirect()
+//        } else {
+//          info(body.error.message)
+//          alert('Error occured: ' + body.error.message)
+//        }
+//      }
+//    })
+// }
 
 function sendByBlockcypher(transactionHex: string, redirect: any) {
   Request.post({

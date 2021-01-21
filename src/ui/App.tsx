@@ -1,5 +1,5 @@
 import { info } from 'electron-log'
-import React from 'react'
+import * as React from 'react'
 // import { Switch, Route } from 'react-router'
 import { Route, Redirect } from 'react-router'
 import { Header } from '../components/Header'
@@ -477,27 +477,24 @@ export default class App extends React.Component<any, IAPPState> {
     return new Promise((resolve) => {
       info('IN GET RATES')
       GetCurrencyRate().then(value => {
-        const parsedValue = JSON.parse(value.content)
+        const parsedValue = value.data
         for (let item in parsedValue) {
-          switch (parsedValue[item].id) {
+          switch (parsedValue[item].slug) {
           case 'bitcoin': {
-            info('BTC PRICE')
-            this.setState({ BTCPrice: Number((parsedValue[item].price_usd * this.state.BTCBalance).toFixed(2)),
-              BTCHourChange: Number(parsedValue[item].percent_change_1h)})
-            info('RATES', parsedValue[item].price_usd,parsedValue[item].percent_change_1h)
+            this.setState({ BTCPrice: Number((parsedValue[item].quote.USD.price * this.state.BTCBalance).toFixed(2)),
+              BTCHourChange: Number(parsedValue[item].quote.USD.percent_change_1h)})
             break
           }
           case 'ethereum': {
             info('ETH PRICE')
-            this.setState({ ETHPrice: Number((parsedValue[item].price_usd * this.state.ETHBalance).toFixed(2)),
-              ETHHourChange: Number(parsedValue[item].percent_change_1h)})
+            this.setState({ ETHPrice: Number((parsedValue[item].quote.USD.price * this.state.ETHBalance).toFixed(2)),
+              ETHHourChange: Number(parsedValue[item].quote.USD.percent_change_1h)})
             info(this.state.ETHPrice, this.state.ETHHourChange)
             break
           }
           case 'litecoin': {
-
-            this.setState({ LTCPrice: Number((parsedValue[item].price_usd * this.state.LTCBalance).toFixed(2)),
-              LTCHourChange: Number(parsedValue[item].percent_change_1h)})
+            this.setState({ LTCPrice: Number((parsedValue[item].quote.USD.price * this.state.LTCBalance).toFixed(2)),
+              LTCHourChange: Number(parsedValue[item].quote.USD.percent_change_1h)})
             info('LTC PRICE', this.state.LTCPrice,this.state.LTCHourChange)
             break
           }
@@ -516,9 +513,12 @@ export default class App extends React.Component<any, IAPPState> {
   }
   getBalances() {
     return Promise.all([getBTCBalance(),getETHBalance(), getLTCBalance()]).then(value => {
+      console.log('got this value')
+      console.log(value)
       for (let item in value) {
-        info('SUBSTRING' + value[item][0])
-        info('VALUE OF SUB', value[item][1])
+        info(value)
+        // info('SUBSTRING' + value[item][0])
+        // info('VALUE OF SUB', value[item][1])
         switch (value[item][0]) {
         case 'BTC': {
           info('SETTING BTC BALANCE', value[item][1])

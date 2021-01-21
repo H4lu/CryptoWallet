@@ -8,5 +8,8 @@
         "named": "never",
         "asyncArrow": "ignore"
       }]
+    },
+    "linterOptions": {
+      "exclude": ["./node_modules/"]
     }
   }

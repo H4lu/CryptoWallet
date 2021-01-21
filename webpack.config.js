@@ -29,12 +29,13 @@ const commonConfig = {
     rules: [
       {
         test: /\.ts$/,
+        exclude: /node_modules/,
         enforce: 'pre',
         loader: 'tslint-loader',
         options: {
-          typeCheck: true,
-          emitErrors: true
-        }
+          typeCheck: false,
+          emitErrors: false
+        },
       },
       {
         test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,

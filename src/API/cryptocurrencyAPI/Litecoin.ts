@@ -11,7 +11,7 @@ import * as satoshi from 'satoshi-bitcoin'
 import { info } from 'electron-log'
 let myAddress = ''
 const rootURL = 'https://chain.so/api/v2'
-const urlChainSo = 'https://chain.so/api/v2/send_tx/'
+// const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.litecoin
 const NETWORK = 'LTC'
 
@@ -43,7 +43,6 @@ export async function initLitecoinAddress() {
   myAddr = await getAddressPCSC(0)
   info('BTC ADDRESS', myAddr)
   */
-  info('INITING LTC ADDRESS')
 
   return new Promise(async (resolve) => {
     let status = false
@@ -76,11 +75,8 @@ export async function initLitecoinAddress() {
 }
 
 function parseValueCrypto(response: webRequest.Response<string>): Array<Number | String> {
-  let parsedResponse = JSON.parse(response.content).data
-  info('PARSED RESP IN PARSE', parsedResponse)
-  info('CONFIRMED BALANCE',Number(parsedResponse.confirmed_balance),parsedResponse.confirmed_balance)
-  info('UNCONFIRMED',Number(parsedResponse.unconfirmed_balance),parsedResponse.unconfirmed_balance)
-  let balance = Number(parsedResponse.confirmed_balance) + Number(parsedResponse.unconfirmed_balance)
+  let parsedResponse = JSON.parse(response.content)
+  let balance = satoshi.toBitcoin(parsedResponse.final_balance)
   info('BALANCE', balance)
   info('BALANCE TO STRING', String(balance))
   info(balance.toString())
@@ -124,7 +120,7 @@ export async function getLTCBalance(): Promise<Array<Number | String>> {
     0 - количество подтверждений транзакций
   */
   let requestUrl = 'https://api.blockcypher.com/v1/ltc/main/addrs/' + myAddress + '/balance'
-  info(requestUrl)
+  console.log(requestUrl)
   try {
     // Делаем запрос и отдаём в виде Promise
     const response = await webRequest.get(requestUrl)
@@ -322,59 +318,59 @@ async function createTransaction(paymentAdress: string,
    })
 }
 */
-function sendTransaction(transactionHex: string, redirect: any) {
-  info('url: ' + urlChainSo + NETWORK)
-  // формируем запрос
-  /* Request.post({
-    url: 'https://api.blockcypher.com/v1/btc/test3/txs/push',
-    headers: {
-      'content-type': 'application/json'
-    },
-    body : { 'tx': transactionHex },
-    json: true
-  },
-      (res,err,body) => {
-        info(body)
-        info(res), info(err)
-        let bodyStatus = body
-        info(bodyStatus.tx.confirmations)
-        try {
-          if (body.tx.confirmations === 0) {
-            // alert('Transaction sended! Hash: ' + Object(body).tx.hash)
-            redirect()
-          }
-        } catch (error) {
-          alert('Error occured: ' + Object(body).error)
-        }
-      })
-      */
-  Request.post({
-    url: urlChainSo + NETWORK,
-    headers: {
-      'content-type': 'application/json'
-    },
-    body : { 'tx_hex': transactionHex },
-    json: true
-  },
-  // Обрабатываем ответ
-   (res,err,body) => {
-     info(body)
-     info(res), info(err)
-     let bodyStatus = body.status
-     info(bodyStatus)
-     if (bodyStatus === 'fail') {
-       info('ERROR IN SEND LITECOIN', err)
-       sendByBlockcypher(transactionHex, redirect)
-     } else {
-       if (bodyStatus.toString() === 'success') {
-         redirect()
-       } else {
-         info(body.error.message)
-         alert('Error occured: ' + body.error.message)
-       }
-     }
-   })
-}
+// function sendTransaction(transactionHex: string, redirect: any) {
+//   info('url: ' + urlChainSo + NETWORK)
+//   // формируем запрос
+//   /* Request.post({
+//     url: 'https://api.blockcypher.com/v1/btc/test3/txs/push',
+//     headers: {
+//       'content-type': 'application/json'
+//     },
+//     body : { 'tx': transactionHex },
+//     json: true
+//   },
+//       (res,err,body) => {
+//         info(body)
+//         info(res), info(err)
+//         let bodyStatus = body
+//         info(bodyStatus.tx.confirmations)
+//         try {
+//           if (body.tx.confirmations === 0) {
+//             // alert('Transaction sended! Hash: ' + Object(body).tx.hash)
+//             redirect()
+//           }
+//         } catch (error) {
+//           alert('Error occured: ' + Object(body).error)
+//         }
+//       })
+//       */
+//   Request.post({
+//     url: urlChainSo + NETWORK,
+//     headers: {
+//       'content-type': 'application/json'
+//     },
+//     body : { 'tx_hex': transactionHex },
+//     json: true
+//   },
+//   // Обрабатываем ответ
+//    (res,err,body) => {
+//      info(body)
+//      info(res), info(err)
+//      let bodyStatus = body.status
+//      info(bodyStatus)
+//      if (bodyStatus === 'fail') {
+//        info('ERROR IN SEND LITECOIN', err)
+//        sendByBlockcypher(transactionHex, redirect)
+//      } else {
+//        if (bodyStatus.toString() === 'success') {
+//          redirect()
+//        } else {
+//          info(body.error.message)
+//          alert('Error occured: ' + body.error.message)
+//        }
+//      }
+//    })
+// }
 
 function sendByBlockcypher(transactionHex: string, redirect: any) {
   Request.post({
