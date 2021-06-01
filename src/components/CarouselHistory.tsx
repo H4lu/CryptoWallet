@@ -4,7 +4,23 @@ import {log} from 'electron-log'
 import {CarouselDesc} from "./CarouselDesc";
 import {CarouselTable} from "./CarouselTable";
 
-export class CarouselHistory extends React.PureComponent<any, any> {
+interface CarouselHistoryState {
+    activeCurrency: number,
+    needShift: boolean
+}
+
+interface CarouselHistoryProps {
+    setActiveCurrency: (string) => void,
+    getActiveCurrency: () => string,
+    activeCurrency: number, // TODO: store as string, convert to index inside component
+    stateSR: (boolean) => void,
+    refresh: () => void,
+    lastTxBTC: Array<any>,
+    lastTxETH: Array<any>,
+    lastTxLTC: Array<any>,
+    lastTxXRP: Array<any>
+}
+export class CarouselHistory extends React.PureComponent<CarouselHistoryProps, CarouselHistoryState> {
     constructor(props: any) {
         super(props)
         this.props.stateSR(false)
@@ -35,7 +51,7 @@ export class CarouselHistory extends React.PureComponent<any, any> {
 
     getActive() {
         log("gettign active")
-        switch (this.props.getActiveCurrency) {
+        switch (this.props.getActiveCurrency()) {
             case "BTC": {
                 return 1
 
@@ -53,7 +69,7 @@ export class CarouselHistory extends React.PureComponent<any, any> {
     }
 
     mapProps() {
-        switch (this.props.getActiveCurrency) {
+        switch (this.props.getActiveCurrency()) {
             case "BTC": {
                 this.setState({activeCurrency: 1})
                 break

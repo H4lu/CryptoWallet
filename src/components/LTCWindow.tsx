@@ -12,9 +12,6 @@ interface ILTCWindowState {
   amount: number,
   fee: number
 }
-
-let currentWindow = remote.BrowserWindow.getFocusedWindow()
-console.log(currentWindow)
 export class LTCWindow extends React.Component<any, ILTCWindowState> {
   constructor(props: any) {
     super(props)

@@ -6,7 +6,7 @@ interface ICarouselProps {
     onClicked: Function
 }
 
-export default class CarouselElement extends React.Component<ICarouselProps, any> {
+export default class CarouselElement extends React.Component<ICarouselProps, {}> {
     private currency: string
     constructor(props: any) {
         super(props)

@@ -5,15 +5,27 @@ import { clipboard } from 'electron'
 import { Table } from './Table'
 import { sendTransaction } from '../core/SendTransaction'
 import { BITCOIN_PATH } from '../core/paths'
-interface IBTCWindowState {
-  address: string,
-  qrcodeAddress: string,
-  paymentAddress: string,
-  amount: number,
-  fee: number
+interface BTCWindowState {
+    address: string,
+    qrcodeAddress: string,
+    paymentAddress: string,
+    amount: number,
+    fee: number
 }
 
-export class BTCWindow extends React.Component<any, IBTCWindowState> {
+interface BTCWindowProps {
+    balance: number,
+    price: number,
+    course: number,
+    hourChange: number,
+    pathState: string,
+    lastTx: Array<any>,
+    transactions: () => Promise<void>,
+    redirect: () => void,
+    reset: () => void
+}
+
+export class BTCWindow extends React.Component<BTCWindowProps, BTCWindowState> {
     icoClass = ['icoBTC', 'icoETH', 'icoLTC', 'icoXRP']
     centr: number
   constructor(props: any) {
@@ -54,7 +66,6 @@ export class BTCWindow extends React.Component<any, IBTCWindowState> {
   componentWillMount() {
     this.setState({ qrcodeAddress: CreateQR(this.state.address) })
     // this.props.transactions()
-    console.log('PROPERTY: ' + this.props.lastTx)
   }
   handleCopyClick() {
     clipboard.writeText(this.state.address)

@@ -1,11 +1,13 @@
-import * as webRequest from 'web-request'
+import axios from 'axios'
 import { info } from 'electron-log'
+
 const requestURL = 'https://api.coinmarketcap.com/v1/ticker/'
+
 export default async function getCurrencyRate() {
-  try {
-    let response = await webRequest.get(requestURL)
-    return response
-  } catch (error) {
-    info(error)
-  }
+    try {
+        const response = await axios.get(requestURL)
+        return response.data
+    } catch (error) {
+        info(error)
+    }
 }

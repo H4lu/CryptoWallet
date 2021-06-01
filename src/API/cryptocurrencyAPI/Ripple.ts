@@ -1,14 +1,15 @@
 import {networks} from 'bitcoinjs-lib'
-import * as webRequest from 'web-request'
 import { getAddressPCSC } from '../hardwareAPI/GetAddress'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.bitcoin
 const NETWORK = 'XRP'                                          // change XRP
 const rootURL = 'https://chain.so/api/v2'
 let myAddr = ''
-let myPubKey = new Buffer(33)
+let myPubKey = Buffer.alloc(33)
 let balance: number
 let price: number
+
+import axios from 'axios'
 import { info } from 'electron-log'
 import {Buffer} from "buffer";
 
@@ -69,27 +70,10 @@ export function getRipplePubKey() {
     return myPubKey
 }
 
-
 export async function getRippleLastTx(): Promise<any> {
-    info('CALLING XRP')
-   /* try {
-        const requestUrl = rootURL + '/address/' + NETWORK + '/' + myAddr
-        info('My req url: ' + requestUrl)
-        let response = await webRequest.get(requestUrl)
-        return response
-    } catch (err) {
-        info(err)
-    }*/
+
 }
 
-function parseValueCrypto(response: webRequest.Response<string>): Array<Number | String> {
-    let parsedResponse = JSON.parse(response.content).data
-    let balance: Number = Number(parsedResponse.confirmed_balance) + Number(parsedResponse.unconfirmed_balance)
-    let arr = []
-    arr.push('XRP')
-    arr.push(Number(balance.toFixed(8)))
-    return arr
-}
 
 export async function getXRPBalance(): Promise<Array<Number | String>> {
     /* Задаём параметры запроса
@@ -97,53 +81,22 @@ export async function getXRPBalance(): Promise<Array<Number | String>> {
       address - наш адрес
       0 - количество подтверждений транзакций
     */
-  /*  let requestUrl = 'https://chain.so/api/v2/get_address_balance/' + NETWORK + '/' + myAddr + '/' + 0
-    info(requestUrl)
-    try {
-        // Делаем запрос и отдаём в виде Promise
-        const response = await webRequest.get(requestUrl)
-        return parseValueCrypto(response)
-    } catch (error) {
-        Promise.reject(error).catch(error => {
-            info(error)
-        })
-    }*/
-    let arr = []
-    arr.push('XRP')
-    arr.push(0)
-    return arr
+    return ['XRP', 0]
 }
 
 export async function getXRPBalanceTrans(address: string): Promise<Array<any>> {
-
-    let requestUrl = 'https://data.ripple.com/v2/accounts/' + address + '/balances?'
+    let requestUrl = `https://data.ripple.com/v2/accounts/${address}/balances?`
     let arr = []
-    try {
-        // Делаем запрос и отдаём в виде Promise
-        const response = await webRequest.get(requestUrl)
+    // Делаем запрос и отдаём в виде Promise
+    const response = await axios.get(requestUrl)
+    const balance = Number(response.data.balances[0].value).toFixed(8)
+    arr.push(balance)
 
-        let parsedResponse = JSON.parse(response.content).balances
-        let balance = Number(parsedResponse[0].value).toFixed(8)
-        arr.push(balance)
-        console.log('1: ', balance)
-    } catch (error) {
-        Promise.reject(error).catch(error => {
-            info(error)
-        })
-    }
-
-    requestUrl = 'https://data.ripple.com/v2/accounts/' + address + '/transactions?'
-    try {
-        // Делаем запрос и отдаём в виде Promise
-        const response = await webRequest.get(requestUrl)
-        let parsedResponse = JSON.parse(response.content)
-        let transactions = Number(parsedResponse.count)
-        arr.push(transactions)
-        console.log('2: ', transactions)
-        return arr
-    } catch (error) {
-        Promise.reject(error).catch(error => {
-            info(error)
-        })
-    }
+    requestUrl = `https://data.ripple.com/v2/accounts/${address}/transactions?`
+        
+    // Делаем запрос и отдаём в виде Promise
+    const transactionsResponse = await axios.get(requestUrl)
+    const transactions = Number(transactionsResponse.data.count)
+    arr.push(transactions)
+    return arr
 }

@@ -1,13 +1,6 @@
 import { reader } from './Reader'
 import { info } from 'electron-log'
-export async function wrapper(): Promise<any> {
-  try {
-    const res = await Promise.resolve()
-    return res
-  } catch (err) {
-    throw err
-  }
-}
+
 export function getInfoPCSC(): Promise<Number> {
   info('TRANSMITTING')
 

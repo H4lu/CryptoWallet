@@ -1,8 +1,15 @@
+import {ECPair, networks} from 'bitcoinjs-lib'
+
 const TX_EMPTY_SIZE = 4 + 1 + 1 + 4
 const TX_INPUT_BASE = 32 + 4 + 1 + 4
 const TX_INPUT_PUBKEYHASH = 107
 const TX_OUTPUT_BASE = 8 + 1
 const TX_OUTPUT_PUBKEYHASH = 25
+
+export function getTestnetAddressBTC(pubkey: Buffer): string {
+    const keyPair = ECPair.fromPublicKeyBuffer(pubkey, networks.testnet)
+    return keyPair.getAddress()
+}
 
 export function inputBytes (input: any) {
   return TX_INPUT_BASE + (input.script ? input.script.length : TX_INPUT_PUBKEYHASH)

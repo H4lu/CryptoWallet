@@ -71,7 +71,11 @@ export class CarouselHOC extends React.Component<any, any> {
         return(
             <div className='windowPay'>
             <div className='payWindow'>
-                <Carousel onClicked = {this.chooseActiveCurrency} getActiveCurrency = {this.props.getActiveCurrency} setActiveCurrency = {this.props.setActiveCurrency} activeCurrency = {this.state.activeCurrency}/>
+                <Carousel 
+                    onClicked = {this.chooseActiveCurrency}
+                    getActiveCurrency = {this.props.getActiveCurrency}
+                    setActiveCurrency = {this.props.setActiveCurrency} 
+                    activeCurrency = {this.state.activeCurrency}/>
                 <CarouselDesc activeCurrency = {this.props.activeCurrency} getActiveCurrency = {this.props.getActiveCurrency}
                               btcBalance={this.props.btcBalance} ltcBalance={this.props.ltcBalance} ethBalance={this.props.ethBalance}
                               btcPrice={this.props.btcPrice} ltcPrice={this.props.ltcPrice} ethPrice={this.props.ethPrice}/>

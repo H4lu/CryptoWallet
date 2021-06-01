@@ -4,13 +4,13 @@ import getBitcoinAddress from "../API/cryptocurrencyAPI/BitCoin";
 import {clipboard, shell} from 'electron'
 import {Link} from "react-router-dom";
 
-interface IBTCRecieveState {
+interface BtcReceiveState {
     address: string,
     qrcodeAddress: string,
 
 }
 
-export class BtcRecieveWindow extends React.Component<any, IBTCRecieveState> {
+export class BtcRecieveWindow extends React.Component<any, BtcReceiveState> {
     constructor(props: any) {
         super(props)
 

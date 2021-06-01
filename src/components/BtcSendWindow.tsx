@@ -3,7 +3,7 @@ import getBitcoinAddress, {getFee} from "../API/cryptocurrencyAPI/BitCoin";
 import {sendTransaction} from "../core/SendTransaction";
 import {Link} from "react-router-dom";
 
-interface IBTCSendState {
+interface BTCSendState {
     address: string,
     paymentAddress: string,
     amount: number,
@@ -16,7 +16,15 @@ interface IBTCSendState {
     amountS: string
 }
 
-export class BtcSendWindow extends React.Component<any, IBTCSendState> {
+interface BTCSendProps {
+    stateSR: (boolean) => void,
+    course: number,
+    btcBalance: number,
+    trFee: number,
+    setFee: (number) => void
+}
+
+export class BtcSendWindow extends React.Component<BTCSendProps, BTCSendState> {
 
     strSum: string
     point: number
@@ -59,7 +67,7 @@ export class BtcSendWindow extends React.Component<any, IBTCSendState> {
         this.classFee1 = this.setClass1()
         this.classFee2 = this.setClass2()
         this.classFee3 = this.setClass3()
-        this.feeCoeff = Math.floor(getFee()*0.7)+1
+        this.feeCoeff = Math.floor(getFee(1) * 0.7) + 1
     }
 
     handleAddressChange(e: any) {

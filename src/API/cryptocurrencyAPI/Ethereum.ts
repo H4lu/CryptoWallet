@@ -1,17 +1,23 @@
 import Web3 from 'web3'
-import Transaction from 'ethereumjs-tx'
+import {Transaction} from '@ethereumjs/tx'
 import {getSignaturePCSC} from '../hardwareAPI/GetSignature'
+import axios from 'axios'
 
-import * as webRequest from 'web-request'
 import {getAddressPCSC} from '../hardwareAPI/GetAddress'
 import {info} from 'electron-log'
 import {Buffer} from 'buffer'
 import {keccak256} from "js-sha3";
 
-const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/960cbfb44af74f27ad0e4b070839158a'))
+enum Networks {
+    MAIN = "mainnet",
+    TEST = "ropsten"
+}
+const NETWORK = Networks.TEST
+
+const web3 = new Web3(new Web3.providers.HttpProvider(`https://${NETWORK}.infura.io/v3/960cbfb44af74f27ad0e4b070839158a`))
 
 let myAdress = ''
-let myPubKey = new Buffer(64)
+let myPubKey = Buffer.alloc(64)
 let balance: number
 let price: number
 
@@ -63,13 +69,9 @@ export function getEthereumAddress() {
 }
 
 export async function getEthereumLastTx(): Promise<any> {
-    try {
-        const requestURL = 'https://api.ethplorer.io/getAddressTransactions/' + myAdress + '?apiKey=freekey&limit=50'
-        let response = await webRequest.get(requestURL)
-        return response
-    } catch (err) {
-        info(err)
-    }
+    const requestURL = `https://api.ethplorer.io/getAddressTransactions/${myAdress}?apiKey=freekey&limit=50`
+    let response = await axios.get(requestURL)
+    return response
 }
 
 export async function getETHBalanceTrans(address: string): Promise<Array<any>> {

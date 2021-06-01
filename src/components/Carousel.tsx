@@ -1,17 +1,18 @@
 import * as React from 'react'
 import CarouselElement from './CarouselElement'
 import Coverflow from "../../react-coverflow.js"
+
+
+
 export class Carousel extends React.PureComponent<any, any> {
 
     constructor(props: any) {
         super(props)
     }
-
-
    
     render() {
         return(
-            <div>
+            <div>{}
                 <Coverflow width={1000}
                 height={106}
                 clickable = {true}
@@ -27,7 +28,6 @@ export class Carousel extends React.PureComponent<any, any> {
             </Coverflow>
 
         </div>
-
         )
     }
 }

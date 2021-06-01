@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import {log} from 'electron-log'
 import {getBTCBalanceTarns} from "../API/cryptocurrencyAPI/BitCoin";
 
@@ -6,15 +6,41 @@ import {getETHBalanceTrans} from "../API/cryptocurrencyAPI/Ethereum";
 import {getLTCBalanceTrans} from "../API/cryptocurrencyAPI/Litecoin";
 import {getXRPBalanceTrans} from "../API/cryptocurrencyAPI/Ripple";
 import Chart from "./Chart";
-
-interface IMainContent {
+interface MainContentState {
     exAddress: string,
     balance: string,
     transactions: string
-
 }
-
-export default class MainContent extends React.Component<any, IMainContent> {
+interface MainContentProps {
+    stateSR: (boolean) => void,
+    btcBalance: number,
+    ltcBalance: number,
+    ethBalance: number,
+    xrpBalance: number,
+    total: number,
+    numTr: number,
+    btcPrice: number,
+    ltcPrice: number,
+    ethPrice: number,
+    xrpPrice: number,
+    btcHourChange: number,
+    ltcHourChange: number,
+    ethHourChange: number,
+    xrpHourChange: number,
+    updateStateBTC: () => void,
+    updateStateETH: () => void,
+    updateStateLTC: () => void,
+    updateStateXRP: () => void,
+    setActiveCurrency: (string) => void,
+    getActiveCurrency: () => string,
+    lastTx: Array<string>,
+    transactions: () => Promise<void>,
+    refresh: () => void,
+    chartBTC: Array<any>,
+    setChartLen: (number) => void,
+    chartLen: number
+}
+export default class MainContent extends React.Component<MainContentProps, MainContentState> {
     classBTC: string;
     classETH: string;
     classLTC: string;
@@ -45,7 +71,6 @@ export default class MainContent extends React.Component<any, IMainContent> {
         this.classLTC = 'img_LTC'
         this.classXRP = 'img_XRP'
         this.classActive = 'ex_BTC'
-
     }
 
 

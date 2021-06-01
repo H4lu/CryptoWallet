@@ -1,24 +1,34 @@
-import {TransactionBuilder, networks, Transaction, ECPair} from 'bitcoinjs-lib'
-import * as Request from 'request'
-import * as webRequest from 'web-request'
-import * as utils from './utils'
+import {TransactionBuilder, networks} from 'bitcoinjs-lib'
+import axios from 'axios'
+import {
+    transactionBytes,
+    getTestnetAddressBTC, 
+    uintOrNaN,
+    sumOfArray, 
+    sumOrNaN,
+    inputBytes,
+    dustThreshold,
+    finalize
+} from './utils'
 import {getAddressPCSC} from '../hardwareAPI/GetAddress'
 import {getSignaturePCSC} from '../hardwareAPI/GetSignature'
 import * as satoshi from 'satoshi-bitcoin'
 import {info} from 'electron-log'
 import {Buffer} from 'buffer'
+import * as ffi from 'ffi-napi'
+
+enum Networks {
+    MAIN = "LTC",
+    TEST = "LTCTEST"
+}
 
 let myAddress = ''
-let myPubKey = new Buffer(64)
+let myPubKey = Buffer.alloc(64)
 const rootURL = 'https://chain.so/api/v2'
-const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.litecoin
-const NETWORK = 'LTC'
 
+const NETWORK = Networks.MAIN
 
-import * as ffi from 'ffi'
-// import * as Path from 'path'
-// const path = Path.join(__dirname,'../..','lib32.dll')
 const libdll = ffi.Library('./resources/lib32.dll', {'forSign': ['void', ['string', 'int', 'string']]})
 
 
@@ -37,9 +47,6 @@ export default function getAddres() {
 }
 
 export async function initLitecoinAddress() {
-
-    info('INITING LTC ADDRESS')
-
     return new Promise(async (resolve) => {
         let status = false
         while (!status) {
@@ -52,22 +59,11 @@ export async function initLitecoinAddress() {
                 setMyAddress(answer[0].substring(3, answer[0].length))
                 console.log("address LTC: ", answer[0].substring(3, answer[0].length))
                 setMyPubKey(answer[1])
+               // setMyAddress(getTestnetAddressBTC(Buffer.from(answer[1])))
                 resolve(0)
             }
         }
     })
-}
-
-function parseValueCrypto(response: webRequest.Response<string>): Array<Number | String> {
-   // let parsedResponse = JSON.parse(response.content).data
-   // let balance: Number = Number(parsedResponse.confirmed_balance) + Number(parsedResponse.unconfirmed_balance)
-    let parsedResponse = JSON.parse(response.content)
-    let balance = Number(parsedResponse.final_balance)
-    //console.log('test1 ', balance)
-    let arr = []
-    arr.push('LTC')
-    arr.push(Number((balance/100000000).toFixed(8)))
-    return arr
 }
 
 function setMyAddress(address: string) {
@@ -89,51 +85,30 @@ export function getLitecoinPubKey() {
 }
 
 export async function getLitecoinLastTx(): Promise<any> {
-    info('CALLING LTC')
     try {
-        const requestUrl = rootURL + '/address/' + NETWORK + '/' + myAddress
-        let response = await webRequest.get(requestUrl)
+        const requestUrl = `${rootURL}/address/${NETWORK}/${myAddress}`
+        let response = await axios.get(requestUrl)
         return response
     } catch (err) {
         info(err)
     }
 }
 
-export async function getLTCBalanceTrans(address: string): Promise<Array<any>> {
-
-    let requestUrl = 'https://chain.so/api/v2/address/' + NETWORK + '/' + address
-
-    try {
-        // Делаем запрос и отдаём в виде Promise
-        const response = await webRequest.get(requestUrl)
-        let arr = []
-        let parsedResponse = JSON.parse(response.content).data
-        let balance = Number(parsedResponse.balance).toFixed(8)
-        let transactions = Number(parsedResponse.total_txs)
-        arr.push(balance)
-        arr.push(transactions)
-        return arr
-    } catch (error) {
-        Promise.reject(error).catch(error => {
-            info(error)
-        })
-    }
+export async function getLTCBalanceTrans(address: string): Promise<Array<Number | string>> {
+    const requestUrl = `https://chain.so/api/v2/address/${NETWORK}/${address}`
+    // Делаем запрос и отдаём в виде Promise
+    const response = await axios.get(requestUrl)
+    const balance = Number(response.data.balance).toFixed(8)
+    const transactions = Number(response.data.total_txs)
+    return [balance, transactions]
 }
 
 export async function getLTCBalance(): Promise<Array<Number | String>> {
-
-    //let requestUrl = 'https://chain.so/api/v2/get_address_balance/' + NETWORK + '/' + myAddress + '/' + 0
-    let requestUrl = 'https://api.blockcypher.com/v1/ltc/main/addrs/' + myAddress + '/balance'
-    info(requestUrl)
-    try {
-        // Делаем запрос и отдаём в виде Promise
-        const response = await webRequest.get(requestUrl)
-        return parseValueCrypto(response)
-    } catch (error) {
-        Promise.reject(error).catch(error => {
-            info(error)
-        })
-    }
+    const requestUrl = `https://api.blockcypher.com/v1/ltc/main/addrs/${myAddress}/balance`
+    // Делаем запрос и отдаём в виде Promise
+    const response = await axios.get(requestUrl)
+    const balance = Number(response.data.final_balance)
+    return ["LTC", Number((balance/100000000).toFixed(8))] 
 }
 
 function toSatoshi(BTC: number): number {
@@ -141,12 +116,12 @@ function toSatoshi(BTC: number): number {
 }
 
 async function getLastTransactionData(): Promise<any> {
-    let requestUrl = 'https://chain.so/api/v2/get_tx_unspent/' + NETWORK + '/' + myAddress
+    const requestUrl = `https://chain.so/api/v2/get_tx_unspent/${NETWORK}/${myAddress}`
     try {
-        const response = await webRequest.get(requestUrl)
-        info('Raw response: ' + response.content)
-        info('Response of last tx: ' + JSON.parse(response.content).data.txs)
-        return response
+        const response = await axios.get(requestUrl)
+        info('Raw response: ' + response)
+        info('Response of last tx: ' + JSON.parse(response.data).data.txs)
+        return response.data
     } catch (error) {
         Promise.reject(error).catch(error => {
             info(error)
@@ -195,7 +170,7 @@ async function createTransaction(paymentAdress: string,
     let lenEnd = lenData - num64 * 64
     let lenMess = 32 + lenEnd
 
-    let dataOut = new Buffer(numInputs * lenMess)
+    let dataOut = Buffer.alloc(numInputs * lenMess)
     libdll.forSign(dataIn, lenData, dataOut)
     console.log('OUT: ', dataOut.toString('hex'))
 
@@ -235,66 +210,13 @@ function ReplaceAt(input: any, search: any, replace: any, start: any, end: any) 
         + input.slice(end)
 }
 
-function sendTransaction(transactionHex: string, redirect: any) {
-    info('url: ' + urlChainSo + NETWORK)
-    // формируем запрос
-    Request.post({
-            url: urlChainSo + NETWORK,
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: {'tx_hex': transactionHex},
-            json: true
-        },
-        // Обрабатываем ответ
-        (res, err, body) => {
-            info(body)
-            info(res), info(err)
-            let bodyStatus = body.status
-            info(bodyStatus)
-            if (bodyStatus === 'fail') {
-                info('ERROR IN SEND LITECOIN', err)
-                sendByBlockcypher(transactionHex, redirect)
-            } else {
-                if (bodyStatus.toString() === 'success') {
-                    redirect()
-                } else {
-                    info(body.error.message)
-                    alert('Error occured: ' + body.error.message)
-                }
-            }
-        })
-}
-
-function sendByBlockcypher(transactionHex: string, redirect: any) {
-    Request.post({
-            url: 'https://api.blockcypher.com/v1/ltc/main/txs/push',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: {'tx': transactionHex},
-            json: true
-        },
-        (res, err, body) => {
-            info(body)
-            info(res), info(err)
-            let bodyStatus = body
-            info(bodyStatus.tx.hash)
-            if (err !== null) {
-                if (err.statusMessage === 'Conflict') {
-                    alert('Conflict')
-                    return
-                }
-            }
-            try {
-                if (body.tx.confirmations === 0) {
-                    redirect()
-                    // alert('Transaction sended! Hash: ' + Object(body).tx.hash)
-                }
-            } catch (error) {
-                alert('Error occured: ' + Object(body).error)
-            }
-        })
+async function sendTransaction(transactionHex: string, redirect: any): Promise<void> {
+    await axios.post(
+        'https://api.blockcypher.com/v1/ltc/main/txs/push',
+        {'tx': transactionHex},
+        {headers: {'content-type': 'application/json'}}
+        )
+    redirect()    
 }
 
 export function handleLitecoin(paymentAdress: string, amount: number, transactionFee: number, redirect: any, course: number, balance: number) {
@@ -327,18 +249,18 @@ export function handleLitecoin(paymentAdress: string, amount: number, transactio
 }
 
 function accumulative(utxos: any, outputs: any, feeRate: any) {
-    if (!isFinite(utils.uintOrNaN(feeRate))) return {}
-    let bytesAccum = utils.transactionBytes([], outputs)
+    if (!isFinite(uintOrNaN(feeRate))) return {}
+    let bytesAccum = transactionBytes([], outputs)
 
     let inAccum = 0
     let inputs = []
-    let outAccum = utils.sumOrNaN(outputs)
+    let outAccum = sumOrNaN(outputs)
 
     for (let i = 0; i < utxos.length; ++i) {
         let utxo = utxos[i]
-        let utxoBytes = utils.inputBytes(utxo)
+        let utxoBytes = inputBytes(utxo)
         let utxoFee = feeRate * utxoBytes
-        let utxoValue = utils.uintOrNaN(Number(utxo.value))
+        let utxoValue = uintOrNaN(Number(utxo.value))
 
         // skip detrimental input
         if (utxoFee > utxo.value) {
@@ -355,39 +277,39 @@ function accumulative(utxos: any, outputs: any, feeRate: any) {
         // go again?
         if (inAccum < outAccum + fee) continue
 
-        return utils.finalize(inputs, outputs, feeRate)
+        return finalize(inputs, outputs, feeRate)
     }
 
     return {fee: feeRate * bytesAccum}
 }
 
 function blackjack(utxos: any, outputs: any, feeRate: any) {
-    if (!isFinite(utils.uintOrNaN(feeRate))) return {}
+    if (!isFinite(uintOrNaN(feeRate))) return {}
 
-    let bytesAccum = utils.transactionBytes([], outputs)
+    let bytesAccum = transactionBytes([], outputs)
 
     let inAccum = 0
     let inputs = []
-    let outAccum = utils.sumOrNaN(outputs)
-    let threshold = utils.dustThreshold({}, feeRate)
+    let outAccum = sumOrNaN(outputs)
+    let threshold = dustThreshold({}, feeRate)
 
     for (let i = 0; i < utxos.length; ++i) {
         let input = utxos[i]
-        let inputBytes = utils.inputBytes(input)
-        let fee = feeRate * (bytesAccum + inputBytes)
-        let inputValue = utils.uintOrNaN(Number(input.value))
+        let inputInBytes = inputBytes(input)
+        let fee = feeRate * (bytesAccum + inputInBytes)
+        let inputValue = uintOrNaN(Number(input.value))
 
         // would it waste value?
         if ((inAccum + inputValue) > (outAccum + fee + threshold)) continue
 
-        bytesAccum += inputBytes
+        bytesAccum += inputInBytes
         inAccum += inputValue
         inputs.push(input)
 
         // go again?
         if (inAccum < outAccum + fee) continue
 
-        return utils.finalize(inputs, outputs, feeRate)
+        return finalize(inputs, outputs, feeRate)
     }
 
     return {fee: feeRate * bytesAccum}

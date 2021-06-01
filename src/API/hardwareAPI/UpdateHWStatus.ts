@@ -4,12 +4,12 @@ import {Buffer} from "buffer";
 
 export function UpdateHWStatusPCSC(BTC_BAL: number, BTC_USD: number, ETH_BAL: number, ETH_USD: number, LTC_BAL: number, LTC_USD: number, XRP_BAL: number, XRP_USD: number, numTr: number) {
 
-    let tempBufferBTC = new Buffer(16)
-    let tempBufferETH = new Buffer(16)
-    let tempBufferLTC = new Buffer(16)
-    let tempBufferXRP = new Buffer(16)
+    let tempBufferBTC = Buffer.alloc(16)
+    let tempBufferETH = Buffer.alloc(16)
+    let tempBufferLTC = Buffer.alloc(16)
+    let tempBufferXRP = Buffer.alloc(16)
 
-    let tempBufferWallet = new Buffer(16)
+    let tempBufferWallet = Buffer.alloc(16)
     let USD = BTC_USD + ETH_USD + LTC_USD + XRP_USD
     let tempI = Math.floor(USD)
     let tempF = (USD - tempI) * 100

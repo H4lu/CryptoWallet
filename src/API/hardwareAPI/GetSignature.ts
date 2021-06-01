@@ -5,7 +5,7 @@ import {getBitcoinPubKey} from "../cryptocurrencyAPI/BitCoin";
 import {getEthereumPubKey} from "../cryptocurrencyAPI/Ethereum";
 import {getLitecoinPubKey} from "../cryptocurrencyAPI/Litecoin";
 
-import * as ffi from 'ffi'
+import * as ffi from 'ffi-napi'
 // import * as Path from 'path'
 // const path = Path.join(__dirname,'../..','lib32.dll')
 const libdll = ffi.Library('./resources/lib32.dll', {'signParse': ['void', ['string', 'int', 'string', 'string', 'string']]})

@@ -21,7 +21,6 @@
     "!_config.yml",
     "!karma.conf.js",
     "!tsconfig.json",
-    "!tslint.json"
   ],
   "win": {
     "target": ["nsis"]

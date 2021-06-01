@@ -52,9 +52,7 @@ export class CarouselDesc extends React.Component<any, any> {
         }
 
     }
-/*componentDidMount(){
-    this.updateProps()
-}*/
+
     render() {
         return (
             <div>

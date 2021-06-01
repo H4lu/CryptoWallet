@@ -1,5 +1,5 @@
 import {info, log} from 'electron-log'
-import React from 'react'
+import * as React from 'react'
 import {Header} from '../components/Header'
 import {Route, Redirect} from 'react-router'
 import {SidebarContent} from '../components/SidebarContent'
@@ -37,10 +37,11 @@ import GetCurrencyRate from '../core/GetCurrencyRate'
 import {SidebarNoButtons} from '../components/SidebarNoButtons'
 import {MainWindow} from '../components/MainWindow'
 import {TransactionSuccess} from '../components/TransactionSuccess'
-import pcsclite from 'pcsclite'
+import pcsclite from '@pokusew/pcsclite'
 import {reader, setReader} from '../API/hardwareAPI/Reader'
 
-let pcsc = new pcsclite()
+let pcsc = pcsclite()
+
 import {getInfoPCSC} from '../API/hardwareAPI/GetWalletInfo'
 import {UpdateHWStatusPCSC, updateTransactionsPCSC} from '../API/hardwareAPI/UpdateHWStatus'
 import {SidebarLeft} from "../components/SidebarLeft";
@@ -65,7 +66,7 @@ import {getRate} from "../API/cryptocurrencyAPI/Exchange";
 import {ModeWindow} from "../components/ModeWindow";
 
 
-interface IAPPState {
+interface AppState {
     BTCBalance: number,
     ETHBalance: number,
     LTCBalance: number,
@@ -108,7 +109,7 @@ interface IAPPState {
 }
 
 
-export default class App extends React.Component<any, IAPPState> {
+export default class App extends React.Component<{}, AppState> {
 
     routes = [
         {
@@ -136,7 +137,8 @@ export default class App extends React.Component<any, IAPPState> {
                                          let c = new Date(a.Date).getTime()
                                          let d = new Date(b.Date).getTime()
                                          return d - c
-                                     })} transactions={this.getTransactions}
+                                     })} 
+                                     transactions={this.getTransactions}
                                      refresh={this.updateData} stateSR={this.setStateSR}
                                      chartBTC={this.state.chartBTC} setChartLen={this.setChartLen}
                                       chartLen={this.state.chartLen} />
@@ -387,7 +389,6 @@ export default class App extends React.Component<any, IAPPState> {
     setChartLen(len: number) {
         this.setState({chartLen: len})
     }
-
 
     async setChartBTC() {
         let currentDate = new Date()
@@ -770,47 +771,46 @@ export default class App extends React.Component<any, IAPPState> {
         }
     }
 
-    getRates() {
+    getRates(): Promise<void> {
         return new Promise((resolve) => {
             info('IN GET RATES')
             GetCurrencyRate().then(value => {
-                const parsedValue = JSON.parse(value.content)
-                for (let item in parsedValue) {
-                    switch (parsedValue[item].id) {
+                for (let item in value) {
+                    switch (value[item].id) {
                         case 'bitcoin': {
                             info('BTC PRICE')
                             this.setState({
-                                BTCPrice: Number((parsedValue[item].price_usd * this.state.BTCBalance).toFixed(2)),
-                                BTCCourse: Number(parsedValue[item].price_usd),
-                                BTCHourChange: Number(parsedValue[item].percent_change_1h)
+                                BTCPrice: Number((value[item].price_usd * this.state.BTCBalance).toFixed(2)),
+                                BTCCourse: Number(value[item].price_usd),
+                                BTCHourChange: Number(value[item].percent_change_1h)
                             })
-                            info('BTC PRICE', parsedValue[item].price_usd, parsedValue[item].percent_change_1h)
+                            info('BTC PRICE', value[item].price_usd, value[item].percent_change_1h)
                             break
                         }
                         case 'ethereum': {
                             info('ETH PRICE')
                             this.setState({
-                                ETHPrice: Number((parsedValue[item].price_usd * this.state.ETHBalance).toFixed(2)),
-                                ETHCourse: Number(parsedValue[item].price_usd),
-                                ETHHourChange: Number(parsedValue[item].percent_change_1h)
+                                ETHPrice: Number((value[item].price_usd * this.state.ETHBalance).toFixed(2)),
+                                ETHCourse: Number(value[item].price_usd),
+                                ETHHourChange: Number(value[item].percent_change_1h)
                             })
                             info('ETH PRICE', this.state.ETHPrice, this.state.ETHHourChange)
                             break
                         }
                         case 'litecoin': {
                             this.setState({
-                                LTCPrice: Number((parsedValue[item].price_usd * this.state.LTCBalance).toFixed(2)),
-                                LTCCourse: Number(parsedValue[item].price_usd),
-                                LTCHourChange: Number(parsedValue[item].percent_change_1h)
+                                LTCPrice: Number((value[item].price_usd * this.state.LTCBalance).toFixed(2)),
+                                LTCCourse: Number(value[item].price_usd),
+                                LTCHourChange: Number(value[item].percent_change_1h)
                             })
                             info('LTC PRICE', this.state.LTCPrice, this.state.LTCHourChange)
                             break
                         }
                         case 'ripple': {
                             this.setState({
-                                XRPPrice: Number((parsedValue[item].price_usd * this.state.XRPBalance).toFixed(2)),
-                                XRPCourse: Number(parsedValue[item].price_usd),
-                                XRPHourChange: Number(parsedValue[item].percent_change_1h)
+                                XRPPrice: Number((value[item].price_usd * this.state.XRPBalance).toFixed(2)),
+                                XRPCourse: Number(value[item].price_usd),
+                                XRPHourChange: Number(value[item].percent_change_1h)
                             })
                             info('XRP PRICE', this.state.XRPPrice, this.state.XRPHourChange)
                             break
@@ -872,12 +872,12 @@ export default class App extends React.Component<any, IAPPState> {
     getTransactions() {
         return Promise.all([getBitcoinLastTx(), getLitecoinLastTx(), getEthereumLastTx(), getRippleLastTx()]).then(value => {
             for (let index in value) {
-                if (Object.prototype.hasOwnProperty.call(JSON.parse(value[index].content), 'data')) {
+                if (Object.prototype.hasOwnProperty.call(value[index].data, 'data')) {
                     info('Parsing btc-like tx')
-                    this.parseBTCLikeTransactions(value[index].content)
+                    this.parseBTCLikeTransactions(value[index].data)
                 } else {
                     info('PArsing eth tx')
-                    this.parseETHTransactions(value[index].content)
+                    this.parseETHTransactions(value[index].data)
                 }
             }
         }).catch(error => {
@@ -887,7 +887,7 @@ export default class App extends React.Component<any, IAPPState> {
 
     parseETHTransactions(value: any) {
 
-        let transactionsObject = JSON.parse(value)
+        let transactionsObject = value
         if (transactionsObject === undefined) {
             info('RETURNING')
             return
@@ -921,7 +921,7 @@ export default class App extends React.Component<any, IAPPState> {
     }
 
     parseBTCLikeTransactions(value: any) {
-        let parsedResponse = JSON.parse(value).data
+        let parsedResponse = value.data
         for (let tx in parsedResponse.txs) {
             this.setNumTransactions(1)
             info('numTransaction: ', this.state.numTransactions)

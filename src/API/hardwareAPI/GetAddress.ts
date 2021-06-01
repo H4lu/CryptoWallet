@@ -1,5 +1,4 @@
 import Web3 from 'web3'
-// const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/hgAaKEDG9sIpNHqt8UYM'))
 const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/960cbfb44af74f27ad0e4b070839158a'))
 import { Buffer } from 'buffer'
 import { reader } from './Reader'
@@ -32,17 +31,7 @@ export function getREALSTATUS() {
     })
   })
 }
-// export function getAnswer(id: Number): Promise<Buffer> {
-//   return new Promise(async (resolve,reject) => {
-//     reader.transmit(Buffer.concat([Buffer.from([0xB0,0x30,0x00]),Buffer.from([id]),Buffer.from([0x00])]),255,2,(err,data) => {
-//       if (err) {
-//         reject(err)
-//       } else {
-//         resolve(data)
-//       }
-//     })
-//   })
-// }
+
 export function getAddressPCSC(id: number): Promise<[string, Buffer]> {
   return new Promise(async (resolve, reject) => {
     let currencyId: number
@@ -83,6 +72,8 @@ export function getAddressPCSC(id: number): Promise<[string, Buffer]> {
           ethAdr = 'ETH0x' + ethAdr.substr(26,40)
           resolve([ethAdr, data.slice(data[0] + 1, data[0] + 66)])
         } else {
+          info(data)
+          info(Buffer.from(data).toString("hex"))
           resolve([data.slice(1, data[0] + 1).toString(), data.slice(data[0] + 1, data[0] + 66)])
         }
       }
