@@ -1,51 +1,54 @@
 import * as React from 'react'
 import { BTC_ICON, LTC_ICON, ETH_ICON, XRP_ICON } from "../core/paths"
 
-interface ICarouselProps {
+interface CarouselState {
+    currencyStyle: string
+}
+interface CarouselProps {
     currencyName: string
     onClicked: Function
 }
 
-export default class CarouselElement extends React.Component<ICarouselProps, {}> {
-    private currency: string
+export default class CarouselElement extends React.Component<CarouselProps, CarouselState> {
     constructor(props: any) {
         super(props)
-
-        this.chooseIcon = this.chooseIcon.bind(this)
+        this.state = {
+            currencyStyle: ''
+        }
     }
 
-    chooseIcon() {
+    componentDidMount() {
+        this.chooseIcon()
+    }
+
+    chooseIcon = () => {
         switch(this.props.currencyName) {
             case "BTC": {
-                this.currency = BTC_ICON
+                this.setState({ currencyStyle: "carouselBTCIcon" })
                 break
             }
             case "LTC": {
-                this.currency = LTC_ICON
+                this.setState({ currencyStyle: "carouselLTCIcon" })
                 break
             }
             case "ETH": {
-                this.currency = ETH_ICON
+                this.setState({ currencyStyle: "carouselETHIcon" })
                 break
             }
             case "XRP": {
-                this.currency = XRP_ICON
+                this.setState({ currencyStyle: "carouselXRPIcon" })
                 break
             }
         }
     }
 
     render() {
-      this.chooseIcon()
         return(
-            <div>
-             
-                <img
-                    src = {this.currency}
-                    style={{ display: 'block', width: '50%' }}
-                    onClick = {() => this.props.onClicked()}/>
+            <div 
+                className = {this.state.currencyStyle}
+                onClick = {() => this.props.onClicked()}
+                >
             </div>
-
         )
     }
 

@@ -765,6 +765,34 @@ button {
     padding-top: 50px;
 }
 
+.carouselBTCIcon {
+    background: url('./static/icon_BTC.svg') no-repeat center;
+    display: block;
+    height: 80px;
+    width: 80px;
+
+}
+
+.carouselETHIcon {
+    background: url('./static/icon_ETH.svg') no-repeat center;
+    display: block;
+    height: 80px;
+    width: 80px;
+}
+.carouselLTCIcon {
+    background: url('./static/icon_LTC.svg') no-repeat center;
+    display: block;
+    height: 80px;
+    width: 80px;
+}
+.carouselXRPIcon {
+    background: url('./static/icon_XRP.svg') no-repeat center;
+    display: block;
+    height: 80px;
+    width: 80px;
+
+}
+
 .iconCryptoCurrency {
     background: url('./static/icon_BTC.svg') no-repeat center;
     border: 0px solid black;
