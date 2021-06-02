@@ -29,16 +29,14 @@ import {
     getETHBalance,
     initEthereumAddress,
     getEthereumLastTx,
-    getEthereumAddress,
     setETHBalance,
     setETHPrice
 } from '../API/cryptocurrencyAPI/Ethereum'
 import {getCurrencyRate} from '../core/getCurrencyRate'
-import {SidebarNoButtons} from '../components/SidebarNoButtons'
 import {MainWindow} from '../components/MainWindow'
 import {TransactionSuccess} from '../components/TransactionSuccess'
 import pcsclite from '@pokusew/pcsclite'
-import {reader, setReader} from '../API/hardwareAPI/Reader'
+import {setReader} from '../API/hardwareAPI/Reader'
 
 const pcsc = pcsclite()
 
@@ -62,9 +60,8 @@ import {
     setXRPBalance,
     setXRPPrice
 } from "../API/cryptocurrencyAPI/Ripple";
-import {getRate} from "../API/cryptocurrencyAPI/Exchange";
 import {ModeWindow} from "../components/ModeWindow";
-import { DisplayTransaction, DisplayTransactionStatus } from '../API/cryptocurrencyAPI/utils'
+import {DisplayTransaction} from '../API/cryptocurrencyAPI/utils'
 
 
 interface AppState {
@@ -357,7 +354,6 @@ export default class App extends React.Component<{}, AppState> {
 
         this.resetRedirect = this.resetRedirect.bind(this)
         this.redirectToTransactionsuccess = this.redirectToTransactionsuccess.bind(this)
-        // this.waitForPin = this.waitForPin.bind(this)
         this.initAll = this.initAll.bind(this)
         this.getBalances = this.getBalances.bind(this)
         this.getTransactions = this.getTransactions.bind(this)
@@ -387,30 +383,20 @@ export default class App extends React.Component<{}, AppState> {
     }
 
     async setChartBTC() {
-        let currentDate = new Date()
-        let month = currentDate.getMonth() + 1
-        let monthStr: string
-        if (month < 10) {
-            monthStr = '0' + month.toString()
-        } else {
-            monthStr = month.toString()
-        }
-        let day = currentDate.getDate()
-        let dayStr: string
-        if (day < 10) {
-            dayStr = '0' + day.toString()
-        } else {
-            dayStr = day.toString()
-        }
-        let dataend = currentDate.getFullYear().toString() + '-' + monthStr + '-' + dayStr
-        let datastart = (currentDate.getFullYear() - 1).toString() + '-' + monthStr + '-' + dayStr
+        const currentDate = new Date()
+        const month = currentDate.getMonth() + 1
+        const monthStr = month < 10 ? `0${month.toString()}` : month.toString()
+        const day = currentDate.getDate()
+        const dayStr = day < 10 ? `0${day.toString()}` : day.toString()
+        const dateEnd = `${currentDate.getFullYear().toString()}-${monthStr}-${dayStr}`
+        const dateStart = `${(currentDate.getFullYear() - 1).toString()}-${monthStr}-${dayStr}`
 
-        const arrData = await getChartBTC(dataend, datastart);
-        let arr = []
+        const arrData = await getChartBTC(dateEnd, dateStart);
+        const arr = Array(365)
         for (let index = 0; index < 365; index++) {
-            let dataN = new Date(Date.now() - 86400000 * (364 - index))
+            const dateN = new Date(Date.now() - 86400000 * (364 - index))
             let mon: string
-            switch (dataN.getMonth() + 1){
+            switch (dateN.getMonth() + 1) {
                 case 1:{
                     mon = 'jan'
                     break
@@ -460,14 +446,10 @@ export default class App extends React.Component<{}, AppState> {
                     break
                 }
             }
-            let dat = dataN.getDate().toString() + '.' + mon
-            let temp = {date: dat, pv: arrData[index]}
-            arr.push(temp)
+            const chartDate = `${dateN.getDate().toString()}.${mon}`
+            arr[index] = {date: chartDate, pv: arrData[index]}
         }
         this.setState({chartBTC: arr})
-        // for (let index = 0; index < 365; index++) {
-        //     this.setState({chartBTC: [...this.state.chartBTC, arr[index]]})
-        // }
     }
 
     setTransactionFee(num: number) {

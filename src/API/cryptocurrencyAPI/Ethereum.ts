@@ -155,7 +155,7 @@ function createTransaction(paymentAdress: string, amount: number, gasPrice: numb
         let hash = Buffer.concat([Buffer.from([0x20]),Buffer.from(txHash, 'hex')])
         let hashArray: Array<Buffer> = []
         hashArray.push(hash)
-        let fee = (49103*gasPrice)/100000000
+        let fee = (49103 * gasPrice) / 100000000
         let data = await getSignaturePCSC(1, hashArray, paymentAdress, amount, 1, course, fee, balance)
         if (data[0].length !== 1) {
             console.log('sign', data[0].toString('hex'))

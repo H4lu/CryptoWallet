@@ -276,7 +276,7 @@ async function createTransaction(paymentAdress: string,
     let lenEnd = lenData - num64 * 64
     let lenMess = 32 + lenEnd
 
-    let dataOut = new Buffer(numInputs * lenMess)
+    let dataOut = Buffer.alloc(numInputs * lenMess)
     libdll.forSign(dataIn, lenData, dataOut)
     console.log('OUT: ', dataOut.toString('hex'))
 

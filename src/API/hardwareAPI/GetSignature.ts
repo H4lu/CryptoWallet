@@ -67,7 +67,7 @@ export function getSignaturePCSC(id: number, message: Array<Buffer>, address: st
               } else {
                 if (String(data.toString('hex')) === '6b84') {
                   let sigArray: Array<Buffer> = []
-                  let nullBuff = new Buffer(1)
+                  let nullBuff = Buffer.alloc(1)
                   nullBuff[0] = 0x00
                   resolve(sigArray)
                   clearInterval(timerId)
@@ -128,7 +128,7 @@ function sendDataMessage(inputNumber: Buffer, currencyId: Buffer, hash: Buffer):
 function getSumAsBuf(sum: number, course: number): Buffer{
     let tempI = Math.floor(sum)
     let tempF = (sum - tempI)*100000000
-    let returnBuf = new Buffer(16)
+    let returnBuf = Buffer.alloc(16)
 
     for (let i=0; i<4; i++)
     {

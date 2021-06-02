@@ -35,7 +35,7 @@ export function getREALSTATUS() {
 export function getAddressPCSC(id: number): Promise<[string, Buffer]> {
   return new Promise(async (resolve, reject) => {
     let currencyId: number
-    let dataToSend = new Buffer(5)
+    let dataToSend = Buffer.alloc(5)
     switch (id) {
     case 0: {
       dataToSend = Buffer.from([0xB0,0x30,0x00,0x00,0x00])
@@ -58,17 +58,14 @@ export function getAddressPCSC(id: number): Promise<[string, Buffer]> {
         break
     }*/
     }
-    info('Currency id:', currencyId)
-    info('DATA TO SEND',dataToSend)
+   
     reader.transmit(dataToSend,255,2,(err: any,data: any) => {
       if (err) {
         reject(err)
       } else {
-        info('ADDRESS ANSWER', data.toString())
         if (currencyId === 1) {
           let forkeccak = (data.slice(data[0] + 2, data[0] + 66)).toString('hex')
           let ethAdr = web3.utils.soliditySha3({ t: 'bytes', v: forkeccak })
-          info('Keccak_web3', ethAdr)
           ethAdr = 'ETH0x' + ethAdr.substr(26,40)
           resolve([ethAdr, data.slice(data[0] + 1, data[0] + 66)])
         } else {
