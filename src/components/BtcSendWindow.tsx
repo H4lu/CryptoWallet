@@ -1,6 +1,6 @@
 import * as React from 'react'
 import getBitcoinAddress, {getFee} from "../API/cryptocurrencyAPI/BitCoin";
-import {sendTransaction} from "../core/SendTransaction";
+import {sendTransaction} from "../core/sendTransaction";
 import {Link} from "react-router-dom";
 
 interface BTCSendState {

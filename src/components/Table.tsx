@@ -1,4 +1,5 @@
 import React from 'react'
+import { DisplayTransaction, DisplayTransactionCurrency } from '../API/cryptocurrencyAPI/utils'
 import {TableRow} from './TableRow'
 
 interface ITableClass {
@@ -6,9 +7,9 @@ interface ITableClass {
 }
 
 interface ITableProps {
-    data: Array<Object>,
+    data: Array<DisplayTransaction>,
     type: string,
-    activeCurrency: string
+    activeCurrency: DisplayTransactionCurrency
 }
 
 export class Table extends React.Component<ITableProps, ITableClass> {
@@ -18,21 +19,21 @@ export class Table extends React.Component<ITableProps, ITableClass> {
         this.state = {
             dataToRender: []
         }
-
     }
 
     render() {
-        console.log("rerender table")
         let tableType = (this.props.type === 'normal') ? 'transaction-history' : 'transaction-history-small'
         return (
             <div className={tableType}>
                 <table>
-
                     <tbody>
-                       {this.props.data.map((element: any) => {
-                        return <TableRow data={element} activeCurrency={this.props.activeCurrency}/>
+                       {this.props.data
+                           .map((element: DisplayTransaction) => {
+                               return <TableRow 
+                                        data={element} 
+                                        activeCurrency={this.props.activeCurrency}
+                                        />
                     })}
-
                     </tbody>
                 </table>
             </div>

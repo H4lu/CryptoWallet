@@ -8,7 +8,10 @@ import {
     sumOrNaN,
     inputBytes,
     dustThreshold,
-    finalize
+    finalize,
+    parseBTCLikeTransactions,
+    BtcLikeCurrencies,
+    DisplayTransaction
 } from './utils'
 import {getAddressPCSC} from '../hardwareAPI/GetAddress'
 import {getSignaturePCSC} from '../hardwareAPI/GetSignature'
@@ -84,14 +87,10 @@ export function getLitecoinPubKey() {
     return myPubKey
 }
 
-export async function getLitecoinLastTx(): Promise<any> {
-    try {
-        const requestUrl = `${rootURL}/address/${NETWORK}/${myAddress}`
-        let response = await axios.get(requestUrl)
-        return response
-    } catch (err) {
-        info(err)
-    }
+export async function getLitecoinLastTx(): Promise<Array<DisplayTransaction>> {
+    const requestUrl = `${rootURL}/address/${NETWORK}/${myAddress}`
+    const response = await axios.get(requestUrl)
+    return parseBTCLikeTransactions(response.data, "LTC")
 }
 
 export async function getLTCBalanceTrans(address: string): Promise<Array<Number | string>> {
@@ -103,12 +102,10 @@ export async function getLTCBalanceTrans(address: string): Promise<Array<Number 
     return [balance, transactions]
 }
 
-export async function getLTCBalance(): Promise<Array<Number | String>> {
+export async function getLTCBalance(): Promise<number> {
     const requestUrl = `https://api.blockcypher.com/v1/ltc/main/addrs/${myAddress}/balance`
-    // Делаем запрос и отдаём в виде Promise
     const response = await axios.get(requestUrl)
-    const balance = Number(response.data.final_balance)
-    return ["LTC", Number((balance/100000000).toFixed(8))] 
+    return Number((response.data.balance / 100000000).toFixed(8))
 }
 
 function toSatoshi(BTC: number): number {

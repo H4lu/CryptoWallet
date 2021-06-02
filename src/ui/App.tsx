@@ -33,14 +33,14 @@ import {
     setETHBalance,
     setETHPrice
 } from '../API/cryptocurrencyAPI/Ethereum'
-import GetCurrencyRate from '../core/GetCurrencyRate'
+import {getCurrencyRate} from '../core/getCurrencyRate'
 import {SidebarNoButtons} from '../components/SidebarNoButtons'
 import {MainWindow} from '../components/MainWindow'
 import {TransactionSuccess} from '../components/TransactionSuccess'
 import pcsclite from '@pokusew/pcsclite'
 import {reader, setReader} from '../API/hardwareAPI/Reader'
 
-let pcsc = pcsclite()
+const pcsc = pcsclite()
 
 import {getInfoPCSC} from '../API/hardwareAPI/GetWalletInfo'
 import {UpdateHWStatusPCSC, updateTransactionsPCSC} from '../API/hardwareAPI/UpdateHWStatus'
@@ -64,6 +64,7 @@ import {
 } from "../API/cryptocurrencyAPI/Ripple";
 import {getRate} from "../API/cryptocurrencyAPI/Exchange";
 import {ModeWindow} from "../components/ModeWindow";
+import { DisplayTransaction, DisplayTransactionStatus } from '../API/cryptocurrencyAPI/utils'
 
 
 interface AppState {
@@ -80,14 +81,13 @@ interface AppState {
     ETHHourChange: number,
     LTCHourChange: number,
     XRPHourChange: number,
-    BTCLastTx: Array<any>,
-    LTCLastTx: Array<any>,
-    ETHLastTx: Array<any>,
-    XRPLastTx: Array<any>,
+    BTCLastTx: Array<DisplayTransaction>,
+    LTCLastTx: Array<DisplayTransaction>,
+    ETHLastTx: Array<DisplayTransaction>,
+    XRPLastTx: Array<DisplayTransaction>,
     connection: boolean,
     status: boolean,
     redirect: boolean,
-    tempState: Array<any>,
     allowInit: boolean,
     redirectToTransactionSuccess: boolean,
     totalPercentage: number,
@@ -133,15 +133,17 @@ export default class App extends React.Component<{}, AppState> {
                                      setActiveCurrency={this.setActiveCurrency}
                                      getActiveCurrency={this.getActiveCurrency}
 
-                                     lastTx={this.state.BTCLastTx.concat(this.state.ETHLastTx, this.state.LTCLastTx, this.state.XRPLastTx).sort((a: any, b: any) => {
-                                         let c = new Date(a.Date).getTime()
-                                         let d = new Date(b.Date).getTime()
-                                         return d - c
-                                     })} 
+                                     lastTx={
+                                         this.state.BTCLastTx
+                                            .concat(this.state.ETHLastTx, this.state.LTCLastTx, this.state.XRPLastTx)
+                                            .sort((a: DisplayTransaction, b: DisplayTransaction) => {
+                                                return b.dateUnix - a.dateUnix
+                                            })
+                                        } 
                                      transactions={this.getTransactions}
                                      refresh={this.updateData} stateSR={this.setStateSR}
                                      chartBTC={this.state.chartBTC} setChartLen={this.setChartLen}
-                                      chartLen={this.state.chartLen} />
+                                     chartLen={this.state.chartLen} />
         },
         {
             path: '/mode-window',
@@ -333,7 +335,6 @@ export default class App extends React.Component<{}, AppState> {
             connection: false,
             status: false,
             redirect: false,
-            tempState: [],
             allowInit: true,
             redirectToTransactionSuccess: false,
             totalPercentage: 0,
@@ -356,10 +357,6 @@ export default class App extends React.Component<{}, AppState> {
 
         this.resetRedirect = this.resetRedirect.bind(this)
         this.redirectToTransactionsuccess = this.redirectToTransactionsuccess.bind(this)
-        this.parseETHTransactions = this.parseETHTransactions.bind(this)
-        this.parseTransactionDataETH = this.parseTransactionDataETH.bind(this)
-        this.parseBTCLikeTransactions = this.parseBTCLikeTransactions.bind(this)
-        this.parseTransactionDataBTC = this.parseTransactionDataBTC.bind(this)
         // this.waitForPin = this.waitForPin.bind(this)
         this.initAll = this.initAll.bind(this)
         this.getBalances = this.getBalances.bind(this)
@@ -367,9 +364,8 @@ export default class App extends React.Component<{}, AppState> {
         this.updateData = this.updateData.bind(this)
         this.connectionERROR = this.connectionERROR.bind(this)
         this.connectionOK = this.connectionOK.bind(this)
-        this.addUnconfirmedTx = this.addUnconfirmedTx.bind(this)
         this.changeBalance = this.changeBalance.bind(this)
-        this.getWalletInfo = this.getWalletInfo.bind(this)
+        this.startWalletInfoPing = this.startWalletInfoPing.bind(this)
         this.setRedirectToMain = this.setRedirectToMain.bind(this)
         this.getRates = this.getRates.bind(this)
         this.setValues = this.setValues.bind(this)
@@ -409,7 +405,7 @@ export default class App extends React.Component<{}, AppState> {
         let dataend = currentDate.getFullYear().toString() + '-' + monthStr + '-' + dayStr
         let datastart = (currentDate.getFullYear() - 1).toString() + '-' + monthStr + '-' + dayStr
 
-        let arrData = await getChartBTC(dataend, datastart);
+        const arrData = await getChartBTC(dataend, datastart);
         let arr = []
         for (let index = 0; index < 365; index++) {
             let dataN = new Date(Date.now() - 86400000 * (364 - index))
@@ -468,25 +464,20 @@ export default class App extends React.Component<{}, AppState> {
             let temp = {date: dat, pv: arrData[index]}
             arr.push(temp)
         }
-        for (let index = 0; index < 365; index++) {
-            this.setState({chartBTC: [...this.state.chartBTC, arr[index]]})
-        }
+        this.setState({chartBTC: arr})
+        // for (let index = 0; index < 365; index++) {
+        //     this.setState({chartBTC: [...this.state.chartBTC, arr[index]]})
+        // }
     }
 
-
     setTransactionFee(num: number) {
-        this.setState({transactionFee: num},
-            () => {
-                console.log('FEE:  ', this.state.transactionFee)
-            })
-
+        this.setState({transactionFee: num})
     }
 
     setNumTransactions(num: number) {
         let old = this.state.numTransactions
         this.setState({numTransactions: old + num})
     }
-
 
     getActiveCurrency(): string {
         log("GET ACTIVE CURRENCY")
@@ -574,18 +565,18 @@ export default class App extends React.Component<{}, AppState> {
         this.setState({connection: false})
     }
 
-    getWalletInfo() {
+    startWalletInfoPing() {
         let interval = setInterval(async () => {
             try {
                 info('START GETWALLET INFO')
-                let data = await getInfoPCSC()
+                const data = await getInfoPCSC()
                 info('GOT THIS DATA', data)
                 switch (data) {
                     case 0: {
                         clearInterval(interval)
                         info('SETTING WALLET STATUS 0')
 
-                        this.initAll()
+                        await this.initAll()
 
                         this.setState({walletStatus: 0})
                         break
@@ -616,60 +607,29 @@ export default class App extends React.Component<{}, AppState> {
 
 
     async componentDidMount() {
-
-        info('APP PROPS:', this.props)
-        info('APP:', App)
-        pcsc.on('reader', async (reader) => {
-            info('READER DETECTED', reader.name)
-            info('setting')
+        pcsc.on('reader', async reader => {
             setReader(reader)
-            reader.on('status', (status) => {
-                info('READER STATE', reader.state)
-                let changes = reader.state ^ status.state
-                info(status)
-                if (changes) {
-                    if ((changes & reader.SCARD_STATE_EMPTY) && (status.state & reader.SCARD_STATE_EMPTY)) {
-                        info('ASD')
-                    } else if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
-                        info('card inserted')
-                        reader.connect({
+            reader.on('status', status => {
+                const changes = reader.state ^ status.state
+                if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
+                    reader.connect({
                             share_mode: reader.SCARD_SHARE_SHARED,
                             protocol: reader.SCARD_PROTOCOL_T1
-                        }, async (err, protocol) => {
-                            if (err) {
-                                info('ERROR OCCURED', err)
-                                info(err)
-                            } else {
-                                info('CONNECTED')
-                                this.setState({connection: true})
-
-                                this.getWalletInfo()
-                                /*reader.transmit(Buffer.from([0x00,0xA4,0x04,0x00,0x08,0x48,0x65,0x6C,0x6C, 0x6F, 0x41, 0x70, 0x70]), 4,2,(err,data) => {
-                                    if (err) {
-                                        info('ERROR IN APLET', err)
-                                    } else {
-                                        info('SETAPLET', data.toString('hex'))
-                                        reader.transmit(Buffer.from([0xB0,0x60,0x00,0x00,0x04,0x31,0x32,0x33,0x34]), 100,2,(err,data) => {
-                                            if (err) {
-                                                info('ERROR IN SETPIN', err)
-                                            } else {
-                                                info('SETPIN', data.toString('hex'))
-
-                                                this.getWalletInfo()
-                                            }
-                                        })
-                                    }
-                                })*/
-
-                                info('Protocol(', reader.name, '):', protocol)
-                            }
-                        })
-                    }
-                }
+                    }, async (err, _) => {
+                        if (err) {
+                            info(err)
+                            alert("Error during connection to the wallet")
+                        } else {
+                            this.setState({connection: true})
+                            this.startWalletInfoPing()
+                        }
+                })
+            }
             })
 
-            reader.on('error', function (err) {
-                info('Error(', this.name, '):', err.message)
+            reader.on('error', err => {
+                info('Error', err.message)
+                alert(err.message)
             })
             reader.on('end', () => {
                 info('Reader', reader.name, 'removed')
@@ -677,9 +637,9 @@ export default class App extends React.Component<{}, AppState> {
             })
         })
 
-
-        pcsc.on('error', function (err) {
+        pcsc.on('error', err => {
             info('PCSC error', err.message)
+            alert(err.message)
         })
     }
 
@@ -687,14 +647,25 @@ export default class App extends React.Component<{}, AppState> {
         this.setState({redirectToMain: true})
     }
 
-    initAll() {
+    async initAll() {
         info('initAll')
-        if (this.state.allowInit) {
-            this.setState({allowInit: false})
-            initBitcoinAddress().then(initEthereumAddress).then(initLitecoinAddress).then(initRippleAddress).then(this.getRates).then(this.getBalances).then(this.getTransactions).then(() => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions)).then(() => {
-                this.setRedirectToMain()
-                this.setValues()
-            }).then(this.updateData).then(this.setChartBTC).then(() =>updateTransactionsPCSC(this.state.BTCLastTx, this.state.ETHLastTx,this.state.LTCLastTx,this.state.XRPLastTx))
+        try {
+            if (this.state.allowInit) {
+                this.setState({allowInit: false})
+                const updateHwStatus = async () => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions)
+                const updateHwTransactions = async () => updateTransactionsPCSC(this.state.BTCLastTx, this.state.ETHLastTx,this.state.LTCLastTx,this.state.XRPLastTx)
+                const redirect =  () => {
+                    this.setRedirectToMain()
+                    this.setValues()
+                }
+                await Promise.all([initBitcoinAddress(), initEthereumAddress(), initLitecoinAddress()])
+                await Promise.all([this.getBalances(), this.getTransactions()])
+                await Promise.all([this.setChartBTC(), this.getRates()])
+                await Promise.all([redirect(), updateHwStatus(), updateHwTransactions()])
+            }
+        } catch(error) {
+            info(error)
+            alert("Error during initialization")
         }
     }
 
@@ -709,16 +680,14 @@ export default class App extends React.Component<{}, AppState> {
         setXRPPrice(this.state.XRPPrice)
     }
 
-    updateData() {
+    async updateData() {
         info('REFRESHING')
         this.setState({numTransactions: 0})
-        this.getTransactions().then(this.getBalances).then(this.getRates)
-            .then(() => {
-                UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions)
-            })
+        await Promise.all([this.getTransactions(), this.getBalances()])
+        const updateHwStatus = async () => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions)
+        await Promise.all([this.getRates(), updateHwStatus()])
+    
     }
-
-
 
     changeBalance(currency: string, amount: number) {
         switch (currency) {
@@ -739,296 +708,73 @@ export default class App extends React.Component<{}, AppState> {
         }
     }
 
-
-    addUnconfirmedTx(currency: string, amount: number, address: string, hash: string) {
-        let currentDate = new Date()
-        let tx = {
-            Date: currentDate.getFullYear() + '/' + (currentDate.getMonth() + 1) + '/' + currentDate.getDate() + ' ' + currentDate.getHours() + ':' + currentDate.getMinutes(),
-            Currency: currency,
-            Amount: amount,
-            Address: address,
-            Status: 'Unconfirmed',
-            Type: 'outgoing',
-            Hash: hash
+    async getRates(): Promise<void> {
+        const rates = await getCurrencyRate();
+        if (rates.status.error_code != 0) {
+            return
         }
-        switch (currency) {
-            case 'BTC' : {
-                this.setState({BTCLastTx: [...this.state.BTCLastTx, tx]})
-                break
-            }
-            case 'ETH': {
-                this.setState({ETHLastTx: [...this.state.ETHLastTx, tx]})
-                break
-            }
-            case 'LTC': {
-                this.setState({LTCLastTx: [...this.state.LTCLastTx, tx]})
-                break
-            }
-            case 'XRP': {
-                this.setState({XRPLastTx: [...this.state.XRPLastTx, tx]})
-                break
-            }
-        }
-    }
-
-    getRates(): Promise<void> {
-        return new Promise((resolve) => {
-            info('IN GET RATES')
-            GetCurrencyRate().then(value => {
-                for (let item in value) {
-                    switch (value[item].id) {
-                        case 'bitcoin': {
-                            info('BTC PRICE')
-                            this.setState({
-                                BTCPrice: Number((value[item].price_usd * this.state.BTCBalance).toFixed(2)),
-                                BTCCourse: Number(value[item].price_usd),
-                                BTCHourChange: Number(value[item].percent_change_1h)
-                            })
-                            info('BTC PRICE', value[item].price_usd, value[item].percent_change_1h)
-                            break
-                        }
-                        case 'ethereum': {
-                            info('ETH PRICE')
-                            this.setState({
-                                ETHPrice: Number((value[item].price_usd * this.state.ETHBalance).toFixed(2)),
-                                ETHCourse: Number(value[item].price_usd),
-                                ETHHourChange: Number(value[item].percent_change_1h)
-                            })
-                            info('ETH PRICE', this.state.ETHPrice, this.state.ETHHourChange)
-                            break
-                        }
-                        case 'litecoin': {
-                            this.setState({
-                                LTCPrice: Number((value[item].price_usd * this.state.LTCBalance).toFixed(2)),
-                                LTCCourse: Number(value[item].price_usd),
-                                LTCHourChange: Number(value[item].percent_change_1h)
-                            })
-                            info('LTC PRICE', this.state.LTCPrice, this.state.LTCHourChange)
-                            break
-                        }
-                        case 'ripple': {
-                            this.setState({
-                                XRPPrice: Number((value[item].price_usd * this.state.XRPBalance).toFixed(2)),
-                                XRPCourse: Number(value[item].price_usd),
-                                XRPHourChange: Number(value[item].percent_change_1h)
-                            })
-                            info('XRP PRICE', this.state.XRPPrice, this.state.XRPHourChange)
-                            break
-                        }
-                    }
+        for (const rate of rates.data) {
+            const usdQuote = rate.quote.USD
+            switch (rate.slug) {
+                case "bitcoin": {
+                    this.setState({
+                        BTCPrice: parseFloat(Number(usdQuote.price * this.state.BTCBalance).toFixed(1)),
+                        BTCCourse: usdQuote.price,
+                        BTCHourChange: Number(usdQuote.percent_change_1h)
+                    })
+                    break
                 }
-                let total = this.state.BTCPrice + this.state.ETHPrice + this.state.LTCPrice + this.state.XRPPrice
-                info('TOTAL', total)
-                info(Number((total).toFixed(8)))
-                this.setState({totalBalance: Number((total).toFixed(8))})
-                let totalPercentage = this.state.BTCHourChange + this.state.ETHHourChange + this.state.LTCHourChange + this.state.XRPHourChange
-                info('TOTAL PERCENTAGE', totalPercentage)
-                this.setState({totalPercentage: Number((totalPercentage).toFixed(2))})
-                resolve()
-            })
-        })
-    }
-
-    getBalances() {
-        return Promise.all([getBTCBalance(), getETHBalance(), getLTCBalance(), getXRPBalance()]).then(value => {
-            for (let item in value) {
-                info('SUBSTRING' + value[item][0])
-                info('VALUE OF SUB', value[item][1])
-                switch (value[item][0]) {
-                    case 'BTC': {
-                        info('SETTING BTC BALANCE', value[item][1])
-                        this.setState({BTCBalance: value[item][1]})
-                        info('BTC STATE', this.state.BTCBalance)
-                        break
-                    }
-                    case 'ETH': {
-                        info('SETTING ETH BALANCE', value[item][1])
-                        this.setState({ETHBalance: value[item][1]})
-                        info('ETH STATE', this.state.ETHBalance)
-                        break
-                    }
-                    case 'LTC': {
-                        info('SETTING LTC BALANCE', value[item][1])
-                        this.setState({LTCBalance: value[item][1]})
-                        info('LTC STATE', this.state.LTCBalance)
-                        break
-                    }
-                    case 'XRP': {
-                        info('SETTING XRP BALANCE', value[item][1])
-                        this.setState({XRPBalance: value[item][1]})
-                        info('XRP STATE', this.state.XRPBalance)
-                        break
-                    }
+                case "litecoin": {
+                    this.setState({
+                        LTCPrice: parseFloat(Number(usdQuote.price * this.state.LTCBalance).toFixed(1)),
+                        LTCCourse: usdQuote.price,
+                        LTCHourChange: Number(usdQuote.percent_change_1h)
+                    })
+                    break
+                }
+                case "ethereum": {
+                    this.setState({
+                        ETHPrice: parseFloat(Number(usdQuote.price * this.state.ETHBalance).toFixed(1)),
+                        ETHCourse: usdQuote.price,
+                        ETHHourChange: Number(usdQuote.percent_change_1h)
+                    })
+                    break
+                }
+                case "ripple": {
+                    this.setState({
+                        XRPPrice: parseFloat(Number(usdQuote.price * this.state.XRPBalance).toFixed(1)),
+                        XRPCourse: usdQuote.price,
+                        XRPHourChange: Number(usdQuote.percent_change_1h)
+                    })
+                    break
                 }
             }
-        })
+           
+        } 
+        const total = this.state.BTCPrice + this.state.ETHPrice + this.state.LTCPrice + this.state.XRPPrice  
+        this.setState({totalBalance: Number((total).toFixed(8))})
+        const totalPercentage = this.state.BTCHourChange + this.state.ETHHourChange + this.state.LTCHourChange + this.state.XRPHourChange
+        this.setState({totalPercentage: Number((totalPercentage).toFixed(2))})
+    }
+
+    async getBalances() {
+        const balances = await Promise.all([getBTCBalance(), getLTCBalance(),  getETHBalance(), getXRPBalance()])
+        this.setState({BTCBalance: balances[0]})
+        this.setState({LTCBalance: balances[1]})
+        this.setState({ETHBalance: balances[2]})
+        this.setState({XRPBalance: balances[3]})
     }
 
     componentWillMount() {
-        info('SETTING REDIRECT')
         this.setState({redirect: true})
     }
 
-    getTransactions() {
-        return Promise.all([getBitcoinLastTx(), getLitecoinLastTx(), getEthereumLastTx(), getRippleLastTx()]).then(value => {
-            for (let index in value) {
-                if (Object.prototype.hasOwnProperty.call(value[index].data, 'data')) {
-                    info('Parsing btc-like tx')
-                    this.parseBTCLikeTransactions(value[index].data)
-                } else {
-                    info('PArsing eth tx')
-                    this.parseETHTransactions(value[index].data)
-                }
-            }
-        }).catch(error => {
-            info(error)
-        })
-    }
-
-    parseETHTransactions(value: any) {
-
-        let transactionsObject = value
-        if (transactionsObject === undefined) {
-            info('RETURNING')
-            return
-        }
-
-        transactionsObject.map((value: any) => {
-
-            let parsedTx = this.parseTransactionDataETH(value, getEthereumAddress())
-            let findResp = this.state.ETHLastTx.find(function (obj) {
-
-
-                return obj.Hash === Object(parsedTx).Hash
-            })
-            if (findResp === undefined) {
-                this.setState({ETHLastTx: [...this.state.ETHLastTx, parsedTx]})
-
-                this.setNumTransactions(1)
-                info('numTransaction: ', this.state.numTransactions)
-            } else if (Object(parsedTx).Status !== findResp.Status) {
-                for (let index in this.state.ETHLastTx) {
-                    if (this.state.ETHLastTx[index].Hash === Object(parsedTx).Hash) {
-                        this.state.ETHLastTx[index].Status = Object(parsedTx).Status
-                    }
-                }
-            } else {
-                this.setNumTransactions(1)
-                info('numTransaction: ', this.state.numTransactions)
-            }
-        })
-
-    }
-
-    parseBTCLikeTransactions(value: any) {
-        let parsedResponse = value.data
-        for (let tx in parsedResponse.txs) {
-            this.setNumTransactions(1)
-            info('numTransaction: ', this.state.numTransactions)
-            switch (parsedResponse.network) {
-                case 'BTC': {
-                    let parsedTx = this.parseTransactionDataBTC(parsedResponse.txs[tx], 'BTC')
-                    let findResp = this.state.BTCLastTx.find(function (obj) {
-                        return obj.Hash === Object(parsedTx).Hash
-                    })
-                    if (findResp === undefined) {
-                        this.setState({BTCLastTx: [...this.state.BTCLastTx, parsedTx]})
-                    } else if (Object(parsedTx).Status !== findResp.Status) {
-                        for (let index in this.state.BTCLastTx) {
-                            if (this.state.BTCLastTx[index].Hash === Object(parsedTx).Hash) this.state.BTCLastTx[index].Status = Object(parsedTx).Status
-                        }
-                    }
-                    break
-                }
-                case 'LTC': {
-                    info('IN LTC')
-                    let parsedTx = this.parseTransactionDataBTC(parsedResponse.txs[tx], 'LTC')
-                    let findResp = this.state.LTCLastTx.find(function (obj) {
-                        return obj.Hash === Object(parsedTx).Hash
-                    })
-                    if (findResp === undefined) {
-                        this.setState({LTCLastTx: [...this.state.LTCLastTx, parsedTx]})
-                    } else if (Object(parsedTx).Status !== findResp.Status) {
-                        for (let index in this.state.LTCLastTx) {
-                            if (this.state.LTCLastTx[index].Hash === Object(parsedTx).Hash) this.state.LTCLastTx[index].Status = Object(parsedTx).Status
-                        }
-                    }
-                    break
-                }
-            }
-        }
-    }
-
-    parseTransactionDataETH(transaction: any, ethAddress: string) {
-        let date = new Date(transaction.timestamp * 1000)
-        let dateCell = date.getHours() + ':' + ((date.getMinutes() >= 10) ? date.getMinutes() : '0' + date.getMinutes()) + ' ' + ' ' + ' ' + date.getDate() + ' ' + (date.getMonth() + 1) + ' ' + date.getFullYear()
-        let amount = transaction.value
-        let type = ''
-        let hash = transaction.hash
-        {
-            (transaction.from === ethAddress.toLowerCase()) ? (type = 'outgoing') : (type = 'incoming')
-        }
-        let address = ''
-        {
-            (type === 'outgoing') ? (address = transaction.to) : (address = transaction.from)
-        }
-        let status = transaction.success ? 'Finished' : 'Active'
-        let returnedObject = {
-            DateUnix: date,
-            Date: dateCell,
-            Currency: 'ETH',
-            Amount: amount,
-            Address: address,
-            Status: status,
-            Type: type,
-            Hash: hash
-        }
-        return returnedObject
-
-    }
-
-    parseTransactionDataBTC(transaction: any, currency: string): Object {
-        let returnedObject = {}
-        if (transaction.outgoing !== undefined) {
-            let date = new Date(transaction.time * 1000)
-            let dateCell = date.getHours() + ':' + ((date.getMinutes() >= 10) ? date.getMinutes() : '0' + date.getMinutes()) + ' ' + ' ' + ' ' + date.getDate() + ' ' + (date.getMonth() + 1) + ' ' + date.getFullYear()
-            let amount = transaction.outgoing.outputs[0].value
-            let address = transaction.outgoing.outputs[0].address
-            let type = 'outgoing'
-            let status = (transaction.confirmations === 0) ? 'Active' : 'Finished'
-            let hash = transaction.txid
-            let dataToPass = {
-                DateUnix: date,
-                Date: dateCell,
-                Currency: currency,
-                Amount: amount,
-                Address: address,
-                Status: status,
-                Type: type,
-                Hash: hash
-            }
-            returnedObject = dataToPass
-        } else {
-            let date = new Date(transaction.time * 1000)
-            let dateCell = date.getHours() + ':' + ((date.getMinutes() >= 10) ? date.getMinutes() : '0' + date.getMinutes()) + ' ' + ' ' + ' ' + date.getDate() + ' ' + (date.getMonth() + 1) + ' ' + date.getFullYear()
-            let amount = transaction.incoming.value
-            let address = transaction.incoming.inputs[0].address
-            let type = 'incoming'
-            let status = (transaction.confirmations === 0) ? 'Active' : 'Finished'
-            let hash = transaction.txid
-            let dataToPass = {
-                DateUnix: date,
-                Date: dateCell,
-                Currency: currency,
-                Amount: amount,
-                Address: address,
-                Status: status,
-                Type: type,
-                Hash: hash
-            }
-            returnedObject = dataToPass
-        }
-        return returnedObject
+    async getTransactions() {
+        const transactions = await Promise.all([getBitcoinLastTx(), getLitecoinLastTx(), getEthereumLastTx(), getRippleLastTx()])
+        this.setState({BTCLastTx: transactions[0]})
+        this.setState({LTCLastTx: transactions[1]})
+        this.setState({ETHLastTx: transactions[2]})
+        this.setState({XRPLastTx: transactions[3]})
     }
 
     render() {
@@ -1038,8 +784,6 @@ export default class App extends React.Component<{}, AppState> {
             <div className='blackBackground'>
                 <Header/>
                 <div className={container}>
-
-
                     {(this.state.redirect) ? (
                         <Redirect to='/start'/>
                     ) : (

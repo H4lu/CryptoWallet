@@ -1,5 +1,5 @@
 import * as React from 'react'
-import CreateQR from "../core/CreateQR";
+import CreateQR from "../core/createQR";
 import getLitecoinAddress from "../API/cryptocurrencyAPI/Litecoin";
 import {clipboard, shell} from 'electron'
 import {Link} from "react-router-dom";

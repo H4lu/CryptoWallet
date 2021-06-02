@@ -1,9 +1,28 @@
-import  React from 'react'
-import {Link} from "react-router-dom";
-import {log} from 'electron-log'
+import  * as React from 'react'
 import {Table} from "./Table";
+import { DisplayTransaction, DisplayTransactionCurrency } from '../API/cryptocurrencyAPI/utils';
+interface CarouselTableState {
+    activeCurrency: number,
+    classNameAll: string,
+    classNameSend: string,
+    classNameReceive: string,
+    direct: number,
+    curTableData: Array<DisplayTransaction>,
+    tableData: Array<DisplayTransaction>
+    activeCur: DisplayTransactionCurrency
+}
 
-export class CarouselTable extends React.PureComponent<any, any> {
+interface CarouselTableProps {
+    activeCurrency: number,
+    getActiveCurrency: () => string,
+    refresh: () => void,
+    lastTxBTC: Array<DisplayTransaction>,
+    lastTxETH: Array<DisplayTransaction>,
+    lastTxLTC: Array<DisplayTransaction>,
+    lastTxXRP: Array<DisplayTransaction>,
+}
+
+export class CarouselTable extends React.PureComponent<CarouselTableProps, CarouselTableState> {
     currencyName: string
     direct: number
     shouldUpdate: boolean
@@ -11,7 +30,6 @@ export class CarouselTable extends React.PureComponent<any, any> {
     constructor(props: any) {
         super(props)
         this.shouldUpdate = true;
-     
 
         this.state = {
             activeCurrency: this.props.activeCurrency,
@@ -30,9 +48,8 @@ export class CarouselTable extends React.PureComponent<any, any> {
         this.receiveDirect = this.receiveDirect.bind(this)
         this.handleUpdateDataClick = this.handleUpdateDataClick.bind(this)
         this.parseData = this.parseData.bind(this)
-       // this.getData = this.getData.bind(this)
-       this.tableData = new Array<any>()
-       this.tableData = this.props.lastTxBTC
+        this.tableData = new Array<any>()
+        this.tableData = this.props.lastTxBTC
     }
 
     handleUpdateDataClick() {
@@ -40,95 +57,78 @@ export class CarouselTable extends React.PureComponent<any, any> {
     } 
 
     updateProps() {
-        // log(this.shouldUpdate + " updateProps 1")
-        // if (!this.shouldUpdate) return
-        // log('in update props')
-        // this.shouldUpdate = false;
-        // log(this.shouldUpdate  + " updateProps 2")
         switch (this.props.activeCurrency) {
             case 1: {
                 this.currencyName = 'Bitcoin'
-                this.setState({curTableData: this.props.lastTxBTC, activeCur: 'BTC'}, () => {
-                    console.log("parse data case 1")
-
+                this.setState({
+                    curTableData: this.props.lastTxBTC,
+                    activeCur: 'BTC'
+                }, () => {
                     this.parseData()
                     this.getData()
-                
                 })
                 break
-                
             }
             case 2: {
-                this.currencyName = 'Etereum'
-                this.setState({curTableData: this.props.lastTxETH, activeCur: 'ETH'}, () => {
-                    console.log("parse data case 2")
+                this.currencyName = 'Ethereum'
+                this.setState({
+                    curTableData: this.props.lastTxETH,
+                    activeCur: 'ETH'
+                }, () => {
                     this.parseData()
-                   // this.getData()
                 })
-            
                 break
             }
             case 3: {
                 this.currencyName = 'Litecoin'
-                this.setState({curTableData: this.props.lastTxLTC, activeCur: 'LTC'}, () => {
-                    console.log("parse data case 3")
+                this.setState({
+                    curTableData: this.props.lastTxLTC, 
+                    activeCur: 'LTC'
+                }, () => {
                     this.parseData()
-                  //  this.getData()
                 })
-               
                 break
             }
             case 4: {
                 this.currencyName = 'Ripple'
-                this.setState({curTableData: this.props.lastTxXRP, activeCur: 'XRP'}, () => {
-                    console.log("parse data case 4")
+                this.setState({
+                    curTableData: this.props.lastTxXRP,
+                    activeCur: 'XRP'
+                }, () => {
                     this.parseData()
-                  //  this.getData()
                 })
-            
                 break
             }
         }
-    
-        log(this.shouldUpdate  + " updateProps 3")
-
     }
 
     allDirect() { 
         this.setState({direct: 0}, () => {
-            console.log("direct now 0")
             this.tableData = this.state.curTableData
-          //  this.setState({classNameAll: 'AlldirectHistory_a',classNameSend: 'SenddirectHistory_p', classNameReceive: 'ReceivedirectHistory_p'})
         })
     }
 
     sendDirect() {
         this.setState({direct: -1}, () => {
-            console.log("direct now -1")
-            this.tableData = this.state.curTableData.filter(curTableData => curTableData.Type === "outgoing")
-            //this.setState({classNameAll: 'AlldirectHistory_p', classNameSend: 'SenddirectHistory_a',classNameReceive: 'ReceivedirectHistory_p'})
+            this.tableData = this.state.curTableData
+                .filter(curTableData => curTableData.type === "outgoing")
         })
     }
 
     receiveDirect() {
         this.setState({direct: 1}, () => {
-            console.log("direct now 1")
-            this.tableData = this.state.curTableData.filter(curTableData => curTableData.Type === "incoming")
-            //this.setState({classNameAll: 'AlldirectHistory_p',classNameSend: 'SenddirectHistory_p', classNameReceive: 'ReceivedirectHistory_a' })
+            this.tableData = this.state.curTableData.filter(curTableData => curTableData.type === "incoming")
         })
     }
     getData() {
         switch (this.state.direct) {
             case -1: {
-               
-                this.tableData = this.state.curTableData.filter(curTableData => curTableData.Type === "outgoing")
+                this.tableData = this.state.curTableData.filter(curTableData => curTableData.type === "outgoing")
                 break
-               // return this.state.curTableData.filter(curTableData => curTableData.Type === "outgoing")
             }
             case 1: {
-                this.tableData = this.state.curTableData.filter(curTableData => curTableData.Type === "incoming")
+                this.tableData = this.state.curTableData.filter(curTableData => curTableData.type === "incoming")
                break
-               // return this.state.curTableData.filter(curTableData => curTableData.Type === "incoming")
             }
             case 0: {
                 this.tableData = this.state.curTableData
@@ -137,35 +137,35 @@ export class CarouselTable extends React.PureComponent<any, any> {
         }
     }
     parseData() {
-
-        // if (!this.shouldUpdate) return
-        // log('in update props')
-        // this.shouldUpdate = false;
-        // log(this.shouldUpdate  + " updateProps 2")
-        // console.log('parseData In')
         switch (this.state.direct) {
             case -1: {
-                this.setState({/*tableData: (this.state.curTableData.filter(curTableData => curTableData.Type === "outgoing")),*/classNameAll: 'AlldirectHistory_p', classNameSend: 'SenddirectHistory_a',classNameReceive: 'ReceivedirectHistory_p'},() =>{
+                this.setState({
+                    classNameAll: 'AlldirectHistory_p', 
+                    classNameSend: 'SenddirectHistory_a',
+                    classNameReceive: 'ReceivedirectHistory_p'
+                }, () => {
                     this.shouldUpdate = true;
-                    
-                    console.log("direct -1")})
+                })
                 break
-               // return this.state.curTableData.filter(curTableData => curTableData.Type === "outgoing")
             }
             case 1: {
-                this.setState({/*tableData: (this.state.curTableData.filter(curTableData => curTableData.Type === "incoming")),*/classNameAll: 'AlldirectHistory_p',classNameSend: 'SenddirectHistory_p', classNameReceive: 'ReceivedirectHistory_a'},() =>{
-                     this.shouldUpdate = true
-                    
-                     console.log("direct 1")})
+                this.setState({
+                    classNameAll: 'AlldirectHistory_p',
+                    classNameSend: 'SenddirectHistory_p', 
+                    classNameReceive: 'ReceivedirectHistory_a'
+                },() => {
+                    this.shouldUpdate = true
+                })
                 break
-               // return this.state.curTableData.filter(curTableData => curTableData.Type === "incoming")
             }
             case 0: {
-                this.setState({/*tableData: this.state.curTableData, */classNameAll: 'AlldirectHistory_a',classNameSend: 'SenddirectHistory_p', classNameReceive: 'ReceivedirectHistory_p'},() =>{
-                  
-                   
+                this.setState({
+                    classNameAll: 'AlldirectHistory_a',
+                    classNameSend: 'SenddirectHistory_p', 
+                    classNameReceive: 'ReceivedirectHistory_p'
+                },() => {
                     this.shouldUpdate = true;
-                    console.log("direct 0")})
+                })
                 break
             }
         }
@@ -173,11 +173,8 @@ export class CarouselTable extends React.PureComponent<any, any> {
 
 
     render() {
-        console.log("rerender carousel table",this.state.curTableData, this.tableData)
-        
         this.updateProps()
         this.getData()
-        
         return (
             <div>
                 <p className='currencyNameHistory'>{this.currencyName}</p>
@@ -189,7 +186,11 @@ export class CarouselTable extends React.PureComponent<any, any> {
                 </div>
                 <hr className='hrLine'/>
                 <div className='table_content'>
-                    <Table data={this.tableData} activeCurrency={this.state.activeCur} type='normal'/>
+                    <Table 
+                        data={this.tableData} 
+                        activeCurrency={this.state.activeCur} 
+                        type='normal'
+                        />
                 </div>
             </div>
         )

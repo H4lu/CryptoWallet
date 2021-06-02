@@ -7,6 +7,17 @@ import {getAddressPCSC} from '../hardwareAPI/GetAddress'
 import {info} from 'electron-log'
 import {Buffer} from 'buffer'
 import {keccak256} from "js-sha3";
+import { DisplayTransaction, DisplayTransactionCurrency, DisplayTransactionStatus, DisplayTransactionType } from './utils'
+
+interface EthplorerTransaction {
+    timestamp: number,
+    from: string,
+    to: string,
+    hash: string,
+    value: number,
+    input: string,
+    success: boolean
+}
 
 enum Networks {
     MAIN = "mainnet",
@@ -68,10 +79,28 @@ export function getEthereumAddress() {
     return myAdress
 }
 
-export async function getEthereumLastTx(): Promise<any> {
+export async function getEthereumLastTx(): Promise<Array<DisplayTransaction>> {
     const requestURL = `https://api.ethplorer.io/getAddressTransactions/${myAdress}?apiKey=freekey&limit=50`
-    let response = await axios.get(requestURL)
-    return response
+    const response = await axios.get(requestURL)
+    return (response.data as Array<EthplorerTransaction>)
+        .map(tx => ethplorerToDisplayTransaction(tx))
+}
+
+function ethplorerToDisplayTransaction(tx: EthplorerTransaction): DisplayTransaction {
+    const date = new Date(tx.timestamp * 1000)
+    const dateUnix = date.getTime()
+    const displayDate = date.getHours() + ':' + ((date.getMinutes() >= 10) ? date.getMinutes() : '0' + date.getMinutes()) + ' ' + ' ' + ' ' + date.getDate() + ' ' + (date.getMonth() + 1) + ' ' + date.getFullYear()
+    const amount = tx.value.toString()
+    const hash = tx.hash
+    const type = tx.from === myAdress.toLowerCase() ? 
+        DisplayTransactionType.OUTGOING : DisplayTransactionType.INCOMING
+    const status = tx.success ?
+        DisplayTransactionStatus.ACTIVE : DisplayTransactionStatus.FINISHED    
+    const address = type === DisplayTransactionType.OUTGOING ? tx.to : tx.from
+    const currency: DisplayTransactionCurrency = "ETH"
+    return {
+        dateUnix, displayDate, currency, amount, address, status, type, hash
+    }
 }
 
 export async function getETHBalanceTrans(address: string): Promise<Array<any>> {
@@ -89,21 +118,10 @@ export async function getETHBalanceTrans(address: string): Promise<Array<any>> {
     return arr
 }
 
-export async function getETHBalance() {
-    web3.eth.getGasPrice().then(value => info(value)).catch(err => info(err))
-    let resp = await web3.eth.getBalance(myAdress)
-    info('ETH balance: ' + resp)
-    return parseValueCrypto(Number(resp))
-}
-
-function parseValueCrypto(amount: number): Array<Number | String> {
-    let ethValue = convertFromWei(amount)
-    let arr = []
-    arr.push('ETH')
-    arr.push(Number(Number(ethValue).toFixed(8)))
-    let answer = 'ETH' + ethValue.toString()
-    info('RETURNING ETH BALANCE', answer)
-    return arr
+export async function getETHBalance(): Promise<number> {
+    const response = await web3.eth.getBalance(myAdress)
+    const ethValue = convertFromWei(Number(response))
+    return Number(Number(ethValue).toFixed(8)) 
 }
 
 export function convertFromWei(amount: number) {
@@ -129,9 +147,7 @@ function createTransaction(paymentAdress: string, amount: number, gasPrice: numb
             r: 0,
             s: 0
         }
-        for (let item in rawtx) {
-            console.log('item : ', Object(rawtx)[item])
-        }
+    
         let tx = new Transaction(rawtx)
         console.log('Unsigned: ', tx.serialize().toString('hex'))
         let txHash = keccak256(tx.serialize())

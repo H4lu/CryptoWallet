@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {getEthereumAddress} from '../API/cryptocurrencyAPI/Ethereum'
-import {sendTransaction} from "../core/SendTransaction";
+import {sendTransaction} from "../core/sendTransaction";
 import {Link} from "react-router-dom";
 
 interface IETHSendState {

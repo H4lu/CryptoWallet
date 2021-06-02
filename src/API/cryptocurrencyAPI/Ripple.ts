@@ -12,6 +12,7 @@ let price: number
 import axios from 'axios'
 import { info } from 'electron-log'
 import {Buffer} from "buffer";
+import { DisplayTransaction } from './utils'
 
 export function setXRPBalance(bal: number) {
     balance = bal
@@ -70,18 +71,12 @@ export function getRipplePubKey() {
     return myPubKey
 }
 
-export async function getRippleLastTx(): Promise<any> {
-
+export async function getRippleLastTx(): Promise<Array<DisplayTransaction>> {
+    return []
 }
 
-
-export async function getXRPBalance(): Promise<Array<Number | String>> {
-    /* Задаём параметры запроса
-      Network - тип сети, testnet или mainnet
-      address - наш адрес
-      0 - количество подтверждений транзакций
-    */
-    return ['XRP', 0]
+export async function getXRPBalance(): Promise<number> {
+    return 0
 }
 
 export async function getXRPBalanceTrans(address: string): Promise<Array<any>> {

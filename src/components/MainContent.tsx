@@ -6,6 +6,7 @@ import {getETHBalanceTrans} from "../API/cryptocurrencyAPI/Ethereum";
 import {getLTCBalanceTrans} from "../API/cryptocurrencyAPI/Litecoin";
 import {getXRPBalanceTrans} from "../API/cryptocurrencyAPI/Ripple";
 import Chart from "./Chart";
+import { DisplayTransaction } from '../API/cryptocurrencyAPI/utils';
 interface MainContentState {
     exAddress: string,
     balance: string,
@@ -33,7 +34,7 @@ interface MainContentProps {
     updateStateXRP: () => void,
     setActiveCurrency: (string) => void,
     getActiveCurrency: () => string,
-    lastTx: Array<string>,
+    lastTx: Array<DisplayTransaction>,
     transactions: () => Promise<void>,
     refresh: () => void,
     chartBTC: Array<any>,

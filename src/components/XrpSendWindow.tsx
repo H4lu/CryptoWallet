@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {log} from "electron-log";
-import {sendTransaction} from "../core/SendTransaction";
+import {sendTransaction} from "../core/sendTransaction";
 import {Link} from "react-router-dom";
 import getRippleAddress from "../API/cryptocurrencyAPI/Ripple";
 

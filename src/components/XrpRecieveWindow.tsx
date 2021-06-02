@@ -1,5 +1,5 @@
 import * as React from 'react'
-import CreateQR from "../core/CreateQR";
+import CreateQR from "../core/createQR";
 /*import getRippleAddress from "../API/cryptocurrencyAPI/Ripple";*/
 import {clipboard, shell} from 'electron'
 import {Link} from "react-router-dom";

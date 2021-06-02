@@ -1,5 +1,5 @@
 import {TransactionBuilder, networks, Transaction, ECPair, address, script} from 'bitcoinjs-lib'
-import axios from 'axios'
+import axios, {AxiosResponse} from 'axios'
 import {getSignaturePCSC} from '../hardwareAPI/GetSignature'
 import {getAddressPCSC} from '../hardwareAPI/GetAddress'
 import  {
@@ -10,7 +10,10 @@ import  {
     sumOrNaN,
     inputBytes,
     dustThreshold,
-    finalize
+    finalize,
+    DisplayTransaction,
+    parseBTCLikeTransactions,
+    BtcLikeCurrencies
 } from './utils'
 import * as satoshi from 'satoshi-bitcoin'
 import {info} from 'electron-log'
@@ -80,8 +83,6 @@ export function setBTCPrice(priceToSet: number) {
 }
 
 export async function initBitcoinAddress() {
-    info('INITING BTC ADDRESS')
-
     return new Promise(async (resolve) => {
         let status = false
         while (!status) {
@@ -125,31 +126,18 @@ export function getBitcoinPubKey() {
     return myPubKey
 }
 
-
-export async function getBitcoinLastTx(): Promise<any> {
-    info('CALLING BTC')
-    try {
-        const requestUrl = `${rootURL}/address/${NETWORK}/${myAddr}`
-        info('My req url: ' + requestUrl)
-        let response = await axios.get(requestUrl)
-        info(response)
-        return response
-    } catch (err) {
-        info(err)
-    }
+export async function getBitcoinLastTx(): Promise<Array<DisplayTransaction>> {
+    const requestUrl = `${rootURL}/address/${NETWORK}/${myAddr}`
+    const response = await axios.get(requestUrl)
+    return parseBTCLikeTransactions(response.data, "BTC")
 }
 
 async function setFee() {
     const requestUrl = 'https://bitcoinfees.earn.com/api/v1/fees/recommended'
-    try {
-        const response = await axios.get(requestUrl)
-        let parsedResponse = JSON.parse(response.data)
-        basicFee1 = Number(parsedResponse.hourFee)
-        basicFee2 = Number(parsedResponse.halfHourFee)
-        basicFee3 = Number(parsedResponse.fastestFee)
-    } catch (error) {
-        info(error)
-    }
+    const response = await axios.get(requestUrl)
+    basicFee1 = Number(response.data.hourFee)
+    basicFee2 = Number(response.data.halfHourFee)
+    basicFee3 = Number(response.data.fastestFee)
 }
 
 export function getFee(transactionFee: number): number {
@@ -173,30 +161,39 @@ export function getFee(transactionFee: number): number {
     return (basicFee)
 }
 
-export async function getBTCBalance(): Promise<Array<any>> {
+export async function getBTCBalance(): Promise<number> {
     const requestUrl = `https://api.blockcypher.com/v1/btc/${BLOCKCYPHER_NETWORK}/addrs/${myAddr}/balance`
-    //console.log('url btc balance', requestUrl)
-    // Делаем запрос и отдаём в виде Promise
     const response = await axios.get(requestUrl)
-    return ['BTC', Number((response.data.balance/100000000).toFixed(8))]
+    return Number((response.data.balance / 100000000).toFixed(8))
+}
+
+type CoindeskChartBpiItem = {
+    [key: string]: number
+}
+interface CoindeskChartResponse {
+    bpi: CoindeskChartBpiItem, 
+    disclaimer: string,
+    time: {
+        updated: Date,
+        updatedISO: Date
+    }
 }
 
 export async function getChartBTC(end: string, start: string): Promise<Array<any>> {
     const requestUrl = `https://api.coindesk.com/v1/bpi/historical/close.json?start=${start}&end=${end}`
-    try {
-        // Делаем запрос и отдаём в виде Promise
-        const response = await axios.get(requestUrl)
-        let parsedResponse = response.data.bpi
-        let arr = []
-        for (let count in parsedResponse) {
-            arr.push(parsedResponse[count])
-        }
-        return arr
-    } catch (error) {
-        Promise.reject(error).catch(error => {
-            info(error)
-        })
+    info(requestUrl)
+    // Делаем запрос и отдаём в виде Promise
+    const response = await axios.get(requestUrl)
+    const chartData = response.data.bpi
+    let key: keyof typeof chartData
+    info("keys")
+    info(key)
+    const arr = []
+    for (key in chartData) {
+        arr.push(chartData[key])
     }
+    info(arr)
+    return arr
 }
 
 export async function getBTCBalanceTarns(address: string): Promise<Array<any>> {

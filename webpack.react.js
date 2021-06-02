@@ -40,7 +40,7 @@ module.exports = {
                 {loader: 'cache-loader' },
                 {loader: 'file-loader',
                     options: {
-                       name : 'assets/images/[name].[ext]',
+                       name : 'static/[name].[ext]',
                     } 
                 }
             ]
