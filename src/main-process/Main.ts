@@ -26,9 +26,10 @@ app.on('ready', () => {
             enableRemoteModule: true
         } 
     })
+   
     mainWindow.loadURL(`file:///${__dirname}/index.html`)
     mainWindow.once('ready-to-show', () => mainWindow.show())
-      
+
     mainWindow.webContents.on('context-menu', (e, props) => {
         console.log(e)
         const selectionMenu = Menu.buildFromTemplate([

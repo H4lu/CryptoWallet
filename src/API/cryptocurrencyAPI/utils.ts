@@ -25,6 +25,16 @@ export interface ChainSoTransactionOutput {
     spent: ChainSoTransactionSpent
 }
 
+export interface ChainSoUnspentTransaction {
+  txid: string,
+  output_no: number,
+  script_asm: string,
+  script_hex: string,
+  value: string,
+  confirmations: number,
+  time: number
+}
+
 export interface ChainSoTransaction {
     txid: string,
     block_no: number,
@@ -55,6 +65,15 @@ export interface ChainSoTransactions {
         pending_value: string,
         total_txs: number,
         txs: Array<ChainSoTransaction>
+    }
+}
+
+export interface ChainSoUnspentTransactions {
+    status: string,
+    data: {
+        network: string,
+        address: string,
+        txs: Array<ChainSoUnspentTransaction>
     }
 }
 
