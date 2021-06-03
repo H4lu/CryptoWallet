@@ -275,6 +275,3 @@ export default class MainContent extends React.Component<MainContentProps, MainC
         )
     }
 }
-
-
-

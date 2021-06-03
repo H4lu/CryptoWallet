@@ -14,21 +14,16 @@ export class SidebarLeft extends React.Component<any, any> {
 
     render() {
         return (
-            <div className='sidebar-Left'>
-                <div className='nav-buttons-Left'>
-                    <Link to='/main' className='but_home'/>
-
-                    <Link to='/currency-carousel' className='but_pay'/>
-
-                    <Link to='/history-carousel' className='but_history'/>
-
-                    <button className='but_exchange'/>
-
-                    <button className='but_info'/>
-
-                    <Link to='/mode-window' className='but_menu'/>
-                </div>
-            </div>
+        <div className='sidebar-Left'>
+            ({ <div className='nav-buttons-Left'>
+                <Link to='/main' className='but_home'/>
+                <Link to='/currency-carousel' className='but_pay'/>
+                <Link to='/history-carousel' className='but_history'/>
+                <button className='but_exchange'/>
+                <button className='but_info'/>
+                <Link to='/mode-window' className='but_menu'/>
+                </div> }
+           </div>
         )
     }
 }

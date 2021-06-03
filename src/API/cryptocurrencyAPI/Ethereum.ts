@@ -97,7 +97,7 @@ function ethplorerToDisplayTransaction(tx: EthplorerTransaction): DisplayTransac
     const type = tx.from === myAdress.toLowerCase() ? 
         DisplayTransactionType.OUTGOING : DisplayTransactionType.INCOMING
     const status = tx.success ?
-        DisplayTransactionStatus.ACTIVE : DisplayTransactionStatus.FINISHED    
+        DisplayTransactionStatus.FINISHED : DisplayTransactionStatus.ACTIVE    
     const address = type === DisplayTransactionType.OUTGOING ? tx.to : tx.from
     const currency: DisplayTransactionCurrency = "ETH"
     return {

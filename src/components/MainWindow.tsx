@@ -44,7 +44,6 @@ export class MainWindow extends React.Component<any, IMainWindowState> {
       return <Redirect from = '/' to = '/main'/>
     }
 
-    // <img src = '../static/logo.svg'/>
     return(
         <div className = 'background-start'>
             {(this.props.connection) ? (
