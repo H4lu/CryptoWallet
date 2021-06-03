@@ -2,8 +2,9 @@ import * as React from 'react'
 import {getEthereumAddress} from '../API/cryptocurrencyAPI/Ethereum'
 import {sendTransaction} from "../core/sendTransaction";
 import {Link} from "react-router-dom";
-
-interface IETHSendState {
+import {error} from "electron-log"
+import {remote} from "electron"
+interface ETHSendState {
     address: string,
     paymentAddress: string,
     amount: number,
@@ -16,7 +17,7 @@ interface IETHSendState {
     amountS: string
 }
 
-export class EthSendWindow extends React.Component<any, IETHSendState> {
+export class EthSendWindow extends React.Component<any, ETHSendState> {
 
     strSum: string
     point: number
@@ -97,16 +98,22 @@ export class EthSendWindow extends React.Component<any, IETHSendState> {
 
     }
 
-    handleClick() {
+    async handleClick() {
         if (this.state.paymentAddress != '') {
-            sendTransaction('ethereum', this.state.paymentAddress, this.state.amount, this.props.trFee, 0, this.props.course, this.props.btcBalance)
+            try {
+                await sendTransaction(
+                    'ethereum', this.state.paymentAddress, this.state.amount, this.props.trFee, 0, this.props.course, this.props.btcBalance
+                    )
+            } catch(err) {
+                error(err)
+                remote.dialog.showErrorBox("Send transaction error", err.message)
+            }
         }
     }
 
     setMax(){
         let sum = (Math.floor(this.state.maxSum*1000000))/1000000
-        if(sum < 0)
-        {
+        if (sum < 0) {
             sum = 0
         }
 

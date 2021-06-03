@@ -62,6 +62,7 @@ import {
 } from "../API/cryptocurrencyAPI/Ripple";
 import {ModeWindow} from "../components/ModeWindow";
 import {DisplayTransaction} from '../API/cryptocurrencyAPI/utils'
+import {remote} from "electron"
 
 
 interface AppState {
@@ -600,7 +601,7 @@ export default class App extends React.Component<{}, AppState> {
                     }, async (err, _) => {
                         if (err) {
                             info(err)
-                            alert("Error during connection to the wallet")
+                            remote.dialog.showErrorBox("PCSC error", err.message)
                         } else {
                             this.setState({connection: true})
                             this.startWalletInfoPing()
@@ -611,7 +612,7 @@ export default class App extends React.Component<{}, AppState> {
 
             reader.on('error', err => {
                 info('Error', err.message)
-                alert(err.message)
+                remote.dialog.showErrorBox("PCSC error", err.message)
             })
             reader.on('end', () => {
                 info('Reader', reader.name, 'removed')
@@ -621,7 +622,7 @@ export default class App extends React.Component<{}, AppState> {
 
         pcsc.on('error', err => {
             info('PCSC error', err.message)
-            alert(err.message)
+            remote.dialog.showErrorBox("PCSC error", err.message)
         })
     }
 
@@ -645,9 +646,9 @@ export default class App extends React.Component<{}, AppState> {
                 await Promise.all([this.setChartBTC(), this.getRates()])
                 await Promise.all([redirect(), updateHwStatus(), updateHwTransactions()])
             }
-        } catch(error) {
-            info(error)
-            alert("Error during initialization")
+        } catch(err) {
+            info(err)
+            remote.dialog.showErrorBox("Initialization error", err.message)
         }
     }
 

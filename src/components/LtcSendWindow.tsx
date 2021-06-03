@@ -1,9 +1,10 @@
 import * as React from 'react'
 import getLitecoinAddress from '../API/cryptocurrencyAPI/Litecoin'
-import {log} from "electron-log";
+import {error} from "electron-log";
 import {sendTransaction} from "../core/sendTransaction";
 import {Link} from "react-router-dom";
 import getBitcoinAddress from "../API/cryptocurrencyAPI/BitCoin";
+import {remote} from "electron"
 
 interface ILTCSendState {
     address: string,
@@ -97,8 +98,15 @@ export class LtcSendWindow extends React.Component<any, ILTCSendState> {
 
     }
 
-    handleClick() {
-        sendTransaction('litecoin', this.state.paymentAddress, this.state.amount, this.props.trFee, /*this.props.redirect*/0, this.props.course, this.props.btcBalance)
+    async handleClick() {
+        try {
+            await sendTransaction(
+                'litecoin', this.state.paymentAddress, this.state.amount, this.props.trFee, 0, this.props.course, this.props.btcBalance
+                )
+        } catch(err) {
+            error(err)
+            remote.dialog.showErrorBox("Send transaction error", err.message)
+        }
     }
 
     setMax() {

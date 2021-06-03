@@ -19,6 +19,7 @@ import * as satoshi from 'satoshi-bitcoin'
 import {info} from 'electron-log'
 import {Buffer} from 'buffer'
 import * as ffi from 'ffi-napi'
+import {remote} from "electron"
 
 enum Networks {
     MAIN = "LTC",
@@ -114,16 +115,8 @@ function toSatoshi(BTC: number): number {
 
 async function getLastTransactionData(): Promise<any> {
     const requestUrl = `https://chain.so/api/v2/get_tx_unspent/${NETWORK}/${myAddress}`
-    try {
-        const response = await axios.get(requestUrl)
-        info('Raw response: ' + response)
-        info('Response of last tx: ' + JSON.parse(response.data).data.txs)
-        return response.data
-    } catch (error) {
-        Promise.reject(error).catch(error => {
-            info(error)
-        })
-    }
+    const response = await axios.get(requestUrl)
+    return response.data
 }
 
 async function createTransaction(paymentAdress: string,
@@ -216,33 +209,24 @@ async function sendTransaction(transactionHex: string, redirect: any): Promise<v
     redirect()    
 }
 
-export function handleLitecoin(paymentAdress: string, amount: number, transactionFee: number, redirect: any, course: number, balance: number) {
-
-    getLastTransactionData().then(Response => {
-        let respData = JSON.parse(Response.content)
-        info('RespData: ' + respData.data)
-        info('Resp status: ' + respData.status)
-        if (respData.status === 'success') {
-            info('In success')
-            let utxos = []
-            for (let utxo in respData.data.txs) {
-                let temp = respData.data.txs[utxo].value
-                respData.data.txs[utxo].value = toSatoshi(temp)
-                info('My value: ' + respData.data.txs[utxo].value)
-                utxos.push(respData.data.txs[utxo])
-                info('Utxo: ' + utxo)
-                info('Utxos: ' + utxos)
-            }
-            amount = toSatoshi(amount)
-            createTransaction(paymentAdress, amount, transactionFee, redirect, utxos, course, balance).catch(err => {
-                info(err)
-            })
-        } else {
-            alert('Error provided by internet connection')
+export async function handleLitecoin(paymentAdress: string, amount: number, transactionFee: number, redirect: any, course: number, balance: number) {
+    const lastTx = await getLastTransactionData()
+        
+    if (lastTx.status === 'success') {
+        const utxos = []
+        for (let utxo in lastTx.data.txs) {
+            let temp = lastTx.data.txs[utxo].value
+            lastTx.data.txs[utxo].value = toSatoshi(temp)
+            utxos.push(lastTx.data.txs[utxo])
         }
-    }).catch((error: any) => {
-        info(error)
-    })
+        amount = toSatoshi(amount)
+        return createTransaction(paymentAdress, amount, transactionFee, redirect, utxos, course, balance).catch(err => {
+            info(err)
+        })
+    } else {
+        remote.dialog.showErrorBox("Error", 'Error provided by internet connection')
+    }
+   
 }
 
 function accumulative(utxos: any, outputs: any, feeRate: any) {

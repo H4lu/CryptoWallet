@@ -2,6 +2,8 @@ import {TransactionBuilder, networks, Transaction, ECPair, address, script} from
 import axios, {AxiosResponse} from 'axios'
 import {getSignaturePCSC} from '../hardwareAPI/GetSignature'
 import {getAddressPCSC} from '../hardwareAPI/GetAddress'
+import {remote} from "electron"
+
 import  {
     transactionBytes,
     getTestnetAddressBTC, 
@@ -42,7 +44,6 @@ let basicFee3: number
 let TXarr = []
 let numTx: number
 
-
 import * as ffi from 'ffi-napi'
 const libdll = ffi.Library('./resources/lib32.dll', {'forSign': ['void', ['string', 'int', 'string']]})
 
@@ -60,7 +61,7 @@ export async function getUnspentTx(): Promise<number> {
                 console.log('tx: ', TXarr[iTX])
             }
         } else {
-            alert('Error provided by internet connection')
+            remote.dialog.showErrorBox("Error", 'Error provided by internet connection')
         }
     }).catch((error: any) => {
         info(error)
@@ -219,7 +220,7 @@ function toSatoshi(BTC: number): number {
 async function getLastTransactionData(): Promise<any> {
     const requestUrl = `https://chain.so/api/v2/get_tx_unspent/${NETWORK}/${myAddr}`   
     const response = await axios.get(requestUrl)
-    return response
+    return response.data
 }
 
 function ReplaceAt(input: any, search: any, replace: any, start: any, end: any) {
@@ -316,30 +317,23 @@ async function sendTransaction(transactionHex: string, redirect: any): Promise<v
     return redirect()
 }
 
-export function handle(paymentAdress: string, amount: number, transactionFee: number, redirect: any, course: number, balance: number) {
-    getLastTransactionData().then(Response => {
-        let respData = JSON.parse(Response.content)
-        info('Resp status: ' + respData.status)
-        if (respData.status === 'success') {
-            let utxos = []
-            for (let utxo in respData.data.txs) {
-                let temp = respData.data.txs[utxo].value
-                respData.data.txs[utxo].value = toSatoshi(temp)
-                info('My value: ' + respData.data.txs[utxo].value)
-                utxos.push(respData.data.txs[utxo])
-                info('Utxo: ' + utxo)
-                info('Utxos: ' + utxos)
-            }
-            amount = toSatoshi(amount)
-            createTransaction(paymentAdress, amount, transactionFee, redirect, utxos, course, balance).catch(err => {
-                info(err)
-            })
-        } else {
-            alert('Error provided by internet connection')
+export async function handleBitcoin(paymentAdress: string, amount: number, transactionFee: number, redirect: any, course: number, balance: number) {
+    const lastTx = await getLastTransactionData()
+
+    if (lastTx.status == "success") {
+        const utxos = []
+        for (let utxo in lastTx.data.txs) {
+            let temp = lastTx.data.txs[utxo].value
+            lastTx.data.txs[utxo].value = toSatoshi(temp)
+            utxos.push(lastTx.data.txs[utxo])
         }
-    }).catch((error: any) => {
-        info(error)
-    })
+        amount = toSatoshi(amount)
+        return createTransaction(paymentAdress, amount, transactionFee, redirect, utxos, course, balance).catch(err => {
+            info(err)
+        })
+    } else {
+        remote.dialog.showErrorBox("Error", 'Error provided by internet connection')
+    }
 }
 
 function accumulative(utxos: any, outputs: any, feeRate: any) {

@@ -26,7 +26,7 @@ export class CarouselDesc extends React.Component<any, any> {
                 break
             }
             case 2: {
-                this.currencyName = 'Etereum'
+                this.currencyName = 'Ethereum'
                 this.cryptoBalans = this.props.ethBalance.toString() + '  ETH'
                 this.fiatBalance = this.props.ethPrice.toString()
                 this.pathSend = '/eth-window-send'

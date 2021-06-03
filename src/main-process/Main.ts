@@ -22,7 +22,8 @@ app.on('ready', () => {
         frame: false,
         webPreferences: { 
             nodeIntegration: true,
-            contextIsolation: false
+            contextIsolation: false,
+            enableRemoteModule: true
         } 
     })
     mainWindow.loadURL(`file:///${__dirname}/index.html`)
