@@ -29,6 +29,7 @@ app.on('ready', () => {
    
     mainWindow.loadURL(`file:///${__dirname}/index.html`)
     mainWindow.once('ready-to-show', () => mainWindow.show())
+    mainWindow.webContents.toggleDevTools()
 
     mainWindow.webContents.on('context-menu', (e, props) => {
         console.log(e)

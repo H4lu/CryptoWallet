@@ -1,5 +1,5 @@
 import  * as React from 'react'
-import {Table} from "./Table";
+import {DisplayTransactionTable} from "./DisplayTransactionTable";
 import { DisplayTransaction, DisplayTransactionCurrency } from '../API/cryptocurrencyAPI/utils';
 interface CarouselTableState {
     activeCurrency: number,
@@ -186,7 +186,7 @@ export class CarouselTable extends React.PureComponent<CarouselTableProps, Carou
                 </div>
                 <hr className='hrLine'/>
                 <div className='table_content'>
-                    <Table 
+                    <DisplayTransactionTable 
                         data={this.tableData} 
                         activeCurrency={this.state.activeCur} 
                         type='normal'

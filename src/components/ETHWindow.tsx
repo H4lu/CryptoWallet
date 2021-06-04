@@ -1,7 +1,7 @@
 import * as React from 'react'
 import CreateQR from '../core/createQR'
 import { getEthereumAddress } from '../API/cryptocurrencyAPI/Ethereum'
-import { Table } from '../components/Table'
+import { DisplayTransactionTable } from './DisplayTransactionTable'
 import { clipboard } from 'electron'
 import { sendTransaction } from '../core/sendTransaction'
 import { ETHEREUM_PATH } from '../core/paths'

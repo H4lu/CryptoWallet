@@ -2,7 +2,7 @@ import * as React from 'react'
 import CreateQR from '../core/createQR'
 import getBitcoinAddress from '../API/cryptocurrencyAPI/BitCoin'
 import { clipboard } from 'electron'
-import { Table } from './Table'
+import { DisplayTransactionTable } from './DisplayTransactionTable'
 import { sendTransaction } from '../core/sendTransaction'
 import { BITCOIN_PATH } from '../core/paths'
 interface BTCWindowState {

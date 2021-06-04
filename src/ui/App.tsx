@@ -64,6 +64,7 @@ import {ModeWindow} from "../components/ModeWindow";
 import {DisplayTransaction} from '../API/cryptocurrencyAPI/utils'
 import {remote} from "electron"
 import { ERC20Window } from '../components/Erc20Window'
+import { Erc20DisplayToken } from '../API/cryptocurrencyAPI/erc20'
 
 
 interface AppState {
@@ -109,6 +110,16 @@ interface AppState {
 
 
 export default class App extends React.Component<{}, AppState> {
+    
+    erc20mock: Array<Erc20DisplayToken> = [{
+        address: "0x1233131313131231231313141",
+        name: "afafafafaf",
+        amount: 11010
+    },{
+        address: "0xv3414214324324321311vfdvdvd",
+        name: "iurwhgiwuhrgiwhrg",
+        amount: 20202002
+    }]
 
     routes = [
         {
@@ -313,7 +324,7 @@ export default class App extends React.Component<{}, AppState> {
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeft/>,
-            main: () => <ERC20Window/>
+            main: () => <ERC20Window data={this.erc20mock}/>
         }
     ]
 

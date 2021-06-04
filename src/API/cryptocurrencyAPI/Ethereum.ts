@@ -82,10 +82,11 @@ export function getEthereumAddress() {
 }
 
 export async function getEthereumLastTx(): Promise<Array<DisplayTransaction>> {
-    const requestURL = `https://api.ethplorer.io/getAddressTransactions/${myAdress}?apiKey=freekey&limit=50`
-    const response = await axios.get(requestURL)
-    return (response.data as Array<EthplorerTransaction>)
-        .map(tx => ethplorerToDisplayTransaction(tx))
+    // const requestURL = `https://api.ethplorer.io/getAddressTransactions/${myAdress}?apiKey=freekey&limit=50`
+    // const response = await axios.get(requestURL)
+    // return (response.data as Array<EthplorerTransaction>)
+    //     .map(tx => ethplorerToDisplayTransaction(tx))
+    return []
 }
 
 function ethplorerToDisplayTransaction(tx: EthplorerTransaction): DisplayTransaction {

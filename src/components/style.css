@@ -1574,9 +1574,38 @@ button {
 }
 
 .iconEthErc20 {
-    background: url('../../static/erc20_eth_icon.svg');
-    left: 38.31%;
-    right: 58.54%;
-    top: 15.36%;
-    bottom: 75.52;
+    background: url('../../static/erc20_eth_icon.svg') no-repeat center;
+    width: 43px;
+    height: 70px;
+    padding-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    /* margin-left: 38.31%;
+    margin-right: 58.54%; */
+}
+
+.backgroundERC20 {
+    background: linear-gradient(359.84deg, #090909 -4.93%, #161616 45.48%, #070707 99.87%);
+    opacity: 0.55;
+    margin-top: 64px;
+    height: 1130px;
+    width: 900px;
+}
+
+.erc20Text {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -30px;
+    font-family: Lato;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 35px;
+    /*line-height: 42px;*/
+    
+    text-align: center;
+    
+    color: #FFFFFF;
+    
+    opacity: 0.75;
 }
