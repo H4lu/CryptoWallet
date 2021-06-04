@@ -114,7 +114,7 @@ export default class App extends React.Component<{}, AppState> {
             path: '/main',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
+            sidebarLeft: () => <SidebarLeft/>,
             main: () => <MainContent btcBalance={this.state.BTCBalance} ltcBalance={this.state.LTCBalance}
                                      ethBalance={this.state.ETHBalance} xrpBalance={this.state.XRPBalance}
                                      total={this.state.totalBalance} numTr={this.state.numTransactions}
@@ -147,14 +147,14 @@ export default class App extends React.Component<{}, AppState> {
             path: '/mode-window',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
+            sidebarLeft: () => <SidebarLeft/>,
             main: () => <ModeWindow setFee={this.setTransactionFee} trFee={this.state.transactionFee}/>
         },
         {
             path: '/currency-carousel',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
+            sidebarLeft: () => <SidebarLeft/>,
             main: () => <CarouselHOC setActiveCurrency={this.setActiveCurrency}
                                      getActiveCurrency={this.getActiveCurrency}
                                      activeCurrency={this.state.activeCurrency}
@@ -234,7 +234,7 @@ export default class App extends React.Component<{}, AppState> {
             path: '/history-carousel',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
+            sidebarLeft: () => <SidebarLeft/>,
             main: () => <CarouselHistory setActiveCurrency={this.setActiveCurrency}
                                          getActiveCurrency={this.getActiveCurrency}
                                          activeCurrency={this.state.activeCurrency}
@@ -267,7 +267,7 @@ export default class App extends React.Component<{}, AppState> {
             path: '/btc-window',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
+            sidebarLeft: () => <SidebarLeft/>,
             main: () => <BTCWindow balance={this.state.BTCBalance} price={this.state.BTCPrice}
                                    course={this.state.BTCCourse}
                                    hourChange={this.state.BTCHourChange} pathState={this.state.stateTransaction}
@@ -282,7 +282,7 @@ export default class App extends React.Component<{}, AppState> {
             path: '/eth-window',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
+            sidebarLeft: () => <SidebarLeft/>,
             main: () => <ETHWIndow balance={this.state.ETHBalance} price={this.state.ETHPrice}
                                    course={this.state.BTCCourse}
                                    hourChange={this.state.ETHHourChange}
@@ -296,7 +296,7 @@ export default class App extends React.Component<{}, AppState> {
             path: '/ltc-window',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeft refresh={this.updateData} pathState={this.state.stateTransaction}/>,
+            sidebarLeft: () => <SidebarLeft/>,
             main: () => <LTCWindow balance={this.state.LTCBalance} price={this.state.LTCPrice}
                                    course={this.state.BTCCourse}
                                    hourChange={this.state.LTCHourChange}
