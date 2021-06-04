@@ -63,6 +63,7 @@ import {
 import {ModeWindow} from "../components/ModeWindow";
 import {DisplayTransaction} from '../API/cryptocurrencyAPI/utils'
 import {remote} from "electron"
+import { ERC20Window } from '../components/Erc20Window'
 
 
 interface AppState {
@@ -306,6 +307,13 @@ export default class App extends React.Component<{}, AppState> {
                                        return d - c
                                    })} transactions={this.getTransactions} redirect={this.redirectToTransactionsuccess}
                                    reset={this.resetRedirect}/>
+        }, 
+        {
+            path: '/erc20-window',
+            exact: true,
+            sidebar: () => <SidebarContent/>,
+            sidebarLeft: () => <SidebarLeft/>,
+            main: () => <ERC20Window/>
         }
     ]
 

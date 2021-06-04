@@ -26,7 +26,12 @@ module.exports = {
         rules: [{
             test: /\.ts(x?)$/,
             include: /src/,
-            use: [{ loader: 'ts-loader', options: {onlyCompileBundledFiles: true} }]
+            use: [{ 
+                loader: 'ts-loader', 
+                options: {
+                    onlyCompileBundledFiles: true,
+                } 
+            }]
         }, {
             test: /\.s[ac]ss$/i,
             use: [
@@ -37,11 +42,11 @@ module.exports = {
         },{
             test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
             use : [
-                {loader: 'cache-loader' },
+              //  {loader: 'cache-loader'},
                 {loader: 'file-loader',
-                    options: {
-                       name : 'static/[name].[ext]',
-                    } 
+                 options: {
+                     name : 'assets/[name].[contenthash].[ext]',
+                } 
                 }
             ]
           },{
@@ -67,7 +72,7 @@ module.exports = {
         new MiniCssExtractPlugin({
             // Options similar to the same options in webpackOptions.output
             // both options are optional
-            filename: "[name].css",
+            filename: "[name].[contenthash].css",
             chunkFilename: "[id].css"
         }),
         new HtmlWebpackPlugin({

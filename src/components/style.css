@@ -1,11 +1,10 @@
-
 .background-start {
-    background: url("./static/backgroundStart.svg") no-repeat center;
+    background: url("../../static/backgroundStart.svg") no-repeat center;
     background-size: cover;
     height: 744px;
     width: 1366px;
     margin-top: -23.5px;
-    }
+}
 
 .header-content {
     margin-left: 32px;
@@ -17,7 +16,6 @@
     height: 3vh;
     -webkit-app-region: drag;
     background-color: #1b1b1b;
-
 }
 
 .title-bar-buttons {
@@ -63,20 +61,19 @@
 }
 
 .blackBackground {
-
     background-color: #1b1b1b;
 }
 
 .main_container {
     display: flex;
-    background: url('./static/backgroundMain.svg') no-repeat center;
+    background: url('../../static/backgroundMain.svg') no-repeat center;
     background-size: cover;
     height: 97vh;
 }
 
 .main_container_blur {
     display: flex;
-    background: url('./static/backgroundMain.svg') no-repeat center;
+    background: url('../../static/backgroundMain.svg') no-repeat center;
     background-size: cover;
     height: 97vh;
     filter: blur(4px);
@@ -105,7 +102,7 @@
 }
 
 .but_home {
-    background: url('./static/home_p.svg') no-repeat center;
+    background: url('../../static/home_p.svg') no-repeat center;
     border: 0px solid black;
     height: 42px;
     width: 42px;
@@ -116,11 +113,11 @@
 }
 
 .but_home:hover {
-    background: url('./static/home_a.svg') no-repeat center;
+    background: url('../../static/home_a.svg') no-repeat center;
 }
 
 .but_pay {
-    background: url('./static/pay_p.svg') no-repeat center;
+    background: url('../../static/pay_p.svg') no-repeat center;
     border: 0px solid black;
     height: 42px;
     width: 42px;
@@ -131,41 +128,11 @@
 }
 
 .but_pay:hover {
-    background: url('./static/pay_a.svg') no-repeat center;
-}
-
-.but_cpu {
-    background: url('./static/cpu_p.svg') no-repeat center;
-    border: 0px solid black;
-    height: 42px;
-    width: 42px;
-    margin-top: 24px;
-    margin-right: 20px;
-    margin-left: 20px;
-    order: 4;
-}
-
-.but_cpu:hover {
-    background: url('./static/cpu_a.svg') no-repeat center;
-}
-
-.but_erc20 {
-    background: url('./static/erc20_p.svg') no-repeat center;
-    border: 0px solid black;
-    height: 42px;
-    width: 42px;
-    margin-top: 24px;
-    margin-right: 20px;
-    margin-left: 20px;
-    order: 4;
-}
-
-.but_erc20:hover {
-    background: url('./static/erc20_a.svg') no-repeat center;
+    background: url('../../static/pay_a.svg') no-repeat center;
 }
 
 .but_history {
-    background: url('./static/refresh_p.svg') no-repeat center;
+    background: url('../../static/refresh_p.svg') no-repeat center;
     border: 0px solid black;
     height: 42px;
     width: 42px;
@@ -176,11 +143,11 @@
 }
 
 .but_history:hover {
-    background: url('./static/refresh_a.svg') no-repeat center;
+    background: url('../../static/refresh_a.svg') no-repeat center;
 }
 
 .but_exchange {
-    background: url('./static/exchange_p.svg') no-repeat center;
+    background: url('../../static/exchange_p.svg') no-repeat center;
     border: 0px solid black;
     height: 42px;
     width: 42px;
@@ -191,37 +158,67 @@
 }
 
 .but_exchange:hover {
-    background: url('./static/exchange_a.svg') no-repeat center;
+    background: url('../../static/exchange_a.svg') no-repeat center;
+}
+
+.but_erc20 {
+    background: url('../../static/erc20_p.svg') no-repeat center;
+    border: 0px solid black;
+    height: 42px;
+    width: 42px;
+    margin-top: 24px;
+    margin-right: 20px;
+    margin-left: 20px;
+    order: 5;
+}
+
+.but_erc20:hover {
+    background: url('../../static/erc20_a.svg') no-repeat center;
+}
+
+.but_cpu {
+    background: url('../../static/cpu_p.svg') no-repeat center;
+    border: 0px solid black;
+    height: 42px;
+    width: 42px;
+    margin-top: 24px;
+    margin-right: 20px;
+    margin-left: 20px;
+    order: 6;
+}
+
+.but_cpu:hover {
+    background: url('../../static/cpu_a.svg') no-repeat center;
 }
 
 .but_info {
-    background: url('./static/info_p.svg') no-repeat center;
+    background: url('../../static/info_p.svg') no-repeat center;
     border: 0px solid black;
     height: 42px;
     width: 42px;
     margin-top: 124px;
     margin-right: 20px;
     margin-left: 20px;
-    order: 5;
+    order: 7;
 }
 
 .but_info:hover {
-    background: url('./static/info_a.svg') no-repeat center;
+    background: url('../../static/info_a.svg') no-repeat center;
 }
 
 .but_menu {
-    background: url('./static/menu_p.svg') no-repeat center;
+    background: url('../../static/menu_p.svg') no-repeat center;
     border: 0px solid black;
     height: 42px;
     width: 42px;
     margin-top: 20px;
     margin-right: 20px;
     margin-left: 20px;
-    order: 6;
+    order: 8;
 }
 
 .but_menu:hover {
-    background: url('./static/menu_a.svg') no-repeat center;
+    background: url('../../static/menu_a.svg') no-repeat center;
 }
 
 .main-content {
@@ -303,7 +300,7 @@
 }
 
 .img_BTC {
-    background: url('./static/but_BTC_p.svg') no-repeat center;
+    background: url('../../static/but_BTC_p.svg') no-repeat center;
     border: 0px solid black;
     height: 150px;
     width: 230px;
@@ -312,7 +309,7 @@
 }
 
 .img_BTC:hover {
-    background: url('./static/but_BTC.svg') no-repeat center;
+    background: url('../../static/but_BTC.svg') no-repeat center;
 }
 
 .but_BTC:hover p {
@@ -320,7 +317,7 @@
 }
 
 .click_img_BTC {
-    background: url('./static/but_BTC.svg') no-repeat center;
+    background: url('../../static/but_BTC.svg') no-repeat center;
     border: 0px solid black;
     height: 150px;
     width: 230px;
@@ -333,7 +330,7 @@
 }
 
 .img_ETH {
-    background: url('./static/but_ETH_p.svg') no-repeat center;
+    background: url('../../static/but_ETH_p.svg') no-repeat center;
     border: 0px solid black;
     height: 150px;
     width: 230px;
@@ -342,7 +339,7 @@
 }
 
 .img_ETH:hover {
-    background: url('./static/but_ETH.svg') no-repeat center;
+    background: url('../../static/but_ETH.svg') no-repeat center;
 }
 
 .but_ETH:hover p {
@@ -350,7 +347,7 @@
 }
 
 .click_img_ETH {
-    background: url('./static/but_ETH.svg') no-repeat center;
+    background: url('../../static/but_ETH.svg') no-repeat center;
     border: 0px solid black;
     height: 150px;
     width: 230px;
@@ -368,7 +365,7 @@
 }
 
 .img_LTC {
-    background: url('./static/but_LTC_p.svg') no-repeat center;
+    background: url('../../static/but_LTC_p.svg') no-repeat center;
     border: 0px solid black;
     height: 150px;
     width: 230px;
@@ -378,7 +375,7 @@
 }
 
 .img_LTC:hover {
-    background: url('./static/but_LTC.svg') no-repeat center;
+    background: url('../../static/but_LTC.svg') no-repeat center;
 }
 
 .but_LTC:hover p {
@@ -386,7 +383,7 @@
 }
 
 .click_img_LTC {
-    background: url('./static/but_LTC.svg') no-repeat center;
+    background: url('../../static/but_LTC.svg') no-repeat center;
     border: 0px solid black;
     height: 150px;
     width: 230px;
@@ -400,7 +397,7 @@
 }
 
 .img_XRP {
-    background: url('./static/but_XRP_p.svg') no-repeat center;
+    background: url('../../static/but_XRP_p.svg') no-repeat center;
     border: 0px solid black;
     height: 150px;
     width: 230px;
@@ -410,7 +407,7 @@
 }
 
 .img_XRP:hover {
-    background: url('./static/but_XRP.svg') no-repeat center;
+    background: url('../../static/but_XRP.svg') no-repeat center;
 }
 
 .but_XRP:hover p {
@@ -418,7 +415,7 @@
 }
 
 .click_img_XRP {
-    background: url('./static/but_XRP.svg') no-repeat center;
+    background: url('../../static/but_XRP.svg') no-repeat center;
     border: 0px solid black;
     height: 150px;
     width: 230px;
@@ -428,7 +425,7 @@
 }
 
 .Block_explorer {
-    background: url('./static/blockExpl.svg') no-repeat center;
+    background: url('../../static/blockExpl.svg') no-repeat center;
     border: 0px solid black;
     height: 240px;
     width: 470px;
@@ -443,7 +440,7 @@
 
 .ex_BTC{
     order: 1;
-    background: url('./static/exBTC.svg') no-repeat center;
+    background: url('../../static/exBTC.svg') no-repeat center;
     border: 0px solid black;
     height: 36px;
     width: 36px;
@@ -453,7 +450,7 @@
 }
 .ex_LTC{
     order: 1;
-    background: url('./static/exLTC.svg') no-repeat center;
+    background: url('../../static/exLTC.svg') no-repeat center;
     border: 0px solid black;
     height: 36px;
     width: 36px;
@@ -463,7 +460,7 @@
 }
 .ex_ETH{
     order: 1;
-    background: url('./static/exETH.svg') no-repeat center;
+    background: url('../../static/exETH.svg') no-repeat center;
     border: 0px solid black;
     height: 36px;
     width: 36px;
@@ -473,7 +470,7 @@
 }
 .ex_XRP{
     order: 1;
-    background: url('./static/exXRP.svg') no-repeat center;
+    background: url('../../static/exXRP.svg') no-repeat center;
     border: 0px solid black;
     height: 36px;
     width: 36px;
@@ -503,7 +500,7 @@
 
 .ex_button_find{
     order: 3;
-    background: url('./static/search.svg') no-repeat center;
+    background: url('../../static/search.svg') no-repeat center;
     border: 0px solid black;
     height: 20px;
     width: 20px;
@@ -512,7 +509,7 @@
 }
 
 .ex_button_find:hover {
-    background: url('./static/search_a.svg') no-repeat center;
+    background: url('../../static/search_a.svg') no-repeat center;
 }
 
 .ex_balance{
@@ -561,7 +558,7 @@
 
 .update {
     order: 2;
-    background: url('./static/but_update_p.svg') no-repeat center;
+    background: url('../../static/but_update_p.svg') no-repeat center;
     border: 0px solid black;
     height: 22px;
     width: 22px;
@@ -569,12 +566,12 @@
 }
 
 .update:hover {
-    background: url('./static/but_update_a.svg') no-repeat center;
+    background: url('../../static/but_update_a.svg') no-repeat center;
 }
 
 .current_balance {
     order: 2;
-    background: url('./static/tr_cur_bal.svg') no-repeat center;
+    background: url('../../static/tr_cur_bal.svg') no-repeat center;
     border: 0px solid black;
     height: 235px;
     width: 401px;
@@ -603,7 +600,7 @@
 
 .cryptoCurrency_chart {
     order: 2;
-    background: url('./static/chart.svg') no-repeat center;
+    background: url('../../static/chart.svg') no-repeat center;
     border: 0px solid black;
     height: 316px;
     width: 401px;
@@ -622,7 +619,7 @@
 }
 
 .payWindow {
-    background: url('./static/Rectangle.svg') no-repeat center;
+    background: url('../../static/Rectangle.svg') no-repeat center;
     border: 0px solid black;
     height: 612px;
     width: 894px;
@@ -631,7 +628,7 @@
 }
 
 .payWindowTable {
-    background: url('./static/RectangleTable.svg') no-repeat center;
+    background: url('../../static/RectangleTable.svg') no-repeat center;
     border: 0px solid black;
     height: 690px;
     width: 894px;
@@ -703,7 +700,7 @@ button {
 }
 
 .sendCurrencybutton {
-    background: url('./static/buttonSend_p.svg') no-repeat center;
+    background: url('../../static/buttonSend_p.svg') no-repeat center;
     border: 0px solid black;
     height: 38px;
     width: 147px;
@@ -712,7 +709,7 @@ button {
 }
 
 .recieveCurrencybutton {
-    background: url('./static/buttonRecieve_p.svg') no-repeat center;
+    background: url('../../static/buttonRecieve_p.svg') no-repeat center;
     border: 0px solid black;
     height: 38px;
     width: 147px;
@@ -721,11 +718,11 @@ button {
 }
 
 .sendCurrencybutton:hover {
-    background: url('./static/buttonSend_a.svg') no-repeat center;
+    background: url('../../static/buttonSend_a.svg') no-repeat center;
 }
 
 .recieveCurrencybutton:hover {
-    background: url('./static/buttonRecieve_a.svg') no-repeat center;
+    background: url('../../static/buttonRecieve_a.svg') no-repeat center;
 }
 
 .sidebar-content {
@@ -755,7 +752,7 @@ button {
 
 .NotificationsNumber {
     order: 2;
-    background: url('./static/numNotif.svg') no-repeat center;
+    background: url('../../static/numNotif.svg') no-repeat center;
     border: 0px solid black;
     height: 24px;
     width: 21px;
@@ -776,7 +773,7 @@ button {
 
 .notificationContent {
     order: 2;
-    background: url('./static/notificationsGroup.svg') no-repeat center;
+    background: url('../../static/notificationsGroup.svg') no-repeat center;
     border: 0px solid black;
     height: 637px;
     width: 312px;
@@ -786,7 +783,7 @@ button {
 
 .rectangleSR {
     filter: inherit;
-    background: url('./static/RectangleSR.svg') no-repeat center;
+    background: url('../../static/RectangleSR.svg') no-repeat center;
     border: 0px solid black;
     height: 540px;
     width: 612px;
@@ -796,7 +793,7 @@ button {
 }
 
 .carouselBTCIcon {
-    background: url('./static/icon_BTC.svg') no-repeat center;
+    background: url('../../static/icon_BTC.svg') no-repeat center;
     display: block;
     height: 80px;
     width: 80px;
@@ -804,19 +801,19 @@ button {
 }
 
 .carouselETHIcon {
-    background: url('./static/icon_ETH.svg') no-repeat center;
+    background: url('../../static/icon_ETH.svg') no-repeat center;
     display: block;
     height: 80px;
     width: 80px;
 }
 .carouselLTCIcon {
-    background: url('./static/icon_LTC.svg') no-repeat center;
+    background: url('../../static/icon_LTC.svg') no-repeat center;
     display: block;
     height: 80px;
     width: 80px;
 }
 .carouselXRPIcon {
-    background: url('./static/icon_XRP.svg') no-repeat center;
+    background: url('../../static/icon_XRP.svg') no-repeat center;
     display: block;
     height: 80px;
     width: 80px;
@@ -824,7 +821,7 @@ button {
 }
 
 .iconCryptoCurrency {
-    background: url('./static/icon_BTC.svg') no-repeat center;
+    background: url('../../static/icon_BTC.svg') no-repeat center;
     border: 0px solid black;
     height: 106px;
     width: 106px;
@@ -836,7 +833,7 @@ button {
 }
 
 .iconCryptoCurrencyLTC {
-    background: url('./static/icon_LTC.svg') no-repeat center;
+    background: url('../../static/icon_LTC.svg') no-repeat center;
     border: 0px solid black;
     height: 106px;
     width: 106px;
@@ -848,7 +845,7 @@ button {
 }
 
 .iconCryptoCurrencyETH {
-    background: url('./static/icon_ETH.svg') no-repeat center;
+    background: url('../../static/icon_ETH.svg') no-repeat center;
     border: 0px solid black;
     height: 106px;
     width: 106px;
@@ -860,7 +857,7 @@ button {
 }
 
 .iconCryptoCurrencyXRP {
-    background: url('./static/icon_XRP.svg') no-repeat center;
+    background: url('../../static/icon_XRP.svg') no-repeat center;
     border: 0px solid black;
     height: 106px;
     width: 106px;
@@ -879,7 +876,7 @@ button {
 
 .iconQr {
     order: 1;
-    background: url('./static/icon_QR.svg') no-repeat center;
+    background: url('../../static/icon_QR.svg') no-repeat center;
     border: 0px solid black;
     height: 58px;
     width: 58px;
@@ -915,7 +912,7 @@ button {
 
 .iconSum {
     order: 1;
-    background: url('./static/icon_Sum.svg') no-repeat center;
+    background: url('../../static/icon_Sum.svg') no-repeat center;
     border: 0px solid black;
     height: 58px;
     width: 58px;
@@ -927,7 +924,7 @@ button {
     order: 2;
     margin-top: 15px;
     margin-left: 20px;
-    background: url('./static/fonSendBTC.svg') no-repeat center;
+    background: url('../../static/fonSendBTC.svg') no-repeat center;
     border: 0px solid black;
     height: 89px;
     width: 355px;
@@ -937,7 +934,7 @@ button {
     order: 2;
     margin-top: 15px;
     margin-left: 20px;
-    background: url('./static/fonSendLTC.svg') no-repeat center;
+    background: url('../../static/fonSendLTC.svg') no-repeat center;
     border: 0px solid black;
     height: 89px;
     width: 355px;
@@ -947,7 +944,7 @@ button {
     order: 2;
     margin-top: 15px;
     margin-left: 20px;
-    background: url('./static/fonSendETH.svg') no-repeat center;
+    background: url('../../static/fonSendETH.svg') no-repeat center;
     border: 0px solid black;
     height: 89px;
     width: 355px;
@@ -957,7 +954,7 @@ button {
     order: 2;
     margin-top: 15px;
     margin-left: 20px;
-    background: url('./static/fonSendXRP.svg') no-repeat center;
+    background: url('../../static/fonSendXRP.svg') no-repeat center;
     border: 0px solid black;
     height: 89px;
     width: 355px;
@@ -1009,7 +1006,7 @@ button {
 
 .setMaxSum{
     order: 3;
-    background: url('./static/maxsum_p.svg') no-repeat center;
+    background: url('../../static/maxsum_p.svg') no-repeat center;
     border: 0px solid black;
     height: 74px;
     width: 72px;
@@ -1018,7 +1015,7 @@ button {
 }
 
 .setMaxSum:hover {
-    background: url('./static/maxsum_a.svg') no-repeat center;
+    background: url('../../static/maxsum_a.svg') no-repeat center;
 }
 
 .blockFee {
@@ -1039,7 +1036,7 @@ button {
 
 .Fee1{
     order: 2;
-    background: url('./static/low_p.svg') no-repeat center;
+    background: url('../../static/low_p.svg') no-repeat center;
     border: 0px solid black;
     height: 14px;
     width: 40px;
@@ -1048,7 +1045,7 @@ button {
 }
 .clickFee1{
     order: 2;
-    background: url('./static/low_a.svg') no-repeat center;
+    background: url('../../static/low_a.svg') no-repeat center;
     border: 0px solid black;
     height: 14px;
     width: 40px;
@@ -1058,7 +1055,7 @@ button {
 
 .Fee2{
     order: 3;
-    background: url('./static/normal_p.svg') no-repeat center;
+    background: url('../../static/normal_p.svg') no-repeat center;
     border: 0px solid black;
     height: 14px;
     width: 40px;
@@ -1067,7 +1064,7 @@ button {
 }
 .clickFee2{
     order: 3;
-    background: url('./static/normal_a.svg') no-repeat center;
+    background: url('../../static/normal_a.svg') no-repeat center;
     border: 0px solid black;
     height: 14px;
     width: 40px;
@@ -1077,7 +1074,7 @@ button {
 
 .Fee3{
     order: 4;
-    background: url('./static/high_p.svg') no-repeat center;
+    background: url('../../static/high_p.svg') no-repeat center;
     border: 0px solid black;
     height: 14px;
     width: 40px;
@@ -1086,7 +1083,7 @@ button {
 }
 .clickFee3{
     order: 4;
-    background: url('./static/high_a.svg') no-repeat center;
+    background: url('../../static/high_a.svg') no-repeat center;
     border: 0px solid black;
     height: 14px;
     width: 40px;
@@ -1163,7 +1160,7 @@ button {
 }
 
 .button-send-transaction {
-    background: url('./static/buttonSendBig_p.svg') no-repeat center;
+    background: url('../../static/buttonSendBig_p.svg') no-repeat center;
     border: 0px solid black;
     height: 43px;
     width: 166px;
@@ -1172,7 +1169,7 @@ button {
 }
 
 .button-cancel-transaction {
-    background: url('./static/buttonCancelBig_p.svg') no-repeat center;
+    background: url('../../static/buttonCancelBig_p.svg') no-repeat center;
     border: 0px solid black;
     height: 43px;
     width: 166px;
@@ -1181,11 +1178,11 @@ button {
 }
 
 .button-send-transaction:hover {
-    background: url('./static/buttonSendBig_a.svg') no-repeat center;
+    background: url('../../static/buttonSendBig_a.svg') no-repeat center;
 }
 
 .button-cancel-transaction:hover {
-    background: url('./static/buttonCancelBig_a.svg') no-repeat center;
+    background: url('../../static/buttonCancelBig_a.svg') no-repeat center;
 }
 
 .containerData {
@@ -1237,7 +1234,7 @@ button {
 
 .copy_to_buffer {
     order: 1;
-    background: url('./static/copyToBuffer_p.svg') no-repeat center;
+    background: url('../../static/copyToBuffer_p.svg') no-repeat center;
     border: 0px solid black;
     height: 60px;
     width: 60px;
@@ -1248,12 +1245,12 @@ button {
 }
 
 .copy_to_buffer:active {
-    background: url('./static/copyToBuffer_a.svg') no-repeat center;
+    background: url('../../static/copyToBuffer_a.svg') no-repeat center;
 }
 
 .sent_to_print {
     order: 2;
-    background: url('./static/sentToPrint_p.svg') no-repeat center;
+    background: url('../../static/sentToPrint_p.svg') no-repeat center;
     border: 0px solid black;
     height: 60px;
     width: 60px;
@@ -1264,12 +1261,12 @@ button {
 }
 
 .sent_to_print:active {
-    background: url('./static/sentToPrint_a.svg') no-repeat center;
+    background: url('../../static/sentToPrint_a.svg') no-repeat center;
 }
 
 .sent_to_email {
     order: 3;
-    background: url('./static/sentToEmail_p.svg') no-repeat center;
+    background: url('../../static/sentToEmail_p.svg') no-repeat center;
     border: 0px solid black;
     height: 60px;
     width: 60px;
@@ -1280,12 +1277,12 @@ button {
 }
 
 .sent_to_email:active {
-    background: url('./static/sentToEmail_a.svg') no-repeat center;
+    background: url('../../static/sentToEmail_a.svg') no-repeat center;
 }
 
 .view_on_blockchain {
     order: 4;
-    background: url('./static/viewOnBlockchain_p.svg') no-repeat center;
+    background: url('../../static/viewOnBlockchain_p.svg') no-repeat center;
     border: 0px solid black;
     height: 60px;
     width: 60px;
@@ -1296,11 +1293,11 @@ button {
 }
 
 .view_on_blockchain:active {
-    background: url('./static/viewOnBlockchain_a.svg') no-repeat center;
+    background: url('../../static/viewOnBlockchain_a.svg') no-repeat center;
 }
 
 .button-cancel-ricieve {
-    background: url('./static/buttonCancelBig_p.svg') no-repeat center;
+    background: url('../../static/buttonCancelBig_p.svg') no-repeat center;
     border: 0px solid black;
     height: 43px;
     width: 166px;
@@ -1309,7 +1306,7 @@ button {
 }
 
 .button-cancel-ricieve:hover {
-    background: url('./static/buttonCancelBig_a.svg') no-repeat center;
+    background: url('../../static/buttonCancelBig_a.svg') no-repeat center;
 }
 
 .buttonHistoryFlex {
@@ -1419,7 +1416,7 @@ button {
 }
 
 .updateTable {
-    background: url('./static/but_update_p.svg') no-repeat center;
+    background: url('../../static/but_update_p.svg') no-repeat center;
     border: 0px solid black;
     height: 22px;
     width: 22px;
@@ -1428,7 +1425,7 @@ button {
 }
 
 .updateTable:hover {
-    background: url('./static/but_update_a.svg') no-repeat center;
+    background: url('../../static/but_update_a.svg') no-repeat center;
 }
 
 .transaction-history {
@@ -1469,7 +1466,7 @@ button {
 }
 
 .BTCimg {
-    background: url('./static/tableBTCico.svg') no-repeat center;
+    background: url('../../static/tableBTCico.svg') no-repeat center;
     border: 0px solid black;
     height: 29px;
     width: 29px;
@@ -1478,7 +1475,7 @@ button {
 }
 
 .ETHimg {
-    background: url('./static/tableETHico.svg') no-repeat center;
+    background: url('../../static/tableETHico.svg') no-repeat center;
     border: 0px solid black;
     height: 29px;
     width: 29px;
@@ -1487,7 +1484,7 @@ button {
 }
 
 .LTCimg {
-    background: url('./static/tableLTCico.svg') no-repeat center;
+    background: url('../../static/tableLTCico.svg') no-repeat center;
     border: 0px solid black;
     height: 29px;
     width: 29px;
@@ -1496,7 +1493,7 @@ button {
 }
 
 .XRPimg {
-    background: url('./static/tableXRPico.svg') no-repeat center;
+    background: url('../../static/tableXRPico.svg') no-repeat center;
     border: 0px solid black;
     height: 29px;
     width: 29px;
@@ -1504,14 +1501,14 @@ button {
     margin-top: 2px
 }
 .income{
-    background: url('./static/txIn.svg') no-repeat center;
+    background: url('../../static/txIn.svg') no-repeat center;
     border: 0px solid black;
     height: 12px;
     width: 14px;
     margin-left: 25px;
 }
 .outcome{
-    background: url('./static/txOut.svg') no-repeat center;
+    background: url('../../static/txOut.svg') no-repeat center;
     border: 0px solid black;
     height: 12px;
     width: 14px;
@@ -1566,7 +1563,7 @@ button {
 .two_line_2{
     margin-top: -15px;
 }
-.window-main-ready{
+.window-main-ready{ 
     font-family: Lato;
     font-weight: bold;
     font-size: 24px;
@@ -1574,4 +1571,12 @@ button {
     letter-spacing: 1px;
     padding-top: 450px;
     text-align: center;
+}
+
+.iconEthErc20 {
+    background: url('../../static/erc20_eth_icon.svg');
+    left: 38.31%;
+    right: 58.54%;
+    top: 15.36%;
+    bottom: 75.52;
 }

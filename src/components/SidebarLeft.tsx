@@ -7,9 +7,9 @@ export const SidebarLeft: FunctionComponent<{}> = () =>
         <Link to='/main' className='but_home'/>
         <Link to='/currency-carousel' className='but_pay'/>
         <Link to='/history-carousel' className='but_history'/>
-        <Link to="#" className='but_erc20"'/>
-        <Link to="#" className='but_cpu'/>
         <Link to="#" className='but_exchange'/>
+        <Link to="/erc20-window" className="but_erc20"/>
+        <Link to="#" className='but_cpu'/>
         <Link to="#" className='but_info'/>
         <Link to='/mode-window' className='but_menu'/>
     </div> 
