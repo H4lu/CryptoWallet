@@ -41,8 +41,8 @@ export class MainWindow extends Component<any, IMainWindowState> {
   }
   render() {
     if (this.props.redirectToMain) {
-      // eslint-disable-next-line
-      // @ts-ignore
+      console.log("REDIRECT")
+      /* @ts-ignore */
       return <Redirect from = '/' to = '/main'/>
     }
 

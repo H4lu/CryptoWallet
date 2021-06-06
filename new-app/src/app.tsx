@@ -611,7 +611,7 @@ export default class App extends Component<{}, AppState> {
         pcsc.on('reader', async reader => {
             console.log(reader)
             setReader(reader)
-            console.log("afaf")
+            console.log("afaafaff")
             reader.on('status', status => {
                 const changes = reader.state ^ status.state
                 console.log(status)
@@ -626,6 +626,7 @@ export default class App extends Component<{}, AppState> {
                             console.error(err)
                          //   remote.diaconsole.log.showErrorBox("PCSC error", err.message)
                         } else {
+                            console.log("start wallet info")
                             this.setState({connection: true})
                             this.startWalletInfoPing()
                         }
