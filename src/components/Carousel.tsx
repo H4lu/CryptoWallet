@@ -2,7 +2,11 @@ import * as React from 'react'
 import CarouselElement from './CarouselElement'
 import Coverflow from "../../react-coverflow.js"
 
-export class Carousel extends React.PureComponent<any, any> {
+interface CarouselProps {
+    setActiveCurrency(currency: string) => void
+}
+
+export class Carousel extends React.PureComponent<CarouselProps, any> {
 
     constructor(props: any) {
         super(props)

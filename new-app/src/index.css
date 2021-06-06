@@ -1,0 +1,1611 @@
+.background-start {
+  background: url("../static/backgroundStart.svg") no-repeat center;
+  background-size: cover;
+  height: 744px;
+  width: 1366px;
+  margin-top: -23.5px;
+}
+
+.header-content {
+  margin-left: 32px;
+  margin-right: 32px;
+}
+
+.header {
+  width: 100%;
+  height: 3vh;
+  -webkit-app-region: drag;
+  background-color: #1b1b1b;
+}
+
+.title-bar-buttons {
+  -webkit-app-region: no-drag;
+  position: fixed;
+  top: 0px;
+  right: 0px;
+}
+
+.button-hide {
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAABCAYAAADn9T9+AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAQSURBVHgBYyzsW/GfgQgAAGVnAqg9QKOOAAAAAElFTkSuQmCC") no-repeat center;
+  border: 0px solid black;
+  height: 20px;
+  width: 20px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  margin-right: 2px;
+  margin-left: 2px;
+}
+
+.button-hide:hover {
+  background-color: rgba(187, 179, 179, 0.3);
+}
+
+.button-close {
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACVSURBVHgBbZAxDoMwDEXzHXIfrtKlSy+BOnRFWZGq9hJIiCVX4T4QB4wAJciekv9fnG/j/R0Cx+j/n9dklGp+Y00mtcSRPCobmq6vNQiJA8/w2IVuEyoOaYmPs/MJpYU27Tnhep3BxjmTQ+Kj+OqA5ZxDUlSEcvllLizcg0un3bhlhhZcGxAapA1IskwNkhJNPLK2XQHnbns2Nxu63gAAAABJRU5ErkJggg==") no-repeat center;
+  border: 0px solid black;
+  height: 20px;
+  width: 20px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  margin-right: 2px;
+  margin-left: 2px;
+}
+
+.button-close:hover {
+  background-color: #462222;
+  opacity: 66%;
+}
+
+.container {
+  background-color: #1b1b1b;
+}
+
+.blackBackground {
+  background-color: #1b1b1b;
+}
+
+.main_container {
+  display: flex;
+  background: url('../static/backgroundMain.svg') no-repeat center;
+  background-size: cover;
+  height: 97vh;
+}
+
+.main_container_blur {
+  display: flex;
+  background: url('../static/backgroundMain.svg') no-repeat center;
+  background-size: cover;
+  height: 97vh;
+  filter: blur(4px);
+}
+
+.sidebar {
+  margin-right: 24px;
+  margin-left: 950px;
+  order: 3;
+  width: 334px;
+}
+
+.sidebarLeft {
+  order: 1;
+  width: 82px;
+}
+
+.nav-buttons-Left {
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  width: 950px;
+  order: 2;
+}
+
+.but_home {
+  background: url('../static/home_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 42px;
+  width: 42px;
+  margin-top: 133px;
+  margin-right: 20px;
+  margin-left: 20px;
+  order: 1;
+}
+
+.but_home:hover {
+  background: url('../static/home_a.svg') no-repeat center;
+}
+
+.but_pay {
+  background: url('../static/pay_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 42px;
+  width: 42px;
+  margin-top: 24px;
+  margin-right: 20px;
+  margin-left: 20px;
+  order: 2;
+}
+
+.but_pay:hover {
+  background: url('../static/pay_a.svg') no-repeat center;
+}
+
+.but_history {
+  background: url('../static/refresh_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 42px;
+  width: 42px;
+  margin-top: 24px;
+  margin-right: 20px;
+  margin-left: 20px;
+  order: 3;
+}
+
+.but_history:hover {
+  background: url('../static/refresh_a.svg') no-repeat center;
+}
+
+.but_exchange {
+  background: url('../static/exchange_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 42px;
+  width: 42px;
+  margin-top: 24px;
+  margin-right: 20px;
+  margin-left: 20px;
+  order: 4;
+}
+
+.but_exchange:hover {
+  background: url('../static/exchange_a.svg') no-repeat center;
+}
+
+.but_erc20 {
+  background: url('../static/erc20_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 42px;
+  width: 42px;
+  margin-top: 24px;
+  margin-right: 20px;
+  margin-left: 20px;
+  order: 5;
+}
+
+.but_erc20:hover {
+  background: url('../static/erc20_a.svg') no-repeat center;
+}
+
+.but_cpu {
+  background: url('../static/cpu_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 42px;
+  width: 42px;
+  margin-top: 24px;
+  margin-right: 20px;
+  margin-left: 20px;
+  order: 6;
+}
+
+.but_cpu:hover {
+  background: url('../static/cpu_a.svg') no-repeat center;
+}
+
+.but_info {
+  background: url('../static/info_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 42px;
+  width: 42px;
+  margin-top: 124px;
+  margin-right: 20px;
+  margin-left: 20px;
+  order: 7;
+}
+
+.but_info:hover {
+  background: url('../static/info_a.svg') no-repeat center;
+}
+
+.but_menu {
+  background: url('../static/menu_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 42px;
+  width: 42px;
+  margin-top: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+  order: 8;
+}
+
+.but_menu:hover {
+  background: url('../static/menu_a.svg') no-repeat center;
+}
+
+.main-content {
+  display: flex;
+}
+
+.currency-block {
+  order: 1;
+}
+
+.transaction_info {
+  order: 2;
+}
+
+.vert {
+  display: flex;
+  flex-direction: column;
+}
+
+.currencies-header {
+  order: 1;
+  margin-top: 66px;
+  margin-left: 10px;
+  font-family: Lato;
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.82);
+  opacity: 75%;
+}
+
+.cryptocurrency {
+  order: 2;
+}
+
+.Block_explorer {
+  order: 3;
+}
+
+.cryptocurrency_flex {
+  display: flex;
+}
+
+.column_1 {
+  order: 1;
+}
+
+.column_2 {
+  order: 2;
+}
+
+.column_BTC_LTC {
+  display: flex;
+  flex-direction: column;
+}
+
+.but_BTC {
+  order: 1;
+}
+
+.balance {
+  padding-left: 115px;
+  padding-top: 90px;
+  font-family: Lato;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.35);
+  opacity: 50%;
+}
+
+.fiat {
+  padding-left: 115px;
+  margin-top: -10px;
+  font-family: Lato;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.35);
+  opacity: 50%;
+}
+
+.card-container {
+  text-decoration: none;
+}
+
+.img_BTC {
+  background: url('../static/but_BTC_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 150px;
+  width: 230px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.img_BTC:hover {
+  background: url('../static/but_BTC.svg') no-repeat center;
+}
+
+.but_BTC:hover p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.click_img_BTC {
+  background: url('../static/but_BTC.svg') no-repeat center;
+  border: 0px solid black;
+  height: 150px;
+  width: 230px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.but_ETH {
+  order: 1;
+}
+
+.img_ETH {
+  background: url('../static/but_ETH_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 150px;
+  width: 230px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.img_ETH:hover {
+  background: url('../static/but_ETH.svg') no-repeat center;
+}
+
+.but_ETH:hover p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.click_img_ETH {
+  background: url('../static/but_ETH.svg') no-repeat center;
+  border: 0px solid black;
+  height: 150px;
+  width: 230px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.column_ETH_XRP {
+  display: flex;
+  flex-direction: column;
+}
+
+.but_LTC {
+  order: 2;
+}
+
+.img_LTC {
+  background: url('../static/but_LTC_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 150px;
+  width: 230px;
+  margin-top: -8px;
+  margin-left: 10px;
+  opacity: 42%;
+}
+
+.img_LTC:hover {
+  background: url('../static/but_LTC.svg') no-repeat center;
+}
+
+.but_LTC:hover p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.click_img_LTC {
+  background: url('../static/but_LTC.svg') no-repeat center;
+  border: 0px solid black;
+  height: 150px;
+  width: 230px;
+  margin-top: -8px;
+  margin-left: 10px;
+  opacity: 42%;
+}
+
+.but_XRP {
+  order: 2;
+}
+
+.img_XRP {
+  background: url('../static/but_XRP_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 150px;
+  width: 230px;
+  margin-top: -8px;
+  margin-left: 10px;
+  opacity: 42%;
+}
+
+.img_XRP:hover {
+  background: url('../static/but_XRP.svg') no-repeat center;
+}
+
+.but_XRP:hover p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.click_img_XRP {
+  background: url('../static/but_XRP.svg') no-repeat center;
+  border: 0px solid black;
+  height: 150px;
+  width: 230px;
+  margin-top: -8px;
+  margin-left: 10px;
+  opacity: 42%;
+}
+
+.Block_explorer {
+  background: url('../static/blockExpl.svg') no-repeat center;
+  border: 0px solid black;
+  height: 240px;
+  width: 470px;
+  margin-top: 18px;
+  margin-left: 10px;
+  opacity: 42%;
+}
+
+.ex_enter_address{
+  display: flex;
+}
+
+.ex_BTC{
+  order: 1;
+  background: url('../static/exBTC.svg') no-repeat center;
+  border: 0px solid black;
+  height: 36px;
+  width: 36px;
+  margin-top: 68px;
+  margin-left: 17px;
+  opacity: 50%;
+}
+.ex_LTC{
+  order: 1;
+  background: url('../static/exLTC.svg') no-repeat center;
+  border: 0px solid black;
+  height: 36px;
+  width: 36px;
+  margin-top: 68px;
+  margin-left: 17px;
+  opacity: 50%;
+}
+.ex_ETH{
+  order: 1;
+  background: url('../static/exETH.svg') no-repeat center;
+  border: 0px solid black;
+  height: 36px;
+  width: 36px;
+  margin-top: 68px;
+  margin-left: 17px;
+  opacity: 50%;
+}
+.ex_XRP{
+  order: 1;
+  background: url('../static/exXRP.svg') no-repeat center;
+  border: 0px solid black;
+  height: 36px;
+  width: 36px;
+  margin-top: 68px;
+  margin-left: 17px;
+  opacity: 50%;
+}
+
+.ex_address{
+  order: 2;
+  margin-top: 69px;
+  margin-left: 27px;
+  border: 0px solid black;
+  font-family: Lato;
+  font-weight: bold;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(0, 0, 0, 0);
+  height: 32px;
+  width: 350px;
+}
+
+.ex_address:focus {
+  outline: none;
+  border: none;
+}
+
+.ex_button_find{
+  order: 3;
+  background: url('../static/search.svg') no-repeat center;
+  border: 0px solid black;
+  height: 20px;
+  width: 20px;
+  margin-top: 78px;
+  margin-left: 1px;
+}
+
+.ex_button_find:hover {
+  background: url('../static/search_a.svg') no-repeat center;
+}
+
+.ex_balance{
+  margin-top: 26px;
+  margin-left: 170px;
+  border: 0px solid black;
+  font-family: Lato;
+  font-weight: bold;
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.ex_transactions{
+  margin-top: 26px;
+  margin-left: 170px;
+  border: 0px solid black;
+  font-family: Lato;
+  font-weight: bold;
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.tran_cur_info {
+  display: flex;
+  flex-direction: column;
+}
+
+.overwiewUpdate {
+  order: 1;
+  margin-top: 66px;
+  margin-left: 20px;
+}
+
+.overwiewUpdateFlex {
+  display: flex;
+  flex-direction: row;
+}
+
+.overwiew {
+  order: 1;
+  font-family: Lato;
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.82);
+  opacity: 75%;
+}
+
+.update {
+  order: 2;
+  background: url('../static/but_update_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 22px;
+  width: 22px;
+  margin-left: 280px;
+}
+
+.update:hover {
+  background: url('../static/but_update_a.svg') no-repeat center;
+}
+
+.current_balance {
+  order: 2;
+  background: url('../static/tr_cur_bal.svg') no-repeat center;
+  border: 0px solid black;
+  height: 235px;
+  width: 401px;
+  margin-top: 18px;
+  margin-left: 20px;
+  opacity: 42%;
+}
+
+.num_transaction {
+  margin-top: 55px;
+  margin-left: 20px;
+  font-family: Lato;
+  font-size: 50px;
+  color: rgba(255, 255, 255, 0.7);
+  opacity: 75%;
+}
+
+.general_usd_balance {
+  margin-top: -3px;
+  margin-left: 20px;
+  font-family: Lato;
+  font-size: 50px;
+  color: rgba(255, 255, 255, 0.7);
+  opacity: 75%;
+}
+
+.cryptoCurrency_chart {
+  order: 2;
+  background: url('../static/chart.svg') no-repeat center;
+  border: 0px solid black;
+  height: 316px;
+  width: 401px;
+  margin-top: 17px;
+  margin-left: 20px;
+  opacity: 42%;
+}
+
+.classChart{
+  margin-top: 52px;
+  margin-left: -7px;
+}
+
+.windowPay {
+  width: 950px;
+}
+
+.payWindow {
+  background: url('../static/Rectangle.svg') no-repeat center;
+  border: 0px solid black;
+  height: 612px;
+  width: 894px;
+  margin-top: 66px;
+  margin-left: 10px;
+}
+
+.payWindowTable {
+  background: url('../static/RectangleTable.svg') no-repeat center;
+  border: 0px solid black;
+  height: 690px;
+  width: 894px;
+  margin-top: 30px;
+  margin-left: 10px;
+}
+
+body, html {
+  height: 100vh;
+  margin: 0;
+}
+
+button {
+  outline: none;
+}
+
+.carousel-container {
+  width: 80vh !important;
+  border: none !important;
+  outline: 0 !important;
+}
+
+.carousel-container:active {
+
+  border: none !important;
+  outline: 0 !important;
+}
+
+.carousel-container:focus {
+
+  border: none !important;
+  outline: 0 !important;
+}
+
+.currencyName {
+  margin-top: 55px;
+  text-align: center;
+  font-family: Lato;
+  font-size: 42px;
+  color: rgba(255, 255, 255, 0.75);
+  opacity: 75%;
+}
+
+.currencyHistory {
+  margin-top: 20px;
+  text-align: center;
+  font-family: Lato;
+  font-size: 42px;
+  color: rgba(255, 255, 255, 0.75);
+  opacity: 75%;
+}
+
+.currencyCryptoBalance {
+  margin-top: 15px;
+  text-align: center;
+  font-family: Lato;
+  font-size: 23px;
+  color: rgba(255, 255, 255, 0.75);
+  opacity: 75%;
+}
+
+.currencyFiatBalance {
+  margin-top: 15px;
+  text-align: center;
+  font-family: Lato;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.75);
+  opacity: 75%;
+}
+
+.sendCurrencybutton {
+  background: url('../static/buttonSend_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 38px;
+  width: 147px;
+  margin-top: 25px;
+  margin-left: 295px;
+}
+
+.recieveCurrencybutton {
+  background: url('../static/buttonRecieve_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 38px;
+  width: 147px;
+  margin-top: 25px;
+  margin-left: 12px;
+}
+
+.sendCurrencybutton:hover {
+  background: url('../static/buttonSend_a.svg') no-repeat center;
+}
+
+.recieveCurrencybutton:hover {
+  background: url('../static/buttonRecieve_a.svg') no-repeat center;
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.headerSidebar {
+  order: 1;
+  margin-top: 60px;
+
+  margin-left: 10px;
+}
+
+.headerSidebarFlex {
+  display: flex;
+}
+
+.Notifications {
+  order: 1;
+  margin-top: 0px;
+  font-family: Lato;
+  font-size: 28px;
+  color: rgba(255, 255, 255, 0.82);
+  opacity: 75%;
+}
+
+.NotificationsNumber {
+  order: 2;
+  background: url('../static/numNotif.svg') no-repeat center;
+  border: 0px solid black;
+  height: 24px;
+  width: 21px;
+  margin-top: 0px;
+  margin-left: 5px;
+}
+
+.CloseNotifications {
+  order: 3;
+  padding-top: 10px;
+  padding-bottom: -10px;
+  margin-left: 70px;
+  font-family: Lato;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.61);
+  opacity: 70%;
+}
+
+.notificationContent {
+  order: 2;
+  background: url('../static/notificationsGroup.svg') no-repeat center;
+  border: 0px solid black;
+  height: 637px;
+  width: 312px;
+  margin-top: 0px;
+  margin-left: 10px;
+}
+
+.rectangleSR {
+  filter: inherit;
+  background: url('../static/RectangleSR.svg') no-repeat center;
+  border: 0px solid black;
+  height: 540px;
+  width: 612px;
+  margin-top: 50px;
+  margin-left: 169px;
+  padding-top: 50px;
+}
+
+.carouselBTCIcon {
+  background: url('../static/icon_BTC.svg') no-repeat center;
+  display: block;
+  height: 80px;
+  width: 80px;
+
+}
+
+.carouselETHIcon {
+  background: url('../static/icon_ETH.svg') no-repeat center;
+  display: block;
+  height: 80px;
+  width: 80px;
+}
+.carouselLTCIcon {
+  background: url('../static/icon_LTC.svg') no-repeat center;
+  display: block;
+  height: 80px;
+  width: 80px;
+}
+.carouselXRPIcon {
+  background: url('../static/icon_XRP.svg') no-repeat center;
+  display: block;
+  height: 80px;
+  width: 80px;
+
+}
+
+.iconCryptoCurrency {
+  background: url('../static/icon_BTC.svg') no-repeat center;
+  border: 0px solid black;
+  height: 106px;
+  width: 106px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-top: 10px;
+  margin-bottom: 0px;
+  margin-left: 253px;
+}
+
+.iconCryptoCurrencyLTC {
+  background: url('../static/icon_LTC.svg') no-repeat center;
+  border: 0px solid black;
+  height: 106px;
+  width: 106px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-top: 10px;
+  margin-bottom: 0px;
+  margin-left: 253px;
+}
+
+.iconCryptoCurrencyETH {
+  background: url('../static/icon_ETH.svg') no-repeat center;
+  border: 0px solid black;
+  height: 106px;
+  width: 106px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-top: 10px;
+  margin-bottom: 0px;
+  margin-left: 253px;
+}
+
+.iconCryptoCurrencyXRP {
+  background: url('../static/icon_XRP.svg') no-repeat center;
+  border: 0px solid black;
+  height: 106px;
+  width: 106px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-top: 10px;
+  margin-bottom: 0px;
+  margin-left: 253px;
+}
+
+.blockSendTransactionAddress {
+  display: flex;
+  margin-top: 0px;
+  margin-left: 50px;
+}
+
+.iconQr {
+  order: 1;
+  background: url('../static/icon_QR.svg') no-repeat center;
+  border: 0px solid black;
+  height: 58px;
+  width: 58px;
+  margin-top: 20px;
+  margin-left: 0px;
+}
+
+.payment_address {
+  order: 2;
+  margin-top: 26px;
+  margin-left: 20px;
+  border: 0px solid black;
+  font-family: Lato;
+  font-weight: bold;
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.4);
+  opacity: 90%;
+  background-color: rgba(0, 0, 0, 0.31);
+  height: 44px;
+  width: 418px;
+}
+
+.payment_address:focus {
+  outline: none;
+  border: none;
+}
+
+.blockSendTransactionSum {
+  display: flex;
+  margin-top: 10px;
+  margin-left: 50px;
+}
+
+.iconSum {
+  order: 1;
+  background: url('../static/icon_Sum.svg') no-repeat center;
+  border: 0px solid black;
+  height: 58px;
+  width: 58px;
+  margin-top: 28px;
+  margin-left: 0px;
+}
+
+.poleSum {
+  order: 2;
+  margin-top: 15px;
+  margin-left: 20px;
+  background: url('../static/fonSendBTC.svg') no-repeat center;
+  border: 0px solid black;
+  height: 89px;
+  width: 355px;
+}
+
+.poleSumLTC {
+  order: 2;
+  margin-top: 15px;
+  margin-left: 20px;
+  background: url('../static/fonSendLTC.svg') no-repeat center;
+  border: 0px solid black;
+  height: 89px;
+  width: 355px;
+}
+
+.poleSumETH {
+  order: 2;
+  margin-top: 15px;
+  margin-left: 20px;
+  background: url('../static/fonSendETH.svg') no-repeat center;
+  border: 0px solid black;
+  height: 89px;
+  width: 355px;
+}
+
+.poleSumXRP {
+  order: 2;
+  margin-top: 15px;
+  margin-left: 20px;
+  background: url('../static/fonSendXRP.svg') no-repeat center;
+  border: 0px solid black;
+  height: 89px;
+  width: 355px;
+}
+
+.payment_sum {
+  margin-top: 2px;
+  margin-left: 9px;
+  border: 0px solid black;
+  font-family: Lato;
+  font-weight: bold;
+  font-size: 22px;
+  color: rgba(0, 0, 0, 0);
+  background-color: rgba(0, 0, 0, 0);
+  height: 44px;
+  width: 355px;
+}
+
+.payment_sum_ {
+  margin-top: -36px;
+  margin-left: 9px;
+  border: 0px solid black;
+  font-family: Lato;
+  font-weight: bold;
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(0, 0, 0, 0);
+  height: 44px;
+  width: 355px;
+}
+
+.payment_sum:focus {
+  outline: none;
+  border: none;
+}
+
+.payment_sumUSD {
+  margin-top: -30px;
+  margin-left: 9px;
+  border: 0px solid black;
+  font-family: Lato;
+  font-weight: bold;
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(0, 0, 0, 0);
+  height: 44px;
+  width: 355px;
+}
+
+.setMaxSum{
+  order: 3;
+  background: url('../static/maxsum_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 74px;
+  width: 72px;
+  margin-top: 23px;
+  margin-left: -4px;
+}
+
+.setMaxSum:hover {
+  background: url('../static/maxsum_a.svg') no-repeat center;
+}
+
+.blockFee {
+  display: flex;
+  margin-top: 20px;
+ /* visibility: hidden; */
+}
+
+.text_Transaction_fee {
+  order: 1;
+  margin-left: 130px;
+  margin-top: 0px;
+  border: 0px solid black;
+  font-family: Lato;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.Fee1{
+  order: 2;
+  background: url('../static/low_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 14px;
+  width: 40px;
+  margin-top: 0px;
+  margin-left: 30px;
+}
+.clickFee1{
+  order: 2;
+  background: url('../static/low_a.svg') no-repeat center;
+  border: 0px solid black;
+  height: 14px;
+  width: 40px;
+  margin-top: 0px;
+  margin-left: 30px;
+}
+
+.Fee2{
+  order: 3;
+  background: url('../static/normal_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 14px;
+  width: 40px;
+  margin-top: 0px;
+  margin-left: 0px;
+}
+.clickFee2{
+  order: 3;
+  background: url('../static/normal_a.svg') no-repeat center;
+  border: 0px solid black;
+  height: 14px;
+  width: 40px;
+  margin-top: 0px;
+  margin-left: 0px;
+}
+
+.Fee3{
+  order: 4;
+  background: url('../static/high_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 14px;
+  width: 40px;
+  margin-top: 0px;
+  margin-left: 0px;
+}
+.clickFee3{
+  order: 4;
+  background: url('../static/high_a.svg') no-repeat center;
+  border: 0px solid black;
+  height: 14px;
+  width: 40px;
+  margin-top: 0px;
+  margin-left: 0px;
+}
+
+.sum_Transaction_fee {
+  order: 5;
+  margin-left: 29px;
+  margin-top: 0px;
+  border: 0px solid black;
+  font-family: Lato;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.NameCrypto_Transaction_fee {
+  order: 6;
+  margin-left: 3px;
+  margin-top: 0px;
+  border: 0px solid black;
+  font-family: Lato;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.USD_icon {
+  order: 7;
+  margin-left: 15px;
+  margin-top: 0px;
+  border: 0px solid black;
+  font-family: Lato;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.USD_Transaction_fee {
+  order: 8;
+  margin-top: 0px;
+  border: 0px solid black;
+  font-family: Lato;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.blockBalance {
+  display: flex;
+  margin-top: 0px;
+}
+
+.sum_Transaction_balance {
+  order: 2;
+  margin-left: 218px;
+  margin-top: 0px;
+  border: 0px solid black;
+  font-family: Lato;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.buttonSendCancelFlex {
+  display: flex;
+  margin-left: 129px;
+  margin-top: 15px;
+}
+
+.buttonSendBig {
+  order: 1;
+}
+
+.buttonCancelBig {
+  order: 2;
+}
+
+.button-send-transaction {
+  background: url('../static/buttonSendBig_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 43px;
+  width: 166px;
+  margin-top: 0px;
+  margin-left: 0px;
+}
+
+.button-cancel-transaction {
+  background: url('../static/buttonCancelBig_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 43px;
+  width: 166px;
+  margin-top: 0px;
+  margin-left: 84px;
+}
+
+.button-send-transaction:hover {
+  background: url('../static/buttonSendBig_a.svg') no-repeat center;
+}
+
+.button-cancel-transaction:hover {
+  background: url('../static/buttonCancelBig_a.svg') no-repeat center;
+}
+
+.containerData {
+  position: fixed;
+  left: 82px;
+  top: 25px;
+}
+
+.QRcontainer {
+  width: 136px;
+  height: 136px;
+  margin-left: 238px;
+  margin-top: 20px;
+  border-radius: 10px;
+}
+
+.address-qrcode {
+  width: 150px;
+  height: 150px;
+  opacity: 0.5;
+  margin-left: 231px;
+  margin-top: 20px;
+  border-radius: 10px;
+}
+
+.YOURB_0ITCOIN_ADDRESS {
+  text-align: center;
+  margin-top: 15px;
+  font-family: Lato;
+  font-weight: bolder;
+  font-size: 21px;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.YOURB_0ITCOIN_ADDRESS_crypto {
+  text-align: center;
+  margin-top: 10px;
+  font-family: Lato;
+  font-weight: bolder;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 1);
+}
+
+.flex_button_recieve {
+  margin-top: 20px;
+  margin-left: 50px;
+  display: flex;
+}
+
+.copy_to_buffer {
+  order: 1;
+  background: url('../static/copyToBuffer_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 60px;
+  width: 60px;
+  margin-top: 0px;
+  margin-left: 55px;
+  cursor: pointer;
+  outline: none;
+}
+
+.copy_to_buffer:active {
+  background: url('../static/copyToBuffer_a.svg') no-repeat center;
+}
+
+.sent_to_print {
+  order: 2;
+  background: url('../static/sentToPrint_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 60px;
+  width: 60px;
+  margin-top: 0px;
+  margin-left: 55px;
+  cursor: pointer;
+  outline: none;
+}
+
+.sent_to_print:active {
+  background: url('../static/sentToPrint_a.svg') no-repeat center;
+}
+
+.sent_to_email {
+  order: 3;
+  background: url('../static/sentToEmail_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 60px;
+  width: 60px;
+  margin-top: 0px;
+  margin-left: 55px;
+  cursor: pointer;
+  outline: none;
+}
+
+.sent_to_email:active {
+  background: url('../static/sentToEmail_a.svg') no-repeat center;
+}
+
+.view_on_blockchain {
+  order: 4;
+  background: url('../static/viewOnBlockchain_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 60px;
+  width: 60px;
+  margin-top: 0px;
+  margin-left: 55px;
+  cursor: pointer;
+  outline: none;
+}
+
+.view_on_blockchain:active {
+  background: url('../static/viewOnBlockchain_a.svg') no-repeat center;
+}
+
+.button-cancel-ricieve {
+  background: url('../static/buttonCancelBig_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 43px;
+  width: 166px;
+  margin-top: 15px;
+  margin-left: 223px;
+}
+
+.button-cancel-ricieve:hover {
+  background: url('../static/buttonCancelBig_a.svg') no-repeat center;
+}
+
+.buttonHistoryFlex {
+  display: flex;
+  margin-top: 0px;
+  margin-left: 20px;
+}
+
+.AlldirectHistory_p {
+  background-color: inherit;
+  border: 0px solid black;
+  margin-top: 0px;
+  margin-left: 0px;
+  font-family: Lato;
+  font-weight: bolder;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.5);
+
+}
+
+.AlldirectHistory_p:hover {
+  color: rgba(255, 255, 255, 1);
+}
+
+.AlldirectHistory_a {
+  background-color: inherit;
+  border: 0px solid black;
+  margin-top: 0px;
+  margin-left: 0px;
+  font-family: Lato;
+  font-weight: bolder;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 1);
+
+}
+
+.SenddirectHistory_p {
+  background-color: inherit;
+  border: 0px solid black;
+  margin-top: 0px;
+  margin-left: 10px;
+  font-family: Lato;
+  font-weight: bolder;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.5);
+
+}
+
+.SenddirectHistory_p:hover {
+  color: rgba(255, 255, 255, 1);
+}
+
+.SenddirectHistory_a {
+  background-color: inherit;
+  border: 0px solid black;
+  margin-top: 0px;
+  margin-left: 10px;
+  font-family: Lato;
+  font-weight: bolder;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 1);
+}
+
+.ReceivedirectHistory_p {
+  background-color: inherit;
+  border: 0px solid black;
+  margin-top: 0px;
+  margin-left: 10px;
+  font-family: Lato;
+  font-weight: bolder;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.5);
+
+}
+
+.ReceivedirectHistory_p:hover {
+  color: rgba(255, 255, 255, 1);
+}
+
+.ReceivedirectHistory_a {
+  background-color: inherit;
+  border: 0px solid black;
+  margin-top: 0px;
+  margin-left: 10px;
+  font-family: Lato;
+  font-weight: bolder;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 1);
+}
+
+.hrLine {
+  margin-top: 0px;
+  margin-left: 20px;
+  border-width: 2px;
+  border-color: rgba(150, 150, 150, 0.5);
+  width: 850px;
+}
+
+.currencyNameHistory {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-family: Lato;
+  font-weight: bolder;
+  font-size: 35px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.updateTable {
+  background: url('../static/but_update_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 22px;
+  width: 22px;
+  margin-left: 670px;
+  margin-bottom: 5px;
+}
+
+.updateTable:hover {
+  background: url('../static/but_update_a.svg') no-repeat center;
+}
+
+.transaction-history {
+  height: 460px;
+  overflow: scroll;
+  margin-left: auto;
+  margin-right: auto;
+  bottom: 5vh;
+  width: 100%;
+  background: inherit;
+  font-family: Lato;
+  font-weight: normal;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.transaction-history::-webkit-scrollbar {
+  width: 8px;
+}
+
+.transaction-history::-webkit-scrollbar-corner {
+  background: inherit;
+}
+
+.transaction-history::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.table_content {
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 20px;
+}
+
+.dateTransactoion{
+  margin-left: 25px;
+}
+
+.BTCimg {
+  background: url('../static/tableBTCico.svg') no-repeat center;
+  border: 0px solid black;
+  height: 29px;
+  width: 29px;
+  margin-left: 25px;
+  margin-top: 2px
+}
+
+.ETHimg {
+  background: url('../static/tableETHico.svg') no-repeat center;
+  border: 0px solid black;
+  height: 29px;
+  width: 29px;
+  margin-left: 25px;
+  margin-top: 2px
+}
+
+.LTCimg {
+  background: url('../static/tableLTCico.svg') no-repeat center;
+  border: 0px solid black;
+  height: 29px;
+  width: 29px;
+  margin-left: 25px;
+  margin-top: 2px
+}
+
+.XRPimg {
+  background: url('../static/tableXRPico.svg') no-repeat center;
+  border: 0px solid black;
+  height: 29px;
+  width: 29px;
+  margin-left: 25px;
+  margin-top: 2px
+}
+.income{
+  background: url('../static/txIn.svg') no-repeat center;
+  border: 0px solid black;
+  height: 12px;
+  width: 14px;
+  margin-left: 25px;
+}
+.outcome{
+  background: url('../static/txOut.svg') no-repeat center;
+  border: 0px solid black;
+  height: 12px;
+  width: 14px;
+  margin-left: 25px;
+}
+
+.addressTransaction{
+  margin-left: 25px;
+}
+.amountTransaction{
+  margin-left: 25px;
+}
+.currencyTransaction{
+  margin-left: 8px;
+  color: rgba(255, 255, 255, 0.4);
+}
+.pointConfirmed{
+  margin-left: 25px;
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background-color: rgba(222, 222, 222, 0.3);
+}
+.pointUnConfirmed{
+  margin-left: 25px;
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background-color: #30874F;
+}
+
+.confirmedTransaction{
+  margin-left: 15px;
+}
+.unconfirmedTransaction{
+  margin-left: 15px;
+  color: #30874F;
+}
+
+.window-main-not-ready{
+  font-family: Lato;
+  font-weight: bold;
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 1px;
+  padding-top: 450px;
+  text-align: center;
+}
+.two_line_1{
+   margin-top: -10px;
+}
+.two_line_2{
+  margin-top: -15px;
+}
+.window-main-ready{ 
+  font-family: Lato;
+  font-weight: bold;
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 1px;
+  padding-top: 450px;
+  text-align: center;
+}
+
+.iconEthErc20 {
+  background: url('../static/erc20_eth_icon.svg') no-repeat center;
+  width: 43px;
+  height: 70px;
+  padding-top: 100px;
+  margin-left: auto;
+  margin-right: auto;
+  /* margin-left: 38.31%;
+  margin-right: 58.54%; */
+}
+
+.backgroundERC20 {
+  background: linear-gradient(359.84deg, #090909 -4.93%, #161616 45.48%, #070707 99.87%);
+  opacity: 0.55;
+  margin-top: 64px;
+  height: 1130px;
+  width: 900px;
+}
+
+.erc20Text {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: -30px;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 35px;
+  /*line-height: 42px;*/
+  
+  text-align: center;
+  
+  color: #FFFFFF;
+  
+  opacity: 0.75;
+}
