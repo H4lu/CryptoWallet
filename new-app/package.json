@@ -9,6 +9,7 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "rebuild": "electron-rebuild",
+    "make-release": "electron-forge make --skip-package",
     "lint": "eslint --ext .ts ."
   },
   "keywords": [],
@@ -20,7 +21,7 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "asar": true
+        "asar": false
       },
       "makers": [
         {
@@ -44,6 +45,7 @@
           "config": {}
         }
       ],
+      "hooks": "require:./hooks.js",
       "plugins": [
         [
           "@electron-forge/plugin-webpack",
@@ -60,8 +62,7 @@
               ]
             }
           }
-        ],
-        ["@electron-forge/plugin-auto-unpack-natives"]
+        ]
       ]
     }
   },

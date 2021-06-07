@@ -60,7 +60,7 @@ let basicFee3: number
 let TXarr = []
 let numTx: number
 
-import * as ffi from 'ffi-napi'
+import ffi from 'ffi-napi'
 const libdll = ffi.Library('./resources/lib32.dll', {'forSign': ['void', ['string', 'int', 'string']]})
 
 // export async function getUnspentTx(): Promise<number> {

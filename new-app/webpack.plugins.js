@@ -4,10 +4,10 @@ const webpack = require('webpack')
 
 module.exports = [
   new ForkTsCheckerWebpackPlugin(),
-  new webpack.NormalModuleReplacementPlugin(
-    /^bindings$/,
-    require.resolve("./bindings")
-   ),
+  // new webpack.NormalModuleReplacementPlugin(
+  //   /^bindings$/,
+  //   require.resolve("./bindings")
+  //  ),
   
   // new CopyPlugin({
   //   patterns: [

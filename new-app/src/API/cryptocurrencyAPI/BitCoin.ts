@@ -3,7 +3,7 @@ import axios from 'axios'
 import {getSignaturePCSC} from '../hardwareAPI/GetSignature'
 import {getAddressPCSC} from '../hardwareAPI/GetAddress'
 //import {remote} from "electron"
-import * as ref from "ref-napi"
+
 import  {
     transactionBytes,
     getTestnetAddressBTC, 
@@ -60,7 +60,7 @@ let basicFee3: number
 let TXarr = []
 let numTx: number
 
-import * as ffi from 'ffi-napi'
+import ffi  from 'ffi-napi'
 const libdll = ffi.Library('./resources/lib32.dll', {'forSign': ['void', ['string', 'int', 'string']]})
 
 // export async function getUnspentTx(): Promise<number> {

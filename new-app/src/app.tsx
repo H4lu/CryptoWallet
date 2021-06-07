@@ -503,10 +503,8 @@ export default class App extends Component<{}, AppState> {
     }
 
     setActiveCurrency(currency: string) {
-        console.log("Setting active currency + " + currency)
         switch (currency) {
             case 'BTC': {
-                console.log("Setting active currency BTC ")
                 this.setState({activeCurrency: 1})
                 break
             }

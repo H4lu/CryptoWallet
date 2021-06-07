@@ -18,8 +18,12 @@ import {getSignaturePCSC} from '../hardwareAPI/GetSignature'
 // @ts-ignore
 import * as satoshi from 'satoshi-bitcoin'
 import {Buffer} from 'buffer'
-import * as ffi from 'ffi-napi'
+//import * as bindings from 'bindings'
+
+// bindings("ref-napi")
+ //import ffi from "../native_modules/""
 //import {remote} from "electron"
+import ffi from "ffi-napi"
 
 enum Networks {
     MAIN = "LTC",

@@ -10,9 +10,6 @@ module.exports = {
   module: {
     rules,
   },
-  output: {
-    publicPath: '/'
-  },
   node: {
     __dirname: true
   },
@@ -32,9 +29,17 @@ module.exports = {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css']
   },
   externals: {
-    "ffi-napi": "commonjs ffi-napi",
-    "ref-napi": "commonjs ref-napi",
-    "ffi": "commonjs ffi",
-    "ref": "commonjs ref"
+    // "ffi-napi": "ffi-napi",
+    // "ref-napi": "ref-napi"
+    // "ffi-napi": "commonjs ffi-napi",
+    // "ref-napi": "commonjs ref-napi",
+    // "ffi": "commonjs ffi",
+    // "ref": "commonjs ref",
+    // ffi: "ffi",
+    // ref: "ref",
+    // "ffi-napi": "require(ffi-napi)",
+    // "ref-napi": "require(ref-napi)",
+    // "ffi": "ffi",
+    // "ref": "ref"
   }
 };
