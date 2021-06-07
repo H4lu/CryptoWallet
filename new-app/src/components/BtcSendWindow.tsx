@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import getBitcoinAddress, {getFee} from "../API/cryptocurrencyAPI/BitCoin";
 import {sendTransaction} from "../core/sendTransaction";
 import {Link} from "react-router-dom";
-//import {remote} from "electron"
+import {remote} from "electron"
 
 interface BTCSendState {
     address: string,
@@ -112,7 +112,7 @@ export class BtcSendWindow extends Component<BTCSendProps, BTCSendState> {
                     )
             } catch(err) {
                 console.error(err)
-              //  remote.dialog.showErrorBox("Send transaction error", err.message)
+                remote.dialog.showErrorBox("Send transaction error", err.message)
             }
         }
     }

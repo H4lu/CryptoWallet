@@ -4,7 +4,7 @@ import {BN} from 'ethereumjs-util'
 import Common from '@ethereumjs/common'
 import {getSignaturePCSC} from '../hardwareAPI/GetSignature'
 import axios from 'axios'
-//import {dialog, remote} from "electron"
+import {dialog, remote} from "electron"
 import {getAddressPCSC} from '../hardwareAPI/GetAddress'
 import {Buffer} from 'buffer'
 import {keccak256} from "js-sha3";
@@ -187,7 +187,7 @@ async function createTransaction(
             })
             .on('error', async error => {
                 console.log(error)
-               // remote.dialog.showErrorBox("Error",error.message)
+                remote.dialog.showErrorBox("Error",error.message)
             });
         }
 }

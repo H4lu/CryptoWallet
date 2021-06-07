@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {getEthereumAddress} from '../API/cryptocurrencyAPI/Ethereum'
 import {sendTransaction} from "../core/sendTransaction";
 import {Link} from "react-router-dom";
-//import {remote} from "electron"
+import {remote} from "electron"
 interface ETHSendState {
     address: string,
     paymentAddress: string,
@@ -105,7 +105,7 @@ export class EthSendWindow extends Component<any, ETHSendState> {
                     )
             } catch(err) {
                 console.error(err)
-              //  remote.dialog.showErrorBox("Send transaction error", err.message)
+                remote.dialog.showErrorBox("Send transaction error", err.message)
             }
         }
     }

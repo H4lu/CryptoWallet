@@ -2,7 +2,7 @@ import {TransactionBuilder, networks, Transaction, ECPair, address, script} from
 import axios from 'axios'
 import {getSignaturePCSC} from '../hardwareAPI/GetSignature'
 import {getAddressPCSC} from '../hardwareAPI/GetAddress'
-//import {remote} from "electron"
+import {remote} from "electron"
 
 import  {
     transactionBytes,
@@ -355,7 +355,7 @@ export async function handleBitcoin(
                 paymentAdress, amount, transactionFee, redirect, utxos, course, balance
                 )
         } else {
-           // remote.dialog.showErrorBox("Error", 'Error provided by internet connection')
+            remote.dialog.showErrorBox("Error", 'Error provided by internet connection')
         }
     }
 

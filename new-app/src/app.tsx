@@ -62,7 +62,7 @@ import {
 } from "./API/cryptocurrencyAPI/Ripple";
 import {ModeWindow} from "./components/ModeWindow";
 import {DisplayTransaction} from './API/cryptocurrencyAPI/utils'
-//import {remote} from "electron"
+import {remote} from "electron"
 import { ERC20Window } from './components/Erc20Window'
 import { Erc20DisplayToken } from './API/cryptocurrencyAPI/erc20'
 
@@ -352,7 +352,7 @@ export default class App extends Component<{}, AppState> {
             LTCLastTx: [],
             BTCLastTx: [],
             ETHLastTx: [],
-            XRPLastTx: [],
+            XRPLastTx: [],  
             connection: false,
             status: false,
             redirect: false,
@@ -606,46 +606,49 @@ export default class App extends Component<{}, AppState> {
 
 
     async componentDidMount() {
-        pcsc.on('reader', async reader => {
-            console.log(reader)
-            setReader(reader)
-            console.log("afaafaff")
-            reader.on('status', status => {
-                const changes = reader.state ^ status.state
-                console.log(status)
-                if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
-                    console.log("connect")
-                    console.log("rr")
-                    reader.connect({
-                            share_mode: reader.SCARD_SHARE_SHARED,
-                            protocol: reader.SCARD_PROTOCOL_T1
-                    }, async (err, _) => {
-                        if (err) {
-                            console.error(err)
-                         //   remote.diaconsole.log.showErrorBox("PCSC error", err.message)
-                        } else {
-                            console.log("start wallet info")
-                            this.setState({connection: true})
-                            this.startWalletInfoPing()
-                        }
-                })
-            }
-            })
+        await this.initAll()
 
-            reader.on('error', err => {
-                console.log('Error', err.message)
-              //  remote.diaconsole.log.showErrorBox("PCSC error", err.message)
-            })
-            reader.on('end', () => {
-                console.log('Reader', reader.name, 'removed')
-                this.setState({connection: false})
-            })
-        })
+        this.setState({walletStatus: 0})
+        // pcsc.on('reader', async reader => {
+        //     console.log(reader)
+        //     setReader(reader)
+        //     console.log("afaafaff")
+        //     reader.on('status', status => {
+        //         const changes = reader.state ^ status.state
+        //         console.log(status)
+        //         if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
+        //             console.log("connect")
+        //             console.log("rr")
+        //             reader.connect({
+        //                     share_mode: reader.SCARD_SHARE_SHARED,
+        //                     protocol: reader.SCARD_PROTOCOL_T1
+        //             }, async (err, _) => {
+        //                 if (err) {
+        //                     console.error(err)
+        //                  //   remote.diaconsole.log.showErrorBox("PCSC error", err.message)
+        //                 } else {
+        //                     console.log("start wallet info")
+        //                     this.setState({connection: true})
+        //                     this.startWalletInfoPing()
+        //                 }
+        //         })
+        //     }
+        //     })
 
-        pcsc.on('error', err => {
-            console.log('PCSC error', err.message)
-         //   remote.diaconsole.log.showErrorBox("PCSC error", err.message)
-        })
+        //     reader.on('error', err => {
+        //         console.log('Error', err.message)
+        //       //  remote.diaconsole.log.showErrorBox("PCSC error", err.message)
+        //     })
+        //     reader.on('end', () => {
+        //         console.log('Reader', reader.name, 'removed')
+        //         this.setState({connection: false})
+        //     })
+        // })
+
+        // pcsc.on('error', err => {
+        //     console.log('PCSC error', err.message)
+        //  //   remote.diaconsole.log.showErrorBox("PCSC error", err.message)
+        // })
     }
 
     setRedirectToMain() {
@@ -663,14 +666,14 @@ export default class App extends Component<{}, AppState> {
                     this.setRedirectToMain()
                     this.setValues()
                 }
-                await Promise.all([initBitcoinAddress(), initEthereumAddress(), initLitecoinAddress()])
-                await Promise.all([this.getBalances(), this.getTransactions()])
-                await Promise.all([this.setChartBTC(), this.getRates()])
+                // await Promise.all([initBitcoinAddress(), initEthereumAddress(), initLitecoinAddress()])
+                // await Promise.all([this.getBalances(), this.getTransactions()])
+                // await Promise.all([this.setChartBTC(), this.getRates()])
                 await Promise.all([redirect(), updateHwStatus(), updateHwTransactions()])
             }
         } catch(err) {
             console.log(err)
-         //   remote.diaconsole.log.showErrorBox("Initialization error", err.message)
+            remote.diaconsole.log.showErrorBox("Initialization error", err.message)
         }
     }
 

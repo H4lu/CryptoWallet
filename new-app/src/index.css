@@ -1609,3 +1609,60 @@ button {
   
   opacity: 0.75;
 }
+
+.erc20Table table {
+  margin-left: auto;
+  margin-right: auto;
+  bottom: 5vh;
+  width: 100%;
+  background: inherit;
+  color: rgba(255, 255, 255, 0.65);
+  table-layout: fixed;
+}
+
+.erc20Table table tbody {
+  width: inherit;
+  overflow: scroll;
+  height: 460px;
+}
+
+.erc20Table table::-webkit-scrollbar {
+  width: 8px;
+}
+
+.erc20Table table::-webkit-scrollbar-corner {
+  background: inherit;
+}
+
+.erc20Table table::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.erc20Table table, th, td {
+  text-align: left;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 18px;
+}
+
+.erc20Table th {
+  color: #C9C9C9;
+  opacity: 0.75;
+}
+
+.erc20Table td {
+  color: #FFFFFF;
+}
+
+/* .erc20Table table td:last-child {
+  width: 100%;
+} */
+
+.erc20Table hr {
+  opacity: 0.28;
+  border: "1px solid rgba(201, 201, 201, 0.61";
+  width: 896px;
+}

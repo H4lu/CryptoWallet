@@ -22,7 +22,7 @@ import {Buffer} from 'buffer'
 
 // bindings("ref-napi")
  //import ffi from "../native_modules/""
-//import {remote} from "electron"
+import {remote} from "electron"
 import ffi from "ffi-napi"
 
 enum Networks {
@@ -230,7 +230,7 @@ export async function handleLitecoin(paymentAdress: string, amount: number, tran
             console.log(err)
         })
     } else {
-       // remote.dialog.showErrorBox("Error", 'Error provided by internet connection')
+        remote.dialog.showErrorBox("Error", 'Error provided by internet connection')
     }
    
 }

@@ -3,7 +3,7 @@ import getLitecoinAddress from '../API/cryptocurrencyAPI/Litecoin'
 import {sendTransaction} from "../core/sendTransaction";
 import {Link} from "react-router-dom";
 import getBitcoinAddress from "../API/cryptocurrencyAPI/BitCoin";
-//import {remote} from "electron"
+import {remote} from "electron"
 
 interface ILTCSendState {
     address: string,
@@ -104,7 +104,7 @@ export class LtcSendWindow extends Component<any, ILTCSendState> {
                 )
         } catch(err) {
             console.error(err)
-           // remote.dialog.showErrorBox("Send transaction error", err.message)
+            remote.dialog.showErrorBox("Send transaction error", err.message)
         }
     }
 
