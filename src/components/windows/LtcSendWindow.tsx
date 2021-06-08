@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
-import getLitecoinAddress from '../API/cryptocurrencyAPI/Litecoin'
-import {sendTransaction} from "../core/sendTransaction";
+import getLitecoinAddress from '../../API/cryptocurrencyAPI/Litecoin'
+import {sendTransaction} from "../../core/sendTransaction";
 import {Link} from "react-router-dom";
-import getBitcoinAddress from "../API/cryptocurrencyAPI/BitCoin";
+import getBitcoinAddress from "../../API/cryptocurrencyAPI/BitCoin";
 import {remote} from "electron"
 
 interface ILTCSendState {

@@ -1,13 +1,14 @@
-import React, {FC, useState, useEffect} from 'react';
+import React, {FC, useState} from 'react';
 import {remote} from 'electron';
 import path from 'path';
 
-interface FirmwareWindowProps {
-    onUpdateClick: () => void;
-}
 
-export const FirmwareWindow: FC<FirmwareWindowProps> = (props: FirmwareWindowProps) => {
+export const FirmwareWindow: FC = () => {
     const [inputValue, setInputValue] = useState("")
+
+    const onUpdate = () => {
+        remote.dialog.showErrorBox("Error", "Firmware update not completed!")
+    }
 
     const onUpload = async () => {
         const file = await remote.dialog.showOpenDialog({
@@ -24,7 +25,6 @@ export const FirmwareWindow: FC<FirmwareWindowProps> = (props: FirmwareWindowPro
         })
         if (file.filePaths.length > 0) {
             const filePath = file.filePaths[0]
-            console.log("set")
             setInputValue(path.basename(filePath))
         }
     }
@@ -35,17 +35,16 @@ export const FirmwareWindow: FC<FirmwareWindowProps> = (props: FirmwareWindowPro
             <p>Firmware</p>
             <div className="firmwareUploadContainer">
                 <div className="firmwareTextBlock">
-                    <p className={inputValue == "" ? 'firmwareUploadTextInactive' : 'firmwareUploadTextActive'}>
+                    <p className={inputValue == "" ? "firmwareUploadTextInactive" : "firmwareUploadTextActive"}>
                         {inputValue == "" ? "Select hex file" : inputValue}
                     </p>
                 </div>
-                <label>
-                    <div 
-                        className="firmwareUploadBtn" 
-                        onClick={onUpload}
-                        />
-                </label>     
-                <button onClick={props.onUpdateClick}>Update</button>
+                <div 
+                    className="firmwareUploadBtn" 
+                    onClick={onUpload}
+                />
+              
+                <button onClick={onUpdate}>Update</button>
             </div>
         </div>    
     )  

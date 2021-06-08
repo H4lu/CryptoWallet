@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
-import CreateQR from '../core/createQR'
-import getAddres from '../API/cryptocurrencyAPI/Litecoin'
-import { sendTransaction } from '../core/sendTransaction'
+import CreateQR from '../../core/createQR'
+import getAddres from '../../API/cryptocurrencyAPI/Litecoin'
+import { sendTransaction } from '../../core/sendTransaction'
 //import { clipboard, remote } from 'electron'
 import {clipboard} from 'electron'
-import { DisplayTransactionTable } from './DisplayTransactionTable'
-import { LITECOIN_PATH } from '../core/paths'
+import { DisplayTransactionTable } from '../DisplayTransactionTable'
+import { LITECOIN_PATH } from '../../core/paths'
 
 interface ILTCWindowState {
   address: string,

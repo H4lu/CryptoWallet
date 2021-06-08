@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
-import CreateQR from '../core/createQR'
-import { getEthereumAddress } from '../API/cryptocurrencyAPI/Ethereum'
-import { DisplayTransactionTable } from './DisplayTransactionTable'
+import CreateQR from '../../core/createQR'
+import { getEthereumAddress } from '../../API/cryptocurrencyAPI/Ethereum'
+import { DisplayTransactionTable } from '../DisplayTransactionTable'
 import { clipboard } from 'electron'
-import { sendTransaction } from '../core/sendTransaction'
-import { ETHEREUM_PATH } from '../core/paths'
+import { sendTransaction } from '../../core/sendTransaction'
+import { ETHEREUM_PATH } from '../../core/paths'
 
 interface IETHWindowState {
   address: string,

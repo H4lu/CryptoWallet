@@ -1,17 +1,16 @@
 import React, {Component} from 'react'
-import CreateQR from "../core/createQR";
-/*import getRippleAddress from "../API/cryptocurrencyAPI/Ripple";*/
+import CreateQR from "../../core/createQR";
+import { getEthereumAddress } from '../../API/cryptocurrencyAPI/Ethereum'
 import {clipboard, shell} from 'electron'
 import {Link} from "react-router-dom";
-import getRippleAddress from "../API/cryptocurrencyAPI/Ripple";
 
-interface IXRPRecieveState {
+interface IETHRecieveState {
     address: string,
     qrcodeAddress: string,
 
 }
 
-export class XrpRecieveWindow extends Component<any, IXRPRecieveState> {
+export class EthRecieveWindow extends Component<any, IETHRecieveState> {
     constructor(props: any) {
         super(props)
 
@@ -20,7 +19,7 @@ export class XrpRecieveWindow extends Component<any, IXRPRecieveState> {
 
         this.props.stateSR(true)
         this.state = {
-            address: getRippleAddress(),
+            address: getEthereumAddress().toLowerCase(),
             qrcodeAddress: '',
         }
     }
@@ -36,7 +35,7 @@ export class XrpRecieveWindow extends Component<any, IXRPRecieveState> {
     }
 
     openUrl() {
-        shell.openExternal('https://bithomp.com/explorer/' + this.state.address)
+        shell.openExternal('https://etherscan.io/address/' + this.state.address)
     }
 
 
@@ -44,9 +43,9 @@ export class XrpRecieveWindow extends Component<any, IXRPRecieveState> {
         return (
             <div className='main'>
                 <div className='rectangleSR'>
-                    <div className='iconCryptoCurrencyXRP'/>
+                    <div className='iconCryptoCurrencyETH'/>
                     <img src={this.state.qrcodeAddress} className='address-qrcode'/>
-                    <div className='YOURB_0ITCOIN_ADDRESS'>YOUR RIPPLE ADDRESS</div>
+                    <div className='YOURB_0ITCOIN_ADDRESS'>YOUR ETHEREUM ADDRESS</div>
                     <div className='YOURB_0ITCOIN_ADDRESS_crypto'>{this.state.address}</div>
                     <div className='flex_button_recieve'>
                         <button className='copy_to_buffer' onClick={this.handleCopyClick}/>
