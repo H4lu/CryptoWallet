@@ -65,6 +65,7 @@ import {DisplayTransaction} from './API/cryptocurrencyAPI/utils'
 import {remote} from "electron"
 import { ERC20Window } from './components/Erc20Window'
 import { Erc20DisplayToken } from './API/cryptocurrencyAPI/erc20'
+import { FirmwareWindow } from './components/FirmwareWindow'
 
 
 interface AppState {
@@ -329,6 +330,13 @@ export default class App extends Component<{}, AppState> {
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeft/>,
             main: () => <ERC20Window data={this.erc20mock}/>
+        },
+        {
+            path: '/firmware-window',
+            exact: true,
+            sidebar: () => <SidebarContent/>,
+            sidebarLeft: SidebarLeft,
+            main: FirmwareWindow,
         }
     ]
 
@@ -509,17 +517,14 @@ export default class App extends Component<{}, AppState> {
                 break
             }
             case 'ETH': {
-                console.log("Setting active currency ETH ")
                 this.setState({activeCurrency: 2})
                 break
             }
             case 'LTC': {
-                console.log("Setting active currency LTC ")
                 this.setState({activeCurrency: 3})
                 break
             }
             case 'XRP': {
-                console.log("Setting active currency XRP ")
                 this.setState({activeCurrency: 4})
                 break
             }
@@ -567,7 +572,6 @@ export default class App extends Component<{}, AppState> {
     startWalletInfoPing() {
         let interval = setInterval(async () => {
             try {
-                console.log('START GETWALLET congsolgaea.log')
                 const data = await getInfoPCSC()
                 console.log('GOT THIS DATA', data)
                 switch (data) {
@@ -606,26 +610,22 @@ export default class App extends Component<{}, AppState> {
 
 
     async componentDidMount() {
-        await this.initAll()
-
+        this.setState({connection: true})
+        this.setState({redirectToMain: true})
         this.setState({walletStatus: 0})
         // pcsc.on('reader', async reader => {
-        //     console.log(reader)
         //     setReader(reader)
-        //     console.log("afaafaff")
         //     reader.on('status', status => {
         //         const changes = reader.state ^ status.state
-        //         console.log(status)
         //         if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
-        //             console.log("connect")
-        //             console.log("rr")
+            
         //             reader.connect({
         //                     share_mode: reader.SCARD_SHARE_SHARED,
         //                     protocol: reader.SCARD_PROTOCOL_T1
         //             }, async (err, _) => {
         //                 if (err) {
         //                     console.error(err)
-        //                  //   remote.diaconsole.log.showErrorBox("PCSC error", err.message)
+        //                     remote.dialog.showErrorBox("PCSC error", err.message)
         //                 } else {
         //                     console.log("start wallet info")
         //                     this.setState({connection: true})
@@ -637,7 +637,7 @@ export default class App extends Component<{}, AppState> {
 
         //     reader.on('error', err => {
         //         console.log('Error', err.message)
-        //       //  remote.diaconsole.log.showErrorBox("PCSC error", err.message)
+        //         remote.dialog.showErrorBox("PCSC error", err.message)
         //     })
         //     reader.on('end', () => {
         //         console.log('Reader', reader.name, 'removed')
@@ -647,7 +647,7 @@ export default class App extends Component<{}, AppState> {
 
         // pcsc.on('error', err => {
         //     console.log('PCSC error', err.message)
-        //  //   remote.diaconsole.log.showErrorBox("PCSC error", err.message)
+        //     remote.dialog.showErrorBox("PCSC error", err.message)
         // })
     }
 
@@ -656,25 +656,26 @@ export default class App extends Component<{}, AppState> {
     }
 
     async initAll() {
-        console.log('initAll')
-        try {
-            if (this.state.allowInit) {
-                this.setState({allowInit: false})
-                const updateHwStatus = async () => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions)
-                const updateHwTransactions = async () => updateTransactionsPCSC(this.state.BTCLastTx, this.state.ETHLastTx,this.state.LTCLastTx,this.state.XRPLastTx)
-                const redirect =  () => {
-                    this.setRedirectToMain()
-                    this.setValues()
-                }
-                // await Promise.all([initBitcoinAddress(), initEthereumAddress(), initLitecoinAddress()])
-                // await Promise.all([this.getBalances(), this.getTransactions()])
-                // await Promise.all([this.setChartBTC(), this.getRates()])
-                await Promise.all([redirect(), updateHwStatus(), updateHwTransactions()])
-            }
-        } catch(err) {
-            console.log(err)
-            remote.diaconsole.log.showErrorBox("Initialization error", err.message)
-        }
+    
+        // console.log('initAll')
+        // try {
+        //     if (this.state.allowInit) {
+        //         this.setState({allowInit: false})
+        //         const updateHwStatus = async () => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions)
+        //         const updateHwTransactions = async () => updateTransactionsPCSC(this.state.BTCLastTx, this.state.ETHLastTx,this.state.LTCLastTx,this.state.XRPLastTx)
+        //         const redirect =  () => {
+        //             this.setRedirectToMain()
+        //             this.setValues()
+        //         }
+        //         await Promise.all([initBitcoinAddress(), initEthereumAddress(), initLitecoinAddress()])
+        //         // await Promise.all([this.getBalances(), this.getTransactions()])
+        //         // await Promise.all([this.setChartBTC(), this.getRates()])
+        //         await Promise.all([redirect(), updateHwStatus(), updateHwTransactions()])
+        //     }
+        // } catch(err) {
+        //     console.log(err)
+        //     remote.diaconsole.log.showErrorBox("Initialization error", err.message)
+        // }
     }
 
     setValues() {
@@ -689,7 +690,6 @@ export default class App extends Component<{}, AppState> {
     }
 
     async updateData() {
-        console.log('REFRESHING')
         this.setState({numTransactions: 0})
         await Promise.all([this.getTransactions(), this.getBalances()])
         const updateHwStatus = async () => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions)
@@ -805,8 +805,6 @@ export default class App extends Component<{}, AppState> {
                     <Route 
                         path='/transaction_success'
                         component={() => <TransactionSuccess refresh={this.updateData} resetState={this.redirectToTransactionsuccess}/> } />
-
-                   
                                                                         
                      <Route 
                          path='/start' 

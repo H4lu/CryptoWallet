@@ -1580,8 +1580,6 @@ button {
   padding-top: 100px;
   margin-left: auto;
   margin-right: auto;
-  /* margin-left: 38.31%;
-  margin-right: 58.54%; */
 }
 
 .backgroundERC20 {
@@ -1657,12 +1655,110 @@ button {
   color: #FFFFFF;
 }
 
-/* .erc20Table table td:last-child {
+.erc20Table table td:last-child {
   width: 100%;
-} */
+}
 
 .erc20Table hr {
   opacity: 0.28;
   border: "1px solid rgba(201, 201, 201, 0.61";
   width: 896px;
 }
+
+.backgroundFirmware {
+  background: linear-gradient(359.84deg, #090909 -4.93%, #161616 45.48%, #070707 99.87%);
+  opacity: 0.55;
+  margin-top: 64px;
+  height: 1130px;
+  width: 900px;
+}
+
+.backgroundFirmware p {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: -30px;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 35px;
+  
+  text-align: center;
+  color: #FFFFFF;
+  opacity: 0.75;
+}
+
+.iconFirmware {
+  background: url('../static/cpu_icon.svg') no-repeat center;
+  width: 43px;
+  height: 70px;
+  padding-top: 100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.firmwareUploadContainer {
+  display: flex;
+  align-items: center;
+}
+
+.firmwareUploadContainer input {
+  display: none;
+}
+
+.firmwareTextBlock {
+  background: rgba(0, 0, 0, 0.31);
+  height: 50px;
+  width: 379px;
+  order: 1;
+}
+
+
+.firmwareUploadTextInactive {
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 21px;
+  line-height: 25px;
+  
+  color: rgba(222, 222, 222, 0.31);
+  
+  opacity: 0.85;
+  order: 2
+}
+
+
+.firmwareUploadTextActive {
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 21px;
+  line-height: 25px;
+  
+  color: #DEDEDE;
+  order: 2;
+}
+
+.firmwareUploadBtn {
+  background: url('../static/upload_btn.svg');
+  width: 44px;
+  height: 44px;
+  order: 3;
+}
+
+.firmwareUploadContainer button {
+  background: linear-gradient(166.12deg, #FFFFFF 5.07%, #848484 172.09%);
+  opacity: 0.8;
+  height: 44px;
+  width: 148px;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 22px;
+  text-align: center;
+  color: #000000;
+  order: 4;
+  border: 0.5px solid #000000;
+}
+
