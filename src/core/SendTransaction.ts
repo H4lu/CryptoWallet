@@ -1,7 +1,8 @@
-import { DisplayTransactionCurrency } from '../API/cryptocurrencyAPI/utils'
-import { handleBitcoin } from '../API/cryptocurrencyAPI/bitcoin'
-import { handleEthereum } from '../API/cryptocurrencyAPI/ethereum'
-import { handleLitecoin } from '../API/cryptocurrencyAPI/litecoin'
+import { DisplayTransactionCurrency } from '../api/cryptocurrencyApi/utils'
+import { handleBitcoin } from '../api/cryptocurrencyApi/bitcoin'
+import {handleLitecoin} from "../api/cryptocurrencyApi/litecoin"
+import { handleEthereum } from '../api/cryptocurrencyApi/ethereum'
+
 
 export async function sendTransaction(
   currency: DisplayTransactionCurrency, 

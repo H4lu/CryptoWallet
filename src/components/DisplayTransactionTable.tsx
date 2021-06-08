@@ -1,6 +1,6 @@
 import React, {FC} from 'react'
-import { DisplayTransaction, DisplayTransactionCurrency } from '../API/cryptocurrencyAPI/utils'
-import {TableRow} from './DisplayTransactionTableRow'
+import { DisplayTransaction, DisplayTransactionCurrency } from '../api/cryptocurrencyApi/utils'
+import {TableRow} from './displayTransactionTableRow'
 
 interface TableProps {
     data: Array<DisplayTransaction>,

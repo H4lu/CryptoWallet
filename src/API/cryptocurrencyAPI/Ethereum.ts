@@ -2,9 +2,9 @@ import Web3 from 'web3'
 import {Transaction} from '@ethereumjs/tx'
 import {BN} from 'ethereumjs-util'
 import Common from '@ethereumjs/common'
-import {getSignaturePCSC} from '../hardwareAPI/GetSignature'
+import {getSignaturePCSC} from '../hardwareApi/getSignature'
 import {remote} from "electron"
-import {getAddressPCSC} from '../hardwareAPI/GetAddress'
+import {getAddressPCSC} from '../hardwareApi/getAddress'
 import {Buffer} from 'buffer'
 import {keccak256} from "js-sha3";
 import { DisplayTransaction, DisplayTransactionCurrency, DisplayTransactionStatus, DisplayTransactionType } from './utils'

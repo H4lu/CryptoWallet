@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react'
-import {DisplayTransactionTable} from "./DisplayTransactionTable";
-import { DisplayTransaction, DisplayTransactionCurrency } from '../API/cryptocurrencyAPI/utils';
+import {DisplayTransactionTable} from "./displayTransactionTable";
+import { DisplayTransaction, DisplayTransactionCurrency } from '../api/cryptocurrencyApi/utils';
 
 export interface  CarouselTableState {
     classNameAll: string,

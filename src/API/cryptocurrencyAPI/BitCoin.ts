@@ -1,7 +1,7 @@
 import {TransactionBuilder, networks, Transaction, ECPair, address, script} from 'bitcoinjs-lib'
 import axios from 'axios'
-import {getSignaturePCSC} from '../hardwareAPI/GetSignature'
-import {getAddressPCSC} from '../hardwareAPI/GetAddress'
+import {getSignaturePCSC} from '../hardwareApi/getSignature'
+import {getAddressPCSC} from '../hardwareApi/getAddress'
 import {remote} from "electron"
 
 import  {
@@ -111,7 +111,7 @@ export function setMyPubKey(pubKey: Buffer) {
     }
 }
 
-export default function getBitcoinAddress() {
+export function getBitcoinAddress() {
     return myAddr
 }
 

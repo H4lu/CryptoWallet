@@ -1,4 +1,4 @@
-import { DisplayTransactionCurrency } from "../API/cryptocurrencyAPI/utils";
+import { DisplayTransactionCurrency } from "../api/cryptocurrencyApi/utils";
 
 export enum CarouselCurrencyIndex {
     BTC = 0,

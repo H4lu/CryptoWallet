@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
-import {sendTransaction} from "../../core/sendTransaction";
 import {Link} from "react-router-dom";
-import getRippleAddress from "../../API/cryptocurrencyAPI/Ripple";
+import getRippleAddress from "../../api/cryptocurrencyApi/ripple";
 
 interface IXRPSendState {
     address: string,
@@ -44,9 +43,7 @@ export class XrpSendWindow extends Component<any, IXRPSendState> {
         this.setState({feeUSD: (this.state.fee * this.props.course)})
     }
 
-    handleClick() {
-        //sendTransaction('ripple', this.state.paymentAddress, this.state.amount, this.state.fee, this.props.redirect)
-    }
+    handleClick() {}
 
     render() {
         return (

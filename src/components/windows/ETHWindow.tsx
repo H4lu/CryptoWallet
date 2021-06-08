@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
-import CreateQR from '../../core/createQR'
-import { getEthereumAddress } from '../../API/cryptocurrencyAPI/ethereum'
-import { DisplayTransactionTable } from '../DisplayTransactionTable'
+import createQR from '../../core/createQR'
+import { getEthereumAddress } from '../../api/cryptocurrencyApi/ethereum'
 import { clipboard } from 'electron'
 import { sendTransaction } from '../../core/sendTransaction'
 import { ETHEREUM_PATH } from '../../core/paths'
@@ -33,7 +32,7 @@ export class ETHWIndow extends Component<any, IETHWindowState> {
     }
   }
   componentWillMount() {
-    this.setState({ qrcodeAddress: CreateQR(this.state.address) })
+    this.setState({ qrcodeAddress: createQR(this.state.address) })
   }
   handleCopyClick() {
     clipboard.writeText(this.state.address)

@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
-import { Erc20DisplayToken } from '../API/cryptocurrencyAPI/erc20';
-import {Erc20tokesTableRow} from "./Erc20TokensTableRow"
+import { Erc20DisplayToken } from '../api/cryptocurrencyApi/erc20';
+import {Erc20tokesTableRow} from "./erc20TokensTableRow"
 
 interface Erc20TableProps {
     data: Array<Erc20DisplayToken>

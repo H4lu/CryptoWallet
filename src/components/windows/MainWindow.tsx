@@ -1,12 +1,12 @@
 import React, {Component} from 'react'
-import {getBTCBalanceTarns} from "../../API/cryptocurrencyAPI/bitcoin";
+import {getBTCBalanceTarns} from "../../api/cryptocurrencyApi/bitcoin";
 
-import {getETHBalanceTrans} from "../../API/cryptocurrencyAPI/ethereum";
-import {getLTCBalanceTrans} from "../../API/cryptocurrencyAPI/litecoin";
-import {getXRPBalanceTrans} from "../../API/cryptocurrencyAPI/Ripple";
-import Chart from "../Chart";
-import { DisplayTransaction, DisplayTransactionCurrency } from '../../API/cryptocurrencyAPI/utils';
-import { CryptocurrencyCard } from '../CryptocurrencyCard';
+import {getETHBalanceTrans} from "../../api/cryptocurrencyApi/ethereum";
+import {getLTCBalanceTrans} from "../../api/cryptocurrencyApi/litecoin";
+import {getXRPBalanceTrans} from "../../api/cryptocurrencyApi/ripple";
+import Chart from "../chart";
+import { DisplayTransaction, DisplayTransactionCurrency } from '../../api/cryptocurrencyApi/utils';
+import { CryptocurrencyCard } from '../cryptocurrencyCard';
 interface MainContentState {
     exAddress: string,
     balance: string,

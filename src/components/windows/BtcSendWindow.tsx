@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import getBitcoinAddress, {getFee} from "../../API/cryptocurrencyAPI/bitcoin";
+import {getBitcoinAddress, getFee} from "../../api/cryptocurrencyApi/bitcoin";
 import {sendTransaction} from "../../core/sendTransaction";
 import {Link} from "react-router-dom";
 import {remote} from "electron"

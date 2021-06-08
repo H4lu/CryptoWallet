@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import { DisplayTransactionCurrency } from '../API/cryptocurrencyAPI/utils';
+import { DisplayTransactionCurrency } from '../api/cryptocurrencyApi/utils';
 
 interface CryptocurrencyCardProps {
     onClick: () => void,

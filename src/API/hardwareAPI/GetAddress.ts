@@ -2,7 +2,7 @@ import Web3 from 'web3'
 const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/960cbfb44af74f27ad0e4b070839158a'))
 import { Buffer } from 'buffer'
 // @ts-ignore
-import { reader } from './Reader'
+import { reader } from './reader'
 
 export function get() {
   return new Promise((resolve,reject) => {

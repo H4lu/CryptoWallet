@@ -1,70 +1,70 @@
 import React, {Component} from 'react'
-import {Header} from './components/Header'
+import {Header} from './components/header'
 import {Route, Redirect} from 'react-router'
-import {SidebarContent} from './components/SidebarContent'
+import {SidebarContent} from './components/sidebarContent'
 
-import {BTCWindow} from './components/windows/BTCWindow'
-import {ETHWIndow} from './components/windows/ETHWindow'
-import {LTCWindow} from './components/windows/LTCWindow'
+import {BTCWindow} from './components/windows/btcWindow'
+import {ETHWIndow} from './components/windows/ethWindow'
+import {LTCWindow} from './components/windows/ltcWindow'
 
 import './index.css'
-import MainContent from './components/windows/MainWindow'
-import {WalletCarousel} from './components/WalletCarousel'
+import MainContent from './components/windows/mainWindow'
+import {WalletCarousel} from './components/walletCarousel'
 import {
     getBitcoinLastTx,
     initBitcoinAddress,
     getBTCBalance,
     setBTCBalance,
     setBTCPrice, getChartBTC
-} from './API/cryptocurrencyAPI/bitcoin'
+} from './api/cryptocurrencyApi/bitcoin'
 import {
     getLTCBalance,
     initLitecoinAddress,
     getLitecoinLastTx,
     setLTCBalance,
     setLTCPrice
-} from './API/cryptocurrencyAPI/litecoin'
+} from './api/cryptocurrencyApi/litecoin'
 import {
     getETHBalance,
     initEthereumAddress,
     getEthereumLastTx,
     setETHBalance,
     setETHPrice
-} from './API/cryptocurrencyAPI/ethereum'
+} from './api/cryptocurrencyApi/ethereum'
 import {getCurrencyRate} from './core/getCurrencyRate'
-import {StartWindow} from './components/windows/StartWindow'
-import {TransactionSuccess} from './components/TransactionSuccess'
+import {StartWindow} from './components/windows/startWindow'
+import {TransactionSuccess} from './components/transactionSuccess'
 import pcsclite from "@pokusew/pcsclite"
-import {setReader} from './API/hardwareAPI/Reader'
+import {setReader} from './api/hardwareApi/reader'
 
 const pcsc = pcsclite()
 
-import {getInfoPCSC} from './API/hardwareAPI/GetWalletInfo'
-import {UpdateHWStatusPCSC, updateTransactionsPCSC} from './API/hardwareAPI/UpdateHWStatus'
-import {SidebarLeft} from "./components/SidebarLeft";
-import {BtcRecieveWindow} from "./components/windows/BtcRecieveWindow";
-import {BtcSendWindow} from "./components/windows/BtcSendWindow";
-import {SidebarLeftBlur} from "./components/SidebarLeftBlur";
-import {LtcSendWindow} from "./components/windows/LtcSendWindow";
-import {LtcRecieveWindow} from "./components/windows/LtcRecieveWindow";
-import {EthRecieveWindow} from "./components/windows/EthReceiveWindow";
-import {EthSendWindow} from "./components/windows/EthSendWindow";
-import {XrpRecieveWindow} from "./components/windows/XrpRecieveWindow";
-import {XrpSendWindow} from "./components/windows/XrpSendWindow";
-import {CarouselHistory} from "./components/CarouselHistory";
+import {getInfoPCSC} from './api/hardwareApi/getWalletInfo'
+import {UpdateHWStatusPCSC, updateTransactionsPCSC} from './api/hardwareApi/updateHWStatus'
+import {SidebarLeft} from "./components/sidebarLeft";
+import {BtcRecieveWindow} from "./components/windows/btcRecieveWindow";
+import {BtcSendWindow} from "./components/windows/btcSendWindow";
+import {SidebarLeftBlur} from "./components/sidebarLeftBlur";
+import {LtcSendWindow} from "./components/windows/ltcSendWindow";
+import {LtcRecieveWindow} from "./components/windows/ltcRecieveWindow";
+import {EthRecieveWindow} from "./components/windows/ethReceiveWindow";
+import {EthSendWindow} from "./components/windows/ethSendWindow";
+import {XrpRecieveWindow} from "./components/windows/xrpRecieveWindow";
+import {XrpSendWindow} from "./components/windows/xrpSendWindow";
+import {CarouselHistory} from "./components/carouselHistory";
 import {
     getRippleLastTx,
     getXRPBalance,
     initRippleAddress,
     setXRPBalance,
     setXRPPrice
-} from "./API/cryptocurrencyAPI/Ripple";
-import {ModeWindow} from "./components/windows/ModeWindow";
-import {DisplayTransaction, DisplayTransactionCurrency} from './API/cryptocurrencyAPI/utils';
+} from "./api/cryptocurrencyApi/ripple";
+import {ModeWindow} from "./components/windows/modeWindow";
+import {DisplayTransaction, DisplayTransactionCurrency} from './api/cryptocurrencyApi/utils';
 import {remote} from "electron";
-import { ERC20Window } from './components/windows/Erc20Window';
-import { Erc20DisplayToken } from './API/cryptocurrencyAPI/erc20';
-import { FirmwareWindow } from './components/windows/FirmwareWindow';
+import { ERC20Window } from './components/windows/erc20Window';
+import { Erc20DisplayToken } from './api/cryptocurrencyApi/erc20';
+import { FirmwareWindow } from './components/windows/firmwareWindow';
 
 
 interface AppState {

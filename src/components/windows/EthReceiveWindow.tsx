@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import CreateQR from "../../core/createQR";
-import { getEthereumAddress } from '../../API/cryptocurrencyAPI/ethereum'
+import createQR from "../../core/createQR";
+import { getEthereumAddress } from '../../api/cryptocurrencyApi/ethereum'
 import {clipboard, shell} from 'electron'
 import {Link} from "react-router-dom";
 
@@ -25,7 +25,7 @@ export class EthRecieveWindow extends Component<any, IETHRecieveState> {
     }
 
     componentWillMount() {
-        this.setState({qrcodeAddress: CreateQR(this.state.address)})
+        this.setState({qrcodeAddress: createQR(this.state.address)})
         console.log('PROPERTY: ' + this.props.lastTx)
     }
 

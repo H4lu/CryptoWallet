@@ -1,7 +1,7 @@
 import React, {FC, useState, useEffect} from 'react'
-import {Carousel} from './Carousel'
-import {CarouselTable} from "./CarouselTable";
-import { DisplayTransaction, DisplayTransactionCurrency } from '../API/cryptocurrencyAPI/utils';
+import {Carousel} from './carousel'
+import {CarouselTable} from "./carouselTable";
+import { DisplayTransaction, DisplayTransactionCurrency } from '../api/cryptocurrencyApi/utils';
 import { currencyToIndex } from '../core/carouselHelper';
 
 interface CarouselHistoryProps {

@@ -1,8 +1,7 @@
-import React, {Component} from 'react'
-import getLitecoinAddress from '../../API/cryptocurrencyAPI/litecoin'
+import React, {Component} from "react"
 import {sendTransaction} from "../../core/sendTransaction";
+import {getLitecoinAddress} from "../../api/cryptocurrencyApi/litecoin"
 import {Link} from "react-router-dom";
-import getBitcoinAddress from "../../API/cryptocurrencyAPI/bitcoin";
 import {remote} from "electron"
 
 interface ILTCSendState {
@@ -17,9 +16,7 @@ interface ILTCSendState {
     maxSum: number,
     amountS: string
 }
-
 export class LtcSendWindow extends Component<any, ILTCSendState> {
-
     strSum: string
     point: number
     classFee1: string;
@@ -32,7 +29,7 @@ export class LtcSendWindow extends Component<any, ILTCSendState> {
 
         this.props.stateSR(true)
         this.state = {
-            address: getBitcoinAddress(),
+            address: getLitecoinAddress(),
             paymentAddress: '',
             amount: 0,
             fee: (431 * this.feeCoeff * this.props.trFee) / 100000000,

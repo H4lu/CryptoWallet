@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
-import CreateQR from '../../core/createQR'
-import getBitcoinAddress from '../../API/cryptocurrencyAPI/bitcoin'
+import createQR from '../../core/createQR'
+import {getBitcoinAddress} from '../../api/cryptocurrencyApi/bitcoin'
 import { clipboard } from 'electron'
-import { DisplayTransactionTable } from '../DisplayTransactionTable'
 import { sendTransaction } from '../../core/sendTransaction'
 import { BITCOIN_PATH } from '../../core/paths'
+
 interface BTCWindowState {
     address: string,
     qrcodeAddress: string,
@@ -12,7 +12,6 @@ interface BTCWindowState {
     amount: number,
     fee: number
 }
-
 interface BTCWindowProps {
     balance: number,
     price: number,
@@ -64,7 +63,7 @@ export class BTCWindow extends Component<BTCWindowProps, BTCWindowState> {
   }
 
   componentWillMount() {
-    this.setState({ qrcodeAddress: CreateQR(this.state.address) })
+    this.setState({ qrcodeAddress: createQR(this.state.address) })
     // this.props.transactions()
   }
   handleCopyClick() {

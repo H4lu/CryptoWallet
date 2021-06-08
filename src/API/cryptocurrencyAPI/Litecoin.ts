@@ -1,20 +1,8 @@
 import {TransactionBuilder, networks} from 'bitcoinjs-lib'
 import axios from 'axios'
-import {
-    transactionBytes,
-    getTestnetAddressBTC, 
-    uintOrNaN,
-    sumOfArray, 
-    sumOrNaN,
-    inputBytes,
-    dustThreshold,
-    finalize,
-    parseBTCLikeTransactions,
-    BtcLikeCurrencies,
-    DisplayTransaction
-} from './utils'
-import {getAddressPCSC} from '../hardwareAPI/GetAddress'
-import {getSignaturePCSC} from '../hardwareAPI/GetSignature'
+import {parseBTCLikeTransactions, DisplayTransaction} from "./utils"
+import {getAddressPCSC} from '../hardwareApi/getAddress'
+import {getSignaturePCSC} from '../hardwareApi/getSignature'
 // @ts-ignore
 import * as satoshi from 'satoshi-bitcoin'
 import {Buffer} from 'buffer'
@@ -46,7 +34,7 @@ export function setLTCBalance(bal: number) {
 export function setLTCPrice(priceToSet: number) {
     price = priceToSet
 }
-export default function getAddres() {
+export function getLitecoinAddress() {
     return myAddress
 }
 

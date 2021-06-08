@@ -1,5 +1,5 @@
 import {networks} from 'bitcoinjs-lib'
-import { getAddressPCSC } from '../hardwareAPI/GetAddress'
+import { getAddressPCSC } from '../hardwareApi/getAddress'
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.bitcoin
 const NETWORK = 'XRP'                                          // change XRP

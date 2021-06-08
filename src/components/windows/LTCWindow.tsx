@@ -1,10 +1,9 @@
 import React, {Component} from 'react'
-import CreateQR from '../../core/createQR'
-import getAddres from '../../API/cryptocurrencyAPI/litecoin'
+import createQR from '../../core/createQR'
+import {getLitecoinAddress} from '../../api/cryptocurrencyApi/litecoin'
 import { sendTransaction } from '../../core/sendTransaction'
 //import { clipboard, remote } from 'electron'
 import {clipboard} from 'electron'
-import { DisplayTransactionTable } from '../DisplayTransactionTable'
 import { LITECOIN_PATH } from '../../core/paths'
 
 interface ILTCWindowState {
@@ -26,7 +25,7 @@ export class LTCWindow extends Component<any, ILTCWindowState> {
     this.handleFeeChange = this.handleFeeChange.bind(this)
 
     this.state = {
-      address: getAddres(),
+      address: getLitecoinAddress(),
       qrcodeAddress: '',
       paymentAddress: '',
       amount: 0,
@@ -35,7 +34,7 @@ export class LTCWindow extends Component<any, ILTCWindowState> {
   }
 
   componentWillMount() {
-    this.setState({ qrcodeAddress: CreateQR(this.state.address) })
+    this.setState({ qrcodeAddress: createQR(this.state.address) })
     // this.props.transactions()
     console.log('PROPERTY: ' + this.props.lastTx)
   }

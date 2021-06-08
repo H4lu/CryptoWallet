@@ -17,6 +17,7 @@
     "jsx": "react",
     "resolveJsonModule": true,
     "strict": false,
+    "forceConsistentCasingInFileNames": true,
     "paths": {
       "*": ["node_modules/*"]
     }

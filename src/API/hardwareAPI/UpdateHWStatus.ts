@@ -1,7 +1,7 @@
 // @ts-ignore
-import {reader} from './Reader'
+import {reader} from './reader'
 import {Buffer} from "buffer";
-import { DisplayTransaction } from '../cryptocurrencyAPI/utils';
+import { DisplayTransaction } from '../cryptocurrencyApi/utils';
 
 
 export function UpdateHWStatusPCSC(

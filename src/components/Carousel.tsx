@@ -1,7 +1,7 @@
 import React, {FC} from 'react'
-import {CarouselElement} from './CarouselElement'
+import {CarouselElement} from './carouselElement'
 import Coverflow from "../react-coverflow.js"
-import { DisplayTransactionCurrency } from '../API/cryptocurrencyAPI/utils'
+import { DisplayTransactionCurrency } from '../api/cryptocurrencyApi/utils'
 
 interface CarouselProps {
     setActiveCurrency: (currency: DisplayTransactionCurrency) => void,

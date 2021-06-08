@@ -1,6 +1,6 @@
 import React, {FC} from 'react'
 import {Link} from "react-router-dom";
-import { DisplayTransactionCurrency, toDisplayCurrencyName } from '../API/cryptocurrencyAPI/utils';
+import { DisplayTransactionCurrency, toDisplayCurrencyName } from '../api/cryptocurrencyApi/utils';
 
 interface CarouselDescProps {
     activeCurrency: DisplayTransactionCurrency,

@@ -1,4 +1,12 @@
-import { ChainSoUnspentTransaction, dustThreshold, finalize, inputBytes, sumOrNaN, transactionBytes, uintOrNaN } from "./utils"
+import { 
+    ChainSoUnspentTransaction, 
+    dustThreshold, 
+    finalize, 
+    inputBytes, 
+    sumOrNaN, 
+    transactionBytes, 
+    uintOrNaN 
+} from "./utils"
 
 
 function accumulative(

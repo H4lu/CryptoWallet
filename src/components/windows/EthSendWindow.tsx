@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {getEthereumAddress} from '../../API/cryptocurrencyAPI/ethereum'
+import {getEthereumAddress} from '../../api/cryptocurrencyApi/ethereum'
 import {sendTransaction} from "../../core/sendTransaction";
 import {Link} from "react-router-dom";
 import {remote} from "electron"

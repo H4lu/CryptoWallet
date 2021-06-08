@@ -1,8 +1,8 @@
 import React, {FC, useState, useEffect} from 'react'
 import { currencyToIndex } from '../core/carouselHelper';
-import { DisplayTransactionCurrency } from '../API/cryptocurrencyAPI/utils';
-import { Carousel } from './Carousel'
-import {CarouselDesc} from "./CarouselDesc";
+import { DisplayTransactionCurrency } from '../api/cryptocurrencyApi/utils';
+import { Carousel } from './carousel'
+import {CarouselDesc} from "./carouselDesc";
 
 interface WalletCarouselProps {
     stateSR: (arg: boolean) => void,

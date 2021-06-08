@@ -1,5 +1,5 @@
 // @ts-ignore
-import { reader } from './Reader'
+import { reader } from './reader'
 
 
 export function getInfoPCSC(): Promise<Number> {
