@@ -1,9 +1,10 @@
 import React, {FC} from 'react'
 import {CarouselElement} from './CarouselElement'
 import Coverflow from "../react-coverflow.js"
+import { DisplayTransactionCurrency } from '../API/cryptocurrencyAPI/utils'
 
 interface CarouselProps {
-    setActiveCurrency: (currency: string) => void,
+    setActiveCurrency: (currency: DisplayTransactionCurrency) => void,
     activeCurrencyIndex: number
 }
 

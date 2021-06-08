@@ -9,7 +9,7 @@ import {LTCWindow} from './components/windows/LTCWindow'
 
 import './index.css'
 import MainContent from './components/windows/MainWindow'
-import {CarouselHOC} from './components/CarouselHOC'
+import {WalletCarousel} from './components/WalletCarousel'
 import {
     getBitcoinLastTx,
     initBitcoinAddress,
@@ -32,7 +32,7 @@ import {
     setETHPrice
 } from './API/cryptocurrencyAPI/ethereum'
 import {getCurrencyRate} from './core/getCurrencyRate'
-import {MainWindow} from './components/windows/StartWindow'
+import {StartWindow} from './components/windows/StartWindow'
 import {TransactionSuccess} from './components/TransactionSuccess'
 import pcsclite from "@pokusew/pcsclite"
 import {setReader} from './API/hardwareAPI/Reader'
@@ -233,7 +233,7 @@ export default class App extends Component<{}, AppState> {
                 lastTx={
                         this.state.BTCLastTx
                            .concat(this.state.ETHLastTx, this.state.LTCLastTx, this.state.XRPLastTx)
-                           .sort((a: DisplayTransaction, b: DisplayTransaction) => {
+                           .sort((a, b) => {
                                return b.dateUnix - a.dateUnix
                        })
            }     
@@ -257,8 +257,7 @@ export default class App extends Component<{}, AppState> {
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeft/>,
-            main: () => <CarouselHOC setActiveCurrency={this.setActiveCurrency}
-                                    activeCurrency={this.state.activeCurrency}
+            main: () => <WalletCarousel 
                                     btcBalance={this.state.BTCBalance} 
                                     ltcBalance={this.state.LTCBalance}
                                     ethBalance={this.state.ETHBalance} 
@@ -273,12 +272,14 @@ export default class App extends Component<{}, AppState> {
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeftBlur/>,
-            main: () => <BtcSendWindow stateSR={this.setStateSR} course={this.state.BTCCourse}
-                                       btcBalance={this.state.BTCBalance} trFee={this.state.transactionFee}
+            main: () => <BtcSendWindow stateSR={this.setStateSR} 
+                                       course={this.state.BTCCourse}
+                                       btcBalance={this.state.BTCBalance} 
+                                       trFee={this.state.transactionFee}
                                        setFee={this.setTransactionFee}/>
         },
         {
-            path: '/btc-window-recieve',
+            path: '/btc-window-receive',
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeftBlur/>,
@@ -289,8 +290,10 @@ export default class App extends Component<{}, AppState> {
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeftBlur/>,
-            main: () => <LtcSendWindow stateSR={this.setStateSR} course={this.state.LTCCourse}
-                                       btcBalance={this.state.LTCBalance} trFee={this.state.transactionFee}
+            main: () => <LtcSendWindow stateSR={this.setStateSR} 
+                                       course={this.state.LTCCourse}
+                                       btcBalance={this.state.LTCBalance} 
+                                       trFee={this.state.transactionFee}
                                        setFee={this.setTransactionFee}/>
         },
         {
@@ -305,8 +308,10 @@ export default class App extends Component<{}, AppState> {
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeftBlur/>,
-            main: () => <EthSendWindow stateSR={this.setStateSR} course={this.state.ETHCourse}
-                                       btcBalance={this.state.ETHBalance} trFee={this.state.transactionFee}
+            main: () => <EthSendWindow stateSR={this.setStateSR} 
+                                       course={this.state.ETHCourse}
+                                       btcBalance={this.state.ETHBalance} 
+                                       trFee={this.state.transactionFee}
                                        setFee={this.setTransactionFee}/>
         },
         {
@@ -321,8 +326,10 @@ export default class App extends Component<{}, AppState> {
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeftBlur/>,
-            main: () => <XrpSendWindow stateSR={this.setStateSR} course={this.state.XRPCourse}
-                                       btcBalance={this.state.XRPBalance} trFee={this.state.transactionFee}
+            main: () => <XrpSendWindow stateSR={this.setStateSR} 
+                                       course={this.state.XRPCourse}
+                                       btcBalance={this.state.XRPBalance} 
+                                       trFee={this.state.transactionFee}
                                        setFee={this.setTransactionFee}/>
         },
         {
@@ -338,33 +345,31 @@ export default class App extends Component<{}, AppState> {
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: () => <SidebarLeft/>,
-            main: () => <CarouselHistory setActiveCurrency={this.setActiveCurrency}
-                                         activeCurrency={this.state.activeCurrency}
-                                         stateSR={this.setStateSR}
-                                         refresh={this.updateData}
-                                         lastTxBTC={this.state.BTCLastTx.sort((a: any, b: any) => {
-                                             let c = new Date(a.Date).getTime()
-                                             let d = new Date(b.Date).getTime()
-                                             return d - c
-                                         })}
-                                         lastTxETH={this.state.ETHLastTx.sort((a: any, b: any) => {
-                                             let c = new Date(a.Date).getTime()
-                                             let d = new Date(b.Date).getTime()
-                                             return d - c
-                                         })}
-                                         lastTxLTC={this.state.LTCLastTx.sort((a: any, b: any) => {
-                                             let c = new Date(a.Date).getTime()
-                                             let d = new Date(b.Date).getTime()
-                                             return d - c
-                                         })}
-                                         lastTxXRP={this.state.XRPLastTx.sort((a: any, b: any) => {
-                                             let c = new Date(a.Date).getTime()
-                                             let d = new Date(b.Date).getTime()
-                                             return d - c
-                                         })}
+            main: () => <CarouselHistory 
+                                        stateSR={this.setStateSR}
+                                        refresh={this.updateData}
+                                        lastTxBTC={this.state.BTCLastTx.sort((a, b) => {
+                                            const c = new Date(a.dateUnix).getTime()
+                                            const d = new Date(b.dateUnix).getTime()
+                                            return d - c
+                                        })}
+                                        lastTxETH={this.state.ETHLastTx.sort((a, b) => {
+                                            const c = new Date(a.dateUnix).getTime()
+                                            const d = new Date(b.dateUnix).getTime()
+                                            return d - c
+                                        })}
+                                        lastTxLTC={this.state.LTCLastTx.sort((a, b) => {
+                                            const c = new Date(a.dateUnix).getTime()
+                                            const d = new Date(b.dateUnix).getTime()
+                                            return d - c
+                                        })}
+                                        lastTxXRP={this.state.XRPLastTx.sort((a, b) => {
+                                            const c = new Date(a.dateUnix).getTime()
+                                            const d = new Date(b.dateUnix).getTime()
+                                            return d - c
+                                        })}
             />
         },
-
         {
             path: '/btc-window',
             exact: true,
@@ -375,9 +380,9 @@ export default class App extends Component<{}, AppState> {
                                    course={this.state.BTCCourse}
                                    hourChange={this.state.BTCHourChange} 
                                    pathState={this.state.stateTransaction}
-                                   lastTx={this.state.BTCLastTx.sort((a: any, b: any) => {
-                                       let c = new Date(a.Date).getTime()
-                                       let d = new Date(b.Date).getTime()
+                                   lastTx={this.state.BTCLastTx.sort((a, b) => {
+                                       let c = new Date(a.dateUnix).getTime()
+                                       let d = new Date(b.dateUnix).getTime()
                                        return d - c
                                    })} 
                                    transactions={this.getTransactions} 
@@ -393,9 +398,9 @@ export default class App extends Component<{}, AppState> {
                                    price={this.state.ETHPrice}
                                    course={this.state.BTCCourse}
                                    hourChange={this.state.ETHHourChange}
-                                   lastTx={this.state.ETHLastTx.sort((a: any, b: any) => {
-                                       let c = new Date(a.Date).getTime()
-                                       let d = new Date(b.Date).getTime()
+                                   lastTx={this.state.ETHLastTx.sort((a, b) => {
+                                       let c = new Date(a.dateUnix).getTime()
+                                       let d = new Date(b.dateUnix).getTime()
                                        return d - c
                                    })} 
                                    redirect={this.redirectToTransactionsuccess} 
@@ -410,9 +415,9 @@ export default class App extends Component<{}, AppState> {
                                    price={this.state.LTCPrice}
                                    course={this.state.BTCCourse}
                                    hourChange={this.state.LTCHourChange}
-                                   lastTx={this.state.LTCLastTx.sort((a: any, b: any) => {
-                                       let c = new Date(a.Date).getTime()
-                                       let d = new Date(b.Date).getTime()
+                                   lastTx={this.state.LTCLastTx.sort((a, b) => {
+                                       let c = new Date(a.dateUnix).getTime()
+                                       let d = new Date(b.dateUnix).getTime()
                                        return d - c
                                    })} 
                                    transactions={this.getTransactions} 
@@ -828,11 +833,8 @@ export default class App extends Component<{}, AppState> {
                                                                         
                      <Route 
                          path='/start' 
-                         component={() =>  <MainWindow 
+                         component={() =>  <StartWindow 
                             connection={this.state.connection}
-                            status={this.state.status}
-                            init={this.initAll}
-                            isInitialized={this.state.isInitialized}
                             walletStatus={this.state.walletStatus}
                             redirectToMain={this.state.redirectToMain}
                             />} 

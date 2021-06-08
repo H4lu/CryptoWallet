@@ -1,7 +1,7 @@
-import React, {FunctionComponent} from 'react'
+import React, {FC} from 'react'
 import {Link} from "react-router-dom";
 
-export const SidebarLeft: FunctionComponent<{}> = () => 
+export const SidebarLeft: FC = () => 
 <div className='sidebar-Left'>
     <div className='nav-buttons-Left'>
         <Link to='/main' className='but_home'/>

@@ -53,7 +53,7 @@ export class EthRecieveWindow extends Component<any, IETHRecieveState> {
                         <button className='sent_to_email'/>
                         <button className='view_on_blockchain' onClick={this.openUrl}/>
                     </div>
-                    <Link to={'/currency-carousel'}>
+                    <Link to = '/currency-carousel'>
                         <div className='button-cancel-ricieve'/>
                     </Link>
                 </div>

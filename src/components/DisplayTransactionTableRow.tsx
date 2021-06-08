@@ -1,4 +1,4 @@
-import React, {FunctionComponent} from 'react'
+import React, {FC} from 'react'
 import { DisplayTransaction, DisplayTransactionCurrency } from '../API/cryptocurrencyAPI/utils'
 
 interface TableRowProps {
@@ -6,7 +6,7 @@ interface TableRowProps {
     activeCurrency: DisplayTransactionCurrency
 }
 
-export const TableRow: FunctionComponent<TableRowProps> = (props: TableRowProps) =>
+export const TableRow: FC<TableRowProps> = (props) =>
     <tr>
         <td><div className='numTransactoion'>#</div></td>
         <td><div className='dateTransactoion'>{props.data.displayDate}</div></td>

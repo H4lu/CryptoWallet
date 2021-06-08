@@ -1,4 +1,4 @@
-import React, {FunctionComponent} from 'react';
+import React, {FC} from 'react';
 import { Erc20DisplayToken } from '../API/cryptocurrencyAPI/erc20';
 import {Erc20tokesTableRow} from "./Erc20TokensTableRow"
 
@@ -6,7 +6,7 @@ interface Erc20TableProps {
     data: Array<Erc20DisplayToken>
 }
 
-export const Erc20TokensTable: FunctionComponent<Erc20TableProps> = (props: Erc20TableProps) => 
+export const Erc20TokensTable: FC<Erc20TableProps> = (props) => 
     <div className="erc20Table">
         <table >
             <thead >
