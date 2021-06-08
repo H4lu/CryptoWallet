@@ -1,6 +1,5 @@
-import * as React from 'react'
+import React, {Component} from 'react'
 import getLitecoinAddress from '../API/cryptocurrencyAPI/Litecoin'
-import {error} from "electron-log";
 import {sendTransaction} from "../core/sendTransaction";
 import {Link} from "react-router-dom";
 import getBitcoinAddress from "../API/cryptocurrencyAPI/BitCoin";
@@ -19,7 +18,7 @@ interface ILTCSendState {
     amountS: string
 }
 
-export class LtcSendWindow extends React.Component<any, ILTCSendState> {
+export class LtcSendWindow extends Component<any, ILTCSendState> {
 
     strSum: string
     point: number
@@ -104,7 +103,7 @@ export class LtcSendWindow extends React.Component<any, ILTCSendState> {
                 'litecoin', this.state.paymentAddress, this.state.amount, this.props.trFee, 0, this.props.course, this.props.btcBalance
                 )
         } catch(err) {
-            error(err)
+            console.error(err)
             remote.dialog.showErrorBox("Send transaction error", err.message)
         }
     }

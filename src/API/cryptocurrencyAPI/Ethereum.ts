@@ -6,7 +6,6 @@ import {getSignaturePCSC} from '../hardwareAPI/GetSignature'
 import axios from 'axios'
 import {dialog, remote} from "electron"
 import {getAddressPCSC} from '../hardwareAPI/GetAddress'
-import {info} from 'electron-log'
 import {Buffer} from 'buffer'
 import {keccak256} from "js-sha3";
 import { DisplayTransaction, DisplayTransactionCurrency, DisplayTransactionStatus, DisplayTransactionType } from './utils'
@@ -46,12 +45,12 @@ export async function initEthereumAddress() {
     return new Promise(async (resolve) => {
         let status = false
         while (!status) {
-            info('Status', status)
+            console.log('Status', status)
             let answer = await getAddressPCSC(1)
-            info('GOT MYADDR ANSWER', answer)
+            console.log('GOT MYADDR ANSWER', answer)
             if (answer.length > 1 && answer[0].includes('ETH')) {
                 status = true
-                info('status after reset', status)
+                console.log('status after reset', status)
                 setMyPubKey(answer[1])
                 resolve(0)
             }
@@ -176,18 +175,18 @@ async function createTransaction(
            
             // seems like our hw wallet don't calculate v properly
             if (!myPubKey.equals(tx.getSenderPublicKey())) {
-                info("change v");
+                console.log("change v");
                 (tx as any).v = tx.v.eq(new BN(42)) ? new BN(41) : new BN(42)
             }
            
             const serTx = '0x' + tx.serialize().toString('hex');
             await web3.eth.sendSignedTransaction(serTx)
-            .on('receipt', info)
+            .on('receipt', console.log)
             .on('transactionHash', (hash) => {
-                info('Transaction sended: ' + hash)
+                console.log('Transaction sended: ' + hash)
             })
             .on('error', async error => {
-                info(error)
+                console.log(error)
                 remote.dialog.showErrorBox("Error",error.message)
             });
         }

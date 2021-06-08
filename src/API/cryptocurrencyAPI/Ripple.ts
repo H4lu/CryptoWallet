@@ -10,7 +10,6 @@ let balance: number
 let price: number
 
 import axios from 'axios'
-import { info } from 'electron-log'
 import {Buffer} from "buffer";
 import { DisplayTransaction } from './utils'
 
@@ -29,16 +28,16 @@ export function getXRPPrice() {
 
 
 export async function initRippleAddress() {
-    info('INITING XRP ADDRESS')
+    console.log('INITING XRP ADDRESS')
 
     return new Promise(async (resolve) => {
         let status = false
         while (!status) {
-            info('Status', status)
+            console.log('Status', status)
             let answer = await getAddressPCSC(0)                                // change 3
             if (answer[0].length > 16 && answer[0].includes('BTC')) {   //change XRP
                 status = true
-                info('MY ADDRESS XRP: ' + myAddr)
+                console.log('MY ADDRESS XRP: ' + myAddr)
                 setMyAddress(answer[0].substring(3,answer[0].length))
                 console.log("address XRP: ", answer[0].substring(3, answer[0].length))
                 setMyPubKey(answer[1])
@@ -50,7 +49,7 @@ export async function initRippleAddress() {
 }
 export function setMyAddress(address: string) {
     myAddr = address
-    info('MY ADDRESS RIPPLE:' + myAddr)
+    console.log('MY ADDRESS RIPPLE:' + myAddr)
 }
 export function setMyPubKey(pubKey: Buffer) {
 
@@ -60,8 +59,8 @@ export function setMyPubKey(pubKey: Buffer) {
     {
         myPubKey[i+1] = pubKey[i+1]
     }
-    info('MY PUBKEY RIPPLE FULL:', pubKey.toString('hex'))
-    info('MY PUBKEY RIPPLE     :', myPubKey.toString('hex'))
+    console.log('MY PUBKEY RIPPLE FULL:', pubKey.toString('hex'))
+    console.log('MY PUBKEY RIPPLE     :', myPubKey.toString('hex'))
 }
 
 export default function getRippleAddress() {

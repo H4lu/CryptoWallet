@@ -1,5 +1,4 @@
 module.exports = [
- 
   // Add support for native node modules
   {
     test: /\.node$/,
@@ -19,7 +18,21 @@ module.exports = [
     test: /\.tsx?$/,
     exclude: /(node_modules|\.webpack)/,
     use: {
-      loader: 'ts-loader'
+      loader: 'ts-loader',
+      options: {
+        onlyCompileBundledFiles: true,
+        transpileOnly: true
+      }
     }
-  },
+  },  
+    {
+      test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
+      use : [
+          {loader: 'file-loader',
+           options: {
+               name : 'assets/[name].[contenthash].[ext]',
+          } 
+          }
+      ]
+    }
 ];

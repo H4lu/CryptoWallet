@@ -1,9 +1,8 @@
-import * as React from 'react'
+import React, {Component} from 'react'
 import { Carousel } from './Carousel'
-import { log } from 'electron-log'
 import {CarouselDesc} from "./CarouselDesc";
 
-export class CarouselHOC extends React.Component<any, any> {
+export class CarouselHOC extends Component<any, any> {
     constructor(props: any) {
         super(props)
         this.props.stateSR(false)
@@ -17,10 +16,7 @@ export class CarouselHOC extends React.Component<any, any> {
     
     }
     componentDidMount() {
-        //this.mapProps()
-        log("Carousel active : " + this.state.activeCurrency)
-        if (this.state.needShift) {
-            log("SHIFTING")
+              if (this.state.needShift) {
             this.setState({ activeCurrency: this.state.activeCurrency + 1 })
             this.setState({ activeCurrency: this.state.activeCurrency - 1 })//kostil for choosing current active 
             this.setState({ needShift: false })
@@ -30,7 +26,6 @@ export class CarouselHOC extends React.Component<any, any> {
         this.setState({ activeCurrency: index })
     }
     getActive() {
-        log("gettign active")
         switch(this.props.getActiveCurrency) {
             case "BTC": {
                 return 1
@@ -72,8 +67,6 @@ export class CarouselHOC extends React.Component<any, any> {
             <div className='windowPay'>
             <div className='payWindow'>
                 <Carousel 
-                    onClicked = {this.chooseActiveCurrency}
-                    getActiveCurrency = {this.props.getActiveCurrency}
                     setActiveCurrency = {this.props.setActiveCurrency} 
                     activeCurrency = {this.state.activeCurrency}/>
                 <CarouselDesc activeCurrency = {this.props.activeCurrency} getActiveCurrency = {this.props.getActiveCurrency}

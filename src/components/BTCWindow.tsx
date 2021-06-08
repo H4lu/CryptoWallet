@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, {Component} from 'react'
 import CreateQR from '../core/createQR'
 import getBitcoinAddress from '../API/cryptocurrencyAPI/BitCoin'
 import { clipboard } from 'electron'
@@ -25,7 +25,7 @@ interface BTCWindowProps {
     reset: () => void
 }
 
-export class BTCWindow extends React.Component<BTCWindowProps, BTCWindowState> {
+export class BTCWindow extends Component<BTCWindowProps, BTCWindowState> {
     icoClass = ['icoBTC', 'icoETH', 'icoLTC', 'icoXRP']
     centr: number
   constructor(props: any) {

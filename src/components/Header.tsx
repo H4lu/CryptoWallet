@@ -1,8 +1,8 @@
-import * as React from 'react'
+import React, {Component} from 'react'
 import { ipcRenderer } from 'electron'
 // let currentWindow = remote.BrowserWindow.getFocusedWindow()
 
-export class Header extends React.Component<any, any> {
+export class Header extends Component<{}, {}> {
   constructor(props: any) {
     super(props)
     this.closeWindow = this.closeWindow.bind(this)
@@ -22,7 +22,7 @@ export class Header extends React.Component<any, any> {
     <div className = 'header'>
       <div className = 'header-content'>
         <div className = 'title-bar-buttons'>
-          <button className = 'button-hide' onClick = {this.hideWindow}/>
+           <button className = 'button-hide' onClick = {this.hideWindow}/>
           <button className = 'button-close' onClick = {this.closeWindow}/>
         </div>
       </div>

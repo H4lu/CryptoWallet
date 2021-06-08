@@ -1,29 +1,27 @@
 {
-    "compileOnSave": false,
-    "compilerOptions": {
-        "incremental": true,
-        "target": "es6",
-        "moduleResolution": "node",
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
-        "pretty": true,
-        "newLine": "LF",
-        "allowSyntheticDefaultImports": true,
-        "strict": false,
-        "noUnusedLocals": false,
-        "noUnusedParameters":false,
-        "sourceMap": false,
-        "skipLibCheck": true,
-        "allowJs": false,
-        "jsx": "react",
-        // "baseUrl": "./",
-        // "paths": {
-        //     "@/*": [
-        //         "src/*"
-        //     ]
-        // }
-    },
-    // "include": [
-    //     "src/**/*"
-    // ]
+  "compileOnSave": false,
+  "compilerOptions": {
+    "target": "es6",
+    "pretty": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": false,
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "jsx": "react",
+    "resolveJsonModule": true,
+    "strict": false,
+    "paths": {
+      "*": ["node_modules/*"]
+    }
+  },
+  "include": [
+    "src/**/*"
+  ]
 }

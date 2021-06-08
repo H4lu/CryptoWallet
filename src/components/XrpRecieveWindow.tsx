@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, {Component} from 'react'
 import CreateQR from "../core/createQR";
 /*import getRippleAddress from "../API/cryptocurrencyAPI/Ripple";*/
 import {clipboard, shell} from 'electron'
@@ -11,7 +11,7 @@ interface IXRPRecieveState {
 
 }
 
-export class XrpRecieveWindow extends React.Component<any, IXRPRecieveState> {
+export class XrpRecieveWindow extends Component<any, IXRPRecieveState> {
     constructor(props: any) {
         super(props)
 

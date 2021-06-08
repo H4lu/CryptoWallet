@@ -1,7 +1,8 @@
-import  * as React from 'react'
+import React, {PureComponent} from 'react'
 import {DisplayTransactionTable} from "./DisplayTransactionTable";
 import { DisplayTransaction, DisplayTransactionCurrency } from '../API/cryptocurrencyAPI/utils';
-interface CarouselTableState {
+
+export interface  CarouselTableState {
     activeCurrency: number,
     classNameAll: string,
     classNameSend: string,
@@ -12,7 +13,7 @@ interface CarouselTableState {
     activeCur: DisplayTransactionCurrency
 }
 
-interface CarouselTableProps {
+export interface CarouselTableProps {
     activeCurrency: number,
     getActiveCurrency: () => string,
     refresh: () => void,
@@ -22,12 +23,12 @@ interface CarouselTableProps {
     lastTxXRP: Array<DisplayTransaction>,
 }
 
-export class CarouselTable extends React.PureComponent<CarouselTableProps, CarouselTableState> {
+export class CarouselTable extends PureComponent<CarouselTableProps, CarouselTableState> {
     currencyName: string
     direct: number
     shouldUpdate: boolean
     tableData:Array<any>
-    constructor(props: any) {
+    constructor(props: CarouselTableProps) {
         super(props)
         this.shouldUpdate = true;
 

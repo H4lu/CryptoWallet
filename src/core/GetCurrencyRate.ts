@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { info } from 'electron-log'
 
 const requestURL = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
 

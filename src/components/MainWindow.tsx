@@ -1,9 +1,9 @@
-import React from 'react'
+import React, {Component} from 'react'
 import { Redirect } from 'react-router'
 interface IMainWindowState {
   redirect: boolean
 }
-export class MainWindow extends React.Component<any, IMainWindowState> {
+export class MainWindow extends Component<any, IMainWindowState> {
   constructor(props: any) {
     super(props)
     this.state = {
@@ -41,6 +41,8 @@ export class MainWindow extends React.Component<any, IMainWindowState> {
   }
   render() {
     if (this.props.redirectToMain) {
+      console.log("REDIRECT")
+      /* @ts-ignore */
       return <Redirect from = '/' to = '/main'/>
     }
 

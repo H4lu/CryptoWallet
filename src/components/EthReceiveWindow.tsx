@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, {Component} from 'react'
 import CreateQR from "../core/createQR";
 import { getEthereumAddress } from '../API/cryptocurrencyAPI/Ethereum'
 import {clipboard, shell} from 'electron'
@@ -10,7 +10,7 @@ interface IETHRecieveState {
 
 }
 
-export class EthRecieveWindow extends React.Component<any, IETHRecieveState> {
+export class EthRecieveWindow extends Component<any, IETHRecieveState> {
     constructor(props: any) {
         super(props)
 

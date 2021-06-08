@@ -1,6 +1,5 @@
-import * as React from 'react'
+import React, {PureComponent} from 'react'
 import {Carousel} from './Carousel'
-import {log} from 'electron-log'
 import {CarouselTable} from "./CarouselTable";
 import { DisplayTransaction } from '../API/cryptocurrencyAPI/utils';
 
@@ -10,17 +9,17 @@ interface CarouselHistoryState {
 }
 
 interface CarouselHistoryProps {
-    setActiveCurrency: (string) => void,
+    setActiveCurrency: (currency: string) => void,
     getActiveCurrency: () => string,
     activeCurrency: number, // TODO: store as string, convert to index inside component
-    stateSR: (boolean) => void,
+    stateSR: (arg: boolean) => void,
     refresh: () => void,
     lastTxBTC: Array<DisplayTransaction>,
     lastTxETH: Array<DisplayTransaction>,
     lastTxLTC: Array<DisplayTransaction>,
     lastTxXRP: Array<DisplayTransaction>
 }
-export class CarouselHistory extends React.PureComponent<CarouselHistoryProps, CarouselHistoryState> {
+export class CarouselHistory extends PureComponent<CarouselHistoryProps, CarouselHistoryState> {
     constructor(props: any) {
         super(props)
         this.props.stateSR(false)
@@ -35,10 +34,7 @@ export class CarouselHistory extends React.PureComponent<CarouselHistoryProps, C
     }
 
     componentDidMount() {
-        //this.mapProps()
-        log("Carousel active : " + this.state.activeCurrency)
         if (this.state.needShift) {
-            log("SHIFTING")
             this.setState({activeCurrency: this.state.activeCurrency + 1})
             this.setState({activeCurrency: this.state.activeCurrency - 1})//kostil for choosing current active
             this.setState({needShift: false})
@@ -50,7 +46,6 @@ export class CarouselHistory extends React.PureComponent<CarouselHistoryProps, C
     }
 
     getActive() {
-        log("gettign active")
         switch (this.props.getActiveCurrency()) {
             case "BTC": {
                 return 1
@@ -90,14 +85,10 @@ export class CarouselHistory extends React.PureComponent<CarouselHistoryProps, C
     }
 
     render() {
-        console.log("History carousel update")
-    
         return (
             <div className='windowPay'>
                 <div className='payWindowTable'>
                     <Carousel
-                            onClicked={this.chooseActiveCurrency} 
-                            getActiveCurrency={this.props.getActiveCurrency}
                             setActiveCurrency={this.props.setActiveCurrency}
                             activeCurrency={this.state.activeCurrency}
                             />

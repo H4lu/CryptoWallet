@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, {Component} from 'react'
 import CreateQR from "../core/createQR";
 import getBitcoinAddress from "../API/cryptocurrencyAPI/BitCoin";
 import {clipboard, shell} from 'electron'
@@ -10,7 +10,7 @@ interface BtcReceiveState {
 
 }
 
-export class BtcRecieveWindow extends React.Component<any, BtcReceiveState> {
+export class BtcRecieveWindow extends Component<any, BtcReceiveState> {
     constructor(props: any) {
         super(props)
 

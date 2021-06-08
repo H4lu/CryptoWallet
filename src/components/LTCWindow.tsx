@@ -1,10 +1,12 @@
-import * as React from 'react'
+import React, {Component} from 'react'
 import CreateQR from '../core/createQR'
 import getAddres from '../API/cryptocurrencyAPI/Litecoin'
 import { sendTransaction } from '../core/sendTransaction'
-import { clipboard, remote } from 'electron'
+//import { clipboard, remote } from 'electron'
+import {clipboard} from 'electron'
 import { DisplayTransactionTable } from './DisplayTransactionTable'
 import { LITECOIN_PATH } from '../core/paths'
+
 interface ILTCWindowState {
   address: string,
   qrcodeAddress: string,
@@ -12,7 +14,8 @@ interface ILTCWindowState {
   amount: number,
   fee: number
 }
-export class LTCWindow extends React.Component<any, ILTCWindowState> {
+
+export class LTCWindow extends Component<any, ILTCWindowState> {
   constructor(props: any) {
     super(props)
 

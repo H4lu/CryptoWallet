@@ -1,7 +1,7 @@
 
-import * as React from "react";
+import React, {Component} from "react";
 
-export class ModeWindow extends React.Component<any, any> {
+export class ModeWindow extends Component<any, any> {
     classFee1: string;
     classFee2: string;
     classFee3: string;
@@ -12,10 +12,10 @@ export class ModeWindow extends React.Component<any, any> {
         this.changeFee1 = this.changeFee1.bind(this)
         this.changeFee2 = this.changeFee2.bind(this)
         this.changeFee3 = this.changeFee3.bind(this)
-       this.setClass1 = this.setClass1.bind(this)
-       this.setClass2 = this.setClass2.bind(this)
-       this.setClass3 = this.setClass3.bind(this)
-       this.setClass = this.setClass.bind(this)
+        this.setClass1 = this.setClass1.bind(this)
+        this.setClass2 = this.setClass2.bind(this)
+        this.setClass3 = this.setClass3.bind(this)
+        this.setClass = this.setClass.bind(this)
         this.classFee1 = this.setClass1()
         this.classFee2 = this.setClass2()
         this.classFee3 = this.setClass3()
@@ -23,17 +23,14 @@ export class ModeWindow extends React.Component<any, any> {
 
     changeFee1() {
         this.props.setFee(1)
-        //this.setClass()
     }
 
     changeFee2() {
         this.props.setFee(2)
-       // this.setClass()
     }
 
     changeFee3() {
         this.props.setFee(3)
-       // this.setClass()
     }
 
     setClass1(): string

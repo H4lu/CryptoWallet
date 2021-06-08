@@ -1,7 +1,7 @@
-import * as React from 'react'
+import React, {Component} from 'react'
 // import {Link} from 'react-router-dom'
 import { REFRESH_BUTTON_PATH, BTN_MENU_PATH } from '../core/paths'
-export class SidebarContent extends React.Component<any, any> {
+export class SidebarContent extends Component<any, any> {
   constructor(props: any) {
     super(props)
 

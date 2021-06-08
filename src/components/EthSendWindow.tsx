@@ -1,8 +1,7 @@
-import * as React from 'react'
+import React, {Component} from 'react'
 import {getEthereumAddress} from '../API/cryptocurrencyAPI/Ethereum'
 import {sendTransaction} from "../core/sendTransaction";
 import {Link} from "react-router-dom";
-import {error} from "electron-log"
 import {remote} from "electron"
 interface ETHSendState {
     address: string,
@@ -17,7 +16,7 @@ interface ETHSendState {
     amountS: string
 }
 
-export class EthSendWindow extends React.Component<any, ETHSendState> {
+export class EthSendWindow extends Component<any, ETHSendState> {
 
     strSum: string
     point: number
@@ -105,7 +104,7 @@ export class EthSendWindow extends React.Component<any, ETHSendState> {
                     'ethereum', this.state.paymentAddress, this.state.amount, this.props.trFee, 0, this.props.course, this.props.btcBalance
                     )
             } catch(err) {
-                error(err)
+                console.error(err)
                 remote.dialog.showErrorBox("Send transaction error", err.message)
             }
         }

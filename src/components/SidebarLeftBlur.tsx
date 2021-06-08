@@ -1,9 +1,8 @@
-import * as React from 'react'
-import {Link} from "react-router-dom";
-export class SidebarLeftBlur extends React.Component<any, any> {
+import React, {Component} from 'react'
+
+export class SidebarLeftBlur extends Component<any, any> {
     constructor(props: any) {
         super(props)
-
     }
 
     render() {

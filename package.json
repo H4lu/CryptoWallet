@@ -1,134 +1,33 @@
 {
   "name": "CryptoWallet",
   "version": "1.1.6",
-  "main": "dist/main.js",
-  "license": "MIT",
-  "author": "Denis Golovkov <halurecht@gmail.com>",
   "description": "CET CryptoWallet application",
-  "devDependencies": {
-    "@types/chai": "4.1.7",
-    "@types/jest": "21.1.5",
-    "@types/mocha": "5.2.5",
-    "@types/react": "^17.0.9",
-    "babel-core": "6.26.3",
-    "babel-loader": "8.2.2",
-    "babel-plugin-transform-es3-member-expression-literals": "6.22.0",
-    "babel-plugin-transform-es3-property-literals": "6.22.0",
-    "babel-preset-es2015-node": "6.1.1",
-    "babel-preset-react": "6.24.1",
-    "bindings": "1.3.0",
-    "chai": "4.2.0",
-    "clean-webpack-plugin": "1.0.0",
-    "css-loader": "0.28.8",
-    "electron": "^13.1.1",
-    "electron-builder": "22.10.5",
-    "electron-rebuild": "^2.3.5",
-    "electron-wix-msi": "1.3.0",
-    "file-loader": "1.1.11",
-    "js-sha3": "0.8.0",
-    "mini-css-extract-plugin": "0.4.4",
-    "mocha": "5.2.0",
-    "node-loader": "0.6.0",
-    "octal-number-loader": "0.1.4",
-    "postcss-load-config": "1.2.0",
-    "postcss-loader": "2.0.10",
-    "sass-loader": "6.0.6",
-    "standard": "10.0.3",
-    "standard-loader": "6.0.1",
-    "style-loader": "0.19.1",
-    "svg-inline-loader": "0.8.0",
-    "typescript": "4.3.2",
-    "url-loader": "0.6.2",
-    "webpack-cli": "^4.7.0",
-    "electron-prebuilt-compile": "8.2.0"
-  },
+  "main": ".webpack/main",
   "scripts": {
-    "build": "webpack --config webpack.config.js",
     "start": "electron-forge start",
-    "test": "mocha -r ts-node/register 'tests/*.spec.ts'",
-    "travisBuild": "npm install && npm run build  && node setup_build.js",
-    "pretest": "webpack --config webpack.tests.config.js",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder",
-    "rebuild": "electron-rebuild --force",
-    "start:dev": "webpack-dev-server",
-    "release:win": "npm run travisBuild  &&  electron-rebuild && electron-builder build --windows",
-    "release:osx": "npm run travisBuild && electron-builder build --mac -p always",
-    "release:linux": "npm run travisBuild && electron-builder build --linux -p always",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "rebuild": "electron-rebuild",
+    "make-release": "electron-forge make --skip-package",
+    "lint": "eslint --ext .ts ."
   },
-  "dependencies": {
-    "@electron-forge/plugin-webpack": "^6.0.0-beta.57",
-    "@ethereumjs/tx": "^3.2.0",
-    "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
-    "@pokusew/pcsclite": "0.6.0",
-    "@types/bitcoinjs-lib": "3.0.5",
-    "@types/react-router-dom": "^5.1.7",
-    "axios": "^0.21.1",
-    "babel-preset-es2015": "6.24.1",
-    "babel-preset-stage-2": "6.24.1",
-    "bitcoinjs-lib": "3.3.0",
-    "cache-loader": "4.1.0",
-    "electron-forge": "^5.2.4",
-    "electron-log": "^4.3.5",
-    "electron-squirrel-startup": "^1.0.0",
-    "ffi-napi": "^4.0.3",
-    "fork-ts-checker-webpack-plugin": "0.5.0",
-    "html-loader": "0.5.5",
-    "html-webpack-plugin": "^5.3.1",
-    "native-ext-loader": "2.3.0",
-    "react": "17.0.2",
-    "react-dom": "^17.0.2",
-    "react-router": "^5.2.0",
-    "react-router-dom": "^5.2.0",
-    "recharts": "2.0.9",
-    "rlp": "2.0.0",
-    "satoshi-bitcoin": "1.0.4",
-    "thread-loader": "3.0.4",
-    "ts-loader": "9.2.2",
-    "utf-8-validate": "^5.0.5",
-    "web3": "^1.3.6",
-    "webpack": "^5.38.1"
+  "keywords": [],
+  "author": {
+    "name": "H4lu",
+    "email": "halurecht@gmail.com"
   },
-  "tasks": {},
-  "optionalDependencies": {
-    "bufferutil": "^3.0.3"
-  },
-  "build": {
-    "files": [
-      "dist/**"
-    ],
-    "win": {
-      "extraResources": [
-        "./lib32.dll"
-      ],
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
-        }
-      ]
-    },
-    "linux": {
-      "target": "deb"
-    }
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/H4lu/CryptoWallet/"
-  },
+  "license": "MIT",
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "asar": false
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "my_app"
+            "name": "new_app"
           }
         },
         {
@@ -146,22 +45,74 @@
           "config": {}
         }
       ],
+      "hooks": "require:./hooks.js",
       "plugins": [
-        "@electron-forge/plugin-webpack",
-        {
-          "mainConfig": "./webpack.config.js",
-          "renderer": {
-            "config": "./webpack.react.js",
-            "entryPoints": [
-              {
-                "html": "/src/ui/index.html",
-                "js": "./src/ui/index.ts",
-                "name": "main_window"
-              }
-            ]
+        [
+          "@electron-forge/plugin-webpack",
+          {
+            "mainConfig": "./webpack.main.config.js",
+            "renderer": {
+              "config": "./webpack.renderer.config.js",
+              "entryPoints": [
+                {
+                  "html": "./src/index.html",
+                  "js": "./src/renderer.tsx",
+                  "name": "main_window"
+                }
+              ]
+            }
           }
-        }
+        ]
       ]
     }
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.57",
+    "@electron-forge/maker-deb": "^6.0.0-beta.57",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.57",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.57",
+    "@electron-forge/maker-zip": "^6.0.0-beta.57",
+    "@electron-forge/plugin-auto-unpack-natives": "^6.0.0-beta.57",
+    "@electron-forge/plugin-webpack": "^6.0.0-beta.57",
+    "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
+    "@types/ffi-napi": "^4.0.1",
+    "@types/react": "^17.0.9",
+    "@types/react-dom": "^17.0.6",
+    "@types/react-router": "^5.1.14",
+    "@types/react-router-dom": "^5.1.7",
+    "@typescript-eslint/eslint-plugin": "^4.26.0",
+    "@typescript-eslint/parser": "^4.26.0",
+    "copy-webpack-plugin": "^9.0.0",
+    "css-loader": "^5.2.6",
+    "electron": "13.1.1",
+    "eslint": "^7.28.0",
+    "eslint-plugin-import": "^2.23.4",
+    "file-loader": "1.1.11",
+    "fork-ts-checker-webpack-plugin": "^6.2.10",
+    "node-loader": "^2.0.0",
+    "style-loader": "^2.0.0",
+    "ts-loader": "^9.2.3",
+    "typescript": "^4.3.2"
+  },
+  "dependencies": {
+    "@ethereumjs/tx": "^3.2.0",
+    "@pokusew/pcsclite": "0.6.0",
+    "@types/bitcoinjs-lib": "3.0.5",
+    "assert": "^2.0.0",
+    "axios": "^0.21.1",
+    "bitcoinjs-lib": "3.3.0",
+    "electron-squirrel-startup": "^1.0.0",
+    "ffi-napi": "^4.0.3",
+    "html-webpack-plugin": "^5.3.1",
+    "js-sha3": "0.8.0",
+    "react": "17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
+    "recharts": "^2.0.9",
+    "rlp": "2.0.0",
+    "satoshi-bitcoin": "1.0.4",
+    "utf-8-validate": "^5.0.5",
+    "web3": "^1.3.6"
   }
 }

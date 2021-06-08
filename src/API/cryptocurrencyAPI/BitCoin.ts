@@ -21,8 +21,8 @@ import  {
     ChainSoUnspentTransaction
 } from './utils'
 
+// @ts-ignore
 import * as satoshi from 'satoshi-bitcoin'
-import {info} from 'electron-log'
 import {Buffer} from "buffer";
 
 type CoindeskChartBpiItem = {
@@ -60,7 +60,7 @@ let basicFee3: number
 let TXarr = []
 let numTx: number
 
-import ffi from 'ffi-napi'
+import ffi  from 'ffi-napi'
 const libdll = ffi.Library('./resources/lib32.dll', {'forSign': ['void', ['string', 'int', 'string']]})
 
 // export async function getUnspentTx(): Promise<number> {
@@ -80,7 +80,7 @@ const libdll = ffi.Library('./resources/lib32.dll', {'forSign': ['void', ['strin
 //             remote.dialog.showErrorBox("Error", 'Error provided by internet connection')
 //         }
 //     }).catch((error: any) => {
-//         info(error)
+//         console.log(error)
 //     })
 
 //     console.log("numTX_in_btc: ", numTx)
@@ -109,7 +109,7 @@ export async function initBitcoinAddress() {
                 setMyAddress(answer[0].substring(3, answer[0].length))
                 setMyPubKey(answer[1])
                 if (NETWORK == Networks.TEST) {
-                    info("generate test address btc")
+                    console.log("generate test address btc")
                     setMyAddress(getTestnetAddressBTC(Buffer.from(answer[1])))
                 }
                 setFee()
@@ -121,7 +121,7 @@ export async function initBitcoinAddress() {
 
 export function setMyAddress(address: string) {
     myAddr = address
-    info('MY ADDRESS BITCOIN:' + myAddr)
+    console.log('MY ADDRESS BITCOIN:' + myAddr)
 }
 
 export function setMyPubKey(pubKey: Buffer) {
@@ -182,7 +182,7 @@ export async function getBTCBalance(): Promise<number> {
 
 export async function getChartBTC(end: string, start: string): Promise<Array<any>> {
     const requestUrl = `https://api.coindesk.com/v1/bpi/historical/close.json?start=${start}&end=${end}`
-    info(requestUrl)
+    console.log(requestUrl)
     // Делаем запрос и отдаём в виде Promise
     const response = await axios.get(requestUrl)
     const chartData = response.data.bpi
@@ -191,7 +191,7 @@ export async function getChartBTC(end: string, start: string): Promise<Array<any
     for (key in chartData) {
         arr.push(chartData[key])
     }
-    info(arr)
+    console.log(arr)
     return arr
 }
 
@@ -202,7 +202,7 @@ export async function getBTCBalanceTarns(address: string): Promise<Array<any>> {
       0 - количество подтверждений транзакций
     */
     // rootURL + 'get_address_balance/' + myAddr
-    const requestUrl = `https://blockchain.info/rawaddr/${address}`
+    const requestUrl = `https://blockchain.console.log/rawaddr/${address}`
         
     // Делаем запрос и отдаём в виде Promise
     const response = await axios.get(requestUrl)
@@ -217,7 +217,7 @@ function toSatoshi(BTC: number): number {
 
 async function getLastTransactionData(): Promise<ChainSoUnspentTransactions> {
     const requestUrl = `https://chain.so/api/v2/get_tx_unspent/${NETWORK}/${myAddr}`   
-    info(requestUrl)
+    console.log(requestUrl)
     const response = await axios.get(requestUrl)
     return response.data
 }
@@ -229,9 +229,9 @@ function ReplaceAt(
     start: number, 
     end: number
     ) {
-        info('FIRST SLICE:' + input.slice(0, start))
-        info('SECOND SLICE ' + input.slice(start, end).replace(search, replace))
-        info('THIRD SLICE: ' + input.slice(end))
+        console.log('FIRST SLICE:' + input.slice(0, start))
+        console.log('SECOND SLICE ' + input.slice(start, end).replace(search, replace))
+        console.log('THIRD SLICE: ' + input.slice(end))
         return input.slice(0, start)
             + input.slice(start, end).replace(search, replace)
             + input.slice(end)
@@ -267,10 +267,10 @@ async function createTransaction(
         }
         let unbuildedTx = transaction.buildIncomplete().toHex()
         transaction.inputs.map(value => {
-            info('MAPPED INPUT: ' + value)
+            console.log('MAPPED INPUT: ' + value)
         })
         transaction.tx.ins.forEach((value: any) => {
-            info('PROBABLY TX INPUT: ' + JSON.stringify(value))
+            console.log('PROBABLY TX INPUT: ' + JSON.stringify(value))
         })
     
         let hashArray: Array<Buffer> = []
@@ -288,7 +288,7 @@ async function createTransaction(
         let lenMess = 32 + lenEnd
     
         let dataOut = Buffer.alloc(numInputs * lenMess)
-        libdll.forSign(dataIn, lenData, dataOut)
+        libdll.forSign(dataIn as any, lenData, dataOut)
         console.log('OUT: ', dataOut.toString('hex'))
 
         for (let j = 0; j < numInputs; j++) {
@@ -307,8 +307,8 @@ async function createTransaction(
         /************ lib dll ******************/
     
         let data = await getSignaturePCSC(0, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.inputs.length, course, fee / 100000000, balance)
-        info("data after pcsc")
-        info(data)
+        console.log("data after pcsc")
+        console.log(data)
         if (data[0] == undefined) {
             throw new Error("Error from hw wallet")
         }
@@ -325,8 +325,8 @@ async function sendTransaction(
     transactionHex: string,
     redirect: () => void
     ): Promise<void> {
-        info("tx hex")
-        info(transactionHex)
+        console.log("tx hex")
+        console.log(transactionHex)
         await axios.post(
             `https://api.blockcypher.com/v1/btc/${BLOCKCYPHER_NETWORK}/txs/push`,
             {'tx': transactionHex},

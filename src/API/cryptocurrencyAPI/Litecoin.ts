@@ -15,12 +15,15 @@ import {
 } from './utils'
 import {getAddressPCSC} from '../hardwareAPI/GetAddress'
 import {getSignaturePCSC} from '../hardwareAPI/GetSignature'
+// @ts-ignore
 import * as satoshi from 'satoshi-bitcoin'
-import {info} from 'electron-log'
 import {Buffer} from 'buffer'
-import ffi from "../native_modules/build/Release/"
-import ffi from 'ffi-napi'
+//import * as bindings from 'bindings'
+
+// bindings("ref-napi")
+ //import ffi from "../native_modules/""
 import {remote} from "electron"
+import ffi from "ffi-napi"
 
 enum Networks {
     MAIN = "LTC",
@@ -33,7 +36,9 @@ const rootURL = 'https://chain.so/api/v2'
 const network = networks.litecoin
 
 const NETWORK = Networks.MAIN
-
+import path from 'path'
+console.log(process.cwd())
+console.log(path.join(process.cwd(), '.webpack/renderer/main_window/resources/lib32.dll'))
 const libdll = ffi.Library('./resources/lib32.dll', {'forSign': ['void', ['string', 'int', 'string']]})
 
 
@@ -56,11 +61,11 @@ export async function initLitecoinAddress() {
         let status = false
         while (!status) {
             let answer = await getAddressPCSC(2)
-            info('GOT MYADDR ANSWER', answer)
-            info('My addr length', answer.length)
+            console.log('GOT MYADDR ANSWER', answer)
+            console.log('My addr length', answer.length)
             if (answer.length > 1 && answer[0].includes('LTC')) {
                 status = true
-                info('status after reset', status)
+                console.log('status after reset', status)
                 setMyAddress(answer[0].substring(3, answer[0].length))
                 console.log("address LTC: ", answer[0].substring(3, answer[0].length))
                 setMyPubKey(answer[1])
@@ -73,7 +78,7 @@ export async function initLitecoinAddress() {
 
 function setMyAddress(address: string) {
     myAddress = address
-    info('MY ADDRESS LITECOIN: ' + myAddress)
+    console.log('MY ADDRESS LITECOIN: ' + myAddress)
 }
 
 export function setMyPubKey(pubKey: Buffer) {
@@ -141,10 +146,10 @@ async function createTransaction(paymentAdress: string,
     }
     let unbuildedTx = transaction.buildIncomplete().toHex()
     transaction.inputs.map(value => {
-        info('MAPPED INPUT: ' + value)
+        console.log('MAPPED INPUT: ' + value)
     })
     transaction.tx.ins.forEach((value: any) => {
-        info('PROBABLY TX INPUT: ' + JSON.stringify(value))
+        console.log('PROBABLY TX INPUT: ' + JSON.stringify(value))
     })
 
     let hashArray: Array<Buffer> = []
@@ -162,7 +167,7 @@ async function createTransaction(paymentAdress: string,
     let lenMess = 32 + lenEnd
 
     let dataOut = Buffer.alloc(numInputs * lenMess)
-    libdll.forSign(dataIn, lenData, dataOut)
+    libdll.forSign(dataIn as any, lenData, dataOut)
     console.log('OUT: ', dataOut.toString('hex'))
 
     for (let j = 0; j < numInputs; j++) {
@@ -193,9 +198,9 @@ async function createTransaction(paymentAdress: string,
 }
 
 function ReplaceAt(input: any, search: any, replace: any, start: any, end: any) {
-    info('FIRST SLICE:' + input.slice(0, start))
-    info('SECOND SLICE ' + input.slice(start, end).replace(search, replace))
-    info('THIRD SLICE: ' + input.slice(end))
+    console.log('FIRST SLICE:' + input.slice(0, start))
+    console.log('SECOND SLICE ' + input.slice(start, end).replace(search, replace))
+    console.log('THIRD SLICE: ' + input.slice(end))
     return input.slice(0, start)
         + input.slice(start, end).replace(search, replace)
         + input.slice(end)
@@ -222,7 +227,7 @@ export async function handleLitecoin(paymentAdress: string, amount: number, tran
         }
         amount = toSatoshi(amount)
         return createTransaction(paymentAdress, amount, transactionFee, redirect, utxos, course, balance).catch(err => {
-            info(err)
+            console.log(err)
         })
     } else {
         remote.dialog.showErrorBox("Error", 'Error provided by internet connection')

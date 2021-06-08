@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, {Component} from 'react'
 import CreateQR from "../core/createQR";
 import getLitecoinAddress from "../API/cryptocurrencyAPI/Litecoin";
 import {clipboard, shell} from 'electron'
@@ -10,7 +10,7 @@ interface ILTCRecieveState {
 
 }
 
-export class LtcRecieveWindow extends React.Component<any, ILTCRecieveState> {
+export class LtcRecieveWindow extends Component<any, ILTCRecieveState> {
     constructor(props: any) {
         super(props)
 

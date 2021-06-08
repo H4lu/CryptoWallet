@@ -1,5 +1,4 @@
-import * as React from 'react'
-import {log} from "electron-log";
+import React, {Component} from 'react'
 import {sendTransaction} from "../core/sendTransaction";
 import {Link} from "react-router-dom";
 import getRippleAddress from "../API/cryptocurrencyAPI/Ripple";
@@ -14,7 +13,7 @@ interface IXRPSendState {
     balanceUSD: number
 }
 
-export class XrpSendWindow extends React.Component<any, IXRPSendState> {
+export class XrpSendWindow extends Component<any, IXRPSendState> {
     constructor(props: any) {
         super(props)
 
@@ -43,7 +42,6 @@ export class XrpSendWindow extends React.Component<any, IXRPSendState> {
         this.setState({amount: e.target.value})
         this.setState({usd: (e.target.value * this.props.course)})
         this.setState({feeUSD: (this.state.fee * this.props.course)})
-        log(this.props.course)
     }
 
     handleClick() {

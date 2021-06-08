@@ -7,15 +7,16 @@ interface Erc20TableProps {
 }
 
 export const Erc20TokensTable: FunctionComponent<Erc20TableProps> = (props: Erc20TableProps) => 
-    <div className="transaction-history">
-        <table>
-            <thead>
-                <tr>
+    <div className="erc20Table">
+        <table >
+            <thead >
+                <tr >
                     <th>Name</th>
                     <th>Address</th>
                     <th>Amount</th>
                 </tr>
             </thead>
+            <hr/>
             <tbody>
                 {
                     props.data

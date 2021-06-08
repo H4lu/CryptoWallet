@@ -5,7 +5,7 @@ import {TableRow} from './DisplayTransactionTableRow'
 interface TableProps {
     data: Array<DisplayTransaction>,
     type: string,
-    activeCurrency: DisplayTransactionCurrency
+    activeCurrency: string
 }
 
 export const DisplayTransactionTable = (props: TableProps) =>        

@@ -1,6 +1,6 @@
 import { Buffer } from 'buffer'
+// @ts-ignore
 import { reader } from '../hardwareAPI/Reader'
-import { info } from 'electron-log'
 import {getBitcoinPubKey} from "../cryptocurrencyAPI/BitCoin";
 import {getEthereumPubKey} from "../cryptocurrencyAPI/Ethereum";
 import {getLitecoinPubKey} from "../cryptocurrencyAPI/Litecoin";
@@ -29,34 +29,36 @@ export function getSignaturePCSC(id: number, message: Array<Buffer>, address: st
       break
     }
     }
-    info('Number of inputs:', Number('0x' + numberOfInputs))
+    console.log('Number of inputs:', Number('0x' + numberOfInputs))
     let numberOfInputsBuf = Buffer.from([numberOfInputs])
 
     let idBuf = Buffer.from([currencyId])
-    info('ID BUF',idBuf)
+    console.log('ID BUF',idBuf)
 
     let le = Buffer.from(address).length + 48
     let leBuf = Buffer.from([le])
-    info('Len data summ', leBuf)
+    console.log('Len data summ', leBuf)
 
     let amountBuf = getSumAsBuf(amount, course)
     let feeBuf = getSumAsBuf(fee, course)
     let balanceBuf = getSumAsBuf(balance, course)
-    info('40: ',Buffer.concat([Buffer.from([0xb0,0x40]), numberOfInputsBuf, idBuf, leBuf, amountBuf, feeBuf, balanceBuf, Buffer.from(address)]).toString('hex'))
+    console.log('40: ',Buffer.concat([Buffer.from([0xb0,0x40]), numberOfInputsBuf, idBuf, leBuf, amountBuf, feeBuf, balanceBuf, Buffer.from(address)]).toString('hex'))
+    // @ts-ignore
     reader.transmit(Buffer.concat([Buffer.from([0xb0,0x40]), numberOfInputsBuf, idBuf, leBuf, amountBuf, feeBuf, balanceBuf, Buffer.from(address)]), 4, 2, async (err, data) => {
       if (err) {
         console.log('ERROR IN FIRST MMESSAGE 40', err)
         reject(err)
       } else {
           let timerId = setInterval(() => {
+            // @ts-ignore
           reader.transmit(Buffer.concat([Buffer.from([0xb0, 0x42, 0x00, 0x00, 0x00])]), 4, 2, async (err: any, data: { toString: { (arg0: string): void; (arg0: string): string; (arg0: string): string; }; }) => {
             if (err) {
               console.log('ERROR IN 42 MMESSAGE', err)
               reject(err)
             } else {
-              info('DATA IN 42 MESSAGE', data.toString('hex'))
+              console.log('DATA IN 42 MESSAGE', data.toString('hex'))
               if (String(data.toString('hex')) === String('9000')) {
-                info('in if send message')
+                console.log('in if send message')
                 let sigArray: Array<Buffer> = []
                 for (let i = 0; i < numberOfInputs; i++) {
                   let answer = await sendDataMessage(Buffer.from([i]), Buffer.from([currencyId]), message[i])
@@ -84,9 +86,10 @@ export function getSignaturePCSC(id: number, message: Array<Buffer>, address: st
 function sendDataMessage(inputNumber: Buffer, currencyId: Buffer, hash: Buffer): Promise<Buffer> {
 
  return new Promise((resolve, reject) => {
+   // @ts-ignore
     reader.transmit(Buffer.concat([Buffer.from([0xb0,0x41]),Buffer.from(inputNumber), Buffer.from(currencyId), Buffer.from(hash)]), 110, 2, (err, data) => {
       if (err) {
-        info('ERROR IN SEND HASH',err)
+        console.log('ERROR IN SEND HASH',err)
         reject(err)
       } else {
         console.log('Answer 41', data.toString('hex'))

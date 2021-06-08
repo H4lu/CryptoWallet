@@ -1,8 +1,7 @@
-import * as React from 'react'
+import React, {Component} from 'react'
 import getBitcoinAddress, {getFee} from "../API/cryptocurrencyAPI/BitCoin";
 import {sendTransaction} from "../core/sendTransaction";
 import {Link} from "react-router-dom";
-import {error} from "electron-log"
 import {remote} from "electron"
 
 interface BTCSendState {
@@ -19,14 +18,14 @@ interface BTCSendState {
 }
 
 interface BTCSendProps {
-    stateSR: (boolean) => void,
+    stateSR: (arg: boolean) => void,
     course: number,
     btcBalance: number,
     trFee: number,
-    setFee: (number) => void
+    setFee: (num: number) => void
 }
 
-export class BtcSendWindow extends React.Component<BTCSendProps, BTCSendState> {
+export class BtcSendWindow extends Component<BTCSendProps, BTCSendState> {
 
     strSum: string
     point: number
@@ -112,7 +111,7 @@ export class BtcSendWindow extends React.Component<BTCSendProps, BTCSendState> {
                     'bitcoin', this.state.paymentAddress, this.state.amount, this.props.trFee, 0, this.props.course, this.props.btcBalance
                     )
             } catch(err) {
-                error(err)
+                console.error(err)
                 remote.dialog.showErrorBox("Send transaction error", err.message)
             }
         }

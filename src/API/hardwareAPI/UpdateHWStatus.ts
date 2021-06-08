@@ -1,3 +1,4 @@
+// @ts-ignore
 import {reader} from './Reader'
 import {Buffer} from "buffer";
 import { DisplayTransaction } from '../cryptocurrencyAPI/utils';
@@ -62,7 +63,7 @@ export function UpdateHWStatusPCSC(
         const BuffBTC = Buffer.concat([
             Buffer.from([0xB0, 0x50, 0x00]), Buffer.from([0x00]), Buffer.from([0x10]), tempBufferBTC, tempBufferWallet
         ])
-    
+        // @ts-ignore
         reader.transmit(BuffBTC, 20, 2, (err, data) => {
         })
     
@@ -91,7 +92,7 @@ export function UpdateHWStatusPCSC(
         const BuffETH = Buffer.concat([
             Buffer.from([0xB0, 0x50, 0x00]), Buffer.from([0x01]), Buffer.from([0x10]), tempBufferETH, tempBufferWallet
         ])
-    
+        // @ts-ignore
         reader.transmit(BuffETH, 20, 2, (err, data) => {
         })
     
@@ -119,7 +120,7 @@ export function UpdateHWStatusPCSC(
         const BuffLTC = Buffer.concat([
             Buffer.from([0xB0, 0x50, 0x00]), Buffer.from([0x02]), Buffer.from([0x10]), tempBufferLTC, tempBufferWallet
         ])
-
+        // @ts-ignore
         reader.transmit(BuffLTC, 20, 2, (err, data) => {
         })
     
@@ -145,7 +146,7 @@ export function UpdateHWStatusPCSC(
         }
     
         const BuffXRP = Buffer.concat([Buffer.from([0xB0, 0x50, 0x00]), Buffer.from([0x03]), Buffer.from([0x10]), tempBufferXRP, tempBufferWallet])
-    
+        // @ts-ignore
         reader.transmit(BuffXRP, 20, 2, (err, data) => {
         })
 }
@@ -293,6 +294,7 @@ export async function updateTransactionsPCSC(
 
 function sendTX(bufferTx: Buffer): Promise<Buffer> {
     return new Promise((resolve, reject) => {
+        // @ts-ignore
         reader.transmit(bufferTx, 4, 2, (err, data) => {
             if (err) {
                 reject(err)

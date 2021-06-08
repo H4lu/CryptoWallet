@@ -4,15 +4,12 @@ import {
 } from 'recharts';
 
 
-
-export default class Chart extends React.PureComponent<any, any> {
+export default class Chart extends PureComponent<any, any> {
 
     constructor(props: any) {
         super(props)
 
     }
-
-
 
     render() {
         return (

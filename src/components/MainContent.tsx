@@ -1,5 +1,4 @@
-import * as React from 'react'
-import {log} from 'electron-log'
+import React, {Component} from 'react'
 import {getBTCBalanceTarns} from "../API/cryptocurrencyAPI/BitCoin";
 
 import {getETHBalanceTrans} from "../API/cryptocurrencyAPI/Ethereum";
@@ -13,7 +12,7 @@ interface MainContentState {
     transactions: string
 }
 interface MainContentProps {
-    stateSR: (boolean) => void,
+    stateSR: (arg: boolean) => void,
     btcBalance: number,
     ltcBalance: number,
     ethBalance: number,
@@ -32,16 +31,16 @@ interface MainContentProps {
     updateStateETH: () => void,
     updateStateLTC: () => void,
     updateStateXRP: () => void,
-    setActiveCurrency: (string) => void,
+    setActiveCurrency: (currency: string) => void,
     getActiveCurrency: () => string,
     lastTx: Array<DisplayTransaction>,
     transactions: () => Promise<void>,
     refresh: () => void,
     chartBTC: Array<any>,
-    setChartLen: (number) => void,
+    setChartLen: (arg: number) => void,
     chartLen: number
 }
-export default class MainContent extends React.Component<MainContentProps, MainContentState> {
+export default class MainContent extends Component<MainContentProps, MainContentState> {
     classBTC: string;
     classETH: string;
     classLTC: string;
@@ -120,25 +119,20 @@ export default class MainContent extends React.Component<MainContentProps, MainC
 
     componentDidMount() {//TODO maybe avoid implicit call of updateState<curr_name>
         let activeCurrency: string = this.props.getActiveCurrency()
-        log("ACtive currency: " + activeCurrency)
         switch (activeCurrency) {
             case "BTC": {
-                log("IN active currency btc")
                 this.updateStateTransBTC()
                 break
             }
             case "ETH": {
-                log("IN active currency eth")
                 this.updateStateTransETH()
                 break
             }
             case "LTC": {
-                log("IN active currency ltc")
                 this.updateStateTransLTC()
                 break
             }
             case "XRP": {
-                log("IN active currency xrp")
                 this.updateStateTransXRP()
                 break
             }

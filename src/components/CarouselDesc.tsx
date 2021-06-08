@@ -1,7 +1,7 @@
-import * as React from 'react'
+import React, {Component} from 'react'
 import {Link} from "react-router-dom";
 
-export class CarouselDesc extends React.Component<any, any> {
+export class CarouselDesc extends Component<any, any> {
     currencyName:string
     cryptoBalans: string
     fiatBalance: string
