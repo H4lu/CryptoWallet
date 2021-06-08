@@ -3,8 +3,7 @@ import {Transaction} from '@ethereumjs/tx'
 import {BN} from 'ethereumjs-util'
 import Common from '@ethereumjs/common'
 import {getSignaturePCSC} from '../hardwareAPI/GetSignature'
-import axios from 'axios'
-import {dialog, remote} from "electron"
+import {remote} from "electron"
 import {getAddressPCSC} from '../hardwareAPI/GetAddress'
 import {Buffer} from 'buffer'
 import {keccak256} from "js-sha3";
@@ -24,6 +23,7 @@ enum Networks {
     MAIN = "mainnet",
     TEST = "ropsten"
 }
+
 const NETWORK = Networks.TEST
 
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://${NETWORK}.infura.io/v3/960cbfb44af74f27ad0e4b070839158a`))

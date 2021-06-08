@@ -24,6 +24,8 @@ import  {
 // @ts-ignore
 import * as satoshi from 'satoshi-bitcoin'
 import {Buffer} from "buffer";
+import ffi from 'ffi-napi'
+import { coinSelect } from './coinSelect'
 
 type CoindeskChartBpiItem = {
     [key: string]: number
@@ -60,32 +62,8 @@ let basicFee3: number
 let TXarr = []
 let numTx: number
 
-import ffi  from 'ffi-napi'
+
 const libdll = ffi.Library('./resources/lib32.dll', {'forSign': ['void', ['string', 'int', 'string']]})
-
-// export async function getUnspentTx(): Promise<number> {
-//     numTx=0
-//     await getLastTransactionData().then(Response => {
-//         let respData = JSON.parse(Response.content)
-//         if (respData.status === 'success') {
-//             for (let iTX in respData.data.txs) {
-//                 numTx = numTx + 1
-//                 let temp = respData.data.txs[iTX].value
-//                 respData.data.txs[iTX].value = toSatoshi(temp)
-//                 TXarr.push(respData.data.txs[iTX])
-//                 console.log('TX', iTX, ':')
-//                 console.log('tx: ', TXarr[iTX])
-//             }
-//         } else {
-//             remote.dialog.showErrorBox("Error", 'Error provided by internet connection')
-//         }
-//     }).catch((error: any) => {
-//         console.log(error)
-//     })
-
-//     console.log("numTX_in_btc: ", numTx)
-//     return numTx
-// }
 
 export function setBTCBalance(bal: number) {
     balance = bal
@@ -202,7 +180,7 @@ export async function getBTCBalanceTarns(address: string): Promise<Array<any>> {
       0 - количество подтверждений транзакций
     */
     // rootURL + 'get_address_balance/' + myAddr
-    const requestUrl = `https://blockchain.console.log/rawaddr/${address}`
+    const requestUrl = `https://blockchain.com/rawaddr/${address}`
         
     // Делаем запрос и отдаём в виде Promise
     const response = await axios.get(requestUrl)
@@ -229,9 +207,6 @@ function ReplaceAt(
     start: number, 
     end: number
     ) {
-        console.log('FIRST SLICE:' + input.slice(0, start))
-        console.log('SECOND SLICE ' + input.slice(start, end).replace(search, replace))
-        console.log('THIRD SLICE: ' + input.slice(end))
         return input.slice(0, start)
             + input.slice(start, end).replace(search, replace)
             + input.slice(end)
@@ -359,90 +334,3 @@ export async function handleBitcoin(
         }
     }
 
-function accumulative(
-    utxos: Array<ChainSoUnspentTransaction>, 
-    outputs: any, 
-    feeRate: any
-    ) {
-        if (!isFinite(uintOrNaN(feeRate))) return {}
-        let bytesAccum = transactionBytes([], outputs)
-    
-        let inAccum = 0
-        let inputs = []
-        let outAccum = sumOrNaN(outputs)
-    
-        for (let i = 0; i < utxos.length; ++i) {
-            let utxo = utxos[i]
-            let utxoBytes = inputBytes(utxo)
-            let utxoFee = feeRate * utxoBytes
-            let utxoValue = uintOrNaN(Number(utxo.value))
-    
-            // skip detrimental input
-            if (utxoFee > uintOrNaN(Number(utxo.value))) {
-                if (i === utxos.length - 1) return {fee: feeRate * (bytesAccum + utxoBytes)}
-                continue
-            }
-    
-            bytesAccum += utxoBytes
-            inAccum += utxoValue
-            inputs.push(utxo)
-    
-            let fee = feeRate * bytesAccum
-    
-            // go again?
-            if (inAccum < outAccum + fee) continue
-    
-            return finalize(inputs, outputs, feeRate)
-        }
-    
-        return {fee: feeRate * bytesAccum}
-}
-
-function blackjack(
-    utxos: Array<ChainSoUnspentTransaction>, 
-    outputs: any, 
-    feeRate: any
-    ) {
-        if (!isFinite(uintOrNaN(feeRate))) return {}
-    
-        let bytesAccum = transactionBytes([], outputs)
-    
-        let inAccum = 0
-        let inputs = []
-        let outAccum = sumOrNaN(outputs)
-        let threshold = dustThreshold({}, feeRate)
-    
-        for (let i = 0; i < utxos.length; ++i) {
-            let input = utxos[i]
-            let inputInBytes = inputBytes(input)
-            let fee = feeRate * (bytesAccum + inputInBytes)
-            let inputValue = uintOrNaN(Number(input.value))
-    
-            // would it waste value?
-            if ((inAccum + inputValue) > (outAccum + fee + threshold)) continue
-    
-            bytesAccum += inputInBytes
-            inAccum += inputValue
-            inputs.push(input)
-    
-            // go again?
-            if (inAccum < outAccum + fee) continue
-    
-            return finalize(inputs, outputs, feeRate)
-        }
-    
-        return {fee: feeRate * bytesAccum}
-}
-
-function coinSelect(
-    utxos: Array<ChainSoUnspentTransaction>, 
-    outputs: any, 
-    feeRate: any
-    ) {
-        // attempt to use the blackjack strategy first (no change output)
-        let base = blackjack(utxos, outputs, feeRate)
-        if (Object(base).inputs) return base
-    
-        // else, try the accumulative strategy
-        return Object(accumulative(utxos, outputs, feeRate))
-}

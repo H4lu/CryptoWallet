@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {getEthereumAddress} from '../../API/cryptocurrencyAPI/Ethereum'
+import {getEthereumAddress} from '../../API/cryptocurrencyAPI/ethereum'
 import {sendTransaction} from "../../core/sendTransaction";
 import {Link} from "react-router-dom";
 import {remote} from "electron"
@@ -101,7 +101,7 @@ export class EthSendWindow extends Component<any, ETHSendState> {
         if (this.state.paymentAddress != '') {
             try {
                 await sendTransaction(
-                    'ethereum', this.state.paymentAddress, this.state.amount, this.props.trFee, 0, this.props.course, this.props.btcBalance
+                    'ETH', this.state.paymentAddress, this.state.amount, this.props.trFee, 0, this.props.course, this.props.btcBalance
                     )
             } catch(err) {
                 console.error(err)

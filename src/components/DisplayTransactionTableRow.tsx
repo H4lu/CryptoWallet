@@ -3,7 +3,7 @@ import { DisplayTransaction, DisplayTransactionCurrency } from '../API/cryptocur
 
 interface TableRowProps {
     data: DisplayTransaction,
-    activeCurrency: string
+    activeCurrency: DisplayTransactionCurrency
 }
 
 export const TableRow: FunctionComponent<TableRowProps> = (props: TableRowProps) =>

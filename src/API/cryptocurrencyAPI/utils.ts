@@ -54,7 +54,6 @@ export interface ChainSoTransaction {
         outputs: Array<ChainSoTransactionOutput>
     }
 }
-
 export interface ChainSoTransactions {
     status: string,
     data: {
@@ -67,7 +66,6 @@ export interface ChainSoTransactions {
         txs: Array<ChainSoTransaction>
     }
 }
-
 export interface ChainSoUnspentTransactions {
     status: string,
     data: {
@@ -87,9 +85,9 @@ export enum DisplayTransactionStatus {
     FINISHED = "Finished"
 }
 
-export type BtcLikeCurrencies = 'BTC' | 'LTC'
+export type BtcLikeCurrencies = 'BTC' | 'LTC';
 
-export type DisplayTransactionCurrency = BtcLikeCurrencies | 'ETH' | 'XRP'
+export type DisplayTransactionCurrency = BtcLikeCurrencies | 'ETH' | 'XRP' | 'MNR' | 'XCH' | 'DOGE' | 'BCH';
 export interface DisplayTransaction {
     dateUnix: number,
     displayDate: string,
@@ -99,6 +97,19 @@ export interface DisplayTransaction {
     status: DisplayTransactionStatus,
     type: DisplayTransactionType,
     hash: string
+}
+
+export function toDisplayCurrencyName(currency: DisplayTransactionCurrency) {
+  switch (currency) {
+    case "BTC": return "Bitcoin";
+    case "LTC": return "Litecoin";
+    case "ETH": return "Ethereum";
+    case "XRP": return "Ripple";
+    case "BCH": return "Bitcoincash";
+    case "MNR": return "Monero";
+    case "XCH": return "CHIA";
+    case "DOGE": return "Dogecoin"
+  }
 }
 
 export function parseBTCLikeTransactions(

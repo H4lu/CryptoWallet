@@ -1,39 +1,41 @@
-import React, {FunctionComponent} from 'react'
+import React, {FC} from 'react'
 
-// interface CarouselState {
-//     currencyStyle: string
-// }
 interface CarouselProps {
     currencyName: string
     onClicked: () => void
 }
 
-const chooseIcon = (currencyName: string): string => {
-    switch(currencyName) {
-        case "BTC": {
-            return "carouselBTCIcon"
-            
-        }
-        case "LTC": {
-            return "carouselLTCIcon"
-           
-        }
-        case "ETH": {
-            return "carouselETHIcon"
-        }
-        case "XRP": {
-            return "carouselXRPIcon" 
+
+
+export const CarouselElement: FC<CarouselProps> = (props: CarouselProps) => {
+    const chooseIcon = (currencyName: string): string => {
+        switch(currencyName) {
+            case "BTC": {
+                return "carouselBTCIcon"
+                
+            }
+            case "LTC": {
+                return "carouselLTCIcon"
+               
+            }
+            case "ETH": {
+                return "carouselETHIcon"
+            }
+            case "XRP": {
+                return "carouselXRPIcon" 
+            }
         }
     }
+
+    return (
+        <div 
+            className = {chooseIcon(props.currencyName)}
+            onClick = {() => props.onClicked()}
+        />
+    )
 }
 
-export const CarouselElement: FunctionComponent<CarouselProps> = (props: CarouselProps) =>
 
-<div 
-    className = {chooseIcon(props.currencyName)}
-    onClick = {() => props.onClicked()}
->
-</div>
 
 
 

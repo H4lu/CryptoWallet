@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import CreateQR from '../../core/createQR'
-import { getEthereumAddress } from '../../API/cryptocurrencyAPI/Ethereum'
+import { getEthereumAddress } from '../../API/cryptocurrencyAPI/ethereum'
 import { DisplayTransactionTable } from '../DisplayTransactionTable'
 import { clipboard } from 'electron'
 import { sendTransaction } from '../../core/sendTransaction'
@@ -39,7 +39,7 @@ export class ETHWIndow extends Component<any, IETHWindowState> {
     clipboard.writeText(this.state.address)
   }
   handleClick() {
-    sendTransaction('ethereum', this.state.paymentAddress, this.state.amount, this.state.fee, this.props.redirect, this.props.course, this.props.balance)
+    sendTransaction('ETH', this.state.paymentAddress, this.state.amount, this.state.fee, this.props.redirect, this.props.course, this.props.balance)
   }
   handleAmountChange(e: any) {
     this.setState({ amount: e.target.value })

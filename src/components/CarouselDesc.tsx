@@ -1,74 +1,68 @@
-import React, {Component} from 'react'
+import React, {FC} from 'react'
 import {Link} from "react-router-dom";
+import { DisplayTransactionCurrency, toDisplayCurrencyName } from '../API/cryptocurrencyAPI/utils';
 
-export class CarouselDesc extends Component<any, any> {
-    currencyName:string
-    cryptoBalans: string
-    fiatBalance: string
-    pathSend: string
-    pathRecive: string
-    state = {
-    activeCurrency:this.props.activeCurrency
-    }
-    constructor(props: any) {
-        super(props)
+interface CarouselDescProps {
+    activeCurrency: DisplayTransactionCurrency,
+    btcBalance: number,
+    ltcBalance: number,
+    ethBalance: number,
+    btcPrice: number,
+    ltcPrice: number,
+    ethPrice: number,
+}
 
-        this.updateProps = this.updateProps.bind(this)
-    }
-    updateProps(){
-        switch(this.props.activeCurrency) {
-            case 1: {
-                this.currencyName = 'Bitcoin'
-                this.cryptoBalans = this.props.btcBalance.toString() + '  BTC'
-                this.fiatBalance = this.props.btcPrice.toString()
-                this.pathSend = '/btc-window-send'
-                this.pathRecive = '/btc-window-recieve'
-                break
-            }
-            case 2: {
-                this.currencyName = 'Ethereum'
-                this.cryptoBalans = this.props.ethBalance.toString() + '  ETH'
-                this.fiatBalance = this.props.ethPrice.toString()
-                this.pathSend = '/eth-window-send'
-                this.pathRecive = '/eth-window-recieve'
-                break
-            }
-            case 3: {
-                this.currencyName = 'Litecoin'
-                this.cryptoBalans = this.props.ltcBalance.toString() + '  LTC'
-                this.fiatBalance = this.props.ltcPrice.toString()
-                this.pathSend = '/ltc-window-send'
-                this.pathRecive = '/ltc-window-recieve'
-                break
-            }
-            case 4: {
-                this.currencyName = 'Ripple'
-                this.cryptoBalans = this.props.btcBalance.toString() + '  XRP'
-                this.fiatBalance = this.props.btcPrice.toString()
-                this.pathSend = '/xrp-window-send'
-                this.pathRecive = '/xrp-window-recieve'
-                break
-            }
+export const CarouselDesc: FC<CarouselDescProps> = (props: CarouselDescProps) => {
+    // TODO: store balances as map and get by active currency
+    const getCryptoBalance = (): number => {
+        switch(props.activeCurrency) {
+            case "BTC": return props.btcBalance;
+            case "ETH": return props.ethBalance;
+            case "LTC": return props.ltcBalance;
+            default: return 0
         }
+    } 
 
+    const getFiatBalance = (): number => {
+        switch(props.activeCurrency) {
+            case "BTC": return props.btcPrice;
+            case "ETH": return props.ethPrice;
+            case "LTC": return props.ltcPrice;
+            default: return 0;
+        }
     }
 
-    render() {
-        return (
-            <div>
-                {this.updateProps()}
-                <p className='currencyName'>{this.currencyName}</p>
-                <p className='currencyCryptoBalance'>{this.cryptoBalans}</p>
-                <p className='currencyFiatBalance'>{this.fiatBalance}   USD </p>
-                <div className='blockButtonSendRecieve'>
-                    <Link to={this.pathSend}>
-                        <button className='sendCurrencybutton'/>
-                    </Link>
-                    <Link to={this.pathRecive}>
-                        <button className='recieveCurrencybutton'/>
-                    </Link>
-                </div>
+    const getPathSend = (): string => {
+        switch(props.activeCurrency) {
+            case "BTC": return "/btc-window-send";
+            case "ETH": return "/eth-window-send";
+            case "LTC": return "/ltc-window-send";
+            default: return "/btc-window-send"
+        }
+    }
+
+    const getPathReceive = (): string => {
+        switch(props.activeCurrency) {
+            case "BTC": return "/btc-window-receive";
+            case "ETH": return "/eth-window-receive";
+            case "LTC": return "/ltc-window-receive";
+            default: return "/btc-window-receive"
+        }
+    }
+
+    return (
+        <div>
+            <p className='currencyName'>{toDisplayCurrencyName(props.activeCurrency)}</p>
+            <p className='currencyCryptoBalance'>{getCryptoBalance()}</p>
+            <p className='currencyFiatBalance'>{getFiatBalance()}   USD </p>
+            <div className='blockButtonSendRecieve'>
+                <Link to={getPathSend()}>
+                    <button className='sendCurrencybutton'/>
+                </Link>
+                <Link to={getPathReceive()}>
+                    <button className='recieveCurrencybutton'/>
+                </Link>
             </div>
+        </div>
         )
-    }
 }

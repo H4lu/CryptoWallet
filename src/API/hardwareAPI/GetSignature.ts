@@ -1,9 +1,9 @@
 import { Buffer } from 'buffer'
 // @ts-ignore
 import { reader } from '../hardwareAPI/Reader'
-import {getBitcoinPubKey} from "../cryptocurrencyAPI/BitCoin";
-import {getEthereumPubKey} from "../cryptocurrencyAPI/Ethereum";
-import {getLitecoinPubKey} from "../cryptocurrencyAPI/Litecoin";
+import {getBitcoinPubKey} from "../cryptocurrencyAPI/bitcoin";
+import {getEthereumPubKey} from "../cryptocurrencyAPI/ethereum";
+import {getLitecoinPubKey} from "../cryptocurrencyAPI/litecoin";
 
 import ffi from 'ffi-napi'
 // import * as Path from 'path'

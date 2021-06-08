@@ -248,7 +248,8 @@
   opacity: 75%;
 }
 
-.cryptocurrency {
+.cryptocurrency-container {
+  margin-left: 10px;
   order: 2;
 }
 
@@ -256,25 +257,13 @@
   order: 3;
 }
 
-.cryptocurrency_flex {
+.cryptocurrency-row {
   display: flex;
-}
-
-.column_1 {
-  order: 1;
-}
-
-.column_2 {
-  order: 2;
-}
-
-.column_BTC_LTC {
-  display: flex;
-  flex-direction: column;
-}
-
-.but_BTC {
-  order: 1;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 10px;
+  row-gap: 0px;
 }
 
 .balance {
@@ -304,8 +293,6 @@
   border: 0px solid black;
   height: 150px;
   width: 230px;
-  margin-top: 10px;
-  margin-left: 10px;
 }
 
 .img_BTC:hover {
@@ -316,13 +303,11 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
-.click_img_BTC {
+.img_BTC_selected {
   background: url('../static/but_BTC.svg') no-repeat center;
   border: 0px solid black;
   height: 150px;
   width: 230px;
-  margin-top: 10px;
-  margin-left: 10px;
 }
 
 .but_ETH {
@@ -334,8 +319,6 @@
   border: 0px solid black;
   height: 150px;
   width: 230px;
-  margin-top: 10px;
-  margin-left: 10px;
 }
 
 .img_ETH:hover {
@@ -346,13 +329,11 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
-.click_img_ETH {
+.img_ETH_selected {
   background: url('../static/but_ETH.svg') no-repeat center;
   border: 0px solid black;
   height: 150px;
   width: 230px;
-  margin-top: 10px;
-  margin-left: 10px;
 }
 
 .column_ETH_XRP {
@@ -369,9 +350,6 @@
   border: 0px solid black;
   height: 150px;
   width: 230px;
-  margin-top: -8px;
-  margin-left: 10px;
-  opacity: 42%;
 }
 
 .img_LTC:hover {
@@ -382,14 +360,11 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
-.click_img_LTC {
+.img_LTC_selected {
   background: url('../static/but_LTC.svg') no-repeat center;
   border: 0px solid black;
   height: 150px;
   width: 230px;
-  margin-top: -8px;
-  margin-left: 10px;
-  opacity: 42%;
 }
 
 .but_XRP {
@@ -401,9 +376,6 @@
   border: 0px solid black;
   height: 150px;
   width: 230px;
-  margin-top: -8px;
-  margin-left: 10px;
-  opacity: 42%;
 }
 
 .img_XRP:hover {
@@ -414,14 +386,83 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
-.click_img_XRP {
+.img_XRP_selected {
   background: url('../static/but_XRP.svg') no-repeat center;
   border: 0px solid black;
   height: 150px;
   width: 230px;
-  margin-top: -8px;
-  margin-left: 10px;
-  opacity: 42%;
+}
+
+.img_BCH {
+  background: url('../static/but_BCH_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 150px;
+  width: 230px;
+}
+
+.img_BCH:hover {
+  background: url('../static/but_BCH_a.svg') no-repeat center;
+}
+
+.img_BCH_selected {
+  background: url('../static/but_BCH_a.svg') no-repeat center;
+  border: 0px solid black;
+  height: 150px;
+  width: 230px;
+}
+
+.img_DOGE {
+  background: url('../static/but_DOGE_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 150px;
+  width: 230px;
+}
+
+.img_DOGE:hover {
+  background: url('../static/but_DOGE_a.svg') no-repeat center;
+}
+
+.img_DOGE_selected {
+  background: url('../static/but_DOGE_a.svg') no-repeat center;
+  border: 0px solid black;
+  height: 150px;
+  width: 230px;
+}
+
+.img_XCH {
+  background: url('../static/but_XCH_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 150px;
+  width: 230px;
+}
+
+.img_XCH:hover {
+  background: url('../static/but_XCH_a.svg') no-repeat center;
+}
+
+.img_XCH_selected {
+  background: url('../static/but_XCH_a.svg') no-repeat center;
+  border: 0px solid black;
+  height: 150px;
+  width: 230px;
+}
+
+.img_MNR {
+  background: url('../static/but_MNR_p.svg') no-repeat center;
+  border: 0px solid black;
+  height: 150px;
+  width: 230px;
+}
+
+.img_MNR:hover {
+  background: url('../static/but_MNR_a.svg') no-repeat center;
+}
+
+.img_MNR_selected {
+  background: url('../static/but_MNR_a.svg') no-repeat center;
+  border: 0px solid black;
+  height: 150px;
+  width: 230px;
 }
 
 .Block_explorer {

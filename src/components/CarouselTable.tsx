@@ -3,7 +3,6 @@ import {DisplayTransactionTable} from "./DisplayTransactionTable";
 import { DisplayTransaction, DisplayTransactionCurrency } from '../API/cryptocurrencyAPI/utils';
 
 export interface  CarouselTableState {
-    activeCurrency: number,
     classNameAll: string,
     classNameSend: string,
     classNameReceive: string,
@@ -14,8 +13,7 @@ export interface  CarouselTableState {
 }
 
 export interface CarouselTableProps {
-    activeCurrency: number,
-    getActiveCurrency: () => string,
+    activeCurrency: DisplayTransactionCurrency
     refresh: () => void,
     lastTxBTC: Array<DisplayTransaction>,
     lastTxETH: Array<DisplayTransaction>,
@@ -33,7 +31,6 @@ export class CarouselTable extends PureComponent<CarouselTableProps, CarouselTab
         this.shouldUpdate = true;
 
         this.state = {
-            activeCurrency: this.props.activeCurrency,
             classNameAll: 'AlldirectHistory_a',
             classNameSend: 'SenddirectHistory_p',
             classNameReceive: 'ReceivedirectHistory_p',
@@ -59,7 +56,7 @@ export class CarouselTable extends PureComponent<CarouselTableProps, CarouselTab
 
     updateProps() {
         switch (this.props.activeCurrency) {
-            case 1: {
+            case "BTC": {
                 this.currencyName = 'Bitcoin'
                 this.setState({
                     curTableData: this.props.lastTxBTC,
@@ -70,7 +67,7 @@ export class CarouselTable extends PureComponent<CarouselTableProps, CarouselTab
                 })
                 break
             }
-            case 2: {
+            case "ETH": {
                 this.currencyName = 'Ethereum'
                 this.setState({
                     curTableData: this.props.lastTxETH,
@@ -80,7 +77,7 @@ export class CarouselTable extends PureComponent<CarouselTableProps, CarouselTab
                 })
                 break
             }
-            case 3: {
+            case "LTC": {
                 this.currencyName = 'Litecoin'
                 this.setState({
                     curTableData: this.props.lastTxLTC, 
@@ -90,7 +87,7 @@ export class CarouselTable extends PureComponent<CarouselTableProps, CarouselTab
                 })
                 break
             }
-            case 4: {
+            case "XRP": {
                 this.currencyName = 'Ripple'
                 this.setState({
                     curTableData: this.props.lastTxXRP,
@@ -189,7 +186,7 @@ export class CarouselTable extends PureComponent<CarouselTableProps, CarouselTab
                 <div className='table_content'>
                     <DisplayTransactionTable 
                         data={this.tableData} 
-                        activeCurrency={this.state.activeCur} 
+                        activeCurrency={this.props.activeCurrency} 
                         type='normal'
                         />
                 </div>

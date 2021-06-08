@@ -18,12 +18,9 @@ import {getSignaturePCSC} from '../hardwareAPI/GetSignature'
 // @ts-ignore
 import * as satoshi from 'satoshi-bitcoin'
 import {Buffer} from 'buffer'
-//import * as bindings from 'bindings'
-
-// bindings("ref-napi")
- //import ffi from "../native_modules/""
 import {remote} from "electron"
 import ffi from "ffi-napi"
+import { coinSelect } from './coinSelect'
 
 enum Networks {
     MAIN = "LTC",
@@ -32,18 +29,15 @@ enum Networks {
 
 let myAddress = ''
 let myPubKey = Buffer.alloc(64)
+let balance: number
+let price: number
+
 const rootURL = 'https://chain.so/api/v2'
 const network = networks.litecoin
 
 const NETWORK = Networks.MAIN
-import path from 'path'
-console.log(process.cwd())
-console.log(path.join(process.cwd(), '.webpack/renderer/main_window/resources/lib32.dll'))
+
 const libdll = ffi.Library('./resources/lib32.dll', {'forSign': ['void', ['string', 'int', 'string']]})
-
-
-let balance: number
-let price: number
 
 export function setLTCBalance(bal: number) {
     balance = bal
@@ -233,81 +227,4 @@ export async function handleLitecoin(paymentAdress: string, amount: number, tran
         remote.dialog.showErrorBox("Error", 'Error provided by internet connection')
     }
    
-}
-
-function accumulative(utxos: any, outputs: any, feeRate: any) {
-    if (!isFinite(uintOrNaN(feeRate))) return {}
-    let bytesAccum = transactionBytes([], outputs)
-
-    let inAccum = 0
-    let inputs = []
-    let outAccum = sumOrNaN(outputs)
-
-    for (let i = 0; i < utxos.length; ++i) {
-        let utxo = utxos[i]
-        let utxoBytes = inputBytes(utxo)
-        let utxoFee = feeRate * utxoBytes
-        let utxoValue = uintOrNaN(Number(utxo.value))
-
-        // skip detrimental input
-        if (utxoFee > utxo.value) {
-            if (i === utxos.length - 1) return {fee: feeRate * (bytesAccum + utxoBytes)}
-            continue
-        }
-
-        bytesAccum += utxoBytes
-        inAccum += utxoValue
-        inputs.push(utxo)
-
-        let fee = feeRate * bytesAccum
-
-        // go again?
-        if (inAccum < outAccum + fee) continue
-
-        return finalize(inputs, outputs, feeRate)
-    }
-
-    return {fee: feeRate * bytesAccum}
-}
-
-function blackjack(utxos: any, outputs: any, feeRate: any) {
-    if (!isFinite(uintOrNaN(feeRate))) return {}
-
-    let bytesAccum = transactionBytes([], outputs)
-
-    let inAccum = 0
-    let inputs = []
-    let outAccum = sumOrNaN(outputs)
-    let threshold = dustThreshold({}, feeRate)
-
-    for (let i = 0; i < utxos.length; ++i) {
-        let input = utxos[i]
-        let inputInBytes = inputBytes(input)
-        let fee = feeRate * (bytesAccum + inputInBytes)
-        let inputValue = uintOrNaN(Number(input.value))
-
-        // would it waste value?
-        if ((inAccum + inputValue) > (outAccum + fee + threshold)) continue
-
-        bytesAccum += inputInBytes
-        inAccum += inputValue
-        inputs.push(input)
-
-        // go again?
-        if (inAccum < outAccum + fee) continue
-
-        return finalize(inputs, outputs, feeRate)
-    }
-
-    return {fee: feeRate * bytesAccum}
-}
-
-function coinSelect(utxos: any, outputs: any, feeRate: any) {
-
-    // attempt to use the blackjack strategy first (no change output)
-    let base = blackjack(utxos, outputs, feeRate)
-    if (Object(base).inputs) return base
-
-    // else, try the accumulative strategy
-    return Object(accumulative(utxos, outputs, feeRate))
 }

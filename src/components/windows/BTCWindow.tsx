@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import CreateQR from '../../core/createQR'
-import getBitcoinAddress from '../../API/cryptocurrencyAPI/BitCoin'
+import getBitcoinAddress from '../../API/cryptocurrencyAPI/bitcoin'
 import { clipboard } from 'electron'
 import { DisplayTransactionTable } from '../DisplayTransactionTable'
 import { sendTransaction } from '../../core/sendTransaction'
@@ -71,7 +71,9 @@ export class BTCWindow extends Component<BTCWindowProps, BTCWindowState> {
     clipboard.writeText(this.state.address)
   }
   handleClick() {
-    sendTransaction('bitcoin', this.state.paymentAddress, this.state.amount, this.state.fee, this.props.redirect, this.props.course, this.props.balance)
+    sendTransaction(
+      'BTC', this.state.paymentAddress, this.state.amount, this.state.fee, this.props.redirect, this.props.course, this.props.balance
+      )
   }
   handleAmountChange(e: any) {
     this.setState({ amount: e.target.value })

@@ -1,17 +1,16 @@
 import React, {PureComponent} from 'react'
 import {Carousel} from './Carousel'
 import {CarouselTable} from "./CarouselTable";
-import { DisplayTransaction } from '../API/cryptocurrencyAPI/utils';
+import { DisplayTransaction, DisplayTransactionCurrency } from '../API/cryptocurrencyAPI/utils';
 
 interface CarouselHistoryState {
-    activeCurrency: number,
-    needShift: boolean
+    activeCurrencyIndex: number,
+    isNeedShift: boolean
 }
 
 interface CarouselHistoryProps {
     setActiveCurrency: (currency: string) => void,
-    getActiveCurrency: () => string,
-    activeCurrency: number, // TODO: store as string, convert to index inside component
+    activeCurrency: DisplayTransactionCurrency, // TODO: store as string, convert to index inside component
     stateSR: (arg: boolean) => void,
     refresh: () => void,
     lastTxBTC: Array<DisplayTransaction>,
@@ -23,64 +22,29 @@ export class CarouselHistory extends PureComponent<CarouselHistoryProps, Carouse
     constructor(props: any) {
         super(props)
         this.props.stateSR(false)
-        this.getActive = this.getActive.bind(this)
+        this.currencyToIndex = this.currencyToIndex.bind(this)
         this.state = {
-            activeCurrency: this.props.activeCurrency,
-            needShift: true
+            activeCurrencyIndex:  this.currencyToIndex(),
+            isNeedShift: true
         };
-        this.chooseActiveCurrency = this.chooseActiveCurrency.bind(this)
-        this.mapProps = this.mapProps.bind(this)
-
     }
 
     componentDidMount() {
-        if (this.state.needShift) {
-            this.setState({activeCurrency: this.state.activeCurrency + 1})
-            this.setState({activeCurrency: this.state.activeCurrency - 1})//kostil for choosing current active
-            this.setState({needShift: false})
+        if (this.state.isNeedShift) {
+            this.setState({activeCurrencyIndex: this.currencyToIndex() + 1})
+            this.setState({activeCurrencyIndex: this.currencyToIndex() - 1})//kostil for choosing current active
+            this.setState({isNeedShift: false})
         }
     }
+ 
 
-    chooseActiveCurrency(index: number) {
-        this.setState({activeCurrency: index})
-    }
-
-    getActive() {
-        switch (this.props.getActiveCurrency()) {
-            case "BTC": {
-                return 1
-
-            }
-            case "ETH": {
-                return 2
-            }
-            case "LTC": {
-                return 3
-            }
-            case "XRP": {
-                return 4
-            }
-        }
-    }
-
-    mapProps() {
-        switch (this.props.getActiveCurrency()) {
-            case "BTC": {
-                this.setState({activeCurrency: 1})
-                break
-            }
-            case "ETH": {
-                this.setState({activeCurrency: 2})
-                break
-            }
-            case "LTC": {
-                this.setState({activeCurrency: 3})
-                break
-            }
-            case "XRP": {
-                this.setState({activeCurrency: 4})
-                break
-            }
+    currencyToIndex() {
+        switch (this.props.activeCurrency) {
+            case "BTC": return 1;
+            case "ETH": return 2;
+            case "LTC": return 3;
+            case "XRP": return 4;
+            default: return 1;
         }
     }
 
@@ -90,11 +54,10 @@ export class CarouselHistory extends PureComponent<CarouselHistoryProps, Carouse
                 <div className='payWindowTable'>
                     <Carousel
                             setActiveCurrency={this.props.setActiveCurrency}
-                            activeCurrency={this.state.activeCurrency}
+                            activeCurrencyIndex={this.state.activeCurrencyIndex}
                             />
                     <CarouselTable 
                                 activeCurrency={this.props.activeCurrency}
-                                getActiveCurrency={this.props.getActiveCurrency} 
                                 refresh={this.props.refresh}
                                 lastTxBTC = {this.props.lastTxBTC}
                                 lastTxLTC = {this.props.lastTxLTC}

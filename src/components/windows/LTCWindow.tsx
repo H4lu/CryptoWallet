@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import CreateQR from '../../core/createQR'
-import getAddres from '../../API/cryptocurrencyAPI/Litecoin'
+import getAddres from '../../API/cryptocurrencyAPI/litecoin'
 import { sendTransaction } from '../../core/sendTransaction'
 //import { clipboard, remote } from 'electron'
 import {clipboard} from 'electron'
@@ -40,7 +40,7 @@ export class LTCWindow extends Component<any, ILTCWindowState> {
     console.log('PROPERTY: ' + this.props.lastTx)
   }
   handleClick() {
-    sendTransaction('litecoin', this.state.paymentAddress, this.state.amount, this.state.fee, this.props.redirect, this.props.course, this.props.balance)
+    sendTransaction('LTC', this.state.paymentAddress, this.state.amount, this.state.fee, this.props.redirect, this.props.course, this.props.balance)
   }
   handleCopyClick() {
     clipboard.writeText(this.state.address)

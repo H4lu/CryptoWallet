@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import getBitcoinAddress, {getFee} from "../../API/cryptocurrencyAPI/BitCoin";
+import getBitcoinAddress, {getFee} from "../../API/cryptocurrencyAPI/bitcoin";
 import {sendTransaction} from "../../core/sendTransaction";
 import {Link} from "react-router-dom";
 import {remote} from "electron"
@@ -108,7 +108,7 @@ export class BtcSendWindow extends Component<BTCSendProps, BTCSendState> {
         if (this.state.paymentAddress != '') {
             try {
                 await sendTransaction(
-                    'bitcoin', this.state.paymentAddress, this.state.amount, this.props.trFee, 0, this.props.course, this.props.btcBalance
+                    'BTC', this.state.paymentAddress, this.state.amount, this.props.trFee, 0, this.props.course, this.props.btcBalance
                     )
             } catch(err) {
                 console.error(err)

@@ -18,7 +18,7 @@ export const FirmwareWindow: FC = () => {
                     extensions: ['*']
                 },
                 {
-                    name: 'Binary Files',
+                    name: 'Hex Files',
                     extensions: ['hex']
                 }, 
             ],
