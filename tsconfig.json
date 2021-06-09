@@ -1,6 +1,10 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "lib": [
+      "es2019",
+      "DOM"
+    ],
     "target": "es6",
     "pretty": true,
     "allowSyntheticDefaultImports": true,

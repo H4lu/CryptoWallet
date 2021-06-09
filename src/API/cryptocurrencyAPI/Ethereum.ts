@@ -7,6 +7,7 @@ import {remote} from "electron"
 import {getAddressPCSC} from '../hardwareApi/getAddress'
 import {Buffer} from 'buffer'
 import {keccak256} from "js-sha3";
+import axios from 'axios'
 import { DisplayTransaction, DisplayTransactionCurrency, DisplayTransactionStatus, DisplayTransactionType } from './utils'
 
 interface EthplorerTransaction {
@@ -24,7 +25,7 @@ enum Networks {
     TEST = "ropsten"
 }
 
-const NETWORK = Networks.TEST
+const NETWORK = Networks.MAIN
 
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://${NETWORK}.infura.io/v3/960cbfb44af74f27ad0e4b070839158a`))
 
@@ -81,11 +82,10 @@ export function getEthereumAddress() {
 }
 
 export async function getEthereumLastTx(): Promise<Array<DisplayTransaction>> {
-    // const requestURL = `https://api.ethplorer.io/getAddressTransactions/${myAdress}?apiKey=freekey&limit=50`
-    // const response = await axios.get(requestURL)
-    // return (response.data as Array<EthplorerTransaction>)
-    //     .map(tx => ethplorerToDisplayTransaction(tx))
-    return []
+    const requestURL = `https://api.ethplorer.io/getAddressTransactions/${myAdress}?apiKey=freekey&limit=50`
+    const response = await axios.get(requestURL)
+    return (response.data as Array<EthplorerTransaction>)
+        .map(tx => ethplorerToDisplayTransaction(tx))
 }
 
 function ethplorerToDisplayTransaction(tx: EthplorerTransaction): DisplayTransaction {
@@ -135,7 +135,6 @@ async function createTransaction(
     amount: number, 
     gasPrice: number, 
     gasLimit: number, 
-    redirect: () => void, 
     course: number, 
     balance: number
     ) {
@@ -180,15 +179,15 @@ async function createTransaction(
             }
            
             const serTx = '0x' + tx.serialize().toString('hex');
-            await web3.eth.sendSignedTransaction(serTx)
-            .on('receipt', console.log)
-            .on('transactionHash', (hash) => {
-                console.log('Transaction sended: ' + hash)
-            })
-            .on('error', async error => {
-                console.log(error)
-                remote.dialog.showErrorBox("Error",error.message)
-            });
+            return web3.eth.sendSignedTransaction(serTx)
+                // .on('receipt', console.log)
+                // .on('transactionHash', (hash) => {
+                //     console.log('Transaction sended: ' + hash)
+                // })
+                // .on('error', async error => {
+                //     console.log(error)
+                //     remote.dialog.showErrorBox("Error",error.message)
+                // });
         }
 }
 
@@ -197,11 +196,10 @@ export function handleEthereum(
     amount: number, 
     gasPrice: number, 
     gasLimit: number, 
-    redirect: () => void, 
     course: number, 
     balance: number
     ) {
         return createTransaction(
-            paymentAdress, amount, gasPrice, gasLimit, redirect, course, balance
+            paymentAdress, amount, gasPrice, gasLimit, course, balance
             )
 }

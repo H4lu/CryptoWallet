@@ -9,7 +9,6 @@ export async function sendTransaction(
   paymentAddress: string, 
   amount: number, 
   fee: number, 
-  redirect: any, 
   course: number, 
   balance: number
   ) {
@@ -18,15 +17,15 @@ export async function sendTransaction(
     switch (currency) {
       case 'BTC':
       console.log('AMOUNT IN SENDBITON', amount)
-      await handleBitcoin(paymentAddress, amount, fee, redirect, course, balance)
+      await handleBitcoin(paymentAddress, amount, fee, course, balance)
       break
     case 'LTC':
       console.log('AMOUNT IN SEND LTC', amount)
-      await handleLitecoin(paymentAddress, amount, fee, redirect, course, balance)
+      await handleLitecoin(paymentAddress, amount, fee, course, balance)
       break
     case 'ETH':
       console.log('AMOUNT IN SEND ETH', amount)
-      await handleEthereum(paymentAddress, amount, fee, 21000, redirect, course, balance)
+      await handleEthereum(paymentAddress, amount, fee, 21000, course, balance)
       break
     }
 }

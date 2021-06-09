@@ -108,8 +108,9 @@ export class BtcSendWindow extends Component<BTCSendProps, BTCSendState> {
         if (this.state.paymentAddress != '') {
             try {
                 await sendTransaction(
-                    'BTC', this.state.paymentAddress, this.state.amount, this.props.trFee, 0, this.props.course, this.props.btcBalance
+                    'BTC', this.state.paymentAddress, this.state.amount, this.props.trFee, this.props.course, this.props.btcBalance
                     )
+                    
             } catch(err) {
                 console.error(err)
                 remote.dialog.showErrorBox("Send transaction error", err.message)

@@ -107,76 +107,81 @@ async function getLastTransactionData(): Promise<any> {
     return response.data
 }
 
-async function createTransaction(paymentAdress: string,
-                                 transactionAmount: number, transactionFee: number, redirect: any, utxos: Array<any>, course: number, balance: number) {
-    let targets = {
-        address: paymentAdress,
-        value: transactionAmount
-    }
-    let {inputs, outputs, fee} = coinSelect(utxos, targets, 23 * transactionFee)
-
-    console.log('FEE_coinSelect: ', fee)
-    let transaction = new TransactionBuilder(network)
-    for (let input in inputs) {
-        transaction.addInput(inputs[input].txid, inputs[input].output_no)
-    }
-    for (let out in outputs) {
-        if (!outputs[out].address) {
-            outputs[out].address = myAddress
+async function createTransaction(
+    paymentAdress: string,
+    transactionAmount: number, 
+    transactionFee: number, 
+    utxos: Array<any>, 
+    course: number, 
+    balance: number
+    ) {
+        let targets = {
+            address: paymentAdress,
+            value: transactionAmount
         }
-        transaction.addOutput(outputs[out].address, outputs[out].value)
-    }
-    let unbuildedTx = transaction.buildIncomplete().toHex()
-    transaction.inputs.map(value => {
-        console.log('MAPPED INPUT: ' + value)
-    })
-    transaction.tx.ins.forEach((value: any) => {
-        console.log('PROBABLY TX INPUT: ' + JSON.stringify(value))
-    })
-
-    let hashArray: Array<Buffer> = []
-
-    let dataForHash = ReplaceAt(unbuildedTx + '01000000', '00000000ff', '00000019' + Object(utxos[0]).script_hex + 'ff', unbuildedTx.indexOf('00000000ff', 0), unbuildedTx.indexOf('00000000ff', 0) + 50)
-    console.log('DATA FOR HASH: ', dataForHash)
-
-
-    /************ lib dll *****************/
-    let dataIn = Buffer.from(dataForHash, 'hex')
-    let lenData = dataIn.length
-    let numInputs = transaction.inputs.length
-    let num64 = Math.floor(lenData / 64) - 1
-    let lenEnd = lenData - num64 * 64
-    let lenMess = 32 + lenEnd
-
-    let dataOut = Buffer.alloc(numInputs * lenMess)
-    libdll.forSign(dataIn as any, lenData, dataOut)
-    console.log('OUT: ', dataOut.toString('hex'))
-
-    for (let j = 0; j < numInputs; j++) {
-        let arr = new Array(lenMess)
-        for (let i = 0; i < lenMess; i++) {
-            arr[i] = dataOut[j * lenMess + i]
+        let {inputs, outputs, fee} = coinSelect(utxos, targets, 23 * transactionFee)
+    
+        console.log('FEE_coinSelect: ', fee)
+        let transaction = new TransactionBuilder(network)
+        for (let input in inputs) {
+            transaction.addInput(inputs[input].txid, inputs[input].output_no)
         }
-        let LL = 2 + lenMess
-        let hh1 = num64 * 64 % 256
-        let hh2 = (num64 * 64 - hh1) / 256
-        let for41 = Buffer.concat([Buffer.from([LL]), Buffer.from([hh2]), Buffer.from([hh1]), Buffer.from(arr)])
-        console.log('for41 ', for41.toString('hex'))
-
-        hashArray.push(for41)
-    }
-    /************ lib dll ******************/
-
-    let data = await getSignaturePCSC(2, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.inputs.length, course, fee / 100000000, balance)
-    if (data[0].length !== 1) {
-        transaction.inputs.forEach((input, index) => {
-
-            unbuildedTx = unbuildedTx.replace('00000000ff', '000000' + data[index].toString('hex') + 'ff')
-
+        for (let out in outputs) {
+            if (!outputs[out].address) {
+                outputs[out].address = myAddress
+            }
+            transaction.addOutput(outputs[out].address, outputs[out].value)
+        }
+        let unbuildedTx = transaction.buildIncomplete().toHex()
+        transaction.inputs.map(value => {
+            console.log('MAPPED INPUT: ' + value)
         })
-        sendTransaction(unbuildedTx, redirect)
-        transaction.addOutput(paymentAdress, transactionAmount)
-    }
+        transaction.tx.ins.forEach((value: any) => {
+            console.log('PROBABLY TX INPUT: ' + JSON.stringify(value))
+        })
+    
+        let hashArray: Array<Buffer> = []
+    
+        let dataForHash = ReplaceAt(unbuildedTx + '01000000', '00000000ff', '00000019' + Object(utxos[0]).script_hex + 'ff', unbuildedTx.indexOf('00000000ff', 0), unbuildedTx.indexOf('00000000ff', 0) + 50)
+        console.log('DATA FOR HASH: ', dataForHash)
+    
+    
+        /************ lib dll *****************/
+        let dataIn = Buffer.from(dataForHash, 'hex')
+        let lenData = dataIn.length
+        let numInputs = transaction.inputs.length
+        let num64 = Math.floor(lenData / 64) - 1
+        let lenEnd = lenData - num64 * 64
+        let lenMess = 32 + lenEnd
+    
+        let dataOut = Buffer.alloc(numInputs * lenMess)
+        libdll.forSign(dataIn as any, lenData, dataOut)
+        console.log('OUT: ', dataOut.toString('hex'))
+    
+        for (let j = 0; j < numInputs; j++) {
+            let arr = new Array(lenMess)
+            for (let i = 0; i < lenMess; i++) {
+                arr[i] = dataOut[j * lenMess + i]
+            }
+            let LL = 2 + lenMess
+            let hh1 = num64 * 64 % 256
+            let hh2 = (num64 * 64 - hh1) / 256
+            let for41 = Buffer.concat([Buffer.from([LL]), Buffer.from([hh2]), Buffer.from([hh1]), Buffer.from(arr)])
+            console.log('for41 ', for41.toString('hex'))
+    
+            hashArray.push(for41)
+        }
+        /************ lib dll ******************/
+    
+        let data = await getSignaturePCSC(2, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.inputs.length, course, fee / 100000000, balance)
+        if (data[0].length !== 1) {
+            transaction.inputs.forEach((input, index) => {
+    
+                unbuildedTx = unbuildedTx.replace('00000000ff', '000000' + data[index].toString('hex') + 'ff')
+    
+            })
+            return sendTransaction(unbuildedTx)
+        }
 }
 
 function ReplaceAt(input: any, search: any, replace: any, start: any, end: any) {
@@ -188,31 +193,36 @@ function ReplaceAt(input: any, search: any, replace: any, start: any, end: any) 
         + input.slice(end)
 }
 
-async function sendTransaction(transactionHex: string, redirect: any): Promise<void> {
+async function sendTransaction(transactionHex: string): Promise<void> {
     await axios.post(
         'https://api.blockcypher.com/v1/ltc/main/txs/push',
         {'tx': transactionHex},
         {headers: {'content-type': 'application/json'}}
-        )
-    redirect()    
+        ) 
 }
 
-export async function handleLitecoin(paymentAdress: string, amount: number, transactionFee: number, redirect: any, course: number, balance: number) {
-    const lastTx = await getLastTransactionData()
+export async function handleLitecoin(
+    paymentAdress: string, 
+    amount: number, 
+    transactionFee: number,
+    course: number, 
+    balance: number
+    ) {
+        const lastTx = await getLastTransactionData()
         
-    if (lastTx.status === 'success') {
-        const utxos = []
-        for (let utxo in lastTx.data.txs) {
-            let temp = lastTx.data.txs[utxo].value
-            lastTx.data.txs[utxo].value = toSatoshi(temp)
-            utxos.push(lastTx.data.txs[utxo])
+        if (lastTx.status === 'success') {
+            const utxos = []
+            for (let utxo in lastTx.data.txs) {
+                let temp = lastTx.data.txs[utxo].value
+                lastTx.data.txs[utxo].value = toSatoshi(temp)
+                utxos.push(lastTx.data.txs[utxo])
+            }
+            amount = toSatoshi(amount)
+            return createTransaction(paymentAdress, amount, transactionFee, utxos, course, balance).catch(err => {
+                console.log(err)
+            })
+        } else {
+            remote.dialog.showErrorBox("Error", 'Error provided by internet connection')
         }
-        amount = toSatoshi(amount)
-        return createTransaction(paymentAdress, amount, transactionFee, redirect, utxos, course, balance).catch(err => {
-            console.log(err)
-        })
-    } else {
-        remote.dialog.showErrorBox("Error", 'Error provided by internet connection')
-    }
    
 }

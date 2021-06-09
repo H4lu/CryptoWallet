@@ -101,7 +101,7 @@ export class EthSendWindow extends Component<any, ETHSendState> {
         if (this.state.paymentAddress != '') {
             try {
                 await sendTransaction(
-                    'ETH', this.state.paymentAddress, this.state.amount, this.props.trFee, 0, this.props.course, this.props.btcBalance
+                    'ETH', this.state.paymentAddress, this.state.amount, this.props.trFee, this.props.course, this.props.btcBalance
                     )
             } catch(err) {
                 console.error(err)

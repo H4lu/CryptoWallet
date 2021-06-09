@@ -5,7 +5,6 @@ import { MemoryRouter as Router } from 'react-router-dom'
 import App from './app'
 
 ReactDOM.render(
-    /*@ts-ignore */ 
     <Router>
         <App/>
     </Router>,

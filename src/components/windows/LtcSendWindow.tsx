@@ -35,9 +35,9 @@ export class LtcSendWindow extends Component<any, ILTCSendState> {
             fee: (431 * this.feeCoeff * this.props.trFee) / 100000000,
             usd: 0,
             feeUSD: this.props.course * (431 * this.feeCoeff * this.props.trFee) / 100000000,
-            balance: this.props.btcBalance,
-            balanceUSD: this.props.btcBalance * this.props.course,
-            maxSum: this.props.btcBalance - (431 * this.feeCoeff * this.props.trFee) / 100000000,
+            balance: this.props.ltcBalance,
+            balanceUSD: this.props.ltcBalance * this.props.course,
+            maxSum: this.props.ltcBalance - (431 * this.feeCoeff * this.props.trFee) / 100000000,
             amountS: ''
         }
         this.handleAddressChange = this.handleAddressChange.bind(this)
@@ -97,7 +97,7 @@ export class LtcSendWindow extends Component<any, ILTCSendState> {
     async handleClick() {
         try {
             await sendTransaction(
-                'LTC', this.state.paymentAddress, this.state.amount, this.props.trFee, 0, this.props.course, this.props.btcBalance
+                'LTC', this.state.paymentAddress, this.state.amount, this.props.trFee, this.props.course, this.props.ltcBalance
                 )
         } catch(err) {
             console.error(err)
@@ -121,7 +121,7 @@ export class LtcSendWindow extends Component<any, ILTCSendState> {
     changeFee1() {
         this.props.setFee(1)
         this.setState({fee: (431 * this.feeCoeff * 1) / 100000000})
-        this.setState({maxSum: this.props.btcBalance - (431 * this.feeCoeff * 1) / 100000000})
+        this.setState({maxSum: this.props.ltcBalance - (431 * this.feeCoeff * 1) / 100000000})
         this.setState({feeUSD: this.props.course * (431 * this.feeCoeff * 1) / 100000000})
 
     }
@@ -129,7 +129,7 @@ export class LtcSendWindow extends Component<any, ILTCSendState> {
     changeFee2() {
         this.props.setFee(2)
         this.setState({fee: (431 * this.feeCoeff * 2) / 100000000})
-        this.setState({maxSum: this.props.btcBalance - (431 * this.feeCoeff * 2) / 100000000}),
+        this.setState({maxSum: this.props.ltcBalance - (431 * this.feeCoeff * 2) / 100000000}),
             this.setState({feeUSD: this.props.course * (431 * this.feeCoeff * 2) / 100000000})
 
     }
@@ -137,7 +137,7 @@ export class LtcSendWindow extends Component<any, ILTCSendState> {
     changeFee3() {
         this.props.setFee(3)
         this.setState({fee: (431 * this.feeCoeff * 3) / 100000000})
-        this.setState({maxSum: this.props.btcBalance - (431 * this.feeCoeff * 3) / 100000000})
+        this.setState({maxSum: this.props.ltcBalance - (431 * this.feeCoeff * 3) / 100000000})
         this.setState({feeUSD: this.props.course * (431 * this.feeCoeff * 3) / 100000000})
 
     }
