@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react'
+import React, {FC} from 'react'
 import { Redirect } from 'react-router'
 
 interface StartWindowProps {
@@ -27,7 +27,6 @@ const renderWalletState = (walletStatus: number) => {
   }
 } 
 
-
 export const StartWindow: FC<StartWindowProps> = (props) => {
   if (props.redirectToMain) {
     return <Redirect from = '/' to = '/main'/>
@@ -43,19 +42,4 @@ export const StartWindow: FC<StartWindowProps> = (props) => {
     </div>
   )
 }
-//   constructor(props: any) {
-//     super(props)
-    
-//     this.renderWalletState = this.renderWalletState.bind(this)
-//   }
-  
 
-//   render() {
-//     if (this.props.redirectToMain) {
-//       console.log("REDIRECT")
-//       return <Redirect from = '/' to = '/main'/>
-//     }
-
-   
-//   }
-// }

@@ -681,7 +681,6 @@ export default class App extends Component<{}, AppState> {
     }
 
     async initAll() {
-    
         // console.log('initAll')
         // try {
         //     if (this.state.allowInit) {
@@ -699,7 +698,7 @@ export default class App extends Component<{}, AppState> {
         //     }
         // } catch(err) {
         //     console.log(err)
-        //     remote.diaconsole.log.showErrorBox("Initialization error", err.message)
+        //     remote.dialog.showErrorBox("Initialization error", err.message)
         // }
     }
 

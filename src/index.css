@@ -1,9 +1,18 @@
 .background-start {
   background: url("../static/backgroundStart.svg") no-repeat center;
   background-size: cover;
-  height: 744px;
+  height: 795px;
   width: 1366px;
   margin-top: -23.5px;
+}
+
+.braitberry-logo {
+  background: url("../static/braitberry_logo.svg") no-repeat center;
+  width: 43px;
+  height: 52px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px;
 }
 
 .header-content {
@@ -106,7 +115,7 @@
   border: 0px solid black;
   height: 42px;
   width: 42px;
-  margin-top: 133px;
+  margin-top: 40px;
   margin-right: 20px;
   margin-left: 20px;
   order: 1;
