@@ -44,7 +44,6 @@ import {UpdateHWStatusPCSC, updateTransactionsPCSC} from './api/hardwareApi/upda
 import {SidebarLeft} from "./components/sidebarLeft";
 import {BtcRecieveWindow} from "./components/windows/btcRecieveWindow";
 import {BtcSendWindow} from "./components/windows/btcSendWindow";
-import {SidebarLeftBlur} from "./components/sidebarLeftBlur";
 import {LtcSendWindow} from "./components/windows/ltcSendWindow";
 import {LtcRecieveWindow} from "./components/windows/ltcRecieveWindow";
 import {EthRecieveWindow} from "./components/windows/ethReceiveWindow";
@@ -207,7 +206,7 @@ export default class App extends Component<{}, AppState> {
             path: '/main',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeft/>,
+            sidebarLeft: SidebarLeft,
             main: () => <MainContent 
                 btcBalance={this.state.BTCBalance} 
                 ltcBalance={this.state.LTCBalance}
@@ -249,14 +248,14 @@ export default class App extends Component<{}, AppState> {
             path: '/mode-window',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeft/>,
+            sidebarLeft: SidebarLeft,
             main: () => <ModeWindow setFee={this.setTransactionFee} trFee={this.state.transactionFee}/>
         },
         {
             path: '/currency-carousel',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeft/>,
+            sidebarLeft: SidebarLeft,
             main: () => <WalletCarousel 
                                     btcBalance={this.state.BTCBalance} 
                                     ltcBalance={this.state.LTCBalance}
@@ -271,7 +270,7 @@ export default class App extends Component<{}, AppState> {
             path: '/btc-window-send',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeftBlur/>,
+            sidebarLeft: SidebarLeft,
             main: () => <BtcSendWindow stateSR={this.setStateSR} 
                                        course={this.state.BTCCourse}
                                        btcBalance={this.state.BTCBalance} 
@@ -282,14 +281,14 @@ export default class App extends Component<{}, AppState> {
             path: '/btc-window-receive',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeftBlur/>,
+            sidebarLeft: SidebarLeft,
             main: () => <BtcRecieveWindow stateSR={this.setStateSR}/>
         },
         {
             path: '/ltc-window-send',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeftBlur/>,
+            sidebarLeft: SidebarLeft,
             main: () => <LtcSendWindow stateSR={this.setStateSR} 
                                        course={this.state.LTCCourse}
                                        btcBalance={this.state.LTCBalance} 
@@ -300,14 +299,14 @@ export default class App extends Component<{}, AppState> {
             path: '/ltc-window-receive',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeftBlur/>,
+            sidebarLeft: SidebarLeft,
             main: () => <LtcRecieveWindow stateSR={this.setStateSR}/>
         },
         {
             path: '/eth-window-send',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeftBlur/>,
+            sidebarLeft: SidebarLeft,
             main: () => <EthSendWindow stateSR={this.setStateSR} 
                                        course={this.state.ETHCourse}
                                        btcBalance={this.state.ETHBalance} 
@@ -318,14 +317,14 @@ export default class App extends Component<{}, AppState> {
             path: '/eth-window-receive',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeftBlur/>,
+            sidebarLeft: SidebarLeft,
             main: () => <EthRecieveWindow stateSR={this.setStateSR}/>
         },
         {
             path: '/xrp-window-send',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeftBlur/>,
+            sidebarLeft: SidebarLeft,
             main: () => <XrpSendWindow stateSR={this.setStateSR} 
                                        course={this.state.XRPCourse}
                                        btcBalance={this.state.XRPBalance} 
@@ -336,7 +335,7 @@ export default class App extends Component<{}, AppState> {
             path: '/xrp-window-receive',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeftBlur/>,
+            sidebarLeft: SidebarLeft,
             main: () => <XrpRecieveWindow stateSR={this.setStateSR}/>
         },
 
@@ -344,7 +343,7 @@ export default class App extends Component<{}, AppState> {
             path: '/history-carousel',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeft/>,
+            sidebarLeft: SidebarLeft,
             main: () => <CarouselHistory 
                                         stateSR={this.setStateSR}
                                         refresh={this.updateData}
@@ -374,7 +373,7 @@ export default class App extends Component<{}, AppState> {
             path: '/btc-window',
             exact: true,
             sidebar: () => <SidebarContent/>,
-            sidebarLeft: () => <SidebarLeft/>,
+            sidebarLeft: SidebarLeft,
             main: () => <BTCWindow balance={this.state.BTCBalance} 
                                    price={this.state.BTCPrice}
                                    course={this.state.BTCCourse}
@@ -854,7 +853,8 @@ export default class App extends Component<{}, AppState> {
                              component={route.sidebar}
                          />
                      ))}
-                 <div className='containerData'>
+             </div>
+             <div className='containerData'>
                      {this.routes.map((route, index) => (
                          <Route
                              key={index}
@@ -864,7 +864,6 @@ export default class App extends Component<{}, AppState> {
                          />
                      ))}
                  </div>
-             </div>
           </div>   
         )
     }
