@@ -1,5 +1,5 @@
 import React, {FC} from 'react'
-import { Erc20DisplayToken } from '../api/cryptocurrencyApi/erc20';
+import { Erc20DisplayToken } from '../api/cryptocurrencyApi/ethereum';
 
 interface Erc20TokesTableRowProps {
     data: Erc20DisplayToken

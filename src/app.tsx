@@ -25,7 +25,10 @@ import {
     initEthereumAddress,
     getEthereumLastTx,
     setETHBalance,
-    setETHPrice
+    setETHPrice,
+    Erc20DisplayToken,
+    getAddressErc20Tokens,
+    getEthereumAddress
 } from './api/cryptocurrencyApi/ethereum'
 import {getCurrencyRate} from './core/getCurrencyRate'
 import {StartWindow} from './components/windows/startWindow'
@@ -54,7 +57,6 @@ import {ModeWindow} from "./components/windows/modeWindow";
 import {DisplayTransaction, DisplayTransactionCurrency} from './api/cryptocurrencyApi/utils';
 import {remote} from "electron";
 import { ERC20Window } from './components/windows/erc20Window';
-import { Erc20DisplayToken } from './api/cryptocurrencyApi/erc20';
 import { FirmwareWindow } from './components/windows/firmwareWindow';
 
 
@@ -95,7 +97,8 @@ interface AppState {
     numTransactions: number,
     transactionFee: number,
     chartBTC: Array<any>,
-    chartLen: number
+    chartLen: number,
+    erc20Tokens: Array<Erc20DisplayToken>
 }
 
 const mockState: AppState = {
@@ -135,7 +138,8 @@ const mockState: AppState = {
     numTransactions: 0,
     transactionFee: 0,
     chartBTC: [],
-    chartLen: 0
+    chartLen: 0,
+    erc20Tokens: []
 }
 
 const initState: AppState = {
@@ -175,18 +179,9 @@ const initState: AppState = {
     numTransactions: 0,
     transactionFee: 2,
     chartBTC: [],
-    chartLen: 360
+    chartLen: 360,
+    erc20Tokens: []
 }
-
-const erc20mock: Array<Erc20DisplayToken> = [{
-    address: "0x1233131313131231231313141",
-    name: "afafafafaf",
-    amount: 11010
-},{
-    address: "0xv3414214324324321311vfdvdvd",
-    name: "iurwhgiwuhrgiwhrg",
-    amount: 20202002
-}]
 
 export default class App extends Component<{}, AppState> {
 
@@ -346,7 +341,7 @@ export default class App extends Component<{}, AppState> {
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: SidebarLeft,
-            main: () => <ERC20Window data={erc20mock}/>
+            main: () => <ERC20Window data={this.state.erc20Tokens}/>
         },
         {
             path: '/firmware-window',
@@ -380,6 +375,9 @@ export default class App extends Component<{}, AppState> {
         this.setTransactionFee = this.setTransactionFee.bind(this)
         this.setChartBTC = this.setChartBTC.bind(this)
         this.setChartLen = this.setChartLen.bind(this)
+        this.updateErc20Tokens = this.updateErc20Tokens.bind(this)
+        this.updateHwWalletInfo = this.updateHwWalletInfo.bind(this)
+        this.initCryptoAddresses = this.initCryptoAddresses.bind(this)
     }
 
     setChartLen(len: number) {
@@ -530,6 +528,11 @@ export default class App extends Component<{}, AppState> {
         }, 500, [])
     }
 
+    async updateErc20Tokens () {
+        const actualTokens = await getAddressErc20Tokens(getEthereumAddress())
+        this.setState({erc20Tokens: actualTokens})
+    }
+
 
     async componentDidMount() {
         // this.setState({connection: true})
@@ -582,21 +585,14 @@ export default class App extends Component<{}, AppState> {
         try {
             if (this.state.allowInit) {
                 this.setState({allowInit: false})
-                const updateHwStatus = async () => UpdateHWStatusPCSC(
-                       this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, 
-                       this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions
-                    )
-                const updateHwTransactions = async () => updateTransactionsPCSC(
-                       this.state.BTCLastTx, this.state.ETHLastTx, this.state.LTCLastTx, this.state.XRPLastTx
-                    )
                 const redirect =  () => {
                     this.setRedirectToMain()
                     this.setValues()
                 }
-                await Promise.all([initBitcoinAddress(), initEthereumAddress(), initLitecoinAddress()])
-                await Promise.all([this.getBalances(), this.getTransactions()])
+                await this.initCryptoAddresses()
+                await Promise.all([this.getBalances(), this.getTransactions(), this.updateErc20Tokens()])
                 await Promise.all([this.setChartBTC(), this.getRates()])
-                await Promise.all([redirect(), updateHwStatus(), updateHwTransactions()])
+                await Promise.all([redirect(), this.updateHwWalletInfo()])
             }
         } catch(err) {
             console.log(err)
@@ -615,11 +611,26 @@ export default class App extends Component<{}, AppState> {
         setXRPPrice(this.state.XRPPrice)
     }
 
+    async initCryptoAddresses() {
+        await Promise.all([initBitcoinAddress(), initEthereumAddress(), initLitecoinAddress()])
+    }
+
+    async updateHwWalletInfo() {
+        const updateHwStatus = async () => UpdateHWStatusPCSC(
+            this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, 
+            this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions
+        )
+        const updateHwTransactions = async () => updateTransactionsPCSC(
+                this.state.BTCLastTx, this.state.ETHLastTx, this.state.LTCLastTx, this.state.XRPLastTx
+        )
+        await Promise.all([updateHwStatus(), updateHwTransactions()])
+    }
+
     async updateData() {
         this.setState({numTransactions: 0})
-        await Promise.all([this.getTransactions(), this.getBalances()])
-        const updateHwStatus = async () => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions)
-        await Promise.all([this.getRates(), updateHwStatus()])
+        await Promise.all([this.getTransactions(), this.getBalances(), this.updateErc20Tokens()])
+        await Promise.all([this.getRates(), this.updateHwWalletInfo()])
+       
     }
 
     changeBalance(currency: string, amount: number) {

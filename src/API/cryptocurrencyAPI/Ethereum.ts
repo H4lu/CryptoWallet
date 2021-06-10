@@ -10,6 +10,13 @@ import {keccak256} from "js-sha3";
 import axios from 'axios'
 import { DisplayTransaction, DisplayTransactionCurrency, DisplayTransactionStatus, DisplayTransactionType } from './utils'
 
+export interface Erc20DisplayToken {
+    name: string,
+    address: string,
+    amount: number
+}
+
+
 interface EthplorerTransaction {
     timestamp: number,
     from: string,
@@ -22,7 +29,8 @@ interface EthplorerTransaction {
 
 enum Networks {
     MAIN = "mainnet",
-    ROPSTEN = "ropsten"
+    ROPSTEN = "ropsten",
+    KOVAN = "kovan"
 }
 
 enum MainV {
@@ -35,14 +43,76 @@ enum RopstenV {
     MIN = 41
 }
 
-const NETWORK = Networks.ROPSTEN
+enum KovanV {
+    MAX = 120,
+    MIN = 119
+}
 
+interface EthplorerErc20TokenInfo {
+    address: string,
+    decimals: string,
+    name: string,
+    owner: string,
+    symbol: string,
+    totalSupply: string,
+    lastUpdated: number,
+    issuancesCount: number,
+    holdersCount: number,
+    price: boolean
+}
+
+
+interface EthplorerErc20Token {
+    tokenInfo: EthplorerErc20TokenInfo,
+    balance: number,
+    totalIn: number,
+    totalOut: number
+}
+
+interface EthplorerEthInfo {
+    balance: number,
+    price: boolean
+}
+
+interface EthplorerAddressInfo {
+    address: string,
+    ETH: EthplorerAddressInfo,
+    countTxs: number,
+    tokens?: Array<EthplorerErc20Token>
+}
+
+const NETWORK = Networks.KOVAN
+const ethplorerRoot = NETWORK == Networks.KOVAN ? "https://kovan-api.ethplorer.io" : "https://api.ethplorer.io"
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://${NETWORK}.infura.io/v3/960cbfb44af74f27ad0e4b070839158a`))
 
 let myAdress = ''
 let myPubKey = Buffer.alloc(64)
 let balance: number
 let price: number
+
+function getVSignatureOffset(network: Networks): number {
+    switch (network) {
+        case Networks.MAIN: return 10
+        case Networks.ROPSTEN: return 14
+        case Networks.KOVAN: return 92
+    }
+}
+
+function getVMin(network: Networks): number {
+    switch (network) {
+        case Networks.MAIN: return MainV.MIN
+        case Networks.ROPSTEN: return RopstenV.MIN
+        case Networks.KOVAN: return KovanV.MIN
+    }
+}
+
+function getVMax(network: Networks): number {
+    switch (network) {
+        case Networks.MAIN: return MainV.MAX
+        case Networks.ROPSTEN: return RopstenV.MAX
+        case Networks.KOVAN: return KovanV.MAX
+    }
+}
 
 export function setETHBalance(bal: number) {
     balance = bal
@@ -92,13 +162,38 @@ export function getEthereumAddress() {
 }
 
 export async function getEthereumLastTx(): Promise<Array<DisplayTransaction>> {
-    const requestURL = `https://api.ethplorer.io/getAddressTransactions/${myAdress}?apiKey=freekey&limit=50`
-    const response = await axios.get(requestURL)
-    return (response.data as Array<EthplorerTransaction>)
-        .map(tx => ethplorerToDisplayTransaction(tx))
+    const params = {
+        "apiKey": "freekey",
+        "limit": 50
+    }
+    const requestUrl = `${ethplorerRoot}/getAddressTransactions/${myAdress}`
+    const response = await axios.get<Array<EthplorerTransaction>>(requestUrl, {params})
+    return response.data
+        .map(tx => toDisplayTransaction(tx))
 }
 
-function ethplorerToDisplayTransaction(tx: EthplorerTransaction): DisplayTransaction {
+export async function getAddressErc20Tokens(address: string): Promise<Array<Erc20DisplayToken>> {
+    const params = {
+        "apiKey": "freekey",
+    }
+    const requestUrl = `${ethplorerRoot}/getAddressInfo/${address}`
+    const response = await axios.get<EthplorerAddressInfo>(requestUrl, {params})
+    return toErc20DisplayToken(response.data)
+}
+
+function toErc20DisplayToken(addressInfo: EthplorerAddressInfo): Array<Erc20DisplayToken> {
+    return addressInfo
+        ?.tokens
+        ?.map(token =>  {
+            return {
+                name: token.tokenInfo.symbol,
+                address: token.tokenInfo.address, 
+                amount: token.balance 
+            }
+        }) ?? []
+}
+
+function toDisplayTransaction(tx: EthplorerTransaction): DisplayTransaction {
     const date = new Date(tx.timestamp * 1000)
     const dateUnix = date.getTime()
     const displayDate = date.getHours() + ':' + ((date.getMinutes() >= 10) ? date.getMinutes() : '0' + date.getMinutes()) + ' ' + ' ' + ' ' + date.getDate() + ' ' + (date.getMonth() + 1) + ' ' + date.getFullYear()
@@ -140,26 +235,6 @@ export function convertFromWei(amount: number) {
     return web3.utils.fromWei(String(amount), 'ether')
 }
 
-function getVSignatureOffset(network: Networks): number {
-    switch (network) {
-        case Networks.MAIN: return 10
-        case Networks.ROPSTEN: return 14
-    }
-}
-
-function getVMin(network: Networks): number {
-    switch (network) {
-        case Networks.MAIN: return MainV.MIN
-        case Networks.ROPSTEN: return RopstenV.MIN
-    }
-}
-
-function getVMax(network: Networks): number {
-    switch (network) {
-        case Networks.MAIN: return MainV.MAX
-        case Networks.ROPSTEN: return RopstenV.MAX
-    }
-}
 
 async function createTransaction(
     paymentAdress: string, 
