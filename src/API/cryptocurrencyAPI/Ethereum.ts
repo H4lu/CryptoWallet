@@ -22,10 +22,20 @@ interface EthplorerTransaction {
 
 enum Networks {
     MAIN = "mainnet",
-    TEST = "ropsten"
+    ROPSTEN = "ropsten"
 }
 
-const NETWORK = Networks.TEST
+enum MainV {
+    MAX = 38,
+    MIN = 37
+}
+
+enum RopstenV {
+    MAX = 42,
+    MIN = 41
+}
+
+const NETWORK = Networks.ROPSTEN
 
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://${NETWORK}.infura.io/v3/960cbfb44af74f27ad0e4b070839158a`))
 
@@ -130,6 +140,27 @@ export function convertFromWei(amount: number) {
     return web3.utils.fromWei(String(amount), 'ether')
 }
 
+function getVSignatureOffset(network: Networks): number {
+    switch (network) {
+        case Networks.MAIN: return 10
+        case Networks.ROPSTEN: return 14
+    }
+}
+
+function getVMin(network: Networks): number {
+    switch (network) {
+        case Networks.MAIN: return MainV.MIN
+        case Networks.ROPSTEN: return RopstenV.MIN
+    }
+}
+
+function getVMax(network: Networks): number {
+    switch (network) {
+        case Networks.MAIN: return MainV.MAX
+        case Networks.ROPSTEN: return RopstenV.MAX
+    }
+}
+
 async function createTransaction(
     paymentAdress: string, 
     amount: number, 
@@ -148,7 +179,7 @@ async function createTransaction(
             gasPrice: web3.utils.toHex(web3.utils.toWei(gas, 'shannon')),
             gasLimit: web3.utils.toHex(31000),
             data: '0x00',
-            v: new BN(41),
+            v: new BN(getVMin(NETWORK)),
             r: new BN(0),
             s: new BN(0)
         }
@@ -159,7 +190,9 @@ async function createTransaction(
         const hash =  Buffer.concat([Buffer.from([0x20]), txHash])
         const hashArray = [hash]
         const fee = (49103 * gasPrice) / 100000000
-        const data = await getSignaturePCSC(1, hashArray, paymentAdress, amount, 1, course, fee, balance)
+        const data = await getSignaturePCSC(
+            1, hashArray, paymentAdress, amount, 1, course, fee, balance
+        )
         if (data[0] == undefined) {
             throw new Error("Error from hw wallet")
         }
@@ -167,7 +200,8 @@ async function createTransaction(
             // FIXME: remove this kostil after 
             // https://github.com/ethereumjs/ethereumjs-monorepo/issues/1278
             // is resolved
-            (tx as any).v = new BN(data[0][64] + 14);
+           
+            (tx as any).v = new BN(data[0][64] + getVSignatureOffset(NETWORK));
             (tx as any).r = new BN(data[0].slice(0, 32));
             (tx as any).s = new BN(data[0].slice(32, 64));
             (tx as any).chainId = new BN(3);
@@ -175,7 +209,9 @@ async function createTransaction(
             // seems like our hw wallet don't calculate v properly
             if (!myPubKey.equals(tx.getSenderPublicKey())) {
                 console.log("change v");
-                (tx as any).v = tx.v.eq(new BN(42)) ? new BN(41) : new BN(42)
+                const vMax = getVMax(NETWORK);
+                const vMin = getVMin(NETWORK);
+                (tx as any).v = tx.v.eq(new BN(vMax)) ? new BN(vMin) : new BN(vMax);
             }
            
             const serTx = '0x' + tx.serialize().toString('hex');
