@@ -44,13 +44,10 @@ import {LtcSendWindow} from "./components/windows/ltcSendWindow";
 import {LtcRecieveWindow} from "./components/windows/ltcRecieveWindow";
 import {EthRecieveWindow} from "./components/windows/ethReceiveWindow";
 import {EthSendWindow} from "./components/windows/ethSendWindow";
-import {XrpRecieveWindow} from "./components/windows/xrpRecieveWindow";
-import {XrpSendWindow} from "./components/windows/xrpSendWindow";
 import {CarouselHistory} from "./components/carouselHistory";
 import {
     getRippleLastTx,
     getXRPBalance,
-    initRippleAddress,
     setXRPBalance,
     setXRPPrice
 } from "./api/cryptocurrencyApi/ripple";
@@ -238,7 +235,10 @@ export default class App extends Component<{}, AppState> {
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: SidebarLeft,
-            main: () => <ModeWindow setFee={this.setTransactionFee} trFee={this.state.transactionFee}/>
+            main: () => <ModeWindow
+                                setFee={this.setTransactionFee} 
+                                trFee={this.state.transactionFee}
+                                />
         },
         {
             path: '/currency-carousel',
@@ -260,11 +260,13 @@ export default class App extends Component<{}, AppState> {
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: SidebarLeft,
-            main: () => <BtcSendWindow stateSR={this.setStateSR} 
-                                       course={this.state.BTCCourse}
-                                       btcBalance={this.state.BTCBalance} 
-                                       trFee={this.state.transactionFee}
-                                       setFee={this.setTransactionFee}/>
+            main: () => <BtcSendWindow
+                                    redirect = {this.redirectToTransactionsuccess} 
+                                    stateSR = {this.setStateSR} 
+                                    course = {this.state.BTCCourse}
+                                    btcBalance = {this.state.BTCBalance} 
+                                    trFee = {this.state.transactionFee}
+                                    setFee = {this.setTransactionFee}/>
         },
         {
             path: '/btc-window-receive',
@@ -278,11 +280,13 @@ export default class App extends Component<{}, AppState> {
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: SidebarLeft,
-            main: () => <LtcSendWindow stateSR={this.setStateSR} 
-                                       course={this.state.LTCCourse}
-                                       ltcBalance={this.state.LTCBalance} 
-                                       trFee={this.state.transactionFee}
-                                       setFee={this.setTransactionFee}/>
+            main: () => <LtcSendWindow 
+                                    redirect = {this.redirectToTransactionsuccess} 
+                                    stateSR={this.setStateSR} 
+                                    course={this.state.LTCCourse}
+                                    ltcBalance={this.state.LTCBalance} 
+                                    trFee={this.state.transactionFee}
+                                    setFee={this.setTransactionFee}/>
         },
         {
             path: '/ltc-window-receive',
@@ -296,11 +300,13 @@ export default class App extends Component<{}, AppState> {
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: SidebarLeft,
-            main: () => <EthSendWindow stateSR={this.setStateSR} 
-                                       course={this.state.ETHCourse}
-                                       btcBalance={this.state.ETHBalance} 
-                                       trFee={this.state.transactionFee}
-                                       setFee={this.setTransactionFee}/>
+            main: () => <EthSendWindow 
+                                    redirect = {this.redirectToTransactionsuccess} 
+                                    stateSR = {this.setStateSR} 
+                                    course = {this.state.ETHCourse}
+                                    ethBalance = {this.state.ETHBalance} 
+                                    trFee = {this.state.transactionFee}
+                                    setFee = {this.setTransactionFee}/>
         },
         {
             path: '/eth-window-receive',
@@ -309,25 +315,6 @@ export default class App extends Component<{}, AppState> {
             sidebarLeft: SidebarLeft,
             main: () => <EthRecieveWindow stateSR={this.setStateSR}/>
         },
-        {
-            path: '/xrp-window-send',
-            exact: true,
-            sidebar: () => <SidebarContent/>,
-            sidebarLeft: SidebarLeft,
-            main: () => <XrpSendWindow stateSR={this.setStateSR} 
-                                       course={this.state.XRPCourse}
-                                       btcBalance={this.state.XRPBalance} 
-                                       trFee={this.state.transactionFee}
-                                       setFee={this.setTransactionFee}/>
-        },
-        {
-            path: '/xrp-window-receive',
-            exact: true,
-            sidebar: () => <SidebarContent/>,
-            sidebarLeft: SidebarLeft,
-            main: () => <XrpRecieveWindow stateSR={this.setStateSR}/>
-        },
-
         {
             path: '/history-carousel',
             exact: true,
@@ -599,8 +586,13 @@ export default class App extends Component<{}, AppState> {
         try {
             if (this.state.allowInit) {
                 this.setState({allowInit: false})
-                const updateHwStatus = async () => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions)
-                const updateHwTransactions = async () => updateTransactionsPCSC(this.state.BTCLastTx, this.state.ETHLastTx,this.state.LTCLastTx,this.state.XRPLastTx)
+                const updateHwStatus = async () => UpdateHWStatusPCSC(
+                       this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, 
+                       this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions
+                    )
+                const updateHwTransactions = async () => updateTransactionsPCSC(
+                       this.state.BTCLastTx, this.state.ETHLastTx, this.state.LTCLastTx, this.state.XRPLastTx
+                    )
                 const redirect =  () => {
                     this.setRedirectToMain()
                     this.setValues()
@@ -632,7 +624,6 @@ export default class App extends Component<{}, AppState> {
         await Promise.all([this.getTransactions(), this.getBalances()])
         const updateHwStatus = async () => UpdateHWStatusPCSC(this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions)
         await Promise.all([this.getRates(), updateHwStatus()])
-    
     }
 
     changeBalance(currency: string, amount: number) {
@@ -664,33 +655,33 @@ export default class App extends Component<{}, AppState> {
             switch (rate.slug) {
                 case "bitcoin": {
                     this.setState({
-                        BTCPrice: parseFloat(Number(usdQuote.price * this.state.BTCBalance).toFixed(1)),
+                        BTCPrice: parseFloat((usdQuote.price * this.state.BTCBalance).toFixed(1)),
                         BTCCourse: usdQuote.price,
-                        BTCHourChange: Number(usdQuote.percent_change_1h)
+                        BTCHourChange: usdQuote.percent_change_1h
                     })
                     break
                 }
                 case "litecoin": {
                     this.setState({
-                        LTCPrice: parseFloat(Number(usdQuote.price * this.state.LTCBalance).toFixed(1)),
+                        LTCPrice: parseFloat((usdQuote.price * this.state.LTCBalance).toFixed(1)),
                         LTCCourse: usdQuote.price,
-                        LTCHourChange: Number(usdQuote.percent_change_1h)
+                        LTCHourChange: usdQuote.percent_change_1h
                     })
                     break
                 }
                 case "ethereum": {
                     this.setState({
-                        ETHPrice: parseFloat(Number(usdQuote.price * this.state.ETHBalance).toFixed(1)),
+                        ETHPrice: parseFloat((usdQuote.price * this.state.ETHBalance).toFixed(1)),
                         ETHCourse: usdQuote.price,
-                        ETHHourChange: Number(usdQuote.percent_change_1h)
+                        ETHHourChange: usdQuote.percent_change_1h
                     })
                     break
                 }
                 case "ripple": {
                     this.setState({
-                        XRPPrice: parseFloat(Number(usdQuote.price * this.state.XRPBalance).toFixed(1)),
+                        XRPPrice: parseFloat((usdQuote.price * this.state.XRPBalance).toFixed(1)),
                         XRPCourse: usdQuote.price,
-                        XRPHourChange: Number(usdQuote.percent_change_1h)
+                        XRPHourChange: usdQuote.percent_change_1h
                     })
                     break
                 }

@@ -216,7 +216,10 @@ function toDisplayTransaction(tx: BlockcypherFullTransaction, ownerAddress: stri
 } 
 
 function findAddressInInput(inputs: Array<BlockcypherFullTransactionInput>, address: string) {
-  return inputs.map(a => a.addresses).flat().filter(a => a == address)
+  return inputs
+              .map(a => a.addresses)
+              .flat()
+              .filter(a => a == address)
 }
 
 export function parseBTCLikeTransactions(

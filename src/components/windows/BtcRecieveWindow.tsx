@@ -10,6 +10,7 @@ interface BtcReceiveState {
 
 }
 
+// TODO: reuse for ltc and others
 export class BtcRecieveWindow extends Component<any, BtcReceiveState> {
     constructor(props: any) {
         super(props)

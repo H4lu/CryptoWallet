@@ -3,6 +3,7 @@ import {getEthereumAddress} from '../../api/cryptocurrencyApi/ethereum'
 import {sendTransaction} from "../../core/sendTransaction";
 import {Link} from "react-router-dom";
 import {remote} from "electron"
+
 interface ETHSendState {
     address: string,
     paymentAddress: string,
@@ -16,8 +17,17 @@ interface ETHSendState {
     amountS: string
 }
 
-export class EthSendWindow extends Component<any, ETHSendState> {
+interface EthSendProps {
+    stateSR: (arg: boolean) => void,
+    course: number,
+    ethBalance: number,
+    trFee: number,
+    setFee: (num: number) => void,
+    redirect: () => void
+}
 
+
+export class EthSendWindow extends Component<EthSendProps, ETHSendState> {
     strSum: string
     point: number
 
@@ -39,15 +49,14 @@ export class EthSendWindow extends Component<any, ETHSendState> {
             fee: (this.props.trFee * this.feeCoeff) / 1000000,
             usd: 0,
             feeUSD: this.props.course * (this.props.trFee * this.feeCoeff) / 1000000,
-            balance: this.props.btcBalance,
-            balanceUSD: this.props.btcBalance * this.props.course,
-            maxSum: this.props.btcBalance - (this.feeCoeff * this.props.trFee ) / 1000000,
+            balance: this.props.ethBalance,
+            balanceUSD: this.props.ethBalance * this.props.course,
+            maxSum: this.props.ethBalance - (this.feeCoeff * this.props.trFee ) / 1000000,
             amountS: ''
         }
         this.handleAddressChange = this.handleAddressChange.bind(this)
         this.handleAmountChange = this.handleAmountChange.bind(this)
         this.handleClick = this.handleClick.bind(this)
-        this.setState({feeUSD: (this.props.course * this.props.trFee * this.feeCoeff / 1000000)})
         this.strSum = ''
         this.point = 0
         this.setMax = this.setMax.bind(this)
@@ -101,8 +110,9 @@ export class EthSendWindow extends Component<any, ETHSendState> {
         if (this.state.paymentAddress != '') {
             try {
                 await sendTransaction(
-                    'ETH', this.state.paymentAddress, this.state.amount, this.props.trFee, this.props.course, this.props.btcBalance
+                    'ETH', this.state.paymentAddress, this.state.amount, this.props.trFee, this.props.course, this.props.ethBalance
                     )
+                this.props.redirect()    
             } catch(err) {
                 console.error(err)
                 remote.dialog.showErrorBox("Send transaction error", err.message)
@@ -125,7 +135,7 @@ export class EthSendWindow extends Component<any, ETHSendState> {
     changeFee1() {
         this.props.setFee(1)
         this.setState({fee: (this.feeCoeff * 1) / 1000000})
-        this.setState({maxSum: this.props.btcBalance - (this.feeCoeff * 1) / 1000000})
+        this.setState({maxSum: this.props.ethBalance - (this.feeCoeff * 1) / 1000000})
         this.setState({feeUSD: this.props.course * (this.feeCoeff * 1) / 1000000})
 
     }
@@ -133,7 +143,7 @@ export class EthSendWindow extends Component<any, ETHSendState> {
     changeFee2() {
         this.props.setFee(2)
         this.setState({fee: (this.feeCoeff * 2) / 1000000})
-        this.setState({maxSum: this.props.btcBalance - (this.feeCoeff * 2) / 1000000}),
+        this.setState({maxSum: this.props.ethBalance - (this.feeCoeff * 2) / 1000000}),
             this.setState({feeUSD: this.props.course * (this.feeCoeff * 2) / 1000000})
 
     }
@@ -141,7 +151,7 @@ export class EthSendWindow extends Component<any, ETHSendState> {
     changeFee3() {
         this.props.setFee(3)
         this.setState({fee: (this.feeCoeff * 3) / 1000000})
-        this.setState({maxSum: this.props.btcBalance - (this.feeCoeff * 3) / 1000000})
+        this.setState({maxSum: this.props.ethBalance - (this.feeCoeff * 3) / 1000000})
         this.setState({feeUSD: this.props.course * (this.feeCoeff * 3) / 1000000})
 
     }

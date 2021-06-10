@@ -43,10 +43,8 @@ interface CoindeskChartResponse {
 }
 
 enum Networks {
-    MAIN = "BTC",
-    TEST = "BTCTEST",
-    BLOCKCYPHER_MAIN = "main",
-    BLOCKCYPHER_TEST = "test3"
+    MAIN = "main",
+    TEST = "test3"
 }
 
 interface TransactionTarget {
@@ -57,8 +55,6 @@ interface TransactionTarget {
 
 const network = networks.bitcoin
 const NETWORK: Networks = Networks.MAIN
-const BLOCKCYPHER_NETWORK = Networks.BLOCKCYPHER_MAIN
-const rootURL = 'https://chain.so/api/v2'
 
 let myAddr = ''
 let myPubKey = Buffer.alloc(33)
@@ -155,7 +151,7 @@ export function getFee(transactionFee: number): number {
 }
 
 export async function getBTCBalance(): Promise<number> {
-    const requestUrl = `https://api.blockcypher.com/v1/btc/${BLOCKCYPHER_NETWORK}/addrs/${myAddr}/balance`
+    const requestUrl = `https://api.blockcypher.com/v1/btc/${NETWORK}/addrs/${myAddr}/balance`
     const response = await axios.get(requestUrl)
     return Number((response.data.balance / 100000000).toFixed(8))
 }
@@ -193,7 +189,7 @@ const getUnspentTransactions = async (address: string) => {
         "includeScript": true,
         "unspentOnly": true
     }
-    const requestUrl = `https://api.blockcypher.com/v1/btc/${BLOCKCYPHER_NETWORK}/addrs/${address}`  
+    const requestUrl = `https://api.blockcypher.com/v1/btc/${NETWORK}/addrs/${address}`  
     const response = await axios.get<BlockcypherUnspentTransactions>(requestUrl, {params})
     console.log(response)
     return response.data
@@ -203,7 +199,7 @@ export async function getBitcoinLastTx() {
     const params = {
         "limit": 50
     }
-    const requestUrl = `https://api.blockcypher.com/v1/btc/${BLOCKCYPHER_NETWORK}/addrs/${myAddr}/full`  
+    const requestUrl = `https://api.blockcypher.com/v1/btc/${NETWORK}/addrs/${myAddr}/full`  
     const response = await axios.get<BlockcypherFullTransactions>(requestUrl, {params})
     console.log(response)
     return toDisplayTransactions(response.data)
@@ -237,10 +233,7 @@ async function createTransaction(
         let feeRate = getFee(transactionFee)
     
         let {inputs, outputs, fee} = coinSelect(utxos, targets, 25)
-        console.log(inputs)
-        console.log(outputs)
-        console.log(fee)
-        console.log('FEE_coinSelect: ', fee)
+        
         let transaction = new TransactionBuilder(network)
         for (const input of inputs) {
             console.log("add input")
@@ -254,7 +247,6 @@ async function createTransaction(
             }
             transaction.addOutput(out.address, out.value)
         }
-        console.log("build tx")
         let unbuildedTx = transaction.buildIncomplete().toHex()
         transaction.inputs.map(value => {
             console.log('MAPPED INPUT')
@@ -264,11 +256,10 @@ async function createTransaction(
             console.log('PROBABLY TX INPUT: ')
             console.log(value)
         })
-        // console.log(transaction)
     
         let hashArray: Array<Buffer> = []
         console.log(utxos)
-        let dataForHash = ReplaceAt(unbuildedTx + '01000000', '00000000ff', '00000019' + new String(utxos[0].script) + 'ff', unbuildedTx.indexOf('00000000ff', 0), unbuildedTx.indexOf('00000000ff', 0) + 50)
+        let dataForHash = ReplaceAt(unbuildedTx + '01000000', '00000000ff', '00000019' + utxos[0].script + 'ff', unbuildedTx.indexOf('00000000ff', 0), unbuildedTx.indexOf('00000000ff', 0) + 50)
         console.log('DATA FOR HASH: ', dataForHash)
     
     
@@ -320,7 +311,7 @@ async function sendTransaction(transactionHex: string): Promise<void> {
         console.log("tx hex")
         console.log(transactionHex)
         await axios.post(
-            `https://api.blockcypher.com/v1/btc/${BLOCKCYPHER_NETWORK}/txs/push`,
+            `https://api.blockcypher.com/v1/btc/${NETWORK}/txs/push`,
             {'tx': transactionHex},
             {'headers': {'content-type': 'application/json'}}
             )

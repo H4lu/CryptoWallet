@@ -16,7 +16,16 @@ interface ILTCSendState {
     maxSum: number,
     amountS: string
 }
-export class LtcSendWindow extends Component<any, ILTCSendState> {
+
+interface LTCSendProps {
+    stateSR: (arg: boolean) => void,
+    course: number,
+    ltcBalance: number,
+    trFee: number,
+    setFee: (num: number) => void,
+    redirect: () => void
+}
+export class LtcSendWindow extends Component<LTCSendProps, ILTCSendState> {
     strSum: string
     point: number
     classFee1: string;
@@ -40,10 +49,11 @@ export class LtcSendWindow extends Component<any, ILTCSendState> {
             maxSum: this.props.ltcBalance - (431 * this.feeCoeff * this.props.trFee) / 100000000,
             amountS: ''
         }
+        console.log("fee usd ltc")
+        console.log(this.state.feeUSD)
         this.handleAddressChange = this.handleAddressChange.bind(this)
         this.handleAmountChange = this.handleAmountChange.bind(this)
         this.handleClick = this.handleClick.bind(this)
-        this.setState({feeUSD: (this.props.course * (431 * this.feeCoeff * this.props.trFee) / 100000000)})
         this.strSum = ''
         this.point = 0
         this.setMax = this.setMax.bind(this)
@@ -70,7 +80,7 @@ export class LtcSendWindow extends Component<any, ILTCSendState> {
         if (temp.length > 1) {
             temp = temp.slice(1, 2)
         }
-        console.log('temp: ', temp)
+        
         if (temp == '') {
             this.strSum = this.strSum.slice(0, this.strSum.length - 1)
         } else if ((temp >= '0' && temp <= '9') || temp == '.') {
@@ -83,7 +93,7 @@ export class LtcSendWindow extends Component<any, ILTCSendState> {
                 this.strSum = this.strSum + temp
             }
         }
-        console.log(this.strSum)
+
         if (Number(this.strSum) > this.state.maxSum) {
             this.strSum = this.strSum.slice(0, this.strSum.length - 1)
         }
@@ -99,6 +109,7 @@ export class LtcSendWindow extends Component<any, ILTCSendState> {
             await sendTransaction(
                 'LTC', this.state.paymentAddress, this.state.amount, this.props.trFee, this.props.course, this.props.ltcBalance
                 )
+            this.props.redirect()    
         } catch(err) {
             console.error(err)
             remote.dialog.showErrorBox("Send transaction error", err.message)
@@ -129,9 +140,8 @@ export class LtcSendWindow extends Component<any, ILTCSendState> {
     changeFee2() {
         this.props.setFee(2)
         this.setState({fee: (431 * this.feeCoeff * 2) / 100000000})
-        this.setState({maxSum: this.props.ltcBalance - (431 * this.feeCoeff * 2) / 100000000}),
-            this.setState({feeUSD: this.props.course * (431 * this.feeCoeff * 2) / 100000000})
-
+        this.setState({maxSum: this.props.ltcBalance - (431 * this.feeCoeff * 2) / 100000000})
+        this.setState({feeUSD: this.props.course * (431 * this.feeCoeff * 2) / 100000000})
     }
 
     changeFee3() {
@@ -139,7 +149,6 @@ export class LtcSendWindow extends Component<any, ILTCSendState> {
         this.setState({fee: (431 * this.feeCoeff * 3) / 100000000})
         this.setState({maxSum: this.props.ltcBalance - (431 * this.feeCoeff * 3) / 100000000})
         this.setState({feeUSD: this.props.course * (431 * this.feeCoeff * 3) / 100000000})
-
     }
 
     setClass1(): string {
@@ -170,7 +179,6 @@ export class LtcSendWindow extends Component<any, ILTCSendState> {
         this.classFee1 = this.setClass1()
         this.classFee2 = this.setClass2()
         this.classFee3 = this.setClass3()
-
     }
 
 
@@ -182,8 +190,11 @@ export class LtcSendWindow extends Component<any, ILTCSendState> {
                     <div className='iconCryptoCurrencyLTC'/>
                     <div className='blockSendTransactionAddress'>
                         <div className='iconQr'/>
-                        <input type='text' className='payment_address' placeholder='  Send to Litcoin address...'
-                               value={this.state.paymentAddress} onChange={this.handleAddressChange}/>
+                        <input 
+                            type='text' className='payment_address' 
+                            placeholder='  Send to Litcoin address...'
+                            value={this.state.paymentAddress} onChange={this.handleAddressChange}
+                            />
                     </div>
                     <div className='blockSendTransactionSum'>
                         <div className='iconSum'/>
@@ -191,8 +202,8 @@ export class LtcSendWindow extends Component<any, ILTCSendState> {
                             <input type='text' className='payment_sum' placeholder=''
                                    onChange={this.handleAmountChange}/>
 
-                            <p className='payment_sum_'>{(this.state.amountS)}</p>
-                            <p className='payment_sumUSD'>{(this.state.usd).toFixed(2)}</p>
+                            <p className='payment_sum_'>{this.state.amountS}</p>
+                            <p className='payment_sumUSD'>{this.state.usd.toFixed(2)}</p>
                         </div>
                         <button className='setMaxSum' onClick={this.setMax}/>
                     </div>

@@ -22,10 +22,12 @@ interface BTCSendProps {
     course: number,
     btcBalance: number,
     trFee: number,
-    setFee: (num: number) => void
+    setFee: (num: number) => void,
+    redirect: () => void
 }
 
-export class BtcSendWindow extends Component<BTCSendProps, BTCSendState> {
+// TODO: reuse this component for ltc and others
+export class BtcSendWindow extends Component<BTCSendProps, BTCSendState> { 
 
     strSum: string
     point: number
@@ -34,10 +36,11 @@ export class BtcSendWindow extends Component<BTCSendProps, BTCSendState> {
     classFee3: string
     feeCoeff: number
 
-    constructor(props: any) {
+    constructor(props) {
         super(props)
 
         this.props.stateSR(true)
+        this.feeCoeff = Math.floor(getFee(1) * 0.7) + 1
         this.state = {
             address: getBitcoinAddress(),
             paymentAddress: '',
@@ -50,10 +53,11 @@ export class BtcSendWindow extends Component<BTCSendProps, BTCSendState> {
             maxSum: (this.props.btcBalance - (431 * this.feeCoeff * this.props.trFee) / 100000000),
             amountS: ''
         }
+        console.log("fee use btc")
+        console.log(this.state.feeUSD)
         this.handleAddressChange = this.handleAddressChange.bind(this)
         this.handleAmountChange = this.handleAmountChange.bind(this)
         this.handleClick = this.handleClick.bind(this)
-        this.setState({feeUSD: (this.props.course * (431 * this.feeCoeff * this.props.trFee) / 100000000)})
         this.strSum = ''
         this.point = 0
         this.setMax = this.setMax.bind(this)
@@ -68,7 +72,7 @@ export class BtcSendWindow extends Component<BTCSendProps, BTCSendState> {
         this.classFee1 = this.setClass1()
         this.classFee2 = this.setClass2()
         this.classFee3 = this.setClass3()
-        this.feeCoeff = Math.floor(getFee(1) * 0.7) + 1
+       
     }
 
     handleAddressChange(e: any) {
@@ -80,7 +84,7 @@ export class BtcSendWindow extends Component<BTCSendProps, BTCSendState> {
         if (temp.length > 1) {
             temp = temp.slice(1, 2)
         }
-        console.log('temp: ', temp)
+        
         if (temp == '') {
             this.strSum = this.strSum.slice(0, this.strSum.length - 1)
         } else if ((temp >= '0' && temp <= '9') || temp == '.') {
@@ -93,7 +97,7 @@ export class BtcSendWindow extends Component<BTCSendProps, BTCSendState> {
                 this.strSum = this.strSum + temp
             }
         }
-        console.log(this.strSum)
+      
         if (Number(this.strSum) > this.state.maxSum) {
             this.strSum = this.strSum.slice(0, this.strSum.length - 1)
         }
@@ -110,7 +114,8 @@ export class BtcSendWindow extends Component<BTCSendProps, BTCSendState> {
                 await sendTransaction(
                     'BTC', this.state.paymentAddress, this.state.amount, this.props.trFee, this.props.course, this.props.btcBalance
                     )
-                    
+                this.props.redirect()    
+
             } catch(err) {
                 console.error(err)
                 remote.dialog.showErrorBox("Send transaction error", err.message)
@@ -183,7 +188,6 @@ export class BtcSendWindow extends Component<BTCSendProps, BTCSendState> {
         this.classFee1 = this.setClass1()
         this.classFee2 = this.setClass2()
         this.classFee3 = this.setClass3()
-        console.log('fee ', this.feeCoeff)
     }
 
 
@@ -195,15 +199,18 @@ export class BtcSendWindow extends Component<BTCSendProps, BTCSendState> {
                     <div className='iconCryptoCurrency'/>
                     <div className='blockSendTransactionAddress'>
                         <div className='iconQr'/>
-                        <input type='text' className='payment_address' placeholder='  Send to Bitcoin address...'
-                               value={this.state.paymentAddress} onChange={this.handleAddressChange}/>
+                        <input 
+                            type='text' className='payment_address' 
+                            placeholder='  Send to Bitcoin address...'
+                            value={this.state.paymentAddress} onChange={this.handleAddressChange}
+                            />
                     </div>
                     <div className='blockSendTransactionSum'>
                         <div className='iconSum'/>
                         <div className='poleSum'>
                             <input type='text' className='payment_sum' placeholder=''
                                    onChange={this.handleAmountChange}/>
-                            <p className='payment_sum_'>{(this.state.amountS)}</p>
+                            <p className='payment_sum_'>{this.state.amountS}</p>
                             <p className='payment_sumUSD'> {(this.state.usd).toFixed(2)}</p>
                         </div>
                         <button className='setMaxSum' onClick={this.setMax}/>
@@ -214,18 +221,18 @@ export class BtcSendWindow extends Component<BTCSendProps, BTCSendState> {
                         <button className={this.classFee1} onClick={this.changeFee1}/>
                         <button className={this.classFee2} onClick={this.changeFee2}/>
                         <button className={this.classFee3} onClick={this.changeFee3}/>
-                        <p className='sum_Transaction_fee'>{(this.state.fee).toFixed(8)}</p>
+                        <p className='sum_Transaction_fee'>{this.state.fee.toFixed(8)}</p>
                         <p className='NameCrypto_Transaction_fee'>{' BTC'}</p>
                         <p className='USD_icon'>{'$'}</p>
-                        <p className='USD_Transaction_fee'>{(this.state.feeUSD).toFixed(2)}</p>
+                        <p className='USD_Transaction_fee'>{this.state.feeUSD.toFixed(2)}</p>
                     </div>
 
                     <div className='blockBalance'>
                         <p className='text_Transaction_fee'>Avalible</p>
-                        <p className='sum_Transaction_balance'>{Number(this.state.maxSum).toFixed(8)}</p>
+                        <p className='sum_Transaction_balance'>{this.state.maxSum.toFixed(8)}</p>
                         <p className='NameCrypto_Transaction_fee'>{' BTC'}</p>
                         <p className='USD_icon'>{'$'}</p>
-                        <p className='USD_Transaction_fee'>{(this.state.balanceUSD).toFixed(2)}</p>
+                        <p className='USD_Transaction_fee'>{this.state.balanceUSD.toFixed(2)}</p>
                     </div>
                     <div className='buttonSendCancelFlex'>
                         <div className='buttonSendBig'>
