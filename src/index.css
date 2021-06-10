@@ -1705,9 +1705,24 @@ button {
   color: #FFFFFF;
 }
 
-.erc20Table table td:last-child {
-  width: 100%;
+.erc20Table table, tr, td, th {
+  padding: 0;
 }
+
+.erc20Table th:first-child,  td:nth-child(1) {
+  width: 30%;
+}
+
+.erc20Table th:nth-child(2), td:nth-child(2) {
+  width: 40%;
+}
+.erc20Table th:nth-child(3), td:nth-child(3) {
+  width: 30%;
+}
+
+/* .erc20Table table td:last-child {
+  width: 100%;
+} */
 
 .erc20Table hr {
   opacity: 0.28;

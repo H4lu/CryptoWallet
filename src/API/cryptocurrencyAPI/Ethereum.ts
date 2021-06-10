@@ -13,7 +13,7 @@ import { DisplayTransaction, DisplayTransactionCurrency, DisplayTransactionStatu
 export interface Erc20DisplayToken {
     name: string,
     address: string,
-    amount: number
+    amount: string
 }
 
 
@@ -188,7 +188,7 @@ function toErc20DisplayToken(addressInfo: EthplorerAddressInfo): Array<Erc20Disp
             return {
                 name: token.tokenInfo.symbol,
                 address: token.tokenInfo.address, 
-                amount: token.balance 
+                amount: parseFloat(convertFromWei(token.balance)).toFixed(8) 
             }
         }) ?? []
 }
@@ -252,7 +252,7 @@ async function createTransaction(
             nonce: new BN(txCount),
             to: paymentAdress,
             gasPrice: web3.utils.toHex(web3.utils.toWei(gas, 'shannon')),
-            gasLimit: web3.utils.toHex(31000),
+            gasLimit: web3.utils.toHex(100000),
             data: '0x00',
             v: new BN(getVMin(NETWORK)),
             r: new BN(0),
