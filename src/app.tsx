@@ -29,7 +29,6 @@ import {
 } from './api/cryptocurrencyApi/ethereum'
 import {getCurrencyRate} from './core/getCurrencyRate'
 import {StartWindow} from './components/windows/startWindow'
-import {TransactionSuccess} from './components/transactionSuccess'
 import pcsclite from "@pokusew/pcsclite"
 import {setReader} from './api/hardwareApi/reader'
 
@@ -261,7 +260,6 @@ export default class App extends Component<{}, AppState> {
             sidebar: () => <SidebarContent/>,
             sidebarLeft: SidebarLeft,
             main: () => <BtcSendWindow
-                                    redirect = {this.redirectToTransactionsuccess} 
                                     stateSR = {this.setStateSR} 
                                     course = {this.state.BTCCourse}
                                     btcBalance = {this.state.BTCBalance} 
@@ -281,7 +279,6 @@ export default class App extends Component<{}, AppState> {
             sidebar: () => <SidebarContent/>,
             sidebarLeft: SidebarLeft,
             main: () => <LtcSendWindow 
-                                    redirect = {this.redirectToTransactionsuccess} 
                                     stateSR={this.setStateSR} 
                                     course={this.state.LTCCourse}
                                     ltcBalance={this.state.LTCBalance} 
@@ -301,7 +298,6 @@ export default class App extends Component<{}, AppState> {
             sidebar: () => <SidebarContent/>,
             sidebarLeft: SidebarLeft,
             main: () => <EthSendWindow 
-                                    redirect = {this.redirectToTransactionsuccess} 
                                     stateSR = {this.setStateSR} 
                                     course = {this.state.ETHCourse}
                                     ethBalance = {this.state.ETHBalance} 
@@ -727,17 +723,10 @@ export default class App extends Component<{}, AppState> {
                         null
                     )}
                     {(this.state.redirectToTransactionSuccess) ? (
-                        <Redirect to='/transaction_success'/>
+                        <Redirect to='/main'/>
                     ) : (
                         null
                     )}
-                    <Route 
-                        path='/transaction_success'
-                        component={() => <TransactionSuccess 
-                            refresh={this.updateData} 
-                            resetState={this.redirectToTransactionsuccess}/> 
-                        } 
-                    />
                                                                         
                      <Route 
                         path='/start' 

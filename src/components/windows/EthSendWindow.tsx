@@ -22,8 +22,7 @@ interface EthSendProps {
     course: number,
     ethBalance: number,
     trFee: number,
-    setFee: (num: number) => void,
-    redirect: () => void
+    setFee: (num: number) => void
 }
 
 
@@ -112,7 +111,6 @@ export class EthSendWindow extends Component<EthSendProps, ETHSendState> {
                 await sendTransaction(
                     'ETH', this.state.paymentAddress, this.state.amount, this.props.trFee, this.props.course, this.props.ethBalance
                     )
-                this.props.redirect()    
             } catch(err) {
                 console.error(err)
                 remote.dialog.showErrorBox("Send transaction error", err.message)
@@ -228,7 +226,7 @@ export class EthSendWindow extends Component<EthSendProps, ETHSendState> {
 
                     <div className='buttonSendCancelFlex'>
                         <div className='buttonSendBig'>
-                            <Link to={'/main'}>
+                            <Link to='/main'>
                                 <button type='submit' className='button-send-transaction' onClick={this.handleClick}/>
                             </Link>
                         </div>

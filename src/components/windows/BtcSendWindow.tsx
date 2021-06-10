@@ -22,8 +22,7 @@ interface BTCSendProps {
     course: number,
     btcBalance: number,
     trFee: number,
-    setFee: (num: number) => void,
-    redirect: () => void
+    setFee: (num: number) => void
 }
 
 // TODO: reuse this component for ltc and others
@@ -114,8 +113,6 @@ export class BtcSendWindow extends Component<BTCSendProps, BTCSendState> {
                 await sendTransaction(
                     'BTC', this.state.paymentAddress, this.state.amount, this.props.trFee, this.props.course, this.props.btcBalance
                     )
-                this.props.redirect()    
-
             } catch(err) {
                 console.error(err)
                 remote.dialog.showErrorBox("Send transaction error", err.message)
@@ -236,7 +233,7 @@ export class BtcSendWindow extends Component<BTCSendProps, BTCSendState> {
                     </div>
                     <div className='buttonSendCancelFlex'>
                         <div className='buttonSendBig'>
-                            <Link to={'/main'}>
+                            <Link to = '/main'>
                                 <button type='submit' className='button-send-transaction' onClick={this.handleClick}/>
                             </Link>
                         </div>

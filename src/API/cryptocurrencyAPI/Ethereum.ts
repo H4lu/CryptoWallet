@@ -25,7 +25,7 @@ enum Networks {
     TEST = "ropsten"
 }
 
-const NETWORK = Networks.MAIN
+const NETWORK = Networks.TEST
 
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://${NETWORK}.infura.io/v3/960cbfb44af74f27ad0e4b070839158a`))
 

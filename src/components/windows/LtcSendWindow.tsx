@@ -22,8 +22,7 @@ interface LTCSendProps {
     course: number,
     ltcBalance: number,
     trFee: number,
-    setFee: (num: number) => void,
-    redirect: () => void
+    setFee: (num: number) => void
 }
 export class LtcSendWindow extends Component<LTCSendProps, ILTCSendState> {
     strSum: string
@@ -109,7 +108,6 @@ export class LtcSendWindow extends Component<LTCSendProps, ILTCSendState> {
             await sendTransaction(
                 'LTC', this.state.paymentAddress, this.state.amount, this.props.trFee, this.props.course, this.props.ltcBalance
                 )
-            this.props.redirect()    
         } catch(err) {
             console.error(err)
             remote.dialog.showErrorBox("Send transaction error", err.message)
@@ -228,7 +226,7 @@ export class LtcSendWindow extends Component<LTCSendProps, ILTCSendState> {
                     </div>
                     <div className='buttonSendCancelFlex'>
                         <div className='buttonSendBig'>
-                            <Link to={'/main'}>
+                            <Link to = '/main'>
                                 <button type='submit' className='button-send-transaction' onClick={this.handleClick}/>
                             </Link>
                         </div>
