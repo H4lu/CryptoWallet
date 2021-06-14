@@ -10,9 +10,9 @@ module.exports = {
   module: {
     rules,
   },
-  node: {
-    __dirname: true
-  },
+  // node: {
+  //   __dirname: true
+  // },
   devServer: {
     historyApiFallback: {
       index: 'index.html',
@@ -27,5 +27,8 @@ module.exports = {
   plugins: plugins,
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css']
+  },
+  externals: {
+    'ffi-napi': 'require("ffi-napi")'
   }
 };

@@ -27,7 +27,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "new_app"
+            "name": "CryptoWallet"
           }
         },
         {
@@ -43,6 +43,17 @@
         {
           "name": "@electron-forge/maker-rpm",
           "config": {}
+        }
+      ],
+      "publishers": [
+        {
+          "name": "@electron-forge/publisher-github",
+          "config": {
+            "owner": "H4lu",
+            "name": "CryptoWallet",
+            "repository": "CryptoWallet"
+          },
+          "prerelease": true
         }
       ],
       "hooks": "require:./hooks.js",
@@ -74,6 +85,7 @@
     "@electron-forge/maker-zip": "^6.0.0-beta.57",
     "@electron-forge/plugin-auto-unpack-natives": "^6.0.0-beta.57",
     "@electron-forge/plugin-webpack": "^6.0.0-beta.57",
+    "@electron-forge/publisher-github": "^6.0.0-beta.57",
     "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
     "@types/ffi-napi": "^4.0.1",
     "@types/react": "^17.0.9",

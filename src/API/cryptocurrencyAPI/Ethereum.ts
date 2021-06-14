@@ -15,8 +15,6 @@ export interface Erc20DisplayToken {
     address: string,
     amount: string
 }
-
-
 interface EthplorerTransaction {
     timestamp: number,
     from: string,
@@ -47,7 +45,6 @@ enum KovanV {
     MAX = 120,
     MIN = 119
 }
-
 interface EthplorerErc20TokenInfo {
     address: string,
     decimals: string,
@@ -61,7 +58,6 @@ interface EthplorerErc20TokenInfo {
     price: boolean
 }
 
-
 interface EthplorerErc20Token {
     tokenInfo: EthplorerErc20TokenInfo,
     balance: number,
@@ -73,7 +69,6 @@ interface EthplorerEthInfo {
     balance: number,
     price: boolean
 }
-
 interface EthplorerAddressInfo {
     address: string,
     ETH: EthplorerAddressInfo,
@@ -81,8 +76,9 @@ interface EthplorerAddressInfo {
     tokens?: Array<EthplorerErc20Token>
 }
 
-const NETWORK = Networks.KOVAN
-const ethplorerRoot = NETWORK == Networks.KOVAN ? "https://kovan-api.ethplorer.io" : "https://api.ethplorer.io"
+const NETWORK = Networks.MAIN
+//const ethplorerRoot = NETWORK Networks.KOVAN ? "https://kovan-api.ethplorer.io" : "https://api.ethplorer.io"
+const ethplorerRoot = "https://api.ethplorer.io"
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://${NETWORK}.infura.io/v3/960cbfb44af74f27ad0e4b070839158a`))
 
 let myAdress = ''
