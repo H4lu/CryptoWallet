@@ -38,11 +38,11 @@ import {setReader} from './api/hardwareApi/reader'
 const pcsc = pcsclite()
 
 import {getInfoPCSC} from './api/hardwareApi/getWalletInfo'
-import {UpdateHWStatusPCSC, updateTransactionsPCSC} from './api/hardwareApi/updateHWStatus'
+import {UpdateHWStatusPCSC, updateTransactionsPCSC} from './api/hardwareApi/updateHwStatus'
 import {SidebarLeft} from "./components/sidebarLeft";
 import {BtcRecieveWindow} from "./components/windows/btcRecieveWindow";
 import {BtcSendWindow} from "./components/windows/btcSendWindow";
-import {LtcSendWindow} from "./components/windows/ltcSendWindow";
+import {LtcSendWindow} from "./components/windows/lLtcSendWindow";
 import {LtcRecieveWindow} from "./components/windows/ltcRecieveWindow";
 import {EthRecieveWindow} from "./components/windows/ethReceiveWindow";
 import {EthSendWindow} from "./components/windows/ethSendWindow";
