@@ -1,5 +1,5 @@
 import React, {FC} from 'react'
-import {CarouselElement} from './carouselElement'
+import {CarouselElement} from './crouselElement'
 import Coverflow from "../react-coverflow.js"
 import { DisplayTransactionCurrency } from '../api/cryptocurrencyApi/utils'
 

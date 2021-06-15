@@ -30,7 +30,7 @@ import {
     getAddressErc20Tokens,
     getEthereumAddress
 } from './api/cryptocurrencyApi/ethereum'
-import {getCurrencyRate} from './core/getCurrencyRate'
+import {getCurrencyRate} from './core/setCurrencyRate'
 import {StartWindow} from './components/windows/startWindow'
 import pcsclite from "@pokusew/pcsclite"
 import {setReader} from './api/hardwareApi/reader'
