@@ -870,6 +870,34 @@ button {
 
 }
 
+.carouselBCHIcon {
+  background: url('../static/icon_BCH.svg') no-repeat center;
+  display: block;
+  height: 80px;
+  width: 80px;
+}
+
+.carouselMNRIcon {
+  background: url('../static/icon_MNR.svg') no-repeat center;
+  display: block;
+  height: 80px;
+  width: 80px;
+}
+
+.carouselXCHIcon {
+  background: url('../static/icon_XCH.svg') no-repeat center;
+  display: block;
+  height: 80px;
+  width: 80px;
+}
+
+.carouselDOGEIcon {
+  background: url('../static/icon_DOGE.svg') no-repeat center;
+  display: block;
+  height: 80px;
+  width: 80px;
+}
+
 .iconCryptoCurrency {
   background: url('../static/icon_BTC.svg') no-repeat center;
   border: 0px solid black;

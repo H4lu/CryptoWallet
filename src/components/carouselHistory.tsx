@@ -39,28 +39,3 @@ export const CarouselHistory: FC<CarouselHistoryProps> = (props) => {
         </div>
     )
 }
-// export class CarouselHistory extends PureComponent<CarouselHistoryProps, CarouselHistoryState> {
-//     constructor(props: any) {
-//         super(props)
-//         this.props.stateSR(false)
-//         this.currencyToIndex = this.currencyToIndex.bind(this)
-//         this.state = {
-//             activeCurrencyIndex:  this.currencyToIndex(),
-//             isNeedShift: true
-//         };
-//     }
-
-//     componentDidMount() {
-//         if (this.state.isNeedShift) {
-//             this.setState({activeCurrencyIndex: this.currencyToIndex() + 1})
-//             this.setState({activeCurrencyIndex: this.currencyToIndex() - 1})//kostil for choosing current active
-//             this.setState({isNeedShift: false})
-//         }
-//     }
- 
-
-//     render() {
-        
-//         )
-//     }
-// }

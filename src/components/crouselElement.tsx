@@ -1,33 +1,15 @@
 import React, {FC} from 'react'
+import { DisplayTransactionCurrency } from '../api/cryptocurrencyApi/utils'
 
 interface CarouselProps {
-    currencyName: string
+    currencyName: DisplayTransactionCurrency
     onClicked: () => void
-}
-
-const chooseIcon = (currencyName: string): string => {
-    switch(currencyName) {
-        case "BTC": {
-            return "carouselBTCIcon"
-            
-        }
-        case "LTC": {
-            return "carouselLTCIcon"
-           
-        }
-        case "ETH": {
-            return "carouselETHIcon"
-        }
-        case "XRP": {
-            return "carouselXRPIcon" 
-        }
-    }
 }
 
 export const CarouselElement: FC<CarouselProps> = (props) => {
     return (
         <div 
-            className = {chooseIcon(props.currencyName)}
+            className = {`carousel${props.currencyName}Icon`}
             onClick = {() => props.onClicked()}
         />
     )
