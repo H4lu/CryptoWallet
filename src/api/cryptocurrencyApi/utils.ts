@@ -187,7 +187,7 @@ export function toDisplayCurrencyName(currency: DisplayTransactionCurrency) {
     case "XRP": return "Ripple";
     case "BCH": return "Bitcoincash";
     case "MNR": return "Monero";
-    case "XCH": return "CHIA";
+    case "XCH": return "Chia";
     case "DOGE": return "Dogecoin"
   }
 }
