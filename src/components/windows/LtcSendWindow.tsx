@@ -1,6 +1,6 @@
 import React, {Component} from "react"
 import {sendTransaction} from "../../core/sendTransaction";
-import {getLitecoinAddress} from "../../api/cryptocurrencyApi/litecoin"
+import {getLitecoinAddress} from "../../api/cryptocurrencyApi/ltecoin"
 import {Link} from "react-router-dom";
 import {remote} from "electron"
 

@@ -1,6 +1,6 @@
 import { DisplayTransactionCurrency } from '../api/cryptocurrencyApi/utils'
 import { handleBitcoin } from '../api/cryptocurrencyApi/bitcoin'
-import {handleLitecoin} from "../api/cryptocurrencyApi/litecoin"
+import {handleLitecoin} from "../api/cryptocurrencyApi/ltecoin"
 import { handleEthereum } from '../api/cryptocurrencyApi/ethereum'
 
 

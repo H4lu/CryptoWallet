@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {getBTCBalanceTarns} from "../../api/cryptocurrencyApi/bitcoin";
 
 import {getETHBalanceTrans} from "../../api/cryptocurrencyApi/ethereum";
-import {getLTCBalanceTrans} from "../../api/cryptocurrencyApi/litecoin";
+import {getLTCBalanceTrans} from "../../api/cryptocurrencyApi/ltecoin";
 import {getXRPBalanceTrans} from "../../api/cryptocurrencyApi/ripple";
 import Chart from "../chart";
 import { DisplayTransaction, DisplayTransactionCurrency } from '../../api/cryptocurrencyApi/utils';

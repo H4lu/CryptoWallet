@@ -19,7 +19,7 @@ import {
     getLitecoinLastTx,
     setLTCBalance,
     setLTCPrice
-} from './api/cryptocurrencyApi/litecoin'
+} from './api/cryptocurrencyApi/ltecoin'
 import {
     getETHBalance,
     initEthereumAddress,

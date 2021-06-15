@@ -3,7 +3,7 @@ import { Buffer } from 'buffer'
 import { reader } from './reader'
 import {getBitcoinPubKey} from "../cryptocurrencyApi/bitcoin";
 import {getEthereumPubKey} from "../cryptocurrencyApi/ethereum";
-import {getLitecoinPubKey} from "../cryptocurrencyApi/litecoin";
+import {getLitecoinPubKey} from "../cryptocurrencyApi/ltecoin";
 
 import ffi from 'ffi-napi'
 // import * as Path from 'path'
