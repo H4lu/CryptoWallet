@@ -49,9 +49,10 @@
         {
           "name": "@electron-forge/publisher-github",
           "config": {
-            "owner": "H4lu",
-            "name": "CryptoWallet",
-            "repository": "CryptoWallet"
+            "repository": {
+              "owner": "H4lu",
+              "name": "CryptoWallet"
+            }
           },
           "prerelease": true
         }
