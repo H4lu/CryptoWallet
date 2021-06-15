@@ -1,13 +1,13 @@
-import * as React from 'react'
+import React, {Component} from 'react'
 
-interface IChooseCurrencyProps {
+interface ChooseCurrencyProps {
   readonly currentCurrency: string
 }
-interface IChooseCurrencyState {
+interface ChooseCurrencyState {
 
 }
 
-export class ChooseCurrency extends React.Component<IChooseCurrencyProps, IChooseCurrencyState> {
+export class ChooseCurrency extends Component<ChooseCurrencyProps, ChooseCurrencyState> {
 
   render() {
     return (

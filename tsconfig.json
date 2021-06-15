@@ -1,17 +1,32 @@
 {
-    "compileOnSave": false,
-    "compilerOptions": {
-        "target": "es2015",
-        "moduleResolution": "node",
-        "pretty": true,
-        "newLine": "LF",
-        "allowSyntheticDefaultImports": true,
-        "strict": false,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "sourceMap": false,
-        "skipLibCheck": true,
-        "allowJs": true,
-        "jsx": "react"
+  "compileOnSave": false,
+  "compilerOptions": {
+    "lib": [
+      "es2019",
+      "DOM"
+    ],
+    "target": "es6",
+    "pretty": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": false,
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "jsx": "react",
+    "resolveJsonModule": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "*": ["node_modules/*"]
     }
+  },
+  "include": [
+    "src/**/*"
+  ]
 }

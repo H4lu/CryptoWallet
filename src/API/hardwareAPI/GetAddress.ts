@@ -1,17 +1,18 @@
-
+import Web3 from 'web3'
+const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/960cbfb44af74f27ad0e4b070839158a'))
 import { Buffer } from 'buffer'
-// import { port } from './OpenPort'
-import { reader } from './Reader'
-import { info } from 'electron-log'
+// @ts-ignore
+import { reader } from './reader'
 
 export function get() {
   return new Promise((resolve,reject) => {
-    reader.transmit(Buffer.from([0xb1,0x20,0x00,0x00,0x01]), 4, 2, (err,data) => {
+    // @ts-ignore
+    reader.transmit(Buffer.from([0xB0,0x20,0x00,0x00,0x01]), 4, 2, (err,data) => {
       if (err) {
-        info(err)
+        console.log(err)
         reject(err)
       } else {
-        info('GOT THIS DATA',data.toString('hex'))
+        console.log('GOT THIS DATA',data.toString('hex'))
         resolve(data.toString('hex'))
       }
     })
@@ -20,141 +21,61 @@ export function get() {
 }
 export function getREALSTATUS() {
   return new Promise((resolve,reject) => {
+    // @ts-ignore
     reader.transmit(Buffer.from([0xB0,0x10,0x00,0x00,0x00]), 255,2,(err,data) => {
       if (err) {
-        info('ERROR IN REALSTATUS', err)
+        console.log('ERROR IN REALSTATUS', err)
         reject(err)
       } else {
-        info('REALSTATUS', data.toString('hex'))
+        console.log('REALSTATUS', data.toString('hex'))
         resolve(data)
       }
     })
   })
 }
-export function getAnswer(id: Number): Promise<Buffer> {
-  return new Promise(async (resolve,reject) => {
-    reader.transmit(Buffer.concat([Buffer.from([0xB1,0x30,0x00]),Buffer.from([id]),Buffer.from([0x00])]),255,2,(err,data) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(data)
-      }
-    })
-  })
-}
-export function getAddressPCSC(id: number): Promise<string> {
+
+export function getAddressPCSC(id: number): Promise<[string, Buffer]> {
   return new Promise(async (resolve, reject) => {
     let currencyId: number
-    let dataToSend
+    let dataToSend = Buffer.alloc(5)
     switch (id) {
     case 0: {
-      dataToSend = Buffer.from([0xB1,0x30,0x00,0x00,0x00])
+      dataToSend = Buffer.from([0xB0,0x30,0x00,0x00,0x00])
       currencyId = 0x00
       break
     }
     case 1: {
-      dataToSend = Buffer.from([0xB1,0x30,0x00,0x01,0x00])
+      dataToSend = Buffer.from([0xB0,0x30,0x00,0x01,0x00])
       currencyId = 0x01
       break
     }
     case 2: {
-      dataToSend = Buffer.from([0xB1,0x30,0x00,0x02,0x00])
+      dataToSend = Buffer.from([0xB0,0x30,0x00,0x02,0x00])
       currencyId = 0x02
       break
     }
+   /* case 3: {
+        dataToSend = Buffer.from([0xB0,0x30,0x00,0x03,0x00])
+        currencyId = 0x03
+        break
+    }*/
     }
-    info('Currency id:', currencyId)
-    info('DATA TO SEND',dataToSend)
-    reader.transmit(dataToSend,255,2,(err,data) => {
+   // @ts-ignore
+    reader.transmit(dataToSend,255,2,(err: any,data: any) => {
       if (err) {
         reject(err)
       } else {
-        info('ADDRESS ANSWER', data.toString())
-        console.log('RESOLVING', data.slice(3, data.length - 3).toString())
-        console.log('LENGTH', data.length)
-        resolve(data.slice(0, data.length - 3).toString())
-      }
-    })
-  })
-
-}
-/*
-function sendData(currencyId: number) {
-  return new Promise((resolve,reject) => {
-    reader.transmit(Buffer.from([0xB1,0x30,0x00,currencyId,0x00]),60,2,(err,data) => {
-      if (err) {
-        reject(err)
-      } else {
-        info('ADDRESS ANSWER', data.toString('hex'))
-        resolve(data.toString('hex').substring(0, data.indexOf('9000', 30)))
+        if (currencyId === 1) {
+          let forkeccak = (data.slice(data[0] + 2, data[0] + 66)).toString('hex')
+          let ethAdr = web3.utils.soliditySha3({ t: 'bytes', v: forkeccak })
+          ethAdr = 'ETH0x' + ethAdr.substr(26,40)
+          resolve([ethAdr, data.slice(data[0] + 1, data[0] + 66)])
+        } else {
+          console.log(data)
+          console.log(Buffer.from(data).toString("hex"))
+          resolve([data.slice(1, data[0] + 1).toString(), data.slice(data[0] + 1, data[0] + 66)])
+        }
       }
     })
   })
 }
-*/
-/* export function getAddr(id: number) {
-  port.open()
-  port.on('open', data => {
-    info('Port opened!' + data)
-    let currencyId: number = 0x00
-    switch (id) {
-    case 0: {
-      currencyId = 0x00
-      break
-    }
-    case 1: {
-      currencyId = 0x01
-      break
-    }
-    case 2: {
-      currencyId = 0x02
-      break
-    }
-    }
-    info(id)
-    let messageBuf = Buffer.from([0x9c,0x9c,0x43,currencyId,0x9a,0x9a])
-    info(messageBuf)
-    port.write(messageBuf)
-    port.on('data', data => {
-      info('Got this data: ' + data.toString())
-      port.close()
-      port.removeAllListeners()
-    })
-  })
-  port.on('error', error => {
-    info('Error: ' + error)
-  })
-}
-export function getAddressByCOM(id: number): Promise<string> {
-  let currencyId: number = 0x00
-  switch (id) {
-  case 0: {
-    currencyId = 0x00
-    break
-  }
-  case 1: {
-    currencyId = 0x01
-    break
-  }
-  case 2: {
-    currencyId = 0x02
-    break
-  }
-  }
-  let startMessage = Buffer.from([0x9c, 0x9c])
-  let endMessage = Buffer.from([0x9a, 0x9a])
-  let messageBody = Buffer.from([0x43, currencyId])
-  let message = Buffer.concat([startMessage,messageBody, endMessage])
-  port.write(message)
-  info('PORT WRITED')
-  return new Promise((resolve) => {
-    port.on('data', (data) => {
-      info('PORT IN ADDRESS:',port)
-      info('GOT THIS DATA IN GET ADDRESS BY COM:',data.toString())
-      port.removeAllListeners('data')
-      resolve(data.toString().substring(7, data.length))
-    })
-  })
-
-}
-*/

@@ -21,16 +21,16 @@ export class SidebarNoButtons extends React.Component<any, any> {
           </div>
           <p className = 'total-currency-font'>{this.props.total}$</p>
           <hr/>
-          <header className = 'info-header-font'>Your Braitberry:</header>
+          <header className = 'console.log-header-font'>Your Braitberry:</header>
             <div className = 'about-block'>
             <div>
-             <p className = 'info-default-font text-inline'>-ID:</p><p className = 'info-amount-font text-inline'>13332</p>
+             <p className = 'console.log-default-font text-inline'>-ID:</p><p className = 'console.log-amount-font text-inline'>13332</p>
             </div>
             <div>
-             <p className = 'info-default-font text-inline'>Currency Available</p><p className ='info-amount-font text-inline'>3</p>
+             <p className = 'console.log-default-font text-inline'>Currency Available</p><p className ='console.log-amount-font text-inline'>3</p>
             </div>
             <div>
-             <p className = 'info-default-font text-inline'>Currency Can Add</p><p className = 'info-amount-font text-inline'>2</p>
+             <p className = 'console.log-default-font text-inline'>Currency Can Add</p><p className = 'console.log-amount-font text-inline'>2</p>
             </div>
             </div>
         </div>

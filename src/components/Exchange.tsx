@@ -83,8 +83,6 @@ export class Exchange extends React.Component<any, IEchangeState> {
           }
         }
         console.log(self.pairs)
-      } else {
-        alert('Problems with internet connection')
       }
     }).catch(error => {
       console.log(error)

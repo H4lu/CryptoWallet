@@ -1,29 +1,27 @@
-import WebRequest from 'web-request'
+import axios from 'axios'
 // import Request from 'request'
 export async function initialTransaction(withdrawal: string, pair: string, exchangeAmount: number, returnAddress: string) {
   const requestURL = 'https://shapeshift.io/sendamount'
   console.log(exchangeAmount)
   try {
-    const response = await WebRequest.post(requestURL,{headers: {
-      'content-type': 'application/json'
-    },
-      json: true,
-      body: {
-        'amount': exchangeAmount,
-        'withdrawal': withdrawal,
-        'pair': pair,
-        returnAddress: returnAddress
-      }})
-    console.log(response.content)
-    let respData: any = response.content
-    console.log('Deposit by object: ' + Object(response.content).deposit)
+    const response = await axios.post(requestURL,
+      {
+      'amount': exchangeAmount,
+      'withdrawal': withdrawal,
+      'pair': pair,
+      returnAddress: returnAddress
+    }, 
+    {headers: {'content-type': 'application/json'}}
+    )
+    console.log(response.data)
+    let respData: any = response.data
     let deposit = respData.deposit
     console.log('Deposit: ' + deposit)
     // console.log(response)
-    console.log('Response content: ' + response.content)
+    console.log('Response content: ' + response.data)
     // console.log(responseBody)
-    console.log('Response content valueOf ' + JSON.stringify(response.content)[2])
-    console.log(JSON.parse(response.content))
+    console.log('Response content valueOf ' + JSON.stringify(response.data)[2])
+    console.log(JSON.parse(response.data))
     /*
 apiPubKey:"shapeshift"
 deposit:"3QsTmBVtsr43DkFwS4K9HenScdmagRa6tY"
@@ -48,9 +46,9 @@ withdrawalType:"ETH"
 }
 
 export async function getRate(firstCurrency: string, secondCurrency: string) {
-  const requestURL = 'https://shapeshift.io/rate/' + firstCurrency + '_' + secondCurrency
+  const requestURL = `https://shapeshift.io/rate/${firstCurrency}_${secondCurrency}`
   try {
-    const response = await WebRequest.get(requestURL)
+    const response = await axios.get(requestURL)
     return response
   } catch (error) {
     console.log(error)
@@ -58,10 +56,10 @@ export async function getRate(firstCurrency: string, secondCurrency: string) {
 }
 
 export async function getMarketInfo(firstCurrency: string, secondCurrency: string) {
-  const request = 'https://shapeshift.io/marketinfo/' + firstCurrency + '_' + secondCurrency
+  const request = `https://shapeshift.io/marketinfo/${firstCurrency}_${secondCurrency}`
   console.log('Pairs: ' + firstCurrency + '_' + secondCurrency)
   try {
-    const response = await WebRequest.get(request)
+    const response = await axios.get(request)
     return response
   } catch (error) {
     console.log(error)
@@ -71,9 +69,9 @@ export async function getMarketInfo(firstCurrency: string, secondCurrency: strin
 export async function getSupportedCoins() {
   const requestURL = 'https://shapeshift.io/getcoins'
   try {
-    const response = await WebRequest.get(requestURL)
-    console.log('Response of supported coins: ' + response.content)
-    let parsedCoins = JSON.parse(response.content)
+    const response = await axios.get(requestURL)
+    console.log('Response of supported coins: ' + response.data)
+    let parsedCoins = JSON.parse(response.data)
     for (let coin in parsedCoins) {
       console.log('Parsed coins: ' + parsedCoins[coin].status)
     }

@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 230.685 150.29">
+  <defs>
+    <style>
+      .cls-1, .cls-5 {
+        fill: #484848;
+      }
+
+      .cls-2 {
+        opacity: 0.8;
+        fill: url(#linear-gradient);
+      }
+
+      .cls-3 {
+        fill: rgba(255,255,255,0.84);
+        font-size: 21px;
+        opacity: 0.75;
+      }
+
+      .cls-3, .cls-4 {
+        font-family: SegoeUI-Light, Segoe UI;
+        font-weight: 300;
+      }
+
+      .cls-4, .cls-9 {
+        fill: #fff;
+      }
+
+      .cls-4 {
+        font-size: 10px;
+        opacity: 0.65;
+      }
+
+      .cls-5 {
+        font-size: 22px;
+        font-family: SegoeUI-Bold, Segoe UI;
+        font-weight: 700;
+      }
+
+      .cls-6 {
+        opacity: 0.91;
+      }
+
+      .cls-7 {
+        clip-path: url(#clip-path);
+      }
+
+      .cls-8 {
+        opacity: 0.6;
+      }
+    </style>
+    <linearGradient id="linear-gradient" y1="-0.044" x2="0.807" y2="1.533" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="0.552" stop-color="#777"/>
+      <stop offset="1" stop-color="#848484"/>
+    </linearGradient>
+    <clipPath id="clip-path">
+      <circle id="Mask" class="cls-1" cx="30" cy="30" r="30"/>
+    </clipPath>
+  </defs>
+  <g id="Group_1944" data-name="Group 1944" transform="translate(-301.003 -852)">
+    <rect id="Rectangle_1663" data-name="Rectangle 1663" class="cls-2" width="230" height="150" transform="translate(301.003 852)"/>
+    <text id="Litecoin" class="cls-3" transform="translate(320.583 960)"><tspan x="0" y="0">Litecoin</tspan></text>
+    <text id="USD" class="cls-4" transform="translate(491.79 984.021)"><tspan x="0" y="0">USD</tspan></text>
+    <text id="LTC" class="cls-5" transform="translate(320.979 903.243)"><tspan x="0" y="0">LTC</tspan></text>
+    <g id="BCC" class="cls-6" transform="translate(452.74 866.54)">
+      <g id="Shape">
+        <circle id="Mask-2" data-name="Mask" class="cls-1" cx="30" cy="30" r="30"/>
+      </g>
+    </g>
+    <g id="Group_1937" data-name="Group 1937" class="cls-8" transform="translate(467.576 881.022)">
+      <path id="Shape-3" data-name="Shape" class="cls-9" d="M13.688,25c5.642.1,11.18.2,16.823.4a21.208,21.208,0,0,0-.522,2.174,29.632,29.632,0,0,0-.836,2.866c-.1.494-.313.593-.836.593H1.358c.94-3.459,1.881-6.72,2.821-10.179-1.463.494-2.717.988-4.18,1.581.418-1.482.836-2.767,1.358-4.151,0-.2.313-.3.522-.3.94-.4,1.985-.692,2.926-1.087a.863.863,0,0,0,.627-.692L9.822.791C9.926.2,10.135,0,10.867,0h9.508c-1.149,4.052-2.194,8.1-3.344,12.353,1.672-.692,3.239-1.285,5.015-1.878-.209.791-.522,1.482-.627,2.174A3.225,3.225,0,0,1,18.6,15.516a19.518,19.518,0,0,0-2.194.791,1.755,1.755,0,0,0-.627.593c-.731,2.668-1.463,5.238-2.09,7.906Z" transform="translate(0 0)"/>
+    </g>
+  </g>
+</svg>

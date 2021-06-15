@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 147.208 38.426">
+  <defs>
+    <style>
+      .cls-1 {
+        opacity: 0.47;
+      }
+
+      .cls-2 {
+        opacity: 0.8;
+        fill: url(#linear-gradient);
+      }
+
+      .cls-3 {
+        stroke: #000;
+        stroke-width: 0.5px;
+        font-size: 18px;
+        font-family: SegoeUI, Segoe UI;
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="0.256" x2="0.741" y2="1.963" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="1" stop-color="#848484"/>
+    </linearGradient>
+  </defs>
+  <g id="Group_1720" data-name="Group 1720" class="cls-1">
+    <rect id="Rectangle_118" data-name="Rectangle 118" class="cls-2" width="147" height="38" transform="translate(0)"/>
+    <text id="Send" class="cls-3" transform="translate(53.788 27.013)"><tspan x="0" y="0">Send</tspan></text>
+  </g>
+</svg>

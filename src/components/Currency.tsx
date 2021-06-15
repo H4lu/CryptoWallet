@@ -13,7 +13,7 @@ export class Currency extends React.Component<any, any> {
       </Link>
         <div className = 'currency-content'>
           <header className = 'text-header'>Your Bitcoin</header>
-          <div className = 'currency-info-container'>
+          <div className = 'currency-console.log-container'>
             <p>1232 BTC</p>
             <p>329479186819740$</p>
             <img src = 'https://shapeshift.io/images/coins/bitcoin.png'/>
