@@ -10,12 +10,12 @@ interface CarouselHistoryProps {
     lastTxBTC: Array<DisplayTransaction>,
     lastTxETH: Array<DisplayTransaction>,
     lastTxLTC: Array<DisplayTransaction>,
-    lastTxXRP: Array<DisplayTransaction>
+    lastTxXRP: Array<DisplayTransaction>,
+    activeCurrency: DisplayTransactionCurrency,
+    setActiveCurrency: (currency: DisplayTransactionCurrency) => void
 }
 
 export const CarouselHistory: FC<CarouselHistoryProps> = (props) => {
-    const [activeCurrency, setActiveCurrency] = useState<DisplayTransactionCurrency>("BTC")
-
     useEffect(() => {
         props.stateSR(false)
     }, [])
@@ -24,11 +24,11 @@ export const CarouselHistory: FC<CarouselHistoryProps> = (props) => {
         <div className='windowPay'>
             <div className='payWindowTable'>
                 <Carousel
-                        setActiveCurrency={setActiveCurrency}
-                        activeCurrencyIndex={currencyToIndex(activeCurrency)}
+                        setActiveCurrency={props.setActiveCurrency}
+                        activeCurrencyIndex={currencyToIndex(props.activeCurrency)}
                         />
                 <CarouselTable 
-                            activeCurrency={activeCurrency}
+                            activeCurrency={props.activeCurrency}
                             refresh={props.refresh}
                             lastTxBTC = {props.lastTxBTC}
                             lastTxLTC = {props.lastTxLTC}
@@ -39,28 +39,3 @@ export const CarouselHistory: FC<CarouselHistoryProps> = (props) => {
         </div>
     )
 }
-// export class CarouselHistory extends PureComponent<CarouselHistoryProps, CarouselHistoryState> {
-//     constructor(props: any) {
-//         super(props)
-//         this.props.stateSR(false)
-//         this.currencyToIndex = this.currencyToIndex.bind(this)
-//         this.state = {
-//             activeCurrencyIndex:  this.currencyToIndex(),
-//             isNeedShift: true
-//         };
-//     }
-
-//     componentDidMount() {
-//         if (this.state.isNeedShift) {
-//             this.setState({activeCurrencyIndex: this.currencyToIndex() + 1})
-//             this.setState({activeCurrencyIndex: this.currencyToIndex() - 1})//kostil for choosing current active
-//             this.setState({isNeedShift: false})
-//         }
-//     }
- 
-
-//     render() {
-        
-//         )
-//     }
-// }

@@ -12,11 +12,11 @@ interface WalletCarouselProps {
     btcPrice: number,
     ltcPrice: number,
     ethPrice: number,
+    activeCurrency: DisplayTransactionCurrency,
+    setActiveCurrency: (currency: DisplayTransactionCurrency) => void
 }
 
 export const WalletCarousel: FC<WalletCarouselProps> = (props) => {
-    const [activeCurrency, setActiveCurrency] = useState<DisplayTransactionCurrency>('BTC')
-
     useEffect(() => {
         props.stateSR(false);
     }, [])
@@ -25,10 +25,10 @@ export const WalletCarousel: FC<WalletCarouselProps> = (props) => {
         <div className='windowPay'>
             <div className='payWindow'>
                 <Carousel 
-                    setActiveCurrency = {setActiveCurrency} 
-                    activeCurrencyIndex = {currencyToIndex(activeCurrency)}/>
+                    setActiveCurrency = {props.setActiveCurrency} 
+                    activeCurrencyIndex = {currencyToIndex(props.activeCurrency)}/>
                 <CarouselDesc 
-                            activeCurrency = {activeCurrency} 
+                            activeCurrency = {props.activeCurrency} 
                             btcBalance={props.btcBalance} 
                             ltcBalance={props.ltcBalance} 
                             ethBalance={props.ethBalance}

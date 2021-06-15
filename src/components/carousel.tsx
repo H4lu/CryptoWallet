@@ -23,6 +23,10 @@ export const Carousel: FC<CarouselProps> = (props: CarouselProps) => {
                 <CarouselElement currencyName = "ETH" onClicked = {() => props.setActiveCurrency("ETH")} />
                 <CarouselElement currencyName = "LTC" onClicked = {() => props.setActiveCurrency("LTC")} />
                 <CarouselElement currencyName = "XRP" onClicked = {() => props.setActiveCurrency("XRP")} />
+                <CarouselElement currencyName = "BCH" onClicked = {() => props.setActiveCurrency("BCH")} />
+                <CarouselElement currencyName = "DOGE" onClicked = {() => props.setActiveCurrency("DOGE")} />
+                <CarouselElement currencyName = "XCH" onClicked = {() => props.setActiveCurrency("XCH")} />
+                <CarouselElement currencyName = "MNR" onClicked = {() => props.setActiveCurrency("MNR")} />
             </Coverflow>
         </div>    
     )
