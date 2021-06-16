@@ -1,6 +1,52 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 401.685 235.29">
-  <defs>
-    <style>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 401.685 235.29"
+   version="1.1"
+   id="svg31"
+   sodipodi:docname="tr_cur_bal.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+  <metadata
+     id="metadata35">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="684"
+     inkscape:window-height="480"
+     id="namedview33"
+     showgrid="false"
+     inkscape:zoom="1.9997593"
+     inkscape:cx="257.12196"
+     inkscape:cy="155.51623"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="Group_1960" />
+  <defs
+     id="defs11">
+    <style
+       id="style2">
       .cls-1 {
         fill: rgba(1,1,1,0.82);
       }
@@ -42,19 +88,91 @@
         opacity: 0.65;
       }
     </style>
-    <linearGradient id="linear-gradient" y1="-0.044" x2="0.807" y2="1.533" gradientUnits="objectBoundingBox">
-      <stop offset="0" stop-color="#fff"/>
-      <stop offset="0.552" stop-color="#777"/>
-      <stop offset="1" stop-color="#848484"/>
+    <linearGradient
+       id="linear-gradient"
+       y1="-0.044"
+       x2="0.807"
+       y2="1.533"
+       gradientUnits="objectBoundingBox">
+      <stop
+         offset="0"
+         stop-color="#fff"
+         id="stop4" />
+      <stop
+         offset="0.552"
+         stop-color="#777"
+         id="stop6" />
+      <stop
+         offset="1"
+         stop-color="#848484"
+         id="stop8" />
     </linearGradient>
   </defs>
-  <g id="Group_1960" data-name="Group 1960" transform="translate(-594.003 -120)">
-    <rect id="Rectangle_138" data-name="Rectangle 138" class="cls-1" width="401" height="235" transform="translate(594.003 120)"/>
-    <rect id="Rectangle_1472" data-name="Rectangle 1472" class="cls-2" width="180.685" height="115.29" transform="translate(796.003 140)"/>
-    <text id="Wallets" class="cls-3" transform="translate(851.347 237.905)"><tspan x="0" y="0">Wallets</tspan></text>
-    <text id="_4" data-name="4" class="cls-4" transform="translate(872.277 199.124)"><tspan x="0" y="0">4</tspan></text>
-    <text id="Transactions" class="cls-5" transform="translate(613.947 160.243)"><tspan x="0" y="0">Transactions</tspan></text>
-    <text id="Current_balance" data-name="Current balance" class="cls-5" transform="translate(613.947 265.243)"><tspan x="0" y="0">Current balance</tspan></text>
-    <text id="USD" class="cls-6" transform="translate(796 297)"><tspan x="0" y="0">USD</tspan></text>
+  <g
+     id="Group_1960"
+     data-name="Group 1960"
+     transform="translate(-594.003 -120)">
+    <rect
+       id="Rectangle_138"
+       data-name="Rectangle 138"
+       class="cls-1"
+       width="401"
+       height="235"
+       transform="translate(594.003 120)" />
+    <rect
+       id="Rectangle_1472"
+       data-name="Rectangle 1472"
+       class="cls-2"
+       width="180.685"
+       height="115.29"
+       transform="translate(796.003 140)" />
+    <text
+       id="Wallets"
+       class="cls-3"
+       transform="translate(851.347 237.905)">
+      <tspan
+         x="0"
+         y="0"
+         id="tspan15">Wallets</tspan>
+    </text>
+    <text
+       id="_4"
+       data-name="4"
+       class="cls-4"
+       transform="translate(872.277,199.124)"
+       style="font-size:49px;font-family:SegoeUI, 'Segoe UI';opacity:0.91000001;fill:#484848">
+      <tspan
+         x="0"
+         y="0"
+         id="tspan18">8</tspan>
+    </text>
+    <text
+       id="Transactions"
+       class="cls-5"
+       transform="translate(613.947 160.243)">
+      <tspan
+         x="0"
+         y="0"
+         id="tspan21">Transactions</tspan>
+    </text>
+    <text
+       id="Current_balance"
+       data-name="Current balance"
+       class="cls-5"
+       transform="translate(613.947 265.243)">
+      <tspan
+         x="0"
+         y="0"
+         id="tspan24">Current balance</tspan>
+    </text>
+    <text
+       id="USD"
+       class="cls-6"
+       transform="translate(796 297)">
+      <tspan
+         x="0"
+         y="0"
+         id="tspan27">USD</tspan>
+    </text>
   </g>
 </svg>

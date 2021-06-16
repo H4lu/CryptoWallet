@@ -539,45 +539,45 @@ export default class App extends Component<{}, AppState> {
 
 
     async componentDidMount() {
-        // this.setState({connection: true})
-        // this.setState({redirectToMain: true})
-        // this.setState({walletStatus: 0})
-        pcsc.on('reader', async reader => {
-            setReader(reader)
-            reader.on('status', status => {
-                const changes = reader.state ^ status.state
-                if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
+        this.setState({connection: true})
+        this.setState({redirectToMain: true})
+        this.setState({walletStatus: 0})
+        // pcsc.on('reader', async reader => {
+        //     setReader(reader)
+        //     reader.on('status', status => {
+        //         const changes = reader.state ^ status.state
+        //         if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
             
-                    reader.connect({
-                            share_mode: reader.SCARD_SHARE_SHARED,
-                            protocol: reader.SCARD_PROTOCOL_T1
-                    }, async (err, _) => {
-                        if (err) {
-                            console.error(err)
-                            remote.dialog.showErrorBox("PCSC error", err.message)
-                        } else {
-                            console.log("start wallet info")
-                            this.setState({connection: true})
-                            this.startWalletInfoPing()
-                        }
-                })
-            }
-            })
+        //             reader.connect({
+        //                     share_mode: reader.SCARD_SHARE_SHARED,
+        //                     protocol: reader.SCARD_PROTOCOL_T1
+        //             }, async (err, _) => {
+        //                 if (err) {
+        //                     console.error(err)
+        //                     remote.dialog.showErrorBox("PCSC error", err.message)
+        //                 } else {
+        //                     console.log("start wallet info")
+        //                     this.setState({connection: true})
+        //                     this.startWalletInfoPing()
+        //                 }
+        //         })
+        //     }
+        //     })
 
-            reader.on('error', err => {
-                console.log('Error', err.message)
-                remote.dialog.showErrorBox("PCSC error", err.message)
-            })
-            reader.on('end', () => {
-                console.log('Reader', reader.name, 'removed')
-                this.setState({connection: false})
-            })
-        })
+        //     reader.on('error', err => {
+        //         console.log('Error', err.message)
+        //         remote.dialog.showErrorBox("PCSC error", err.message)
+        //     })
+        //     reader.on('end', () => {
+        //         console.log('Reader', reader.name, 'removed')
+        //         this.setState({connection: false})
+        //     })
+        // })
 
-        pcsc.on('error', err => {
-            console.log('PCSC error', err.message)
-            remote.dialog.showErrorBox("PCSC error", err.message)
-        })
+        // pcsc.on('error', err => {
+        //     console.log('PCSC error', err.message)
+        //     remote.dialog.showErrorBox("PCSC error", err.message)
+        // })
     }
 
     setRedirectToMain() {
@@ -585,22 +585,22 @@ export default class App extends Component<{}, AppState> {
     }
 
     async initAll() {
-        try {
-            if (this.state.allowInit) {
-                this.setState({allowInit: false})
-                const redirect =  () => {
-                    this.setRedirectToMain()
-                    this.setValues()
-                }
-                await this.initCryptoAddresses()
-                await Promise.all([this.getBalances(), this.getTransactions(), this.updateErc20Tokens()])
-                await Promise.all([this.setChartBTC(), this.getRates()])
-                await Promise.all([redirect(), this.updateHwWalletInfo()])
-            }
-        } catch(err) {
-            console.log(err)
-            remote.dialog.showErrorBox("Initialization error", err.message)
-        }
+        // try {
+        //     if (this.state.allowInit) {
+        //         this.setState({allowInit: false})
+        //         const redirect =  () => {
+        //             this.setRedirectToMain()
+        //             this.setValues()
+        //         }
+        //         await this.initCryptoAddresses()
+        //         await Promise.all([this.getBalances(), this.getTransactions(), this.updateErc20Tokens()])
+        //         await Promise.all([this.setChartBTC(), this.getRates()])
+        //         await Promise.all([redirect(), this.updateHwWalletInfo()])
+        //     }
+        // } catch(err) {
+        //     console.log(err)
+        //     remote.dialog.showErrorBox("Initialization error", err.message)
+        // }
     }
 
     setValues() {
