@@ -11,7 +11,7 @@ import {
     initBitcoinAddress,
     getBTCBalance,
     setBTCBalance,
-    setBTCPrice, getChartBTC
+    setBTCPrice, getChartBTC, getFee
 } from './api/cryptocurrencyApi/bitcoin'
 import {
     getLTCBalance,
@@ -57,6 +57,7 @@ import {DisplayTransaction, DisplayTransactionCurrency} from './api/cryptocurren
 import {remote} from "electron";
 import { ERC20Window } from './components/windows/erc20Window';
 import { FirmwareWindow } from './components/windows/firmwareWindow';
+import { SendWindow } from './components/windows/sendWindow'
 
 
 interface AppState {
@@ -94,7 +95,6 @@ interface AppState {
     SR: boolean,
     SideBarLeftState: number,
     numTransactions: number,
-    transactionFee: number,
     chartBTC: Array<any>,
     chartLen: number,
     erc20Tokens: Array<Erc20DisplayToken>
@@ -135,7 +135,6 @@ const mockState: AppState = {
     SR: true,
     SideBarLeftState: 1,
     numTransactions: 0,
-    transactionFee: 0,
     chartBTC: [],
     chartLen: 0,
     erc20Tokens: []
@@ -176,7 +175,6 @@ const initState: AppState = {
     SR: false,
     SideBarLeftState: 1,
     numTransactions: 0,
-    transactionFee: 2,
     chartBTC: [],
     chartLen: 360,
     erc20Tokens: []
@@ -245,12 +243,14 @@ export default class App extends Component<{}, AppState> {
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: SidebarLeft,
-            main: () => <BtcSendWindow
+            main: () => <SendWindow
                                     stateSR = {this.setStateSR} 
                                     course = {this.state.BTCCourse}
-                                    btcBalance = {this.state.BTCBalance} 
-                                    trFee = {this.state.transactionFee}
-                                    setFee = {this.setTransactionFee}/>
+                                    cryptoBalance = {this.state.BTCBalance} 
+                                    feeCoeff = {Math.floor(getFee(1) * 0.7) + 1}
+                                    feeMagic = {431}
+                                    currency = {"BTC"}
+                                    />
         },
         {
             path: '/btc-window-receive',
@@ -264,12 +264,14 @@ export default class App extends Component<{}, AppState> {
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: SidebarLeft,
-            main: () => <LtcSendWindow 
+            main: () => <SendWindow 
                                     stateSR = {this.setStateSR} 
                                     course = {this.state.LTCCourse}
-                                    ltcBalance = {this.state.LTCBalance} 
-                                    trFee = {this.state.transactionFee}
-                                    setFee = {this.setTransactionFee}/>
+                                    cryptoBalance = {this.state.LTCBalance} 
+                                    feeCoeff = {25}
+                                    feeMagic = {431}
+                                    currency = {"LTC"}
+            />
         },
         {
             path: '/ltc-window-receive',
@@ -283,12 +285,14 @@ export default class App extends Component<{}, AppState> {
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: SidebarLeft,
-            main: () => <EthSendWindow 
+            main: () =>  <SendWindow 
                                     stateSR = {this.setStateSR} 
                                     course = {this.state.ETHCourse}
-                                    ethBalance = {this.state.ETHBalance} 
-                                    trFee = {this.state.transactionFee}
-                                    setFee = {this.setTransactionFee}/>
+                                    cryptoBalance = {this.state.ETHBalance} 
+                                    feeCoeff = {491}
+                                    feeMagic = {1}
+                                    currency = {"ETH"}
+            />
         },
         {
             path: '/eth-window-receive',
@@ -365,7 +369,6 @@ export default class App extends Component<{}, AppState> {
         this.setActiveCurrency = this.setActiveCurrency.bind(this)
         this.setStateSR = this.setStateSR.bind(this)
         this.setNumTransactions = this.setNumTransactions.bind(this)
-        this.setTransactionFee = this.setTransactionFee.bind(this)
         this.setChartBTC = this.setChartBTC.bind(this)
         this.setChartLen = this.setChartLen.bind(this)
         this.updateErc20Tokens = this.updateErc20Tokens.bind(this)
@@ -447,10 +450,6 @@ export default class App extends Component<{}, AppState> {
         this.setState({chartBTC: arr})
     }
 
-    setTransactionFee(num: number) {
-        this.setState({transactionFee: num})
-    }
-
     setNumTransactions(num: number) {
         let old = this.state.numTransactions
         this.setState({numTransactions: old + num})
@@ -528,45 +527,45 @@ export default class App extends Component<{}, AppState> {
 
 
     async componentDidMount() {
-        this.setState({connection: true})
-        this.setState({redirectToMain: true})
-        this.setState({walletStatus: 0})
-        // pcsc.on('reader', async reader => {
-        //     setReader(reader)
-        //     reader.on('status', status => {
-        //         const changes = reader.state ^ status.state
-        //         if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
+        // this.setState({connection: true})
+        // this.setState({redirectToMain: true})
+        // this.setState({walletStatus: 0})
+        pcsc.on('reader', async reader => {
+            setReader(reader)
+            reader.on('status', status => {
+                const changes = reader.state ^ status.state
+                if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
             
-        //             reader.connect({
-        //                     share_mode: reader.SCARD_SHARE_SHARED,
-        //                     protocol: reader.SCARD_PROTOCOL_T1
-        //             }, async (err, _) => {
-        //                 if (err) {
-        //                     console.error(err)
-        //                     remote.dialog.showErrorBox("PCSC error", err.message)
-        //                 } else {
-        //                     console.log("start wallet info")
-        //                     this.setState({connection: true})
-        //                     this.startWalletInfoPing()
-        //                 }
-        //         })
-        //     }
-        //     })
+                    reader.connect({
+                            share_mode: reader.SCARD_SHARE_SHARED,
+                            protocol: reader.SCARD_PROTOCOL_T1
+                    }, async (err, _) => {
+                        if (err) {
+                            console.error(err)
+                            remote.dialog.showErrorBox("PCSC error", err.message)
+                        } else {
+                            console.log("start wallet info")
+                            this.setState({connection: true})
+                            this.startWalletInfoPing()
+                        }
+                })
+            }
+            })
 
-        //     reader.on('error', err => {
-        //         console.log('Error', err.message)
-        //         remote.dialog.showErrorBox("PCSC error", err.message)
-        //     })
-        //     reader.on('end', () => {
-        //         console.log('Reader', reader.name, 'removed')
-        //         this.setState({connection: false})
-        //     })
-        // })
+            reader.on('error', err => {
+                console.log('Error', err.message)
+                remote.dialog.showErrorBox("PCSC error", err.message)
+            })
+            reader.on('end', () => {
+                console.log('Reader', reader.name, 'removed')
+                this.setState({connection: false})
+            })
+        })
 
-        // pcsc.on('error', err => {
-        //     console.log('PCSC error', err.message)
-        //     remote.dialog.showErrorBox("PCSC error", err.message)
-        // })
+        pcsc.on('error', err => {
+            console.log('PCSC error', err.message)
+            remote.dialog.showErrorBox("PCSC error", err.message)
+        })
     }
 
     setRedirectToMain() {
@@ -574,22 +573,22 @@ export default class App extends Component<{}, AppState> {
     }
 
     async initAll() {
-        // try {
-        //     if (this.state.allowInit) {
-        //         this.setState({allowInit: false})
-        //         const redirect =  () => {
-        //             this.setRedirectToMain()
-        //             this.setValues()
-        //         }
-        //         await this.initCryptoAddresses()
-        //         await Promise.all([this.getBalances(), this.getTransactions(), this.updateErc20Tokens()])
-        //         await Promise.all([this.setChartBTC(), this.getRates()])
-        //         await Promise.all([redirect(), this.updateHwWalletInfo()])
-        //     }
-        // } catch(err) {
-        //     console.log(err)
-        //     remote.dialog.showErrorBox("Initialization error", err.message)
-        // }
+        try {
+            if (this.state.allowInit) {
+                this.setState({allowInit: false})
+                const redirect =  () => {
+                    this.setRedirectToMain()
+                    this.setValues()
+                }
+                await this.initCryptoAddresses()
+                await Promise.all([this.getBalances(), this.getTransactions(), this.updateErc20Tokens()])
+                await Promise.all([this.setChartBTC(), this.getRates()])
+                await Promise.all([redirect(), this.updateHwWalletInfo()])
+            }
+        } catch(err) {
+            console.log(err)
+            remote.dialog.showErrorBox("Initialization error", err.message)
+        }
     }
 
     setValues() {

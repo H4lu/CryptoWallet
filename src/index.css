@@ -1051,6 +1051,12 @@ button {
   width: 355px;
 }
 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
 .payment_sum_ {
   margin-top: -36px;
   margin-left: 9px;

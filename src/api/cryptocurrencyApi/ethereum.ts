@@ -184,7 +184,7 @@ function toErc20DisplayToken(addressInfo: EthplorerAddressInfo): Array<Erc20Disp
             return {
                 name: token.tokenInfo.symbol,
                 address: token.tokenInfo.address, 
-                amount: parseFloat(convertFromWei(token.balance)).toFixed(8) 
+                amount: parseFloat(convertFromWei(Number.isSafeInteger(token.balance) ? token.balance : 0)).toFixed(8) 
             }
         }) ?? []
 }

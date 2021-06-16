@@ -7,6 +7,13 @@ const TX_INPUT_BASE = 32 + 4 + 1 + 4
 const TX_INPUT_PUBKEYHASH = 107
 const TX_OUTPUT_BASE = 8 + 1
 const TX_OUTPUT_PUBKEYHASH = 25
+
+export enum FeeTypes {
+  LOW = 1,
+  MEDIUM = 2,
+  HIGH = 3
+}
+
 export interface ChainSoTransactionSpent {
     txid: string,
     input_no: number

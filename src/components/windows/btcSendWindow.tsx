@@ -5,14 +5,12 @@ import {Link} from "react-router-dom";
 import {remote} from "electron"
 
 interface BTCSendState {
-    address: string,
     paymentAddress: string,
     amount: number,
     usd: number,
     fee: number,
     feeUSD: number,
     balanceUSD: number,
-    balance: number,
     maxSum: number,
     amountS: string
 }
@@ -41,13 +39,11 @@ export class BtcSendWindow extends Component<BTCSendProps, BTCSendState> {
         this.props.stateSR(true)
         this.feeCoeff = Math.floor(getFee(1) * 0.7) + 1
         this.state = {
-            address: getBitcoinAddress(),
             paymentAddress: '',
             amount: 0,
             fee: (431 * this.feeCoeff * this.props.trFee) / 100000000,
             usd: 0,
             feeUSD: this.props.course * (431 * this.feeCoeff * this.props.trFee) / 100000000,
-            balance: this.props.btcBalance,
             balanceUSD: this.props.btcBalance * this.props.course,
             maxSum: (this.props.btcBalance - (431 * this.feeCoeff * this.props.trFee) / 100000000),
             amountS: ''
@@ -78,32 +74,35 @@ export class BtcSendWindow extends Component<BTCSendProps, BTCSendState> {
         this.setState({paymentAddress: e.target.value})
     }
 
-    handleAmountChange(e: any) {
-        let temp = e.target.value.toString().replace(',', '.')
-        if (temp.length > 1) {
-            temp = temp.slice(1, 2)
-        }
+    handleAmountChange(e: React.ChangeEvent<HTMLInputElement>) {
+        this.setState({amountS: e.target.value, amount: Number(e.target.value)}, () => {})
+        this.setState({amount: Number(e.target.value)})
+        this.setState({usd: (Number(e.target.value) * this.props.course)})
+        // let temp = e.target.value.toString().replace(',', '.')
+        // if (temp.length > 1) {
+        //     temp = temp.slice(1, 2)
+        // }
         
-        if (temp == '') {
-            this.strSum = this.strSum.slice(0, this.strSum.length - 1)
-        } else if ((temp >= '0' && temp <= '9') || temp == '.') {
-            if (temp == '.') {
-                this.point += 1
-            }
-            if (this.point > 1 && temp == '.') {
-                console.log('point: ', this.point)
-            } else {
-                this.strSum = this.strSum + temp
-            }
-        }
+        // if (temp == '') {
+        //     this.strSum = this.strSum.slice(0, this.strSum.length - 1)
+        // } else if ((temp >= '0' && temp <= '9') || temp == '.') {
+        //     if (temp == '.') {
+        //         this.point += 1
+        //     }
+        //     if (this.point > 1 && temp == '.') {
+        //         console.log('point: ', this.point)
+        //     } else {
+        //         this.strSum = this.strSum + temp
+        //     }
+        // }
       
-        if (Number(this.strSum) > this.state.maxSum) {
-            this.strSum = this.strSum.slice(0, this.strSum.length - 1)
-        }
-        this.setState({amountS: this.strSum})
-        this.setState({amount: Number(this.strSum)})
-        this.setState({usd: (Number(this.strSum) * this.props.course)})
-        e.target.value = ' '
+        // if (Number(this.strSum) > this.state.maxSum) {
+        //     this.strSum = this.strSum.slice(0, this.strSum.length - 1)
+        // }
+        // this.setState({amountS: this.strSum})
+        // this.setState({amount: Number(this.strSum)})
+        // this.setState({usd: (Number(this.strSum) * this.props.course)})
+        // e.target.value = ' '
 
     }
 
@@ -205,8 +204,8 @@ export class BtcSendWindow extends Component<BTCSendProps, BTCSendState> {
                     <div className='blockSendTransactionSum'>
                         <div className='iconSum'/>
                         <div className='poleSum'>
-                            <input type='text' className='payment_sum' placeholder=''
-                                   onChange={this.handleAmountChange}/>
+                            <input type = 'number' className = 'payment_sum' placeholder = ''
+                                   onChange = {this.handleAmountChange} step = "any"/>
                             <p className='payment_sum_'>{this.state.amountS}</p>
                             <p className='payment_sumUSD'> {(this.state.usd).toFixed(2)}</p>
                         </div>
