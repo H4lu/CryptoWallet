@@ -53,7 +53,6 @@ import {
     setXRPBalance,
     setXRPPrice
 } from "./api/cryptocurrencyApi/ripple";
-import {ModeWindow} from "./components/windows/modeWindow";
 import {DisplayTransaction, DisplayTransactionCurrency} from './api/cryptocurrencyApi/utils';
 import {remote} from "electron";
 import { ERC20Window } from './components/windows/erc20Window';
@@ -223,16 +222,6 @@ export default class App extends Component<{}, AppState> {
                 setChartLen = {this.setChartLen}
                 chartLen = {this.state.chartLen} 
             />
-        },
-        {
-            path: '/mode-window',
-            exact: true,
-            sidebar: () => <SidebarContent/>,
-            sidebarLeft: SidebarLeft,
-            main: () => <ModeWindow
-                                setFee = {this.setTransactionFee} 
-                                trFee = {this.state.transactionFee}
-                                />
         },
         {
             path: '/currency-carousel',
