@@ -62,7 +62,7 @@ export const SendWindow: FC<SendProps> = (props) => {
     const handleClick = async () => {
         try {
             await sendTransaction(
-                'BTC', paymentAddress, amount, feeType, props.course, props.cryptoBalance
+                props.currency, paymentAddress, amount, feeType, props.course, props.cryptoBalance
                 )
         } catch(err) {
             console.error(err)

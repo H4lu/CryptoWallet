@@ -61,6 +61,7 @@ interface EthplorerErc20TokenInfo {
 interface EthplorerErc20Token {
     tokenInfo: EthplorerErc20TokenInfo,
     balance: number,
+    rawBalance?: string
     totalIn: number,
     totalOut: number
 }
@@ -184,9 +185,25 @@ function toErc20DisplayToken(addressInfo: EthplorerAddressInfo): Array<Erc20Disp
             return {
                 name: token.tokenInfo.symbol,
                 address: token.tokenInfo.address, 
-                amount: parseFloat(convertFromWei(Number.isSafeInteger(token.balance) ? token.balance : 0)).toFixed(8) 
+                amount: parseTokenBalance(token)
             }
         }) ?? []
+}
+
+function parseTokenBalance(token: EthplorerErc20Token): string {
+    try {
+        if (token.rawBalance != undefined) {
+            return web3.utils.fromWei(token.rawBalance, 'ether')
+        } else if (token.balance < 1e21) {
+            return parseFloat(convertFromWei(token.balance)).toFixed(8)
+        } else {
+            return token.balance.toString()
+        }
+    } catch (error) {
+        console.error(error)
+        return "0"
+    }
+   
 }
 
 function toDisplayTransaction(tx: EthplorerTransaction): DisplayTransaction {
