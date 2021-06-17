@@ -16,7 +16,7 @@ interface SendProps {
 
 export const SendWindow: FC<SendProps> = (props) => {
     const [paymentAddress, setPaymentAddress] = useState("")
-    const [amount, setAmount] = useState(0)
+    const [amount, setAmount] = useState<number>(null)
     const [fee, setFee] = useState(0)
     const [usd, setUsd] = useState(0)
     const [feeUsd, setFeeUsd] = useState(0)
@@ -35,6 +35,7 @@ export const SendWindow: FC<SendProps> = (props) => {
     }, [feeType])
     
     const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        console.log(e.target.value)
         setAmount(Number(e.target.value))
         setUsd(Number(e.target.value) * props.course)
     }
@@ -68,7 +69,7 @@ export const SendWindow: FC<SendProps> = (props) => {
     return (
         <div className='main'>
             <div className='rectangleSR'>
-                <div className='iconCryptoCurrency'/>
+                <div className = {`iconCryptoCurrency${props.currency}`}/>
                 <div className='blockSendTransactionAddress'>
                     <div className='iconQr'/>
                     <input 
@@ -80,11 +81,11 @@ export const SendWindow: FC<SendProps> = (props) => {
                         />
                 </div>
                 <div className='blockSendTransactionSum'>
-                    <div className='iconSum'/>
-                    <div className='poleSum'>
-                        <input type = 'number' className = 'payment_sum' placeholder = ''
-                               onChange = {handleAmountChange} step = "any"/>
-                        <p className='payment_sum_'>{amount}</p>
+                    <div className = 'iconSum'/>
+                    <div className = {`sumField${props.currency}`}>
+                        <input type = "number" className = 'payment_sum' 
+                               placeholder = {"0.0"}
+                               onChange = {handleAmountChange} step = {0.0000001}/>
                         <p className='payment_sumUSD'> {(usd).toFixed(2)}</p>
                     </div>
                     <button className='setMaxSum' onClick={setMax}/>
@@ -96,7 +97,7 @@ export const SendWindow: FC<SendProps> = (props) => {
                     <button className={getFeeClass(FeeTypes.MEDIUM)} onClick={_ => setFeeType(FeeTypes.MEDIUM)}/>
                     <button className={getFeeClass(FeeTypes.HIGH)} onClick={_ => setFeeType(FeeTypes.HIGH)}/>
                     <p className='sum_Transaction_fee'>{fee.toFixed(8)}</p>
-                    <p className='NameCrypto_Transaction_fee'>{' BTC'}</p>
+                    <p className='NameCrypto_Transaction_fee'>{props.currency}</p>
                     <p className='USD_icon'>{'$'}</p>
                     <p className='USD_Transaction_fee'>{feeUsd.toFixed(2)}</p>
                 </div>
@@ -104,9 +105,9 @@ export const SendWindow: FC<SendProps> = (props) => {
                 <div className='blockBalance'>
                     <p className='text_Transaction_fee'>Avalible</p>
                     <p className='sum_Transaction_balance'>{maxSum.toFixed(8)}</p>
-                    <p className='NameCrypto_Transaction_fee'>{' BTC'}</p>
+                    <p className='NameCrypto_Transaction_fee'>{props.currency}</p>
                     <p className='USD_icon'>{'$'}</p>
-                    <p className='USD_Transaction_fee'>{props.cryptoBalance * props.course}</p>
+                    <p className='USD_Transaction_fee'>{(props.cryptoBalance * props.course).toFixed(2)}</p>
                 </div>
                 <div className='buttonSendCancelFlex'>
                     <div className='buttonSendBig'>
@@ -123,5 +124,4 @@ export const SendWindow: FC<SendProps> = (props) => {
             </div>
         </div>
     )
-
 }
