@@ -77,9 +77,9 @@ interface EthplorerAddressInfo {
     tokens?: Array<EthplorerErc20Token>
 }
 
-const NETWORK = Networks.KOVAN
+const NETWORK = Networks.MAIN
 //const ethplorerRoot = NETWORK Networks.KOVAN ? "https://kovan-api.ethplorer.io" : "https://api.ethplorer.io"
-const ethplorerRoot = "https://kovan-api.ethplorer.io"
+const ethplorerRoot = "https://api.ethplorer.io"
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://${NETWORK}.infura.io/v3/960cbfb44af74f27ad0e4b070839158a`))
 
 let myAdress = ''
