@@ -11,7 +11,8 @@ interface SendProps {
     cryptoBalance: number,
     feeCoeff: number,
     currency: DisplayTransactionCurrency,
-    feeMagic: number
+    feeMagic: number,
+    feeDivider: number
 }
 
 export const SendWindow: FC<SendProps> = (props) => {
@@ -28,7 +29,7 @@ export const SendWindow: FC<SendProps> = (props) => {
     }, [])
 
     useEffect(() => {
-        const cryptoFee = (props.feeMagic * props.feeCoeff * feeType) / 100000000
+        const cryptoFee = (props.feeMagic * props.feeCoeff * feeType) / props.feeDivider
         setFee(cryptoFee)
         setFeeUsd(props.course * cryptoFee)
         setMaxSum(props.cryptoBalance - cryptoFee)
@@ -41,7 +42,7 @@ export const SendWindow: FC<SendProps> = (props) => {
     }
 
     const setMax = () => {
-        let sum = (Math.floor(maxSum*1000000))/1000000
+        let sum = (Math.floor(maxSum * 1000000)) / props.feeDivider
         if (sum < 0) {
             sum = 0
         }

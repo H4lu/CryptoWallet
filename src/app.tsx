@@ -250,6 +250,7 @@ export default class App extends Component<{}, AppState> {
                                     feeCoeff = {Math.floor(getFee(1) * 0.7) + 1}
                                     feeMagic = {431}
                                     currency = {"BTC"}
+                                    feeDivider = {100000000}
                                     />
         },
         {
@@ -271,6 +272,7 @@ export default class App extends Component<{}, AppState> {
                                     feeCoeff = {25}
                                     feeMagic = {431}
                                     currency = {"LTC"}
+                                    feeDivider = {100000000}
             />
         },
         {
@@ -292,6 +294,7 @@ export default class App extends Component<{}, AppState> {
                                     feeCoeff = {491}
                                     feeMagic = {1}
                                     currency = {"ETH"}
+                                    feeDivider = {1000000}
             />
         },
         {
@@ -621,7 +624,6 @@ export default class App extends Component<{}, AppState> {
         this.setState({numTransactions: 0})
         await Promise.all([this.getTransactions(), this.getBalances(), this.updateErc20Tokens()])
         await Promise.all([this.getRates(), this.updateHwWalletInfo()])
-       
     }
 
     changeBalance(currency: string, amount: number) {
