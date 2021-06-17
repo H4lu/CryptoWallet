@@ -25,7 +25,7 @@ export const SendWindow: FC<SendProps> = (props) => {
     const [feeType, setFeeType] = useState(FeeTypes.MEDIUM)
 
     useEffect(() => {
-        props.stateSR(false);
+        props.stateSR(true);
     }, [])
 
     useEffect(() => {
@@ -36,8 +36,12 @@ export const SendWindow: FC<SendProps> = (props) => {
     }, [feeType])
     
     const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target.value)
-        setAmount(Number(e.target.value))
+        if (e.target.value == "") {
+            setAmount(null)
+        } else {
+            setAmount(Number(e.target.value))
+        }
+      
         setUsd(Number(e.target.value) * props.course)
     }
 
@@ -85,7 +89,8 @@ export const SendWindow: FC<SendProps> = (props) => {
                     <div className = 'iconSum'/>
                     <div className = {`sumField${props.currency}`}>
                         <input type = "number" className = 'payment_sum' 
-                               placeholder = {"0.0"}
+                               placeholder = {"0.0"} defaultValue={""}
+                               value = {amount}
                                onChange = {handleAmountChange} step = {0.0000001}/>
                         <p className='payment_sumUSD'> {(usd).toFixed(2)}</p>
                     </div>

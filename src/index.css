@@ -1076,9 +1076,16 @@ input[type=number]::-webkit-outer-spin-button {
   border: none;
 }
 
+input[type=number]::placeholder {
+  font-family: Lato;
+  font-weight: bold;
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
 .payment_sumUSD {
   margin-top: 2px;
-  margin-left: 9px;
+  margin-left: 12px;
   border: 0px solid black;
   font-family: Lato;
   font-weight: bold;
