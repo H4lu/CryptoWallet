@@ -14,7 +14,7 @@ export const SidebarLeft: FC = () => {
                 <Link to="/erc20-window" className="but_erc20"/>
                 <Link to="/firmware-window" className='but_cpu'/>
                 <Link to="#" className='but_info'/>
-                <Link to='/mode-window' className='but_menu'/>
+                <Link to='#' className='but_menu'/>
             </div> 
         </div>
     )

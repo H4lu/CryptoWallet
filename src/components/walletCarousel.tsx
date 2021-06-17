@@ -29,12 +29,12 @@ export const WalletCarousel: FC<WalletCarouselProps> = (props) => {
                     activeCurrencyIndex = {currencyToIndex(props.activeCurrency)}/>
                 <CarouselDesc 
                             activeCurrency = {props.activeCurrency} 
-                            btcBalance={props.btcBalance} 
-                            ltcBalance={props.ltcBalance} 
-                            ethBalance={props.ethBalance}
-                            btcPrice={props.btcPrice} 
-                            ltcPrice={props.ltcPrice} 
-                            ethPrice={props.ethPrice}/>
+                            btcBalance = {props.btcBalance} 
+                            ltcBalance = {props.ltcBalance} 
+                            ethBalance = {props.ethBalance}
+                            btcPrice = {props.btcPrice} 
+                            ltcPrice = {props.ltcPrice} 
+                            ethPrice = {props.ethPrice}/>
             </div>
         </div>
     )

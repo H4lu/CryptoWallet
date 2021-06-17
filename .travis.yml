@@ -22,7 +22,7 @@ os:
 
 script:
   - echo "Deploy windows build"
-  - if [[ "$TRAVIS_BRANCH" == "$BRANCH" ]]; then npm ci && npx electron-rebuild && npm run publish; fi
+  - if [[ "$TRAVIS_BRANCH" == "master" ]]; then npm ci && npx electron-rebuild && npm run publish; fi
   # - echo "Deploy linux build"
  # - echo "Deploy linux build"
  #  - if [[ "$TRAVIS_OS_NAME" == "linux"] ]; then npm run release:linux; fi

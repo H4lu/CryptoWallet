@@ -11,7 +11,7 @@ import {
     initBitcoinAddress,
     getBTCBalance,
     setBTCBalance,
-    setBTCPrice, getChartBTC
+    setBTCPrice, getChartBTC, getFee
 } from './api/cryptocurrencyApi/bitcoin'
 import {
     getLTCBalance,
@@ -53,11 +53,11 @@ import {
     setXRPBalance,
     setXRPPrice
 } from "./api/cryptocurrencyApi/ripple";
-import {ModeWindow} from "./components/windows/modeWindow";
 import {DisplayTransaction, DisplayTransactionCurrency} from './api/cryptocurrencyApi/utils';
 import {remote} from "electron";
 import { ERC20Window } from './components/windows/erc20Window';
 import { FirmwareWindow } from './components/windows/firmwareWindow';
+import { SendWindow } from './components/windows/sendWindow'
 
 
 interface AppState {
@@ -95,7 +95,6 @@ interface AppState {
     SR: boolean,
     SideBarLeftState: number,
     numTransactions: number,
-    transactionFee: number,
     chartBTC: Array<any>,
     chartLen: number,
     erc20Tokens: Array<Erc20DisplayToken>
@@ -136,7 +135,6 @@ const mockState: AppState = {
     SR: true,
     SideBarLeftState: 1,
     numTransactions: 0,
-    transactionFee: 0,
     chartBTC: [],
     chartLen: 0,
     erc20Tokens: []
@@ -177,7 +175,6 @@ const initState: AppState = {
     SR: false,
     SideBarLeftState: 1,
     numTransactions: 0,
-    transactionFee: 2,
     chartBTC: [],
     chartLen: 360,
     erc20Tokens: []
@@ -225,16 +222,6 @@ export default class App extends Component<{}, AppState> {
             />
         },
         {
-            path: '/mode-window',
-            exact: true,
-            sidebar: () => <SidebarContent/>,
-            sidebarLeft: SidebarLeft,
-            main: () => <ModeWindow
-                                setFee = {this.setTransactionFee} 
-                                trFee = {this.state.transactionFee}
-                                />
-        },
-        {
             path: '/currency-carousel',
             exact: true,
             sidebar: () => <SidebarContent/>,
@@ -256,12 +243,15 @@ export default class App extends Component<{}, AppState> {
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: SidebarLeft,
-            main: () => <BtcSendWindow
+            main: () => <SendWindow
                                     stateSR = {this.setStateSR} 
                                     course = {this.state.BTCCourse}
-                                    btcBalance = {this.state.BTCBalance} 
-                                    trFee = {this.state.transactionFee}
-                                    setFee = {this.setTransactionFee}/>
+                                    cryptoBalance = {this.state.BTCBalance} 
+                                    feeCoeff = {Math.floor(getFee(1) * 0.7) + 1}
+                                    feeMagic = {431}
+                                    currency = {"BTC"}
+                                    feeDivider = {100000000}
+                                    />
         },
         {
             path: '/btc-window-receive',
@@ -275,12 +265,15 @@ export default class App extends Component<{}, AppState> {
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: SidebarLeft,
-            main: () => <LtcSendWindow 
+            main: () => <SendWindow 
                                     stateSR = {this.setStateSR} 
                                     course = {this.state.LTCCourse}
-                                    ltcBalance = {this.state.LTCBalance} 
-                                    trFee = {this.state.transactionFee}
-                                    setFee = {this.setTransactionFee}/>
+                                    cryptoBalance = {this.state.LTCBalance} 
+                                    feeCoeff = {25}
+                                    feeMagic = {431}
+                                    currency = {"LTC"}
+                                    feeDivider = {100000000}
+            />
         },
         {
             path: '/ltc-window-receive',
@@ -294,12 +287,15 @@ export default class App extends Component<{}, AppState> {
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: SidebarLeft,
-            main: () => <EthSendWindow 
+            main: () =>  <SendWindow 
                                     stateSR = {this.setStateSR} 
                                     course = {this.state.ETHCourse}
-                                    ethBalance = {this.state.ETHBalance} 
-                                    trFee = {this.state.transactionFee}
-                                    setFee = {this.setTransactionFee}/>
+                                    cryptoBalance = {this.state.ETHBalance} 
+                                    feeCoeff = {491}
+                                    feeMagic = {1}
+                                    currency = {"ETH"}
+                                    feeDivider = {1000000}
+            />
         },
         {
             path: '/eth-window-receive',
@@ -376,7 +372,6 @@ export default class App extends Component<{}, AppState> {
         this.setActiveCurrency = this.setActiveCurrency.bind(this)
         this.setStateSR = this.setStateSR.bind(this)
         this.setNumTransactions = this.setNumTransactions.bind(this)
-        this.setTransactionFee = this.setTransactionFee.bind(this)
         this.setChartBTC = this.setChartBTC.bind(this)
         this.setChartLen = this.setChartLen.bind(this)
         this.updateErc20Tokens = this.updateErc20Tokens.bind(this)
@@ -456,10 +451,6 @@ export default class App extends Component<{}, AppState> {
             arr[index] = {date: chartDate, pv: arrData[index]}
         }
         this.setState({chartBTC: arr})
-    }
-
-    setTransactionFee(num: number) {
-        this.setState({transactionFee: num})
     }
 
     setNumTransactions(num: number) {
@@ -633,7 +624,6 @@ export default class App extends Component<{}, AppState> {
         this.setState({numTransactions: 0})
         await Promise.all([this.getTransactions(), this.getBalances(), this.updateErc20Tokens()])
         await Promise.all([this.getRates(), this.updateHwWalletInfo()])
-       
     }
 
     changeBalance(currency: string, amount: number) {

@@ -44,7 +44,7 @@ export class BtcRecieveWindow extends Component<any, BtcReceiveState> {
         return (
             <div className='main'>
                 <div className='rectangleSR'>
-                    <div className='iconCryptoCurrency'/>
+                    <div className='iconCryptoCurrencyBTC'/>
                     <img src={this.state.qrcodeAddress} className='address-qrcode'/>
                     <div className='YOURB_0ITCOIN_ADDRESS'>YOUR BITCOIN ADDRESS</div>
                     <div className='YOURB_0ITCOIN_ADDRESS_crypto'>{this.state.address}</div>

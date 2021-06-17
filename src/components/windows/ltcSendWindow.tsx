@@ -24,6 +24,7 @@ interface LTCSendProps {
     trFee: number,
     setFee: (num: number) => void
 }
+
 export class LtcSendWindow extends Component<LTCSendProps, ILTCSendState> {
     strSum: string
     point: number
