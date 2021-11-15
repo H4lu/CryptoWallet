@@ -34,9 +34,6 @@ import {getCurrencyRate} from './core/setCurrencyRate'
 import {StartWindow} from './components/windows/startWindow'
 import pcsclite from "@pokusew/pcsclite"
 import {setReader} from './api/hardwareApi/reader'
-
-const pcsc = pcsclite()
-
 import {getInfoPCSC} from './api/hardwareApi/getWalletInfo'
 import {UpdateHWStatusPCSC, updateTransactionsPCSC} from './api/hardwareApi/updateHwStatus'
 import {SidebarLeft} from "./components/sidebarLeft";
@@ -180,8 +177,9 @@ const initState: AppState = {
     erc20Tokens: []
 }
 
+let pcsc = undefined;
+const PSCS_MANAGER_NOT_RUGGING_ERROR = "(0x8010001d)"
 export default class App extends Component<{}, AppState> {
-
     routes = [
         {
             path: '/main',
@@ -377,6 +375,8 @@ export default class App extends Component<{}, AppState> {
         this.updateErc20Tokens = this.updateErc20Tokens.bind(this)
         this.updateHwWalletInfo = this.updateHwWalletInfo.bind(this)
         this.initCryptoAddresses = this.initCryptoAddresses.bind(this)
+        this.onReaderCallback = this.onReaderCallback.bind(this)
+        this.onErrorCallback = this.onErrorCallback.bind(this)
     }
 
     setChartLen(len: number) {
@@ -528,47 +528,69 @@ export default class App extends Component<{}, AppState> {
         this.setState({erc20Tokens: actualTokens})
     }
 
+    async onReaderCallback(reader) {
+        setReader(reader)
+        reader.on('status', status => {
+            const changes = reader.state ^ status.state
+            if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
+        
+                reader.connect({
+                        share_mode: reader.SCARD_SHARE_SHARED,
+                        protocol: reader.SCARD_PROTOCOL_T1
+                }, async (err, _) => {
+                    if (err) {
+                        console.error(err)
+                        remote.dialog.showErrorBox("PCSC error", err.message)
+                    } else {
+                        console.log("start wallet info")
+                        this.setState({connection: true})
+                        this.startWalletInfoPing()
+                    }
+            })
+        }
+        })
+
+        reader.on('error', err => {
+            console.log('Error', err.message)
+            remote.dialog.showErrorBox("PCSC error", err.message)
+        })
+        reader.on('end', () => {
+            console.log('Reader', reader.name, 'removed')
+            this.setState({connection: false})
+        })
+    }
+
+    async onErrorCallback(err) {
+        console.log('PCSC error', err.message)
+      
+        const errMessage = String(err.message)
+        const errLines = errMessage.split('\n')
+        if (errLines.length > 1) {
+            const code = errLines[1]
+            // just reinit pcsc in case of manager not running error(usually appears during timeout)
+            if (code == PSCS_MANAGER_NOT_RUGGING_ERROR) {
+                pcsc.removeAllListeners()
+                pcsc = pcsclite()
+                pcsc.on('reader', this.onReaderCallback)
+                pcsc.on('error', this.onErrorCallback)
+                return
+            }
+        }
+
+        remote.dialog.showErrorBox("PCSC error", err.message)
+    }
+
 
     async componentDidMount() {
         // this.setState({connection: true})
         // this.setState({redirectToMain: true})
         // this.setState({walletStatus: 0})
-        pcsc.on('reader', async reader => {
-            setReader(reader)
-            reader.on('status', status => {
-                const changes = reader.state ^ status.state
-                if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
-            
-                    reader.connect({
-                            share_mode: reader.SCARD_SHARE_SHARED,
-                            protocol: reader.SCARD_PROTOCOL_T1
-                    }, async (err, _) => {
-                        if (err) {
-                            console.error(err)
-                            remote.dialog.showErrorBox("PCSC error", err.message)
-                        } else {
-                            console.log("start wallet info")
-                            this.setState({connection: true})
-                            this.startWalletInfoPing()
-                        }
-                })
-            }
-            })
+        
+        pcsc = pcsclite()
+        pcsc.on('reader', this.onReaderCallback)
 
-            reader.on('error', err => {
-                console.log('Error', err.message)
-                remote.dialog.showErrorBox("PCSC error", err.message)
-            })
-            reader.on('end', () => {
-                console.log('Reader', reader.name, 'removed')
-                this.setState({connection: false})
-            })
-        })
+        pcsc.on('error', this.onErrorCallback)
 
-        pcsc.on('error', err => {
-            console.log('PCSC error', err.message)
-            remote.dialog.showErrorBox("PCSC error", err.message)
-        })
     }
 
     setRedirectToMain() {
