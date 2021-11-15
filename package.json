@@ -2,7 +2,7 @@
   "name": "CryptoWallet",
   "version": "1.1.7",
   "description": "CET CryptoWallet application",
-  "main": ".webpack/main",
+  "main": ".webpack/main/main.js",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
@@ -79,8 +79,8 @@
     }
   },
   "devDependencies": {
-    "@electron-forge/cli": "^6.0.0-beta.57",
-    "@electron-forge/maker-deb": "^6.0.0-beta.57",
+    "@electron-forge/cli": "^6.0.0-beta.61",
+    "@electron-forge/maker-deb": "^6.0.0-beta.61",
     "@electron-forge/maker-rpm": "^6.0.0-beta.57",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.57",
     "@electron-forge/maker-zip": "^6.0.0-beta.57",
@@ -109,11 +109,12 @@
     "typescript": "^4.3.2"
   },
   "dependencies": {
+    "@electron/remote": "^2.0.1",
     "@ethereumjs/tx": "^3.2.0",
     "@pokusew/pcsclite": "0.6.0",
     "@types/bitcoinjs-lib": "3.0.5",
     "assert": "^2.0.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.4",
     "bitcoinjs-lib": "3.3.0",
     "electron-squirrel-startup": "^1.0.0",
     "ffi-napi": "^4.0.3",

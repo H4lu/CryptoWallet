@@ -51,7 +51,7 @@ import {
     setXRPPrice
 } from "./api/cryptocurrencyApi/ripple";
 import {DisplayTransaction, DisplayTransactionCurrency} from './api/cryptocurrencyApi/utils';
-import {remote} from "electron";
+import {remote, ipcRenderer} from "electron";
 import { ERC20Window } from './components/windows/erc20Window';
 import { FirmwareWindow } from './components/windows/firmwareWindow';
 import { SendWindow } from './components/windows/sendWindow'
@@ -585,11 +585,14 @@ export default class App extends Component<{}, AppState> {
         // this.setState({connection: true})
         // this.setState({redirectToMain: true})
         // this.setState({walletStatus: 0})
-        
-        pcsc = pcsclite()
-        pcsc.on('reader', this.onReaderCallback)
+        ipcRenderer.on('pcsc', (event, message) => {
+            console.log('ipc pcsc_status')
+            console.log(message)
+        })
+        // pcsc = pcsclite()
+        // pcsc.on('reader', this.onReaderCallback)
 
-        pcsc.on('error', this.onErrorCallback)
+        // pcsc.on('error', this.onErrorCallback)
 
     }
 
