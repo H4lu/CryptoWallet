@@ -69,6 +69,7 @@ const createWindow = (): void => {
     })
     pcscProcess.on('exit', code => {
       console.log("EXITED CHILD CODE: ", code)
+      pcscProcess.kill()
     })
     pcscProcess.on('message', msg => {
       console.log('child message');
