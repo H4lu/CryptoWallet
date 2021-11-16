@@ -364,7 +364,6 @@ export default class App extends Component<{}, AppState> {
         this.setActiveCurrency = this.setActiveCurrency.bind(this)
         this.setStateSR = this.setStateSR.bind(this)
         this.setNumTransactions = this.setNumTransactions.bind(this)
-        this.setChartBTC = this.setChartBTC.bind(this)
         this.setChartLen = this.setChartLen.bind(this)
         this.updateErc20Tokens = this.updateErc20Tokens.bind(this)
         this.updateHwWalletInfo = this.updateHwWalletInfo.bind(this)
@@ -373,76 +372,6 @@ export default class App extends Component<{}, AppState> {
 
     setChartLen(len: number) {
         this.setState({chartLen: len})
-    }
-
-    async setChartBTC() {
-        // const currentDate = new Date()
-        // const month = currentDate.getMonth() + 1
-        // const monthStr = month < 10 ? `0${month.toString()}` : month.toString()
-        // const day = currentDate.getDate()
-        // const dayStr = day < 10 ? `0${day.toString()}` : day.toString()
-        // const dateEnd = `${currentDate.getFullYear().toString()}-${monthStr}-${dayStr}`
-        // const dateStart = `${(currentDate.getFullYear() - 1).toString()}-${monthStr}-${dayStr}`
-        //
-        // const arrData = await getChartBTC(dateEnd, dateStart);
-        // const arr = Array(365)
-        // for (let index = 0; index < 365; index++) {
-        //     const dateN = new Date(Date.now() - 86400000 * (364 - index))
-        //     let mon: string
-        //     switch (dateN.getMonth() + 1) {
-        //         case 1:{
-        //             mon = 'jan'
-        //             break
-        //         }
-        //         case 2:{
-        //             mon = 'feb'
-        //             break
-        //         }
-        //         case 3:{
-        //             mon = 'mar'
-        //             break
-        //         }
-        //         case 4:{
-        //             mon = 'apr'
-        //             break
-        //         }
-        //         case 5:{
-        //             mon = 'may'
-        //             break
-        //         }
-        //         case 6:{
-        //             mon = 'jun'
-        //             break
-        //         }
-        //         case 7:{
-        //             mon = 'jul'
-        //             break
-        //         }
-        //         case 8:{
-        //             mon = 'aug'
-        //             break
-        //         }
-        //         case 9:{
-        //             mon = 'sep'
-        //             break
-        //         }
-        //         case 10:{
-        //             mon = 'oct'
-        //             break
-        //         }
-        //         case 11:{
-        //             mon = 'nov'
-        //             break
-        //         }
-        //         case 12:{
-        //             mon = 'dec'
-        //             break
-        //         }
-        //     }
-        //     const chartDate = `${dateN.getDate().toString()}.${mon}`
-        //     arr[index] = {date: chartDate, pv: arrData[index]}
-        // }
-        // this.setState({chartBTC: arr})
     }
 
     setNumTransactions(num: number) {
@@ -548,11 +477,11 @@ export default class App extends Component<{}, AppState> {
                     }
                     break
                 }
-                case PCSCMessageType.CHART_DATA_CHANGE: {
+                case 7: {
                     this.setState({chartBTC: message.data})
                     break
                 }
-                case PCSCMessageType.ERC20_CHANGE: {
+                case 5: {
                     this.setState({erc20Tokens: message.data})
                     break
                 }
@@ -564,9 +493,15 @@ export default class App extends Component<{}, AppState> {
                     }
                     await this.updateHwWalletInfo()
                     redirect()
+                    break
                 }
                 case PCSCMessageType.ERROR: {
                     remote.dialog.showErrorBox("Error", (message.data as Error).message)
+                    break
+                }
+                case 11: {
+                    await this.getRates()
+                    await this.updateHwWalletInfo()
                     break
                 }
                 default: return
@@ -589,7 +524,7 @@ export default class App extends Component<{}, AppState> {
                 }
                 await this.initCryptoAddresses()
                 await Promise.all([this.getBalances(), this.getTransactions(), this.updateErc20Tokens()])
-                await Promise.all([this.setChartBTC(), this.getRates()])
+            //    await Promise.all([this.setChartBTC(), this.getRates()])
                 await Promise.all([redirect(), this.updateHwWalletInfo()])
             }
         } catch(err) {
@@ -640,8 +575,9 @@ export default class App extends Component<{}, AppState> {
 
     async updateData() {
         this.setState({numTransactions: 0})
-        await Promise.all([this.getTransactions(), this.getBalances(), this.updateErc20Tokens()])
-        await Promise.all([this.getRates(), this.updateHwWalletInfo()])
+        ipcRenderer.send('pcsc', {type: 10})
+        // await Promise.all([this.getTransactions(), this.getBalances(), this.updateErc20Tokens()])
+        // await Promise.all([this.getRates(), this.updateHwWalletInfo()])
     }
 
     changeBalance(currency: string, amount: number) {

@@ -21,7 +21,7 @@ import {ChartData, PCSCMessage, PCSCMessageType} from "./pcsc_helpers";
 
 const PSCS_MANAGER_NOT_RUGGING_ERROR = "(0x8010001d)";
 
-process.on('message', (msg: PCSCMessage, _) => {
+process.on('message', async (msg: PCSCMessage, _) => {
     switch (msg.type) {
         case PCSCMessageType.UPDATE_HW_BALANCES: {
             const data = msg.data
@@ -30,7 +30,11 @@ process.on('message', (msg: PCSCMessage, _) => {
         }
         case PCSCMessageType.UPDATE_HW_TRANSACTIONS: {
             const data = msg.data
-            updateTransactionsPCSC(data[0], data[1], data[2], data[3])
+            await updateTransactionsPCSC(data[0], data[1], data[2], data[3])
+            break
+        }
+        case PCSCMessageType.UPDATE: {
+            await updateAll()
             break
         }
         default: return
@@ -137,7 +141,18 @@ const sendBtcChartData = async () => {
         const chartDate = `${dateN.getDate().toString()}.${mon}`
         arr[index] = {date: chartDate, pv: arrData[index]}
     }
+    console.log("sended chart, " , arr)
     process.send({type: PCSCMessageType.CHART_DATA_CHANGE, data: arr})
+}
+
+const updateAll = async () => {
+    try {
+        await Promise.all([getBalances(), getTransactions(), updateErc20Tokens(), sendBtcChartData()])
+        process.send({type: PCSCMessageType.UPDATED})
+    } catch(err) {
+        console.log(err.message)
+        process.send({type: PCSCMessageType.ERROR, data: err})
+    }
 }
 
 const initAll = async () => {
