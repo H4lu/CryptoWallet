@@ -3,7 +3,6 @@ import {Transaction} from '@ethereumjs/tx'
 import {BN} from 'ethereumjs-util'
 import Common from '@ethereumjs/common'
 import {getSignaturePCSC} from '../hardwareApi/getSignature'
-import {remote} from "electron"
 import {getAddressPCSC} from '../hardwareApi/getAddress'
 import {Buffer} from 'buffer'
 import {keccak256} from "js-sha3";

@@ -6,7 +6,6 @@ import {getSignaturePCSC} from '../hardwareApi/getSignature'
 // @ts-ignore
 import * as satoshi from 'satoshi-bitcoin'
 import {Buffer} from 'buffer'
-import {remote} from "electron"
 import ffi from "ffi-napi"
 import { coinSelect } from './coinSelect'
 
@@ -222,7 +221,7 @@ export async function handleLitecoin(
                 console.log(err)
             })
         } else {
-            remote.dialog.showErrorBox("Error", 'Error provided by internet connection')
+            throw new Error("Error provided by the internet connection")
         }
    
 }

@@ -50,7 +50,8 @@ const createWindow = (): void => {
     console.log('PROCESS CWD:')
     console.log(process.cwd())
     console.log("FORK")
-    pcscProcess = fork('.webpack/main/pcsc.js', {
+    const processPath = process.env.NODE_ENV == 'production' ? "resources/app/.webpack/main/pcsc.js" : ".webpack/main/pcsc.js"
+    pcscProcess = fork(processPath, {
       stdio: ['ipc'],
       silent: true,
       detached: true
@@ -88,6 +89,12 @@ const createWindow = (): void => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
+app.on('quit', () => {
+  if (pcscProcess != undefined) {
+    pcscProcess.kill()
+  }
+
+})
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
