@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {Header} from './components/header'
-import {Route, Redirect} from 'react-router'
+import {Redirect, Route} from 'react-router'
 import {SidebarContent} from './components/sidebarContent'
 
 import './index.css'
@@ -32,27 +32,25 @@ import {WalletCarousel} from './components/walletCarousel'
 // } from './api/cryptocurrencyApi/ethereum'
 import {getCurrencyRate} from './core/setCurrencyRate'
 import {StartWindow} from './components/windows/startWindow'
-import {setReader} from './api/hardwareApi/reader'
 import {SidebarLeft} from "./components/sidebarLeft";
 import {BtcRecieveWindow} from "./components/windows/btcRecieveWindow";
-import {BtcSendWindow} from "./components/windows/btcSendWindow";
-import {LtcSendWindow} from "./components/windows/ltcSendWindow";
 import {LtcRecieveWindow} from "./components/windows/ltcRecieveWindow";
 import {EthRecieveWindow} from "./components/windows/ethReceiveWindow";
-import {EthSendWindow} from "./components/windows/ethSendWindow";
 import {CarouselHistory} from "./components/carouselHistory";
-import {
-    getRippleLastTx,
-    getXRPBalance,
-    setXRPBalance,
-    setXRPPrice
-} from "./api/cryptocurrencyApi/ripple";
-import {DisplayTransaction, DisplayTransactionCurrency} from './api/cryptocurrencyApi/utils';
-import {remote, ipcRenderer} from "electron";
+import {DisplayTransaction, DisplayTransactionCurrency, Erc20DisplayToken} from './api/cryptocurrencyApi/utils';
+import {ipcRenderer, remote} from "electron";
 // import { ERC20Window } from './components/windows/erc20Window';
-import { FirmwareWindow } from './components/windows/firmwareWindow';
-import { SendWindow } from './components/windows/sendWindow'
-import { ConnectionStatus, DisplayBalanceStatus, PCSCMessageType, TransactionsStatus, WalletStatus } from './pcsc_helpers'
+import {FirmwareWindow} from './components/windows/firmwareWindow';
+import {SendWindow} from './components/windows/sendWindow'
+import {
+    ConnectionStatus,
+    DisplayBalanceStatus,
+    PCSCMessage,
+    PCSCMessageType,
+    TransactionsStatus,
+    WalletStatus
+} from './pcsc_helpers'
+
 //import {getFee} from "./api/cryptocurrencyApi/bitcoin";
 
 interface AppState {
@@ -92,7 +90,7 @@ interface AppState {
     numTransactions: number,
     chartBTC: Array<any>,
     chartLen: number,
-    // erc20Tokens: Array<Erc20DisplayToken>
+    erc20Tokens: Array<Erc20DisplayToken>
 }
 
 const mockState: AppState = {
@@ -132,7 +130,7 @@ const mockState: AppState = {
     numTransactions: 0,
     chartBTC: [],
     chartLen: 0,
-    // erc20Tokens: []
+    erc20Tokens: []
 }
 
 const initState: AppState = {
@@ -172,7 +170,7 @@ const initState: AppState = {
     numTransactions: 0,
     chartBTC: [],
     chartLen: 360,
-    // erc20Tokens: []
+    erc20Tokens: []
 }
 
 export default class App extends Component<{}, AppState> {
@@ -378,74 +376,73 @@ export default class App extends Component<{}, AppState> {
     }
 
     async setChartBTC() {
-        const currentDate = new Date()
-        const month = currentDate.getMonth() + 1
-        const monthStr = month < 10 ? `0${month.toString()}` : month.toString()
-        const day = currentDate.getDate()
-        const dayStr = day < 10 ? `0${day.toString()}` : day.toString()
-        const dateEnd = `${currentDate.getFullYear().toString()}-${monthStr}-${dayStr}`
-        const dateStart = `${(currentDate.getFullYear() - 1).toString()}-${monthStr}-${dayStr}`
-
-        const arrData = []
-       // const arrData = await getChartBTC(dateEnd, dateStart);
-        const arr = Array(365)
-        for (let index = 0; index < 365; index++) {
-            const dateN = new Date(Date.now() - 86400000 * (364 - index))
-            let mon: string
-            switch (dateN.getMonth() + 1) {
-                case 1:{
-                    mon = 'jan'
-                    break
-                }
-                case 2:{
-                    mon = 'feb'
-                    break
-                }
-                case 3:{
-                    mon = 'mar'
-                    break
-                }
-                case 4:{
-                    mon = 'apr'
-                    break
-                }
-                case 5:{
-                    mon = 'may'
-                    break
-                }
-                case 6:{
-                    mon = 'jun'
-                    break
-                }
-                case 7:{
-                    mon = 'jul'
-                    break
-                }
-                case 8:{
-                    mon = 'aug'
-                    break
-                }
-                case 9:{
-                    mon = 'sep'
-                    break
-                }
-                case 10:{
-                    mon = 'oct'
-                    break
-                }
-                case 11:{
-                    mon = 'nov'
-                    break
-                }
-                case 12:{
-                    mon = 'dec'
-                    break
-                }
-            }
-            const chartDate = `${dateN.getDate().toString()}.${mon}`
-            arr[index] = {date: chartDate, pv: arrData[index]}
-        }
-        this.setState({chartBTC: arr})
+        // const currentDate = new Date()
+        // const month = currentDate.getMonth() + 1
+        // const monthStr = month < 10 ? `0${month.toString()}` : month.toString()
+        // const day = currentDate.getDate()
+        // const dayStr = day < 10 ? `0${day.toString()}` : day.toString()
+        // const dateEnd = `${currentDate.getFullYear().toString()}-${monthStr}-${dayStr}`
+        // const dateStart = `${(currentDate.getFullYear() - 1).toString()}-${monthStr}-${dayStr}`
+        //
+        // const arrData = await getChartBTC(dateEnd, dateStart);
+        // const arr = Array(365)
+        // for (let index = 0; index < 365; index++) {
+        //     const dateN = new Date(Date.now() - 86400000 * (364 - index))
+        //     let mon: string
+        //     switch (dateN.getMonth() + 1) {
+        //         case 1:{
+        //             mon = 'jan'
+        //             break
+        //         }
+        //         case 2:{
+        //             mon = 'feb'
+        //             break
+        //         }
+        //         case 3:{
+        //             mon = 'mar'
+        //             break
+        //         }
+        //         case 4:{
+        //             mon = 'apr'
+        //             break
+        //         }
+        //         case 5:{
+        //             mon = 'may'
+        //             break
+        //         }
+        //         case 6:{
+        //             mon = 'jun'
+        //             break
+        //         }
+        //         case 7:{
+        //             mon = 'jul'
+        //             break
+        //         }
+        //         case 8:{
+        //             mon = 'aug'
+        //             break
+        //         }
+        //         case 9:{
+        //             mon = 'sep'
+        //             break
+        //         }
+        //         case 10:{
+        //             mon = 'oct'
+        //             break
+        //         }
+        //         case 11:{
+        //             mon = 'nov'
+        //             break
+        //         }
+        //         case 12:{
+        //             mon = 'dec'
+        //             break
+        //         }
+        //     }
+        //     const chartDate = `${dateN.getDate().toString()}.${mon}`
+        //     arr[index] = {date: chartDate, pv: arrData[index]}
+        // }
+        // this.setState({chartBTC: arr})
     }
 
     setNumTransactions(num: number) {
@@ -551,29 +548,31 @@ export default class App extends Component<{}, AppState> {
                     }
                     break
                 }
+                case PCSCMessageType.CHART_DATA_CHANGE: {
+                    this.setState({chartBTC: message.data})
+                    break
+                }
                 case PCSCMessageType.ERC20_CHANGE: {
-                    // this.setState({erc20Tokens: message.data})
+                    this.setState({erc20Tokens: message.data})
                     break
                 }
                 case PCSCMessageType.INITIALIZED: {
+                    await this.getRates()
                     const redirect =  () => {
                         this.setRedirectToMain()
                         this.setValues()
                     }
-            
-                    await Promise.all([this.setChartBTC(), this.getRates()])
+                    await this.updateHwWalletInfo()
                     redirect()
                 }
+                case PCSCMessageType.ERROR: {
+                    remote.dialog.showErrorBox("Error", (message.data as Error).message)
+                    break
+                }
+                default: return
                         
             }
-
-        
         })
-        // pcsc = pcsclite()
-        // pcsc.on('reader', this.onReaderCallback)
-
-        // pcsc.on('error', this.onErrorCallback)
-
     }
 
     setRedirectToMain() {
@@ -615,6 +614,20 @@ export default class App extends Component<{}, AppState> {
     }
 
     async updateHwWalletInfo() {
+        // for some reason enum not work here
+        let msg : PCSCMessage = {
+            type: 8,
+            data: [this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance,
+                  this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions]
+        }
+        console.log("msg to send: " , msg)
+        ipcRenderer.send('pcsc', msg)
+        msg = {
+            type: 9,
+            data: [this.state.BTCLastTx, this.state.ETHLastTx, this.state.LTCLastTx, this.state.XRPLastTx]
+        }
+        console.log("msg to send: " , msg)
+        ipcRenderer.send('pcsc', msg)
         // const updateHwStatus = async () => UpdateHWStatusPCSC(
         //     this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, 
         //     this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions
@@ -643,9 +656,11 @@ export default class App extends Component<{}, AppState> {
             }
             case 'LTC': {
                 this.setState({LTCBalance: (this.state.LTCBalance - amount)})
+                break
             }
             case 'XRP': {
                 this.setState({XRPBalance: (this.state.XRPBalance - amount)})
+                break
             }
         }
     }

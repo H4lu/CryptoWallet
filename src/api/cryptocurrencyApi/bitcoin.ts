@@ -158,7 +158,6 @@ export async function getBTCBalance(): Promise<number> {
 export async function getChartBTC(end: string, start: string): Promise<Array<any>> {
     const requestUrl = `https://api.coindesk.com/v1/bpi/historical/close.json?start=${start}&end=${end}`
     console.log(requestUrl)
-    // Делаем запрос и отдаём в виде Promise
     const response = await axios.get(requestUrl)
     const chartData = response.data.bpi
     let key: keyof typeof chartData

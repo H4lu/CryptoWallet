@@ -2,20 +2,40 @@ process.on('uncaughtException', err => {
     console.log(err.message)
     console.log(err.stack)
 })
-import pcsclite from "@pokusew/pcsclite";
-import { getBitcoinLastTx, getBTCBalance, initBitcoinAddress } from "./api/cryptocurrencyApi/bitcoin";
-import { Erc20DisplayToken, getAddressErc20Tokens, getETHBalance, getEthereumAddress, getEthereumLastTx, initEthereumAddress } from "./api/cryptocurrencyApi/ethereum";
-import { getLitecoinLastTx, getLTCBalance, initLitecoinAddress } from "./api/cryptocurrencyApi/ltecoin";
-import { getRippleLastTx, getXRPBalance, initRippleAddress } from "./api/cryptocurrencyApi/ripple";
-import { DisplayTransaction, DisplayTransactionCurrency } from "./api/cryptocurrencyApi/utils";
-import { getInfoPCSC } from "./api/hardwareApi/getWalletInfo";
-import { setReader } from "./api/hardwareApi/reader";
-import { ConnectionStatus, DisplayBalanceStatus, PCSCMessage, PCSCMessageType, TransactionsStatus, WalletStatus } from "./pcsc_helpers";
 
-console.log('SETTING EXc')
+import {UpdateHWStatusPCSC, updateTransactionsPCSC} from "./api/hardwareApi/updateHwStatus";
+import pcsclite from "@pokusew/pcsclite";
+import {getBitcoinLastTx, getBTCBalance, getChartBTC, initBitcoinAddress} from "./api/cryptocurrencyApi/bitcoin";
+import {
+    getAddressErc20Tokens,
+    getETHBalance,
+    getEthereumAddress,
+    getEthereumLastTx,
+    initEthereumAddress
+} from "./api/cryptocurrencyApi/ethereum";
+import {getLitecoinLastTx, getLTCBalance, initLitecoinAddress} from "./api/cryptocurrencyApi/ltecoin";
+import {getRippleLastTx, getXRPBalance} from "./api/cryptocurrencyApi/ripple";
+import {getInfoPCSC} from "./api/hardwareApi/getWalletInfo";
+import {setReader} from "./api/hardwareApi/reader";
+import {ChartData, PCSCMessage, PCSCMessageType} from "./pcsc_helpers";
 
 const PSCS_MANAGER_NOT_RUGGING_ERROR = "(0x8010001d)";
 
+process.on('message', (msg: PCSCMessage, _) => {
+    switch (msg.type) {
+        case PCSCMessageType.UPDATE_HW_BALANCES: {
+            const data = msg.data
+            UpdateHWStatusPCSC(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8])
+            break
+        }
+        case PCSCMessageType.UPDATE_HW_TRANSACTIONS: {
+            const data = msg.data
+            updateTransactionsPCSC(data[0], data[1], data[2], data[3])
+            break
+        }
+        default: return
+    }
+})
 
 let pcsc = undefined;
 let allowInit = true;
@@ -50,12 +70,82 @@ const updateErc20Tokens = async () => {
 }
 
 
+const sendBtcChartData = async () => {
+    const currentDate = new Date()
+    const month = currentDate.getMonth() + 1
+    const monthStr = month < 10 ? `0${month.toString()}` : month.toString()
+    const day = currentDate.getDate()
+    const dayStr = day < 10 ? `0${day.toString()}` : day.toString()
+    const dateEnd = `${currentDate.getFullYear().toString()}-${monthStr}-${dayStr}`
+    const dateStart = `${(currentDate.getFullYear() - 1).toString()}-${monthStr}-${dayStr}`
+
+    const arrData = await getChartBTC(dateEnd, dateStart);
+    const arr = Array<ChartData>(365)
+    for (let index = 0; index < 365; index++) {
+        const dateN = new Date(Date.now() - 86400000 * (364 - index))
+        let mon: string
+        switch (dateN.getMonth() + 1) {
+            case 1: {
+                mon = 'jan'
+                break
+            }
+            case 2: {
+                mon = 'feb'
+                break
+            }
+            case 3: {
+                mon = 'mar'
+                break
+            }
+            case 4: {
+                mon = 'apr'
+                break
+            }
+            case 5: {
+                mon = 'may'
+                break
+            }
+            case 6: {
+                mon = 'jun'
+                break
+            }
+            case 7: {
+                mon = 'jul'
+                break
+            }
+            case 8: {
+                mon = 'aug'
+                break
+            }
+            case 9: {
+                mon = 'sep'
+                break
+            }
+            case 10: {
+                mon = 'oct'
+                break
+            }
+            case 11: {
+                mon = 'nov'
+                break
+            }
+            case 12: {
+                mon = 'dec'
+                break
+            }
+        }
+        const chartDate = `${dateN.getDate().toString()}.${mon}`
+        arr[index] = {date: chartDate, pv: arrData[index]}
+    }
+    process.send({type: PCSCMessageType.CHART_DATA_CHANGE, data: arr})
+}
+
 const initAll = async () => {
     try {
         if (allowInit) {
             allowInit = false;
             await initCryptoAddresses()
-            await Promise.all([getBalances(), getTransactions(), updateErc20Tokens()])
+            await Promise.all([getBalances(), getTransactions(), updateErc20Tokens(), sendBtcChartData()])
             process.send({type: PCSCMessageType.INITIALIZED})
         }
     } catch(err) {

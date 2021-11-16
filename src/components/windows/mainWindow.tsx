@@ -104,8 +104,6 @@ export default class MainContent extends Component<MainContentProps, MainContent
     }
 
     onCardClicked(currency: DisplayTransactionCurrency) {
-        console.log("BTC BALANCE")
-        console.log(this.props.btcBalance)
         this.props.setActiveCurrency(currency)
         this.classActive = `ex_${currency}`
     }

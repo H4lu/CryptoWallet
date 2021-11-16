@@ -7,14 +7,16 @@ import {getAddressPCSC} from '../hardwareApi/getAddress'
 import {Buffer} from 'buffer'
 import {keccak256} from "js-sha3";
 import axios from 'axios'
-import { DisplayTransaction, DisplayTransactionCurrency, DisplayTransactionStatus, DisplayTransactionType } from './utils'
+import {
+    DisplayTransaction,
+    DisplayTransactionCurrency,
+    DisplayTransactionStatus,
+    DisplayTransactionType,
+    Erc20DisplayToken
+} from './utils'
 
-export interface Erc20DisplayToken {
-    name: string,
-    address: string,
-    amount: string
-}
-interface EthplorerTransaction {
+
+type EthplorerTransaction = {
     timestamp: number,
     from: string,
     to: string,
@@ -44,7 +46,8 @@ enum KovanV {
     MAX = 120,
     MIN = 119
 }
-interface EthplorerErc20TokenInfo {
+
+type EthplorerErc20TokenInfo = {
     address: string,
     decimals: string,
     name: string,
@@ -57,7 +60,7 @@ interface EthplorerErc20TokenInfo {
     price: boolean
 }
 
-interface EthplorerErc20Token {
+type EthplorerErc20Token = {
     tokenInfo: EthplorerErc20TokenInfo,
     balance: number,
     rawBalance?: string
@@ -65,11 +68,11 @@ interface EthplorerErc20Token {
     totalOut: number
 }
 
-interface EthplorerEthInfo {
+type EthplorerEthInfo = {
     balance: number,
     price: boolean
 }
-interface EthplorerAddressInfo {
+type EthplorerAddressInfo = {
     address: string,
     ETH: EthplorerAddressInfo,
     countTxs: number,

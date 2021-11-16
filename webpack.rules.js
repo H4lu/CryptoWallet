@@ -20,8 +20,7 @@ module.exports = [
     use: {
       loader: 'ts-loader',
       options: {
-        onlyCompileBundledFiles: true,
-        transpileOnly: true
+        onlyCompileBundledFiles: true
       }
     }
   },  

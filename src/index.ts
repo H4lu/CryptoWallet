@@ -16,6 +16,14 @@ ipcMain.once('close', () => {
 ipcMain.on('hide', () => {
   mainWindow.minimize()
 })
+
+ipcMain.on('pcsc', (event, data) => {
+  console.log("pcsc data")
+  console.log(data)
+  if (pcscProcess != undefined) {
+    pcscProcess.send(data)
+  }
+})
 app.disableHardwareAcceleration()
 app.allowRendererProcessReuse = false
 app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors')
