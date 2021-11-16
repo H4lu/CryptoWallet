@@ -34,11 +34,11 @@ const createWindow = (): void => {
     resizable: false,
     fullscreen: false, 
     frame: false,
-    webPreferences: { 
-        enableBlinkFeatures: 'OutOfBlinkCors',
-        webSecurity: false,
+    webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
+        enableBlinkFeatures: 'OutOfBlinkCors',
+        webSecurity: false,
         enableRemoteModule: true
     } 
   });
@@ -46,24 +46,35 @@ const createWindow = (): void => {
   
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-  console.log('PROCESS CWD:')
-  console.log(process.cwd())
-  console.log("FORK")
-  pcscProcess = fork('.webpack/main/pcsc.js', {stdio: ['ipc']});
-  pcscProcess.on('error', err => {
-    console.log("CHILD ERRPR")
-    console.log(err)
-  })
-  pcscProcess.on('exit', code => {
-    console.log("EXITED CHILD CODE: ", code)
-  })
-  pcscProcess.on('message', msg => {
-    console.log('child message');
-    console.log(msg);
-    mainWindow.webContents.send('pcsc', msg)
-  })
-  pcscProcess.stdout.on('data', data=> {
-    console.log('pcsc stdout ', data.toString("utf-8"));
+  mainWindow.once('ready-to-show', () => {
+    console.log('PROCESS CWD:')
+    console.log(process.cwd())
+    console.log("FORK")
+    pcscProcess = fork('.webpack/main/pcsc.js', {
+      stdio: ['ipc'],
+      silent: true,
+      detached: true
+    });
+    pcscProcess.on('error', err => {
+      console.log("CHILD ERRPR ", err.message)
+    })
+    pcscProcess.on('exit', code => {
+      console.log("EXITED CHILD CODE: ", code)
+    })
+    pcscProcess.on('message', msg => {
+      console.log('child message');
+      console.log(msg);
+      mainWindow.webContents.send('pcsc', msg)
+    })
+    process.stderr.on('data', data => {
+      console.log("stderr: ", data.toString())
+    })
+    pcscProcess.stdout.on('data', data=> {
+      console.log('pcsc stdout ', data.toString());
+    })
+    pcscProcess.stdout.on('error', err => {
+      console.log('pcsc stderr: ', err.message)
+    })
   })
 
   // Open the DevTools.

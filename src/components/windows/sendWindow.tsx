@@ -1,6 +1,6 @@
 import React, {FC, useState, useEffect} from 'react';
 import {DisplayTransactionCurrency, FeeTypes, toDisplayCurrencyName} from '../../api/cryptocurrencyApi/utils'
-import {sendTransaction} from "../../core/sendTransaction";
+// import {sendTransaction} from "../../core/sendTransaction";
 import {remote} from "electron"
 import {Link} from "react-router-dom";
 
@@ -61,9 +61,9 @@ export const SendWindow: FC<SendProps> = (props) => {
 
     const handleClick = async () => {
         try {
-            await sendTransaction(
-                props.currency, paymentAddress, amount, feeType, props.course, props.cryptoBalance
-                )
+            // await sendTransaction(
+            //     props.currency, paymentAddress, amount, feeType, props.course, props.cryptoBalance
+            //     )
         } catch(err) {
             console.error(err)
             remote.dialog.showErrorBox("Send transaction error", err.message)

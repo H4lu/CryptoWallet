@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
-import {getBTCBalanceTarns} from "../../api/cryptocurrencyApi/bitcoin";
-
-import {getETHBalanceTrans} from "../../api/cryptocurrencyApi/ethereum";
-import {getLTCBalanceTrans} from "../../api/cryptocurrencyApi/ltecoin";
-import {getXRPBalanceTrans} from "../../api/cryptocurrencyApi/ripple";
+// import {getBTCBalanceTarns} from "../../api/cryptocurrencyApi/bitcoin";
+//
+// import {getETHBalanceTrans} from "../../api/cryptocurrencyApi/ethereum";
+// import {getLTCBalanceTrans} from "../../api/cryptocurrencyApi/ltecoin";
+// import {getXRPBalanceTrans} from "../../api/cryptocurrencyApi/ripple";
 import Chart from "../chart";
 import { DisplayTransaction, DisplayTransactionCurrency } from '../../api/cryptocurrencyApi/utils';
 import { CryptocurrencyCard } from '../cryptocurrencyCard';
@@ -70,29 +70,29 @@ export default class MainContent extends Component<MainContentProps, MainContent
         if(this.state.exAddress != '') {
             switch (this.classActive) {
                 case 'ex_BTC': {
-                    let arr = await getBTCBalanceTarns(this.state.exAddress)
-                    this.setState({balance: (arr[0]).toString() + ' BTC'})
-                    this.setState({transactions: (arr[1]).toString()})
+                    // let arr = await getBTCBalanceTarns(this.state.exAddress)
+                    // this.setState({balance: (arr[0]).toString() + ' BTC'})
+                    // this.setState({transactions: (arr[1]).toString()})
                     break
                 }
                 case 'ex_ETH': {
-                    let arr = await getETHBalanceTrans(this.state.exAddress)
-                    console.log('3', arr[0])
-                    console.log('4', arr[1])
-                    this.setState({balance: (arr[0]) + ' ETH'})
-                    this.setState({transactions: (arr[1]).toString()})
+                    // let arr = await getETHBalanceTrans(this.state.exAddress)
+                    // console.log('3', arr[0])
+                    // console.log('4', arr[1])
+                    // this.setState({balance: (arr[0]) + ' ETH'})
+                    // this.setState({transactions: (arr[1]).toString()})
                     break
                 }
                 case 'ex_LTC': {
-                    let arr = await getLTCBalanceTrans(this.state.exAddress)
-                    this.setState({balance: (arr[0]).toString() + ' LTC'})
-                    this.setState({transactions: (arr[1]).toString()})
+                    // let arr = await getLTCBalanceTrans(this.state.exAddress)
+                    // this.setState({balance: (arr[0]).toString() + ' LTC'})
+                    // this.setState({transactions: (arr[1]).toString()})
                     break
                 }
                 case 'ex_XRP': {
-                    let arr = await getXRPBalanceTrans(this.state.exAddress)
-                    this.setState({balance: (arr[0]).toString() + ' LTC'})
-                    this.setState({transactions: (arr[1]).toString()})
+               // //     let arr = await getXRPBalanceTrans(this.state.exAddress)
+               //      this.setState({balance: (arr[0]).toString() + ' LTC'})
+               //      this.setState({transactions: (arr[1]).toString()})
                     break
                 }
             }
@@ -104,6 +104,8 @@ export default class MainContent extends Component<MainContentProps, MainContent
     }
 
     onCardClicked(currency: DisplayTransactionCurrency) {
+        console.log("BTC BALANCE")
+        console.log(this.props.btcBalance)
         this.props.setActiveCurrency(currency)
         this.classActive = `ex_${currency}`
     }

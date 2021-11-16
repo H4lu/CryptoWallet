@@ -54,7 +54,7 @@ interface TransactionTarget {
 
 
 const network = networks.bitcoin
-const NETWORK: Networks = Networks.MAIN
+export const NETWORK: Networks = Networks.MAIN
 
 let myAddr = ''
 let myPubKey = Buffer.alloc(33)

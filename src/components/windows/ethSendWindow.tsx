@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import {getEthereumAddress} from '../../api/cryptocurrencyApi/ethereum'
-import {sendTransaction} from "../../core/sendTransaction";
+// import {getEthereumAddress} from '../../api/cryptocurrencyApi/ethereum'
+// import {sendTransaction} from "../../core/sendTransaction";
 import {Link} from "react-router-dom";
 import {remote} from "electron"
 
@@ -42,7 +42,7 @@ export class EthSendWindow extends Component<EthSendProps, ETHSendState> {
 
         this.props.stateSR(true)
         this.state = {
-            address: getEthereumAddress(),
+            address: "",
             paymentAddress: '',
             amount: 0,
             fee: (this.props.trFee * this.feeCoeff) / 1000000,
@@ -108,9 +108,9 @@ export class EthSendWindow extends Component<EthSendProps, ETHSendState> {
     async handleClick() {
         if (this.state.paymentAddress != '') {
             try {
-                await sendTransaction(
-                    'ETH', this.state.paymentAddress, this.state.amount, this.props.trFee, this.props.course, this.props.ethBalance
-                    )
+                // await sendTransaction(
+                //     'ETH', this.state.paymentAddress, this.state.amount, this.props.trFee, this.props.course, this.props.ethBalance
+                //     )
             } catch(err) {
                 console.error(err)
                 remote.dialog.showErrorBox("Send transaction error", err.message)

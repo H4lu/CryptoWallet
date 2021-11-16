@@ -1,6 +1,6 @@
 import React, {Component} from "react"
-import {sendTransaction} from "../../core/sendTransaction";
-import {getLitecoinAddress} from "../../api/cryptocurrencyApi/ltecoin"
+// import {sendTransaction} from "../../core/sendTransaction";
+// import {getLitecoinAddress} from "../../api/cryptocurrencyApi/ltecoin"
 import {Link} from "react-router-dom";
 import {remote} from "electron"
 
@@ -38,7 +38,7 @@ export class LtcSendWindow extends Component<LTCSendProps, ILTCSendState> {
 
         this.props.stateSR(true)
         this.state = {
-            address: getLitecoinAddress(),
+            address: "",
             paymentAddress: '',
             amount: 0,
             fee: (431 * this.feeCoeff * this.props.trFee) / 100000000,
@@ -106,9 +106,9 @@ export class LtcSendWindow extends Component<LTCSendProps, ILTCSendState> {
 
     async handleClick() {
         try {
-            await sendTransaction(
-                'LTC', this.state.paymentAddress, this.state.amount, this.props.trFee, this.props.course, this.props.ltcBalance
-                )
+            // await sendTransaction(
+            //     'LTC', this.state.paymentAddress, this.state.amount, this.props.trFee, this.props.course, this.props.ltcBalance
+            //     )
         } catch(err) {
             console.error(err)
             remote.dialog.showErrorBox("Send transaction error", err.message)

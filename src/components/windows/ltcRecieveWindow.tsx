@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import createQR from "../../core/createQR";
-import {getLitecoinAddress} from "../../api/cryptocurrencyApi/ltecoin";
+// import {getLitecoinAddress} from "../../api/cryptocurrencyApi/ltecoin";
 import {clipboard, shell} from 'electron'
 import {Link} from "react-router-dom";
 
@@ -19,7 +19,7 @@ export class LtcRecieveWindow extends Component<any, ILTCRecieveState> {
 
         this.props.stateSR(true)
         this.state = {
-            address: getLitecoinAddress(),
+            address: "",
             qrcodeAddress: '',
         }
     }

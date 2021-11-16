@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import createQR from "../../core/createQR";
-import { getBitcoinAddress } from "../../api/cryptocurrencyApi/bitcoin";
+// import { getBitcoinAddress } from "../../api/cryptocurrencyApi/bitcoin";
 import {clipboard, shell} from 'electron'
 import {Link} from "react-router-dom";
 
@@ -20,7 +20,7 @@ export class BtcRecieveWindow extends Component<any, BtcReceiveState> {
 
         this.props.stateSR(true)
         this.state = {
-            address: getBitcoinAddress(),
+            address: "",
             qrcodeAddress: '',
         }
     }

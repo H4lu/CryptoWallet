@@ -6,36 +6,33 @@ import {SidebarContent} from './components/sidebarContent'
 import './index.css'
 import MainContent from './components/windows/mainWindow'
 import {WalletCarousel} from './components/walletCarousel'
-import {
-    getBitcoinLastTx,
-    initBitcoinAddress,
-    getBTCBalance,
-    setBTCBalance,
-    setBTCPrice, getChartBTC, getFee
-} from './api/cryptocurrencyApi/bitcoin'
-import {
-    getLTCBalance,
-    initLitecoinAddress,
-    getLitecoinLastTx,
-    setLTCBalance,
-    setLTCPrice
-} from './api/cryptocurrencyApi/ltecoin'
-import {
-    getETHBalance,
-    initEthereumAddress,
-    getEthereumLastTx,
-    setETHBalance,
-    setETHPrice,
-    Erc20DisplayToken,
-    getAddressErc20Tokens,
-    getEthereumAddress
-} from './api/cryptocurrencyApi/ethereum'
+// import {
+//     getBitcoinLastTx,
+//     initBitcoinAddress,
+//     getBTCBalance,
+//     setBTCBalance,
+//     setBTCPrice, getChartBTC, getFee
+// } from './api/cryptocurrencyApi/bitcoin'
+// import {
+//     getLTCBalance,
+//     initLitecoinAddress,
+//     getLitecoinLastTx,
+//     setLTCBalance,
+//     setLTCPrice
+// } from './api/cryptocurrencyApi/ltecoin'
+// import {
+//     getETHBalance,
+//     initEthereumAddress,
+//     getEthereumLastTx,
+//     setETHBalance,
+//     setETHPrice,
+//     Erc20DisplayToken,
+//     getAddressErc20Tokens,
+//     getEthereumAddress
+// } from './api/cryptocurrencyApi/ethereum'
 import {getCurrencyRate} from './core/setCurrencyRate'
 import {StartWindow} from './components/windows/startWindow'
-import pcsclite from "@pokusew/pcsclite"
 import {setReader} from './api/hardwareApi/reader'
-import {getInfoPCSC} from './api/hardwareApi/getWalletInfo'
-import {UpdateHWStatusPCSC, updateTransactionsPCSC} from './api/hardwareApi/updateHwStatus'
 import {SidebarLeft} from "./components/sidebarLeft";
 import {BtcRecieveWindow} from "./components/windows/btcRecieveWindow";
 import {BtcSendWindow} from "./components/windows/btcSendWindow";
@@ -52,10 +49,11 @@ import {
 } from "./api/cryptocurrencyApi/ripple";
 import {DisplayTransaction, DisplayTransactionCurrency} from './api/cryptocurrencyApi/utils';
 import {remote, ipcRenderer} from "electron";
-import { ERC20Window } from './components/windows/erc20Window';
+// import { ERC20Window } from './components/windows/erc20Window';
 import { FirmwareWindow } from './components/windows/firmwareWindow';
 import { SendWindow } from './components/windows/sendWindow'
-
+import { ConnectionStatus, DisplayBalanceStatus, PCSCMessageType, TransactionsStatus, WalletStatus } from './pcsc_helpers'
+//import {getFee} from "./api/cryptocurrencyApi/bitcoin";
 
 interface AppState {
     BTCBalance: number,
@@ -94,7 +92,7 @@ interface AppState {
     numTransactions: number,
     chartBTC: Array<any>,
     chartLen: number,
-    erc20Tokens: Array<Erc20DisplayToken>
+    // erc20Tokens: Array<Erc20DisplayToken>
 }
 
 const mockState: AppState = {
@@ -134,7 +132,7 @@ const mockState: AppState = {
     numTransactions: 0,
     chartBTC: [],
     chartLen: 0,
-    erc20Tokens: []
+    // erc20Tokens: []
 }
 
 const initState: AppState = {
@@ -174,11 +172,9 @@ const initState: AppState = {
     numTransactions: 0,
     chartBTC: [],
     chartLen: 360,
-    erc20Tokens: []
+    // erc20Tokens: []
 }
 
-let pcsc = undefined;
-const PSCS_MANAGER_NOT_RUGGING_ERROR = "(0x8010001d)"
 export default class App extends Component<{}, AppState> {
     routes = [
         {
@@ -244,8 +240,9 @@ export default class App extends Component<{}, AppState> {
             main: () => <SendWindow
                                     stateSR = {this.setStateSR} 
                                     course = {this.state.BTCCourse}
-                                    cryptoBalance = {this.state.BTCBalance} 
-                                    feeCoeff = {Math.floor(getFee(1) * 0.7) + 1}
+                                    cryptoBalance = {this.state.BTCBalance}
+                                    feeCoeff = {0}
+                                  //  feeCoeff = {Math.floor(getFee(1) * 0.7) + 1}
                                     feeMagic = {431}
                                     currency = {"BTC"}
                                     feeDivider = {100000000}
@@ -334,13 +331,13 @@ export default class App extends Component<{}, AppState> {
                                         })}
             />
         },
-        {
-            path: '/erc20-window',
-            exact: true,
-            sidebar: () => <SidebarContent/>,
-            sidebarLeft: SidebarLeft,
-            main: () => <ERC20Window data={this.state.erc20Tokens}/>
-        },
+        // {
+        //     path: '/erc20-window',
+        //     exact: true,
+        //     sidebar: () => <SidebarContent/>,
+        //     sidebarLeft: SidebarLeft,
+        //     main: () => <ERC20Window data={this.state.erc20Tokens}/>
+        // },
         {
             path: '/firmware-window',
             exact: true,
@@ -363,7 +360,6 @@ export default class App extends Component<{}, AppState> {
         this.connectionERROR = this.connectionERROR.bind(this)
         this.connectionOK = this.connectionOK.bind(this)
         this.changeBalance = this.changeBalance.bind(this)
-        this.startWalletInfoPing = this.startWalletInfoPing.bind(this)
         this.setRedirectToMain = this.setRedirectToMain.bind(this)
         this.getRates = this.getRates.bind(this)
         this.setValues = this.setValues.bind(this)
@@ -375,8 +371,6 @@ export default class App extends Component<{}, AppState> {
         this.updateErc20Tokens = this.updateErc20Tokens.bind(this)
         this.updateHwWalletInfo = this.updateHwWalletInfo.bind(this)
         this.initCryptoAddresses = this.initCryptoAddresses.bind(this)
-        this.onReaderCallback = this.onReaderCallback.bind(this)
-        this.onErrorCallback = this.onErrorCallback.bind(this)
     }
 
     setChartLen(len: number) {
@@ -392,7 +386,8 @@ export default class App extends Component<{}, AppState> {
         const dateEnd = `${currentDate.getFullYear().toString()}-${monthStr}-${dayStr}`
         const dateStart = `${(currentDate.getFullYear() - 1).toString()}-${monthStr}-${dayStr}`
 
-        const arrData = await getChartBTC(dateEnd, dateStart);
+        const arrData = []
+       // const arrData = await getChartBTC(dateEnd, dateStart);
         const arr = Array(365)
         for (let index = 0; index < 365; index++) {
             const dateN = new Date(Date.now() - 86400000 * (364 - index))
@@ -484,110 +479,95 @@ export default class App extends Component<{}, AppState> {
         this.setState({connection: false})
     }
 
-    startWalletInfoPing() {
-        let interval = setInterval(async () => {
-            try {
-                const data = await getInfoPCSC()
-                console.log('GOT THIS DATA', data)
-                switch (data) {
-                    case 0: {
-                        clearInterval(interval)
-                        console.log('SETTING WALLET STATUS 0')
-
-                        await this.initAll()
-
-                        this.setState({walletStatus: 0})
-                        break
-                    }
-                    case 1: {
-                        this.setState({walletStatus: 1})
-                        break
-                    }
-                    case 2: {
-                        this.setState({walletStatus: 2})
-                        break
-                    }
-                    case 3: {
-                        this.setState({walletStatus: 3})
-                        break
-                    }
-                    case 4: {
-                        this.setState({walletStatus: 4})
-                        break
-                    }
-                }
-            } catch (error) {
-                console.log('GOT ERROR', error)
-                clearInterval(interval)
-            }
-        }, 500, [])
-    }
-
     async updateErc20Tokens () {
-        const actualTokens = await getAddressErc20Tokens(getEthereumAddress())
-        this.setState({erc20Tokens: actualTokens})
+        // const actualTokens = await getAddressErc20Tokens(getEthereumAddress())
+        // this.setState({erc20Tokens: actualTokens})
     }
-
-    async onReaderCallback(reader) {
-        setReader(reader)
-        reader.on('status', status => {
-            const changes = reader.state ^ status.state
-            if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
-        
-                reader.connect({
-                        share_mode: reader.SCARD_SHARE_SHARED,
-                        protocol: reader.SCARD_PROTOCOL_T1
-                }, async (err, _) => {
-                    if (err) {
-                        console.error(err)
-                        remote.dialog.showErrorBox("PCSC error", err.message)
-                    } else {
-                        console.log("start wallet info")
-                        this.setState({connection: true})
-                        this.startWalletInfoPing()
-                    }
-            })
-        }
-        })
-
-        reader.on('error', err => {
-            console.log('Error', err.message)
-            remote.dialog.showErrorBox("PCSC error", err.message)
-        })
-        reader.on('end', () => {
-            console.log('Reader', reader.name, 'removed')
-            this.setState({connection: false})
-        })
-    }
-
-    async onErrorCallback(err) {
-        console.log('PCSC error', err.message)
-      
-        const errMessage = String(err.message)
-        const errLines = errMessage.split('\n')
-        if (errLines.length > 1) {
-            const code = errLines[1]
-            // just reinit pcsc in case of manager not running error(usually appears during timeout)
-            if (code == PSCS_MANAGER_NOT_RUGGING_ERROR) {
-                pcsc.removeAllListeners()
-                pcsc = pcsclite()
-                pcsc.on('reader', this.onReaderCallback)
-                pcsc.on('error', this.onErrorCallback)
-                return
-            }
-        }
-
-        remote.dialog.showErrorBox("PCSC error", err.message)
-    }
-
 
     async componentDidMount() {
         // this.setState({connection: true})
         // this.setState({redirectToMain: true})
         // this.setState({walletStatus: 0})
-        ipcRenderer.on('pcsc', (event, message) => {
+        ipcRenderer.on('pcsc', async (event, message) => {
             console.log('ipc pcsc_status')
             console.log(message)
+            switch (message.type) {
+                case PCSCMessageType.WALLET_STATUS_CHANGE: {
+                    this.setState({walletStatus: (message.data as WalletStatus).walletStatus})
+                    break
+                }
+                case PCSCMessageType.CONNECTION_STATUS_CHANGE: {
+                    this.setState({connection: (message.data as ConnectionStatus).isConnected})
+                    break
+                }
+                case PCSCMessageType.BALANCE_CHANGE: {
+                    const data = message.data as DisplayBalanceStatus
+                    switch (data.currency) {
+                        case 'BTC': {
+                            console.log("set btc balance", data.balance)
+                            this.setState({BTCBalance: data.balance})
+                            break
+                        }
+                        case 'ETH': {
+                            console.log("set eth balance: ", data.balance)
+                            this.setState({ETHBalance: data.balance})
+                            break
+                        }
+                        case 'LTC': {
+                            console.log("set ltc balance: " , data.balance)
+                            this.setState({LTCBalance: data.balance})
+                            break
+                        }
+                        case 'XRP': {
+                            this.setState({XRPBalance: data.balance})
+                            break
+                        }
+                        default: return
+                    }
+                    break
+                }
+                case PCSCMessageType.TRANSACTIONS_CHANGE: {
+                    const data = message.data as TransactionsStatus
+                    switch(data.currency) {
+                        case 'BTC': {
+                            console.log("set btc last tx")
+                            this.setState({BTCLastTx: data.transactions})
+                            break
+                        }
+                        case 'ETH': {
+                            console.log("set ")
+                            this.setState({ETHLastTx: data.transactions})
+                            break
+                        }
+                        case 'LTC': {
+                            this.setState({LTCLastTx: data.transactions})
+                            break
+                        }
+                        case 'XRP': {
+                            this.setState({XRPLastTx: data.transactions})
+                            break
+                        }
+                        default: return
+                    }
+                    break
+                }
+                case PCSCMessageType.ERC20_CHANGE: {
+                    // this.setState({erc20Tokens: message.data})
+                    break
+                }
+                case PCSCMessageType.INITIALIZED: {
+                    const redirect =  () => {
+                        this.setRedirectToMain()
+                        this.setValues()
+                    }
+            
+                    await Promise.all([this.setChartBTC(), this.getRates()])
+                    redirect()
+                }
+                        
+            }
+
+        
         })
         // pcsc = pcsclite()
         // pcsc.on('reader', this.onReaderCallback)
@@ -620,29 +600,29 @@ export default class App extends Component<{}, AppState> {
     }
 
     setValues() {
-        setBTCBalance(this.state.BTCBalance)
-        setBTCPrice(this.state.BTCPrice)
-        setETHBalance(this.state.ETHBalance)
-        setETHPrice(this.state.ETHPrice)
-        setLTCBalance(this.state.LTCBalance)
-        setLTCPrice(this.state.LTCPrice)
-        setXRPBalance(this.state.XRPBalance)
-        setXRPPrice(this.state.XRPPrice)
+        // setBTCBalance(this.state.BTCBalance)
+        // setBTCPrice(this.state.BTCPrice)
+        // setETHBalance(this.state.ETHBalance)
+        // setETHPrice(this.state.ETHPrice)
+        // setLTCBalance(this.state.LTCBalance)
+        // setLTCPrice(this.state.LTCPrice)
+        // setXRPBalance(this.state.XRPBalance)
+        // setXRPPrice(this.state.XRPPrice)
     }
 
     async initCryptoAddresses() {
-        await Promise.all([initBitcoinAddress(), initEthereumAddress(), initLitecoinAddress()])
+      //  await Promise.all([initBitcoinAddress(), initEthereumAddress(), initLitecoinAddress()])
     }
 
     async updateHwWalletInfo() {
-        const updateHwStatus = async () => UpdateHWStatusPCSC(
-            this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, 
-            this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions
-        )
-        const updateHwTransactions = async () => updateTransactionsPCSC(
-                this.state.BTCLastTx, this.state.ETHLastTx, this.state.LTCLastTx, this.state.XRPLastTx
-        )
-        await Promise.all([updateHwStatus(), updateHwTransactions()])
+        // const updateHwStatus = async () => UpdateHWStatusPCSC(
+        //     this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, 
+        //     this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions
+        // )
+        // const updateHwTransactions = async () => updateTransactionsPCSC(
+        //         this.state.BTCLastTx, this.state.ETHLastTx, this.state.LTCLastTx, this.state.XRPLastTx
+        // )
+        // await Promise.all([updateHwStatus(), updateHwTransactions()])
     }
 
     async updateData() {
@@ -720,11 +700,11 @@ export default class App extends Component<{}, AppState> {
     }
 
     async getBalances() {
-        const balances = await Promise.all([getBTCBalance(), getLTCBalance(),  getETHBalance(), getXRPBalance()])
-        this.setState({BTCBalance: balances[0]})
-        this.setState({LTCBalance: balances[1]})
-        this.setState({ETHBalance: balances[2]})
-        this.setState({XRPBalance: balances[3]})
+        // const balances = await Promise.all([getBTCBalance(), getLTCBalance(),  getETHBalance(), getXRPBalance()])
+        // this.setState({BTCBalance: balances[0]})
+        // this.setState({LTCBalance: balances[1]})
+        // this.setState({ETHBalance: balances[2]})
+        // this.setState({XRPBalance: balances[3]})
     }
 
     componentWillMount() {
@@ -732,11 +712,11 @@ export default class App extends Component<{}, AppState> {
     }
 
     async getTransactions() {
-        const transactions = await Promise.all([getBitcoinLastTx(), getLitecoinLastTx(), getEthereumLastTx(), getRippleLastTx()])
-        this.setState({BTCLastTx: transactions[0]})
-        this.setState({LTCLastTx: transactions[1]})
-        this.setState({ETHLastTx: transactions[2]})
-        this.setState({XRPLastTx: transactions[3]})
+        // const transactions = await Promise.all([getBitcoinLastTx(), getLitecoinLastTx(), getEthereumLastTx(), getRippleLastTx()])
+        // this.setState({BTCLastTx: transactions[0]})
+        // this.setState({LTCLastTx: transactions[1]})
+        // this.setState({ETHLastTx: transactions[2]})
+        // this.setState({XRPLastTx: transactions[3]})
     }
 
     render() {

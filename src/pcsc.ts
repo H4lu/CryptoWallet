@@ -1,46 +1,83 @@
+process.on('uncaughtException', err => {
+    console.log(err.message)
+    console.log(err.stack)
+})
 import pcsclite from "@pokusew/pcsclite";
+import { getBitcoinLastTx, getBTCBalance, initBitcoinAddress } from "./api/cryptocurrencyApi/bitcoin";
+import { Erc20DisplayToken, getAddressErc20Tokens, getETHBalance, getEthereumAddress, getEthereumLastTx, initEthereumAddress } from "./api/cryptocurrencyApi/ethereum";
+import { getLitecoinLastTx, getLTCBalance, initLitecoinAddress } from "./api/cryptocurrencyApi/ltecoin";
+import { getRippleLastTx, getXRPBalance, initRippleAddress } from "./api/cryptocurrencyApi/ripple";
+import { DisplayTransaction, DisplayTransactionCurrency } from "./api/cryptocurrencyApi/utils";
 import { getInfoPCSC } from "./api/hardwareApi/getWalletInfo";
-import {setReader} from "./api/hardwareApi/reader";
+import { setReader } from "./api/hardwareApi/reader";
+import { ConnectionStatus, DisplayBalanceStatus, PCSCMessage, PCSCMessageType, TransactionsStatus, WalletStatus } from "./pcsc_helpers";
+
+console.log('SETTING EXc')
+
 const PSCS_MANAGER_NOT_RUGGING_ERROR = "(0x8010001d)";
 
 
 let pcsc = undefined;
+let allowInit = true;
 
-const startWalletInfoPing = () => {
+const initCryptoAddresses = async () => {
+    try {
+        await Promise.all([initBitcoinAddress(), initEthereumAddress(), initLitecoinAddress()])
+    } catch(err) {
+        console.log(err.message)
+    }
+}
+
+const getBalances = async () => {
+    const balances = await Promise.all([getBTCBalance(), getLTCBalance(),  getETHBalance(), getXRPBalance()])
+    process.send({type: PCSCMessageType.BALANCE_CHANGE, data: {currency: 'BTC', balance: balances[0]}})
+    process.send({type: PCSCMessageType.BALANCE_CHANGE, data: {currency: 'LTC', balance: balances[1]}})
+    process.send({type: PCSCMessageType.BALANCE_CHANGE, data: {currency: 'ETH', balance: balances[2]}})
+    process.send({type: PCSCMessageType.BALANCE_CHANGE, data: {currency: 'XRP', balance: balances[3]}})
+}
+
+const getTransactions = async () => {
+    const transactions = await Promise.all([getBitcoinLastTx(), getLitecoinLastTx(), getEthereumLastTx(), getRippleLastTx()])
+    process.send({type: PCSCMessageType.TRANSACTIONS_CHANGE, data: {currency: 'BTC', transactions: transactions[0]}})
+    process.send({type: PCSCMessageType.TRANSACTIONS_CHANGE, data: {currency: 'LTC', transactions: transactions[1]}})
+    process.send({type: PCSCMessageType.TRANSACTIONS_CHANGE, data: {currency: 'ETH', transactions: transactions[2]}})
+    process.send({type: PCSCMessageType.TRANSACTIONS_CHANGE, data: {currency: 'XRP', transactions: transactions[3]}})
+}
+
+const updateErc20Tokens = async () => {
+    const actualTokens = await getAddressErc20Tokens(getEthereumAddress())
+    process.send({type: PCSCMessageType.ERC20_CHANGE, data: actualTokens})
+}
+
+
+const initAll = async () => {
+    try {
+        if (allowInit) {
+            allowInit = false;
+            await initCryptoAddresses()
+            await Promise.all([getBalances(), getTransactions(), updateErc20Tokens()])
+            process.send({type: PCSCMessageType.INITIALIZED})
+        }
+    } catch(err) {
+        console.log(err.message)
+        process.send({type: PCSCMessageType.ERROR, data: err})
+    }
+}
+
+const startWalletInfoPing = async () => {
     let interval = setInterval(async () => {
         try {
-            const data = await getInfoPCSC()
-            console.log('GOT THIS DATA', data)
-            switch (data) {
-                case 0: {
-                    clearInterval(interval)
-                    console.log('SETTING WALLET STATUS 0')
-
-                    //await this.initAll()
-                    process.send({walletStatus: 0})
-                   // this.setState({walletStatus: 0})
-                    break
-                }
-                case 1: {
-                    process.send({walletStatus: 1})
-                    //this.setState({walletStatus: 1})
-                    break
-                }
-                case 2: {
-                    process.send({walletStatus: 2})
-                   // this.setState({walletStatus: 2})
-                    break
-                }
-                case 3: {
-                    process.send({walletStatus: 3})
-                   // this.setState({walletStatus: 3})
-                    break
-                }
-                case 4: {
-                    process.send({walletStatus: 4})
-                    //this.setState({walletStatus: 4})
-                    break
-                }
+            const walletStatus = await getInfoPCSC()
+            console.log('Got wallet status: ', walletStatus)
+            const message : PCSCMessage = {
+                type: PCSCMessageType.WALLET_STATUS_CHANGE,
+                data: {walletStatus: walletStatus}
+            }
+            process.send(message)
+            if (walletStatus == 0) {
+                clearInterval(interval)
+                console.log('SETTING WALLET STATUS 0')
+                await initAll()
             }
         } catch (error) {
             console.log('GOT ERROR', error)
@@ -49,7 +86,7 @@ const startWalletInfoPing = () => {
     }, 500, [])
 };
 
-const onReaderCallback = async (reader) {
+const onReaderCallback = async (reader) => {
     setReader(reader)
     reader.on('status', status => {
         const changes = reader.state ^ status.state
@@ -59,15 +96,12 @@ const onReaderCallback = async (reader) {
                     protocol: reader.SCARD_PROTOCOL_T1
             }, async (err, _) => {
                 if (err) {
-                    process.send(err)
+                    process.send({type: PCSCMessageType.ERROR, data: err})
                     console.error(err)
-                   // remote.dialog.showErrorBox("PCSC error", err.message)
                 } else {
                     console.log("start wallet info")
-                    process.send({connected: true})
+                    process.send({type: PCSCMessageType.CONNECTION_STATUS_CHANGE, data: {isConnected: true}})
                     startWalletInfoPing()
-                    // this.setState({connection: true})
-                    // this.startWalletInfoPing()
                 }
         })
     }
@@ -75,15 +109,15 @@ const onReaderCallback = async (reader) {
 
     reader.on('error', err => {
         console.log('Error', err.message)
+        process.send({type: PCSCMessageType.ERROR, data: err})
     })
     reader.on('end', () => {
         console.log('Reader', reader.name, 'removed')
-        process.send({connected: false})
-        //this.setState({connection: false})
+        process.send({type: PCSCMessageType.CONNECTION_STATUS_CHANGE, data: {isConnected: false}})
     })
 };
 
-const onErrorCallback = async (err) {
+const onErrorCallback = async (err) => {
     console.log('PCSC error', err.message)
   
     const errMessage = String(err.message)
@@ -107,4 +141,6 @@ const start = async () => {
     pcsc.on("error", onErrorCallback);
 };
 
+console.log('START')
 start();
+console.log("START ENDED")

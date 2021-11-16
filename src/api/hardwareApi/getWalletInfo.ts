@@ -2,7 +2,7 @@
 import { reader } from './reader'
 
 
-export function getInfoPCSC(): Promise<Number> {
+export function getInfoPCSC(): Promise<number> {
   console.log('TRANSMITTING')
 
   return new Promise((resolve, reject) => {
