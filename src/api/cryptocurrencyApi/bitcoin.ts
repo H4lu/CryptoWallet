@@ -229,31 +229,27 @@ async function createTransaction(
         
         let transaction = new TransactionBuilder(network)
         for (const input of inputs) {
-            console.log("add input")
-            console.log(input)
             transaction.addInput(input.tx_hash, input.tx_output_n)
         }
         for (const out of outputs) {
-            console.log("add output")
             if (!out.address) {
                 out.address = myAddr
             }
             transaction.addOutput(out.address, out.value)
         }
         let unbuildedTx = transaction.buildIncomplete().toHex()
-        transaction.inputs.map(value => {
-            console.log('MAPPED INPUT')
-            console.log(value)
-        })
-        transaction.tx.ins.forEach(value => {
-            console.log('PROBABLY TX INPUT: ')
-            console.log(value)
-        })
+        // transaction.inputs.map(value => {
+        //     console.log('MAPPED INPUT')
+        //     console.log(value)
+        // })
+        // transaction.tx.ins.forEach(value => {
+        //     console.log('PROBABLY TX INPUT: ')
+        //     console.log(value)
+        // })
     
         let hashArray: Array<Buffer> = []
         console.log(utxos)
         let dataForHash = ReplaceAt(unbuildedTx + '01000000', '00000000ff', '00000019' + utxos[0].script + 'ff', unbuildedTx.indexOf('00000000ff', 0), unbuildedTx.indexOf('00000000ff', 0) + 50)
-        console.log('DATA FOR HASH: ', dataForHash)
     
     
         /************ lib dll *****************/
@@ -285,18 +281,14 @@ async function createTransaction(
         /************ lib dll ******************/
     
         let data = await getSignaturePCSC(0, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.inputs.length, course, fee / 100000000, balance)
-        console.log("data after pcsc")
-        console.log(data)
-        console.log(data.toString())
         if (data[0] == undefined) {
-            throw new Error("Error from hw wallet")
+            return
         }
-        if (data[0].length !== 1) {
+        if (data[0]?.length !== 1) {
             transaction.inputs.forEach((input, index) => {
                 unbuildedTx = unbuildedTx.replace('00000000ff', '000000' + data[index].toString('hex') + 'ff')
             })
             return sendTransaction(unbuildedTx)
-            //transaction.addOutput(paymentAdress, transactionAmount)
         }
 }
 
@@ -317,6 +309,13 @@ export async function handleBitcoin(
     course: number, 
     balance: number
     ) {
+        // validate address
+        try {
+            address.toOutputScript(paymentAdress)
+        } catch (err) {
+            console.log(err.meessage)
+            throw Error("Invalid address")
+        }
         const lastTx = await getUnspentTransactions(myAddr)
         const utxos = lastTx.txrefs
         amount = toSatoshi(amount)

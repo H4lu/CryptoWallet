@@ -1,4 +1,5 @@
 process.on('uncaughtException', err => {
+    console.log("Uncaught exception: ")
     console.log(err.message)
     console.log(err.stack)
 })
@@ -54,8 +55,14 @@ process.on('message', async (msg: PCSCMessage, _) => {
             try {
                 await sendTransaction(data.currency, data.paymentAddress, data.amount, data.fee, data.course, data.cryptoBalance);
             } catch (err) {
+                console.log("send transaction error: ")
                 console.log(err.message)
-                process.send({type: PCSCMessageType.ERROR, data: err})
+                console.log(err.stack)
+                if (err.response) { // axios error
+                    process.send({type: PCSCMessageType.ERROR, data: {errorMessage: JSON.stringify(err.response.data)}})
+                    return
+                }
+                process.send({type: PCSCMessageType.ERROR, data: {errorMessage: err.message}})
             }
             break
         }
@@ -172,7 +179,7 @@ const updateAll = async () => {
         process.send({type: PCSCMessageType.UPDATED})
     } catch(err) {
         console.log(err.message)
-        process.send({type: PCSCMessageType.ERROR, data: err})
+        process.send({type: PCSCMessageType.ERROR, data: {errorMessage: err.message}})
     }
 }
 
@@ -188,7 +195,7 @@ const initAll = async () => {
     } catch(err) {
         console.log("init all error")
         console.log(err.message)
-        process.send({type: PCSCMessageType.ERROR, data: err})
+        process.send({type: PCSCMessageType.ERROR, data: {errorMessage: err.message}})
     }
 }
 

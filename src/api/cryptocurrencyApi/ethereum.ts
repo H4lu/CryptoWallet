@@ -281,7 +281,7 @@ async function createTransaction(
             1, hashArray, paymentAdress, amount, 1, course, fee, balance
         )
         if (data[0] == undefined) {
-            throw new Error("Error from hw wallet")
+            return
         }
         if (data[0].length !== 1) {
             // FIXME: remove this kostil after 
@@ -303,14 +303,14 @@ async function createTransaction(
            
             const serTx = '0x' + tx.serialize().toString('hex');
             return web3.eth.sendSignedTransaction(serTx)
-                // .on('receipt', console.log)
-                // .on('transactionHash', (hash) => {
-                //     console.log('Transaction sended: ' + hash)
-                // })
-                // .on('error', async error => {
-                //     console.log(error)
-                //     remote.dialog.showErrorBox("Error",error.message)
-                // });
+                .on('receipt', console.log)
+                .on('transactionHash', (hash) => {
+                    console.log('Transaction sended: ' + hash)
+                })
+                .on('error', async error => {
+                    console.log(error)
+                    throw error
+                });
         }
 }
 

@@ -1,7 +1,7 @@
 import React, {FC, useState, useEffect} from 'react';
 import {DisplayTransactionCurrency, FeeTypes, toDisplayCurrencyName} from '../../api/cryptocurrencyApi/utils'
 import {Link} from "react-router-dom";
-import {ipcRenderer} from 'electron'
+import {ipcRenderer, remote} from 'electron'
 import {PCSCMessage} from "../../pcsc_helpers";
 
 
@@ -56,6 +56,18 @@ export const SendWindow: FC<SendProps> = (props) => {
     }
 
     const handleClick = async () => {
+        if (paymentAddress == "") {
+            remote.dialog.showErrorBox("Error", "No address provied")
+            return
+        }
+        if (amount <= 0) {
+            remote.dialog.showErrorBox("Error", "No amount provided")
+            return
+        }
+        if (amount >= props.cryptoBalance) {
+            remote.dialog.showErrorBox("Error", "There is no available amount")
+            return
+        }
         if (paymentAddress != '') {
             const msg : PCSCMessage = {
                 type: 12,
@@ -70,15 +82,6 @@ export const SendWindow: FC<SendProps> = (props) => {
             }
             ipcRenderer.send('pcsc', msg)
         }
-
-        // try {
-        //     // await sendTransaction(
-        //     //     props.currency, paymentAddress, amount, feeType, props.course, props.cryptoBalance
-        //     //     )
-        // } catch(err) {
-        //     console.error(err)
-        //     remote.dialog.showErrorBox("Send transaction error", err.message)
-        // }
     }
 
     
@@ -128,9 +131,7 @@ export const SendWindow: FC<SendProps> = (props) => {
                 </div>
                 <div className='buttonSendCancelFlex'>
                     <div className='buttonSendBig'>
-                        <Link to = '/main'>
-                            <button type='submit' className='button-send-transaction' onClick={handleClick}/>
-                        </Link>
+                        <button type='submit' className='button-send-transaction' onClick={handleClick}/>
                     </div>
                     <div className='buttonCancelBig'>
                         <Link to={'/currency-carousel'}>

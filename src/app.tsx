@@ -21,7 +21,7 @@ import {SendWindow} from './components/windows/sendWindow'
 import {
     AddressChange,
     ConnectionStatus,
-    DisplayBalanceStatus,
+    DisplayBalanceStatus, ErrorMessage,
     PCSCMessage,
     PCSCMessageType,
     TransactionsStatus,
@@ -469,7 +469,7 @@ export default class App extends Component<{}, AppState> {
                     break
                 }
                 case 2: { // ERROR
-                    remote.dialog.showErrorBox("Error", (message.data as Error).message)
+                    remote.dialog.showErrorBox("Error", (message.data as ErrorMessage).errorMessage)
                     break
                 }
                 case 11: { // UPDATED

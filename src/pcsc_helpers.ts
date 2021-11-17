@@ -40,6 +40,10 @@ export type AddressChange = {
     address: string
 }
 
+export type ErrorMessage = {
+    errorMessage: string
+}
+
 // Do not change this values, they are hardcoded in app.tsx for some reason
 export enum PCSCMessageType {
     WALLET_STATUS_CHANGE = 0 ,
@@ -58,7 +62,7 @@ export enum PCSCMessageType {
     ADDRESS_CHANGE = 13
 }
 
-export type PCSCMessageData = WalletStatus | ConnectionStatus | Error | DisplayBalanceStatus | TransactionsStatus | Array<Erc20DisplayToken> | Array<ChartData> | Array<HwBalance> | Array<Array<DisplayTransaction>> | TransactionRequest | AddressChange
+export type PCSCMessageData = WalletStatus | ConnectionStatus | ErrorMessage | DisplayBalanceStatus | TransactionsStatus | Array<Erc20DisplayToken> | Array<ChartData> | Array<HwBalance> | Array<Array<DisplayTransaction>> | TransactionRequest | AddressChange
 
 export type PCSCMessage = {
     type: PCSCMessageType

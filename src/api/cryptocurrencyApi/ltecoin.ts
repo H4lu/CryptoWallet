@@ -1,4 +1,4 @@
-import {TransactionBuilder, networks} from 'bitcoinjs-lib'
+import {TransactionBuilder, networks, address} from 'bitcoinjs-lib'
 import axios from 'axios'
 import {parseBTCLikeTransactions, DisplayTransaction} from "./utils"
 import {getAddressPCSC} from '../hardwareApi/getAddress'
@@ -166,6 +166,9 @@ async function createTransaction(
         /************ lib dll ******************/
     
         let data = await getSignaturePCSC(2, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.inputs.length, course, fee / 100000000, balance)
+        if (data[0] == undefined) {
+            return
+        }
         if (data[0].length !== 1) {
             transaction.inputs.forEach((input, index) => {
     
@@ -200,6 +203,12 @@ export async function handleLitecoin(
     course: number, 
     balance: number
     ) {
+        try {
+            address.toOutputScript(paymentAdress, networks.litecoin)
+        } catch (err) {
+            console.log(err.message)
+            throw Error("invalid address")
+        }
         const lastTx = await getLastTransactionData()
         
         if (lastTx.status === 'success') {
@@ -210,11 +219,9 @@ export async function handleLitecoin(
                 utxos.push(lastTx.data.txs[utxo])
             }
             amount = toSatoshi(amount)
-            return createTransaction(paymentAdress, amount, transactionFee, utxos, course, balance).catch(err => {
-                console.log(err)
-            })
+            return createTransaction(paymentAdress, amount, transactionFee, utxos, course, balance)
         } else {
-            throw new Error("Error provided by the internet connection")
+            throw Error("Error provided by the internet connection")
         }
    
 }
