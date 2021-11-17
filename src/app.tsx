@@ -43,6 +43,7 @@ import {ipcRenderer, remote} from "electron";
 import {FirmwareWindow} from './components/windows/firmwareWindow';
 import {SendWindow} from './components/windows/sendWindow'
 import {
+    AddressChange,
     ConnectionStatus,
     DisplayBalanceStatus,
     PCSCMessage,
@@ -54,6 +55,9 @@ import {
 //import {getFee} from "./api/cryptocurrencyApi/bitcoin";
 
 interface AppState {
+    BTCAddress: string,
+    ETHAddress: string,
+    LTCAddress: string,
     BTCBalance: number,
     ETHBalance: number,
     LTCBalance: number,
@@ -94,6 +98,9 @@ interface AppState {
 }
 
 const mockState: AppState = {
+    BTCAddress: "",
+    ETHAddress: "",
+    LTCAddress: "",
     BTCBalance: 0.02,
     ETHBalance: 0.1,
     LTCBalance: 0.3,
@@ -134,6 +141,9 @@ const mockState: AppState = {
 }
 
 const initState: AppState = {
+    BTCAddress: "",
+    ETHAddress: "",
+    LTCAddress: "",
     BTCBalance: 0.00,
     ETHBalance: 0.00,
     LTCBalance: 0.00,
@@ -251,7 +261,7 @@ export default class App extends Component<{}, AppState> {
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: SidebarLeft,
-            main: () => <BtcRecieveWindow stateSR = {this.setStateSR}/>
+            main: () => <BtcRecieveWindow stateSR = {this.setStateSR} address={this.state.BTCAddress}/>
         },
         {
             path: '/ltc-window-send',
@@ -273,7 +283,7 @@ export default class App extends Component<{}, AppState> {
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: SidebarLeft,
-            main: () => <LtcRecieveWindow stateSR = {this.setStateSR}/>
+            main: () => <LtcRecieveWindow stateSR = {this.setStateSR} address={this.state.LTCAddress}/>
         },
         {
             path: '/eth-window-send',
@@ -295,7 +305,7 @@ export default class App extends Component<{}, AppState> {
             exact: true,
             sidebar: () => <SidebarContent/>,
             sidebarLeft: SidebarLeft,
-            main: () => <EthRecieveWindow stateSR = {this.setStateSR}/>
+            main: () => <EthRecieveWindow stateSR = {this.setStateSR} address={this.state.ETHAddress}/>
         },
         {
             path: '/history-carousel',
@@ -351,7 +361,6 @@ export default class App extends Component<{}, AppState> {
 
         this.resetRedirect = this.resetRedirect.bind(this)
         this.redirectToTransactionsuccess = this.redirectToTransactionsuccess.bind(this)
-        this.initAll = this.initAll.bind(this)
         this.getBalances = this.getBalances.bind(this)
         this.getTransactions = this.getTransactions.bind(this)
         this.updateData = this.updateData.bind(this)
@@ -360,14 +369,12 @@ export default class App extends Component<{}, AppState> {
         this.changeBalance = this.changeBalance.bind(this)
         this.setRedirectToMain = this.setRedirectToMain.bind(this)
         this.getRates = this.getRates.bind(this)
-        this.setValues = this.setValues.bind(this)
         this.setActiveCurrency = this.setActiveCurrency.bind(this)
         this.setStateSR = this.setStateSR.bind(this)
         this.setNumTransactions = this.setNumTransactions.bind(this)
         this.setChartLen = this.setChartLen.bind(this)
         this.updateErc20Tokens = this.updateErc20Tokens.bind(this)
         this.updateHwWalletInfo = this.updateHwWalletInfo.bind(this)
-        this.initCryptoAddresses = this.initCryptoAddresses.bind(this)
     }
 
     setChartLen(len: number) {
@@ -487,14 +494,10 @@ export default class App extends Component<{}, AppState> {
                 }
                 case 6: {
                     await this.getRates()
-                    const redirect =  () => {
-                        this.setRedirectToMain()
-                        this.setValues()
-                    }
                     console.log("upd hw info")
                     await this.updateHwWalletInfo()
                     console.log("redirecting")
-                    redirect()
+                    this.setRedirectToMain()
                     break
                 }
                 case 2: {
@@ -506,48 +509,35 @@ export default class App extends Component<{}, AppState> {
                     await this.updateHwWalletInfo()
                     break
                 }
+                case 13: {
+                    const data = message.data as AddressChange
+                    switch (data.currency) {
+                        case "BTC": {
+                            console.log("set btc address: ", data.address)
+                            this.setState({BTCAddress: data.address})
+                            break
+                        }
+                        case "ETH": {
+                            console.log("set eth address: ", data.address)
+                            this.setState({ETHAddress: data.address})
+                            break
+                        }
+                        case "LTC": {
+                            console.log("set ltc address: ", data.address)
+                            this.setState({LTCAddress: data.address})
+                            break
+                        }
+                        default: return
+                    }
+                    break
+                }
                 default: return
-                        
             }
         })
     }
 
     setRedirectToMain() {
         this.setState({redirectToMain: true})
-    }
-
-    async initAll() {
-        try {
-            if (this.state.allowInit) {
-                this.setState({allowInit: false})
-                const redirect =  () => {
-                    this.setRedirectToMain()
-                    this.setValues()
-                }
-                await this.initCryptoAddresses()
-                await Promise.all([this.getBalances(), this.getTransactions(), this.updateErc20Tokens()])
-            //    await Promise.all([this.setChartBTC(), this.getRates()])
-                await Promise.all([redirect(), this.updateHwWalletInfo()])
-            }
-        } catch(err) {
-            console.log(err)
-            remote.dialog.showErrorBox("Initialization error", err.message)
-        }
-    }
-
-    setValues() {
-        // setBTCBalance(this.state.BTCBalance)
-        // setBTCPrice(this.state.BTCPrice)
-        // setETHBalance(this.state.ETHBalance)
-        // setETHPrice(this.state.ETHPrice)
-        // setLTCBalance(this.state.LTCBalance)
-        // setLTCPrice(this.state.LTCPrice)
-        // setXRPBalance(this.state.XRPBalance)
-        // setXRPPrice(this.state.XRPPrice)
-    }
-
-    async initCryptoAddresses() {
-      //  await Promise.all([initBitcoinAddress(), initEthereumAddress(), initLitecoinAddress()])
     }
 
     async updateHwWalletInfo() {
@@ -565,14 +555,6 @@ export default class App extends Component<{}, AppState> {
         }
         console.log("msg to send: " , msg)
         ipcRenderer.send('pcsc', msg)
-        // const updateHwStatus = async () => UpdateHWStatusPCSC(
-        //     this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance, 
-        //     this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions
-        // )
-        // const updateHwTransactions = async () => updateTransactionsPCSC(
-        //         this.state.BTCLastTx, this.state.ETHLastTx, this.state.LTCLastTx, this.state.XRPLastTx
-        // )
-        // await Promise.all([updateHwStatus(), updateHwTransactions()])
     }
 
     async updateData() {

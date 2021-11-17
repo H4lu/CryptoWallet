@@ -2,7 +2,6 @@ import {TransactionBuilder, networks, Transaction, ECPair, address, script} from
 import axios from 'axios'
 import {getSignaturePCSC} from '../hardwareApi/getSignature'
 import {getAddressPCSC} from '../hardwareApi/getAddress'
-
 import  {
     transactionBytes,
     getTestnetAddressBTC, 
@@ -50,7 +49,6 @@ interface TransactionTarget {
     address: string,
     value: number
 }
-
 
 const network = networks.bitcoin
 export const NETWORK: Networks = Networks.MAIN
@@ -111,7 +109,7 @@ export const setMyPubKey = (pubKey: Buffer) => {
     }
 }
 
-export const getBitcoinAddress = () => {
+export const getBitcoinAddress = (): string => {
     return myAddr
 }
 

@@ -6,7 +6,13 @@ process.on('uncaughtException', err => {
 import {sendTransaction} from "./core/sendTransaction";
 import {UpdateHWStatusPCSC, updateTransactionsPCSC} from "./api/hardwareApi/updateHwStatus";
 import pcsclite from "@pokusew/pcsclite";
-import {getBitcoinLastTx, getBTCBalance, getChartBTC, initBitcoinAddress} from "./api/cryptocurrencyApi/bitcoin";
+import {
+    getBitcoinAddress,
+    getBitcoinLastTx,
+    getBTCBalance,
+    getChartBTC,
+    initBitcoinAddress
+} from "./api/cryptocurrencyApi/bitcoin";
 import {
     getAddressErc20Tokens,
     getETHBalance,
@@ -14,7 +20,12 @@ import {
     getEthereumLastTx,
     initEthereumAddress
 } from "./api/cryptocurrencyApi/ethereum";
-import {getLitecoinLastTx, getLTCBalance, initLitecoinAddress} from "./api/cryptocurrencyApi/ltecoin";
+import {
+    getLitecoinAddress,
+    getLitecoinLastTx,
+    getLTCBalance,
+    initLitecoinAddress
+} from "./api/cryptocurrencyApi/ltecoin";
 import {getRippleLastTx, getXRPBalance} from "./api/cryptocurrencyApi/ripple";
 import {getInfoPCSC} from "./api/hardwareApi/getWalletInfo";
 import {setReader} from "./api/hardwareApi/reader";
@@ -57,6 +68,9 @@ let allowInit = true;
 
 const initCryptoAddresses = async () => {
     await Promise.all([initBitcoinAddress(), initEthereumAddress(), initLitecoinAddress()])
+    process.send({type: PCSCMessageType.ADDRESS_CHANGE, data: {currency: "BTC", address: getBitcoinAddress()}})
+    process.send({type: PCSCMessageType.ADDRESS_CHANGE, data: {currency: "ETH", address: getEthereumAddress()}})
+    process.send({type: PCSCMessageType.ADDRESS_CHANGE, data: {currency: "LTC", address: getLitecoinAddress()}})
 }
 
 const getBalances = async () => {

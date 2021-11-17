@@ -3,13 +3,16 @@ import createQR from "../../core/createQR";
 import {clipboard, shell} from 'electron'
 import {Link} from "react-router-dom";
 
-interface ILTCRecieveState {
-    address: string,
-    qrcodeAddress: string,
-
+interface LtcRecieveState {
+    qrcodeAddress: string
 }
 
-export class LtcRecieveWindow extends Component<any, ILTCRecieveState> {
+interface LtcReceiveProps {
+    address: string,
+    stateSR: (arg: boolean) => void
+}
+
+export class LtcRecieveWindow extends Component<LtcReceiveProps, LtcRecieveState> {
     constructor(props: any) {
         super(props)
 
@@ -18,25 +21,21 @@ export class LtcRecieveWindow extends Component<any, ILTCRecieveState> {
 
         this.props.stateSR(true)
         this.state = {
-            address: "",
-            qrcodeAddress: '',
+            qrcodeAddress: ''
         }
     }
 
     componentWillMount() {
-        this.setState({qrcodeAddress: createQR(this.state.address)})
-        console.log('PROPERTY: ' + this.props.lastTx)
+        this.setState({qrcodeAddress: createQR(this.props.address)})
     }
 
-
     handleCopyClick() {
-        clipboard.writeText(this.state.address)
+        clipboard.writeText(this.props.address)
     }
 
     openUrl() {
-        shell.openExternal('https://live.blockcypher.com/ltc/address/' + this.state.address)
+        shell.openExternal('https://live.blockcypher.com/ltc/address/' + this.props.address)
     }
-
 
     render() {
         return (
@@ -45,7 +44,7 @@ export class LtcRecieveWindow extends Component<any, ILTCRecieveState> {
                     <div className='iconCryptoCurrencyLTC'/>
                     <img src={this.state.qrcodeAddress} className='address-qrcode'/>
                     <div className='YOURB_0ITCOIN_ADDRESS'>YOUR LITCOIN ADDRESS</div>
-                    <div className='YOURB_0ITCOIN_ADDRESS_crypto'>{this.state.address}</div>
+                    <div className='YOURB_0ITCOIN_ADDRESS_crypto'>{this.props.address}</div>
                     <div className='flex_button_recieve'>
                         <button className='copy_to_buffer' onClick={this.handleCopyClick}/>
                         <button className='sent_to_print'/>

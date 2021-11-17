@@ -4,12 +4,15 @@ import {clipboard, shell} from 'electron'
 import {Link} from "react-router-dom";
 
 interface IETHRecieveState {
-    address: string,
-    qrcodeAddress: string,
-
+    qrcodeAddress: string
 }
 
-export class EthRecieveWindow extends Component<any, IETHRecieveState> {
+interface EthReceiveProps {
+    address: string,
+    stateSR: (arg: boolean) => void
+}
+
+export class EthRecieveWindow extends Component<EthReceiveProps, IETHRecieveState> {
     constructor(props: any) {
         super(props)
 
@@ -18,25 +21,22 @@ export class EthRecieveWindow extends Component<any, IETHRecieveState> {
 
         this.props.stateSR(true)
         this.state = {
-            address: "".toLowerCase(),
             qrcodeAddress: '',
         }
     }
 
     componentWillMount() {
-        this.setState({qrcodeAddress: createQR(this.state.address)})
-        console.log('PROPERTY: ' + this.props.lastTx)
+        this.setState({qrcodeAddress: createQR(this.props.address)})
     }
 
 
     handleCopyClick() {
-        clipboard.writeText(this.state.address)
+        clipboard.writeText(this.props.address)
     }
 
     openUrl() {
-        shell.openExternal('https://etherscan.io/address/' + this.state.address)
+        shell.openExternal('https://etherscan.io/address/' + this.props.address)
     }
-
 
     render() {
         return (
@@ -45,7 +45,7 @@ export class EthRecieveWindow extends Component<any, IETHRecieveState> {
                     <div className='iconCryptoCurrencyETH'/>
                     <img src={this.state.qrcodeAddress} className='address-qrcode'/>
                     <div className='YOURB_0ITCOIN_ADDRESS'>YOUR ETHEREUM ADDRESS</div>
-                    <div className='YOURB_0ITCOIN_ADDRESS_crypto'>{this.state.address}</div>
+                    <div className='YOURB_0ITCOIN_ADDRESS_crypto'>{this.props.address}</div>
                     <div className='flex_button_recieve'>
                         <button className='copy_to_buffer' onClick={this.handleCopyClick}/>
                         <button className='sent_to_print'/>

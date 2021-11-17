@@ -1,6 +1,5 @@
 import {DisplayTransaction, DisplayTransactionCurrency, Erc20DisplayToken} from "./api/cryptocurrencyApi/utils";
 
-
 export type WalletStatus = {
     walletStatus: number
 }
@@ -36,6 +35,11 @@ export type TransactionRequest = {
 
 export type HwBalance = number
 
+export type AddressChange = {
+    currency: DisplayTransactionCurrency,
+    address: string
+}
+
 // Do not change this values, they are hardcoded in app.tsx for some reason
 export enum PCSCMessageType {
     WALLET_STATUS_CHANGE = 0 ,
@@ -50,10 +54,11 @@ export enum PCSCMessageType {
     UPDATE_HW_TRANSACTIONS = 9,
     UPDATE = 10,
     UPDATED = 11,
-    TRANSACTION_REQUEST = 12
+    TRANSACTION_REQUEST = 12,
+    ADDRESS_CHANGE = 13
 }
 
-export type PCSCMessageData =  WalletStatus | ConnectionStatus | Error | DisplayBalanceStatus | TransactionsStatus | Array<Erc20DisplayToken> | Array<ChartData> | Array<HwBalance> | Array<Array<DisplayTransaction>> | TransactionRequest
+export type PCSCMessageData = WalletStatus | ConnectionStatus | Error | DisplayBalanceStatus | TransactionsStatus | Array<Erc20DisplayToken> | Array<ChartData> | Array<HwBalance> | Array<Array<DisplayTransaction>> | TransactionRequest | AddressChange
 
 export type PCSCMessage = {
     type: PCSCMessageType

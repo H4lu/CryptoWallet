@@ -4,13 +4,16 @@ import {clipboard, shell} from 'electron'
 import {Link} from "react-router-dom";
 
 interface BtcReceiveState {
-    address: string,
-    qrcodeAddress: string,
+    qrcodeAddress: string
+}
 
+interface BtcReceiveProps {
+    address: string,
+    stateSR: (arg: boolean) => void
 }
 
 // TODO: reuse for ltc and others
-export class BtcRecieveWindow extends Component<any, BtcReceiveState> {
+export class BtcRecieveWindow extends Component<BtcReceiveProps, BtcReceiveState> {
     constructor(props: any) {
         super(props)
 
@@ -19,24 +22,22 @@ export class BtcRecieveWindow extends Component<any, BtcReceiveState> {
 
         this.props.stateSR(true)
         this.state = {
-            address: "",
             qrcodeAddress: '',
         }
     }
 
     componentWillMount() {
-        this.setState({qrcodeAddress: createQR(this.state.address)})
+        this.setState({qrcodeAddress: createQR(this.props.address)})
     }
 
 
     handleCopyClick() {
-        clipboard.writeText(this.state.address)
+        clipboard.writeText(this.props.address)
     }
 
     openUrl() {
-        shell.openExternal('https://live.blockcypher.com/btc/address/' + this.state.address)
+        shell.openExternal('https://live.blockcypher.com/btc/address/' + this.props.address)
     }
-
 
     render() {
         return (
@@ -45,7 +46,7 @@ export class BtcRecieveWindow extends Component<any, BtcReceiveState> {
                     <div className='iconCryptoCurrencyBTC'/>
                     <img src={this.state.qrcodeAddress} className='address-qrcode'/>
                     <div className='YOURB_0ITCOIN_ADDRESS'>YOUR BITCOIN ADDRESS</div>
-                    <div className='YOURB_0ITCOIN_ADDRESS_crypto'>{this.state.address}</div>
+                    <div className='YOURB_0ITCOIN_ADDRESS_crypto'>{this.props.address}</div>
                     <div className='flex_button_recieve'>
                         <button className='copy_to_buffer' onClick={this.handleCopyClick}/>
                         <button className='sent_to_print'/>
