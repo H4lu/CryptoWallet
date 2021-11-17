@@ -6,30 +6,6 @@ import {SidebarContent} from './components/sidebarContent'
 import './index.css'
 import MainContent from './components/windows/mainWindow'
 import {WalletCarousel} from './components/walletCarousel'
-// import {
-//     getBitcoinLastTx,
-//     initBitcoinAddress,
-//     getBTCBalance,
-//     setBTCBalance,
-//     setBTCPrice, getChartBTC, getFee
-// } from './api/cryptocurrencyApi/bitcoin'
-// import {
-//     getLTCBalance,
-//     initLitecoinAddress,
-//     getLitecoinLastTx,
-//     setLTCBalance,
-//     setLTCPrice
-// } from './api/cryptocurrencyApi/ltecoin'
-// import {
-//     getETHBalance,
-//     initEthereumAddress,
-//     getEthereumLastTx,
-//     setETHBalance,
-//     setETHPrice,
-//     Erc20DisplayToken,
-//     getAddressErc20Tokens,
-//     getEthereumAddress
-// } from './api/cryptocurrencyApi/ethereum'
 import {getCurrencyRate} from './core/setCurrencyRate'
 import {StartWindow} from './components/windows/startWindow'
 import {SidebarLeft} from "./components/sidebarLeft";
@@ -39,7 +15,7 @@ import {EthRecieveWindow} from "./components/windows/ethReceiveWindow";
 import {CarouselHistory} from "./components/carouselHistory";
 import {DisplayTransaction, DisplayTransactionCurrency, Erc20DisplayToken} from './api/cryptocurrencyApi/utils';
 import {ipcRenderer, remote} from "electron";
-// import { ERC20Window } from './components/windows/erc20Window';
+import { ERC20Window } from './components/windows/erc20Window';
 import {FirmwareWindow} from './components/windows/firmwareWindow';
 import {SendWindow} from './components/windows/sendWindow'
 import {
@@ -339,13 +315,13 @@ export default class App extends Component<{}, AppState> {
                                         })}
             />
         },
-        // {
-        //     path: '/erc20-window',
-        //     exact: true,
-        //     sidebar: () => <SidebarContent/>,
-        //     sidebarLeft: SidebarLeft,
-        //     main: () => <ERC20Window data={this.state.erc20Tokens}/>
-        // },
+        {
+            path: '/erc20-window',
+            exact: true,
+            sidebar: () => <SidebarContent/>,
+            sidebarLeft: SidebarLeft,
+            main: () => <ERC20Window data={this.state.erc20Tokens}/>
+        },
         {
             path: '/firmware-window',
             exact: true,
@@ -373,7 +349,6 @@ export default class App extends Component<{}, AppState> {
         this.setStateSR = this.setStateSR.bind(this)
         this.setNumTransactions = this.setNumTransactions.bind(this)
         this.setChartLen = this.setChartLen.bind(this)
-        this.updateErc20Tokens = this.updateErc20Tokens.bind(this)
         this.updateHwWalletInfo = this.updateHwWalletInfo.bind(this)
     }
 
@@ -412,11 +387,6 @@ export default class App extends Component<{}, AppState> {
         this.setState({connection: false})
     }
 
-    async updateErc20Tokens () {
-        // const actualTokens = await getAddressErc20Tokens(getEthereumAddress())
-        // this.setState({erc20Tokens: actualTokens})
-    }
-
     async componentDidMount() {
         // this.setState({connection: true})
         // this.setState({redirectToMain: true})
@@ -425,15 +395,15 @@ export default class App extends Component<{}, AppState> {
             console.log('ipc pcsc_status')
             console.log(message)
             switch (message.type) {
-                case 0: {
+                case 0: { // WALLET_STATUS_CHANGE
                     this.setState({walletStatus: (message.data as WalletStatus).walletStatus})
                     break
                 }
-                case 1: {
+                case 1: { // CONNECTION_STATUS_CHANGE
                     this.setState({connection: (message.data as ConnectionStatus).isConnected})
                     break
                 }
-                case 3: {
+                case 3: { // BALANCE_CHANGE
                     const data = message.data as DisplayBalanceStatus
                     switch (data.currency) {
                         case 'BTC': {
@@ -459,7 +429,7 @@ export default class App extends Component<{}, AppState> {
                     }
                     break
                 }
-                case 4: {
+                case 4: { // TRANSACTIONS_CHANGE
                     const data = message.data as TransactionsStatus
                     switch(data.currency) {
                         case 'BTC': {
@@ -484,46 +454,42 @@ export default class App extends Component<{}, AppState> {
                     }
                     break
                 }
-                case 7: {
+                case 7: { // CHART_DATA_CHANGE
                     this.setState({chartBTC: message.data})
                     break
                 }
-                case 5: {
+                case 5: { // ERC20_CHANGE
                     this.setState({erc20Tokens: message.data})
                     break
                 }
-                case 6: {
+                case 6: { // INITIALIZED
                     await this.getRates()
-                    console.log("upd hw info")
                     await this.updateHwWalletInfo()
-                    console.log("redirecting")
                     this.setRedirectToMain()
                     break
                 }
-                case 2: {
+                case 2: { // ERROR
                     remote.dialog.showErrorBox("Error", (message.data as Error).message)
                     break
                 }
-                case 11: {
+                case 11: { // UPDATED
+                    console.log("GOT UPDATED SIGNAL")
                     await this.getRates()
                     await this.updateHwWalletInfo()
                     break
                 }
-                case 13: {
+                case 13: { // ADDRESS_CHANGE
                     const data = message.data as AddressChange
                     switch (data.currency) {
                         case "BTC": {
-                            console.log("set btc address: ", data.address)
                             this.setState({BTCAddress: data.address})
                             break
                         }
                         case "ETH": {
-                            console.log("set eth address: ", data.address)
                             this.setState({ETHAddress: data.address})
                             break
                         }
                         case "LTC": {
-                            console.log("set ltc address: ", data.address)
                             this.setState({LTCAddress: data.address})
                             break
                         }
@@ -547,13 +513,13 @@ export default class App extends Component<{}, AppState> {
             data: [this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance,
                   this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions]
         }
-        console.log("msg to send: " , msg)
+        console.log("up hw info msg to send: " , msg)
         ipcRenderer.send('pcsc', msg)
         msg = {
             type: 9,
             data: [this.state.BTCLastTx, this.state.ETHLastTx, this.state.LTCLastTx, this.state.XRPLastTx]
         }
-        console.log("msg to send: " , msg)
+        console.log("upd hw info msg to send: " , msg)
         ipcRenderer.send('pcsc', msg)
     }
 

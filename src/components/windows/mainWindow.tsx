@@ -79,8 +79,6 @@ export default class MainContent extends Component<MainContentProps, MainContent
                 }
                 case 'ex_ETH': {
                     // let arr = await getETHBalanceTrans(this.state.exAddress)
-                    // console.log('3', arr[0])
-                    // console.log('4', arr[1])
                     // this.setState({balance: (arr[0]) + ' ETH'})
                     // this.setState({transactions: (arr[1]).toString()})
                     break
