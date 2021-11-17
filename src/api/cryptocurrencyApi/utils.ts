@@ -279,10 +279,13 @@ export function btcLikeToDisplayTransaction(
   }
 }
 
-
 export function getTestnetAddressBTC(pubkey: Buffer): string {
+    console.log("generate pk from buffer", pubkey.toString("hex"))
     const keyPair = ECPair.fromPublicKeyBuffer(pubkey, networks.testnet)
-    return keyPair.getAddress()
+    console.log("generated pk", keyPair.getPublicKeyBuffer().toString("hex"))
+    const address =  keyPair.getAddress()
+    console.log("address: ", address)
+    return address
 }
 
 export function inputBytes (input: any) {

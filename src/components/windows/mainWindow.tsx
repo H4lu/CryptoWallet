@@ -7,11 +7,13 @@ import React, {Component} from 'react'
 import Chart from "../chart";
 import { DisplayTransaction, DisplayTransactionCurrency } from '../../api/cryptocurrencyApi/utils';
 import { CryptocurrencyCard } from '../cryptocurrencyCard';
+
 interface MainContentState {
     exAddress: string,
     balance: string,
     transactions: string
 }
+
 interface MainContentProps {
     stateSR: (arg: boolean) => void,
     btcBalance: number,
@@ -70,7 +72,7 @@ export default class MainContent extends Component<MainContentProps, MainContent
         if(this.state.exAddress != '') {
             switch (this.classActive) {
                 case 'ex_BTC': {
-                    // let arr = await getBTCBalanceTarns(this.state.exAddress)
+                   // let arr = await getBTCBalanceTarns(this.state.exAddress)
                     // this.setState({balance: (arr[0]).toString() + ' BTC'})
                     // this.setState({transactions: (arr[1]).toString()})
                     break

@@ -3,6 +3,7 @@ process.on('uncaughtException', err => {
     console.log(err.stack)
 })
 
+import {sendTransaction} from "./core/sendTransaction";
 import {UpdateHWStatusPCSC, updateTransactionsPCSC} from "./api/hardwareApi/updateHwStatus";
 import pcsclite from "@pokusew/pcsclite";
 import {getBitcoinLastTx, getBTCBalance, getChartBTC, initBitcoinAddress} from "./api/cryptocurrencyApi/bitcoin";
@@ -17,7 +18,7 @@ import {getLitecoinLastTx, getLTCBalance, initLitecoinAddress} from "./api/crypt
 import {getRippleLastTx, getXRPBalance} from "./api/cryptocurrencyApi/ripple";
 import {getInfoPCSC} from "./api/hardwareApi/getWalletInfo";
 import {setReader} from "./api/hardwareApi/reader";
-import {ChartData, PCSCMessage, PCSCMessageType} from "./pcsc_helpers";
+import {ChartData, PCSCMessage, PCSCMessageType, TransactionRequest} from "./pcsc_helpers";
 
 const PSCS_MANAGER_NOT_RUGGING_ERROR = "(0x8010001d)";
 
@@ -37,6 +38,16 @@ process.on('message', async (msg: PCSCMessage, _) => {
             await updateAll()
             break
         }
+        case PCSCMessageType.TRANSACTION_REQUEST: {
+            const data = msg.data as TransactionRequest
+            try {
+                await sendTransaction(data.currency, data.paymentAddress, data.amount, data.fee, data.course, data.cryptoBalance);
+            } catch (err) {
+                console.log(err.message)
+                process.send({type: PCSCMessageType.ERROR, data: err})
+            }
+            break
+        }
         default: return
     }
 })
@@ -45,11 +56,7 @@ let pcsc = undefined;
 let allowInit = true;
 
 const initCryptoAddresses = async () => {
-    try {
-        await Promise.all([initBitcoinAddress(), initEthereumAddress(), initLitecoinAddress()])
-    } catch(err) {
-        console.log(err.message)
-    }
+    await Promise.all([initBitcoinAddress(), initEthereumAddress(), initLitecoinAddress()])
 }
 
 const getBalances = async () => {
@@ -161,9 +168,11 @@ const initAll = async () => {
             allowInit = false;
             await initCryptoAddresses()
             await Promise.all([getBalances(), getTransactions(), updateErc20Tokens(), sendBtcChartData()])
+            console.log("send initialized")
             process.send({type: PCSCMessageType.INITIALIZED})
         }
     } catch(err) {
+        console.log("init all error")
         console.log(err.message)
         process.send({type: PCSCMessageType.ERROR, data: err})
     }

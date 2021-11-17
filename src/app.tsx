@@ -418,15 +418,15 @@ export default class App extends Component<{}, AppState> {
             console.log('ipc pcsc_status')
             console.log(message)
             switch (message.type) {
-                case PCSCMessageType.WALLET_STATUS_CHANGE: {
+                case 0: {
                     this.setState({walletStatus: (message.data as WalletStatus).walletStatus})
                     break
                 }
-                case PCSCMessageType.CONNECTION_STATUS_CHANGE: {
+                case 1: {
                     this.setState({connection: (message.data as ConnectionStatus).isConnected})
                     break
                 }
-                case PCSCMessageType.BALANCE_CHANGE: {
+                case 3: {
                     const data = message.data as DisplayBalanceStatus
                     switch (data.currency) {
                         case 'BTC': {
@@ -452,7 +452,7 @@ export default class App extends Component<{}, AppState> {
                     }
                     break
                 }
-                case PCSCMessageType.TRANSACTIONS_CHANGE: {
+                case 4: {
                     const data = message.data as TransactionsStatus
                     switch(data.currency) {
                         case 'BTC': {
@@ -485,17 +485,19 @@ export default class App extends Component<{}, AppState> {
                     this.setState({erc20Tokens: message.data})
                     break
                 }
-                case PCSCMessageType.INITIALIZED: {
+                case 6: {
                     await this.getRates()
                     const redirect =  () => {
                         this.setRedirectToMain()
                         this.setValues()
                     }
+                    console.log("upd hw info")
                     await this.updateHwWalletInfo()
+                    console.log("redirecting")
                     redirect()
                     break
                 }
-                case PCSCMessageType.ERROR: {
+                case 2: {
                     remote.dialog.showErrorBox("Error", (message.data as Error).message)
                     break
                 }

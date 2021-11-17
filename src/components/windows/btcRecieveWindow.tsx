@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import createQR from "../../core/createQR";
-// import { getBitcoinAddress } from "../../api/cryptocurrencyApi/bitcoin";
 import {clipboard, shell} from 'electron'
 import {Link} from "react-router-dom";
 
@@ -27,7 +26,6 @@ export class BtcRecieveWindow extends Component<any, BtcReceiveState> {
 
     componentWillMount() {
         this.setState({qrcodeAddress: createQR(this.state.address)})
-        console.log('PROPERTY: ' + this.props.lastTx)
     }
 
 

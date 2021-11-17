@@ -37,24 +37,18 @@ export function getLitecoinAddress() {
     return myAddress
 }
 
-export async function initLitecoinAddress() {
-    return new Promise(async (resolve) => {
-        let status = false
-        while (!status) {
-            let answer = await getAddressPCSC(2)
-            console.log('GOT MYADDR ANSWER', answer)
-            console.log('My addr length', answer.length)
-            if (answer.length > 1 && answer[0].includes('LTC')) {
-                status = true
-                console.log('status after reset', status)
-                setMyAddress(answer[0].substring(3, answer[0].length))
-                console.log("address LTC: ", answer[0].substring(3, answer[0].length))
-                setMyPubKey(answer[1])
-               // setMyAddress(getTestnetAddressBTC(Buffer.from(answer[1])))
-                resolve(0)
-            }
+export const initLitecoinAddress = async () => {
+    let status = false
+    while (!status) {
+        let answer = await getAddressPCSC(2)
+        console.log('GOT MYADDR ANSWER', answer)
+        if (answer.length > 1 && answer[0].includes('LTC')) {
+            status = true
+            setMyAddress(answer[0].substring(3, answer[0].length))
+            console.log("address LTC: ", answer[0].substring(3, answer[0].length))
+            setMyPubKey(answer[1])
         }
-    })
+    }
 }
 
 function setMyAddress(address: string) {
@@ -65,8 +59,7 @@ function setMyAddress(address: string) {
 export function setMyPubKey(pubKey: Buffer) {
     myPubKey[0] = 0x02 + pubKey[64]%2
 
-    for(let i = 0; i < 32; i++)
-    {
+    for(let i = 0; i < 32; i++) {
         myPubKey[i+1] = pubKey[i+1]
     }
 }

@@ -79,9 +79,9 @@ type EthplorerAddressInfo = {
     tokens?: Array<EthplorerErc20Token>
 }
 
-const NETWORK = Networks.MAIN
+const NETWORK = Networks.KOVAN
 //const ethplorerRoot = NETWORK Networks.KOVAN ? "https://kovan-api.ethplorer.io" : "https://api.ethplorer.io"
-const ethplorerRoot = "https://api.ethplorer.io"
+const ethplorerRoot = "https://kovan-api.ethplorer.io"
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://${NETWORK}.infura.io/v3/960cbfb44af74f27ad0e4b070839158a`))
 
 let myAdress = ''
@@ -121,21 +121,18 @@ export function setETHPrice(priceToSet: number) {
     price = priceToSet
 }
 
-export async function initEthereumAddress() {
-    return new Promise(async (resolve) => {
-        let status = false
-        while (!status) {
-            console.log('Status', status)
-            let answer = await getAddressPCSC(1)
-            console.log('GOT MYADDR ANSWER', answer)
-            if (answer.length > 1 && answer[0].includes('ETH')) {
-                status = true
-                console.log('status after reset', status)
-                setMyPubKey(answer[1])
-                resolve(0)
-            }
+export const initEthereumAddress = async () => {
+    let status = false
+    while (!status) {
+        console.log('Status', status)
+        let answer = await getAddressPCSC(1)
+        console.log('GOT MYADDR ANSWER', answer)
+        if (answer.length > 1 && answer[0].includes('ETH')) {
+            status = true
+            console.log('status after reset', status)
+            setMyPubKey(answer[1])
         }
-    })
+    }
 }
 
 export function setMyPubKey(pubKey: Buffer) {

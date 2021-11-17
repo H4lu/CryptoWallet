@@ -25,6 +25,15 @@ export type ChartData = {
     pv: number
 }
 
+export type TransactionRequest = {
+    currency: DisplayTransactionCurrency,
+    paymentAddress: string,
+    amount: number,
+    fee: number,
+    course: number,
+    cryptoBalance: number
+}
+
 export type HwBalance = number
 
 // Do not change this values, they are hardcoded in app.tsx for some reason
@@ -40,10 +49,11 @@ export enum PCSCMessageType {
     UPDATE_HW_BALANCES = 8,
     UPDATE_HW_TRANSACTIONS = 9,
     UPDATE = 10,
-    UPDATED = 11
+    UPDATED = 11,
+    TRANSACTION_REQUEST = 12
 }
 
-export type PCSCMessageData =  WalletStatus | ConnectionStatus | Error | DisplayBalanceStatus | TransactionsStatus | Array<Erc20DisplayToken> | Array<ChartData> | Array<HwBalance> | Array<Array<DisplayTransaction>>
+export type PCSCMessageData =  WalletStatus | ConnectionStatus | Error | DisplayBalanceStatus | TransactionsStatus | Array<Erc20DisplayToken> | Array<ChartData> | Array<HwBalance> | Array<Array<DisplayTransaction>> | TransactionRequest
 
 export type PCSCMessage = {
     type: PCSCMessageType

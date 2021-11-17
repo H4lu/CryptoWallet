@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import createQR from "../../core/createQR";
-// import { getEthereumAddress } from '../../api/cryptocurrencyApi/ethereum'
 import {clipboard, shell} from 'electron'
 import {Link} from "react-router-dom";
 
