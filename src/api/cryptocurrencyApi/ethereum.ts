@@ -72,6 +72,7 @@ type EthplorerEthInfo = {
     balance: number,
     price: boolean
 }
+
 type EthplorerAddressInfo = {
     address: string,
     ETH: EthplorerAddressInfo,
@@ -79,9 +80,9 @@ type EthplorerAddressInfo = {
     tokens?: Array<EthplorerErc20Token>
 }
 
-const NETWORK = Networks.KOVAN
+const NETWORK = Networks.MAIN
 //const ethplorerRoot = NETWORK Networks.KOVAN ? "https://kovan-api.ethplorer.io" : "https://api.ethplorer.io"
-const ethplorerRoot = "https://kovan-api.ethplorer.io"
+const ethplorerRoot = "https://api.ethplorer.io"
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://${NETWORK}.infura.io/v3/960cbfb44af74f27ad0e4b070839158a`))
 
 let myAdress = ''
@@ -91,25 +92,34 @@ let price: number
 
 function getVSignatureOffset(network: Networks): number {
     switch (network) {
-        case Networks.MAIN: return 10
-        case Networks.ROPSTEN: return 14
-        case Networks.KOVAN: return 92
+        case Networks.MAIN:
+            return 10
+        case Networks.ROPSTEN:
+            return 14
+        case Networks.KOVAN:
+            return 92
     }
 }
 
 function getVMin(network: Networks): number {
     switch (network) {
-        case Networks.MAIN: return MainV.MIN
-        case Networks.ROPSTEN: return RopstenV.MIN
-        case Networks.KOVAN: return KovanV.MIN
+        case Networks.MAIN:
+            return MainV.MIN
+        case Networks.ROPSTEN:
+            return RopstenV.MIN
+        case Networks.KOVAN:
+            return KovanV.MIN
     }
 }
 
 function getVMax(network: Networks): number {
     switch (network) {
-        case Networks.MAIN: return MainV.MAX
-        case Networks.ROPSTEN: return RopstenV.MAX
-        case Networks.KOVAN: return KovanV.MAX
+        case Networks.MAIN:
+            return MainV.MAX
+        case Networks.ROPSTEN:
+            return RopstenV.MAX
+        case Networks.KOVAN:
+            return KovanV.MAX
     }
 }
 
@@ -124,12 +134,9 @@ export function setETHPrice(priceToSet: number) {
 export const initEthereumAddress = async () => {
     let status = false
     while (!status) {
-        console.log('Status', status)
         let answer = await getAddressPCSC(1)
-        console.log('GOT MYADDR ANSWER', answer)
         if (answer.length > 1 && answer[0].includes('ETH')) {
             status = true
-            console.log('status after reset', status)
             setMyPubKey(answer[1])
         }
     }
@@ -139,9 +146,7 @@ export function setMyPubKey(pubKey: Buffer) {
     for (let i = 0; i < 64; i++) {
         myPubKey[i] = pubKey[i + 1]
     }
-    console.log('PUB_KEY_ETHEREUM', myPubKey.toString('hex'))
     let address = '0x' + keccak256(myPubKey).substr(24, 40).toLowerCase()
-    console.log('PUB_KEY_ETHEREUM', address)
     setAddress(address)
 }
 
@@ -180,10 +185,10 @@ export async function getAddressErc20Tokens(address: string): Promise<Array<Erc2
 function toErc20DisplayToken(addressInfo: EthplorerAddressInfo): Array<Erc20DisplayToken> {
     return addressInfo
         ?.tokens
-        ?.map(token =>  {
+        ?.map(token => {
             return {
                 name: token.tokenInfo.symbol,
-                address: token.tokenInfo.address, 
+                address: token.tokenInfo.address,
                 amount: parseTokenBalance(token)
             }
         }) ?? []
@@ -202,7 +207,7 @@ function parseTokenBalance(token: EthplorerErc20Token): string {
         console.error(error)
         return "0"
     }
-   
+
 }
 
 function toDisplayTransaction(tx: EthplorerTransaction): DisplayTransaction {
@@ -211,10 +216,10 @@ function toDisplayTransaction(tx: EthplorerTransaction): DisplayTransaction {
     const displayDate = date.getHours() + ':' + ((date.getMinutes() >= 10) ? date.getMinutes() : '0' + date.getMinutes()) + ' ' + ' ' + ' ' + date.getDate() + ' ' + (date.getMonth() + 1) + ' ' + date.getFullYear()
     const amount = tx.value.toString()
     const hash = tx.hash
-    const type = tx.from === myAdress.toLowerCase() ? 
+    const type = tx.from === myAdress.toLowerCase() ?
         DisplayTransactionType.OUTGOING : DisplayTransactionType.INCOMING
     const status = tx.success ?
-        DisplayTransactionStatus.FINISHED : DisplayTransactionStatus.ACTIVE    
+        DisplayTransactionStatus.FINISHED : DisplayTransactionStatus.ACTIVE
     const address = type === DisplayTransactionType.OUTGOING ? tx.to : tx.from
     const currency: DisplayTransactionCurrency = "ETH"
     return {
@@ -240,89 +245,88 @@ export async function getETHBalanceTrans(address: string): Promise<Array<any>> {
 export async function getETHBalance(): Promise<number> {
     const response = await web3.eth.getBalance(myAdress)
     const ethValue = convertFromWei(Number(response))
-    return Number(Number(ethValue).toFixed(8)) 
+    return Number(Number(ethValue).toFixed(8))
 }
 
 export function convertFromWei(amount: number) {
     return web3.utils.fromWei(String(amount), 'ether')
 }
 
-
 async function createTransaction(
-    paymentAdress: string, 
-    amount: number, 
-    gasPrice: number, 
-    gasLimit: number, 
-    course: number, 
+    paymentAdress: string,
+    amount: number,
+    gasPrice: number,
+    gasLimit: number,
+    course: number,
     balance: number
-    ) {
-        const txCount = await web3.eth.getTransactionCount(myAdress)
-        // Получаем порядковый номер транзакции, т.н nonce
-        const gas = (8 * gasPrice).toString()
-        const rawtx = {
-            value: new BN(web3.utils.toWei(amount.toString(), 'ether')),
-            nonce: new BN(txCount),
-            to: paymentAdress,
-            gasPrice: web3.utils.toHex(web3.utils.toWei(gas, 'shannon')),
-            gasLimit: web3.utils.toHex(100000),
-            data: '0x00',
-            v: new BN(getVMin(NETWORK)),
-            r: new BN(0),
-            s: new BN(0)
+) {
+    const txCount = await web3.eth.getTransactionCount(myAdress)
+    // Получаем порядковый номер транзакции, т.н nonce
+    const gas = (8 * gasPrice).toString()
+    const rawtx = {
+        value: new BN(web3.utils.toWei(amount.toString(), 'ether')),
+        nonce: new BN(txCount),
+        to: paymentAdress,
+        gasPrice: web3.utils.toHex(web3.utils.toWei(gas, 'shannon')),
+        gasLimit: web3.utils.toHex(100000),
+        data: '0x00',
+        v: new BN(getVMin(NETWORK)),
+        r: new BN(0),
+        s: new BN(0)
+    }
+
+    const common = new Common({chain: NETWORK})
+    let tx = Transaction.fromTxData(rawtx, {common, freeze: false})
+    const txHash = tx.getMessageToSign(true)
+    const hash = Buffer.concat([Buffer.from([0x20]), txHash])
+    const hashArray = [hash]
+    const fee = (49103 * gasPrice) / 100000000
+    const data = await getSignaturePCSC(
+        1, hashArray, paymentAdress, amount, 1, course, fee, balance
+    )
+    if (data[0] == undefined) {
+        return
+    }
+    if (data[0].length !== 1) {
+        // FIXME: remove this kostil after
+        // https://github.com/ethereumjs/ethereumjs-monorepo/issues/1278
+        // is resolved
+
+        (tx as any).v = new BN(data[0][64] + getVSignatureOffset(NETWORK));
+        (tx as any).r = new BN(data[0].slice(0, 32));
+        (tx as any).s = new BN(data[0].slice(32, 64));
+        (tx as any).chainId = new BN(3);
+
+        // seems like our hw wallet don't calculate v properly
+        if (!myPubKey.equals(tx.getSenderPublicKey())) {
+            console.log("change v");
+            const vMax = getVMax(NETWORK);
+            const vMin = getVMin(NETWORK);
+            (tx as any).v = tx.v.eq(new BN(vMax)) ? new BN(vMin) : new BN(vMax);
         }
-            
-        const common = new Common({chain: NETWORK})
-        let tx = Transaction.fromTxData(rawtx, {common, freeze: false})
-        const txHash = tx.getMessageToSign(true)
-        const hash =  Buffer.concat([Buffer.from([0x20]), txHash])
-        const hashArray = [hash]
-        const fee = (49103 * gasPrice) / 100000000
-        const data = await getSignaturePCSC(
-            1, hashArray, paymentAdress, amount, 1, course, fee, balance
-        )
-        if (data[0] == undefined) {
-            return
-        }
-        if (data[0].length !== 1) {
-            // FIXME: remove this kostil after 
-            // https://github.com/ethereumjs/ethereumjs-monorepo/issues/1278
-            // is resolved
-           
-            (tx as any).v = new BN(data[0][64] + getVSignatureOffset(NETWORK));
-            (tx as any).r = new BN(data[0].slice(0, 32));
-            (tx as any).s = new BN(data[0].slice(32, 64));
-            (tx as any).chainId = new BN(3);
-           
-            // seems like our hw wallet don't calculate v properly
-            if (!myPubKey.equals(tx.getSenderPublicKey())) {
-                console.log("change v");
-                const vMax = getVMax(NETWORK);
-                const vMin = getVMin(NETWORK);
-                (tx as any).v = tx.v.eq(new BN(vMax)) ? new BN(vMin) : new BN(vMax);
-            }
-           
-            const serTx = '0x' + tx.serialize().toString('hex');
-            return web3.eth.sendSignedTransaction(serTx)
-                .on('receipt', console.log)
-                .on('transactionHash', (hash) => {
-                    console.log('Transaction sended: ' + hash)
-                })
-                .on('error', async error => {
-                    console.log(error)
-                    throw error
-                });
-        }
+
+        const serTx = '0x' + tx.serialize().toString('hex');
+        return web3.eth.sendSignedTransaction(serTx)
+            .on('receipt', console.log)
+            .on('transactionHash', (hash) => {
+                console.log('Transaction sended: ' + hash)
+            })
+            .on('error', async error => {
+                console.log(error)
+                throw error
+            });
+    }
 }
 
 export function handleEthereum(
-    paymentAdress: string, 
-    amount: number, 
-    gasPrice: number, 
-    gasLimit: number, 
-    course: number, 
+    paymentAdress: string,
+    amount: number,
+    gasPrice: number,
+    gasLimit: number,
+    course: number,
     balance: number
-    ) {
-        return createTransaction(
-            paymentAdress, amount, gasPrice, gasLimit, course, balance
-            )
+) {
+    return createTransaction(
+        paymentAdress, amount, gasPrice, gasLimit, course, balance
+    )
 }
