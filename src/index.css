@@ -1326,20 +1326,21 @@ input[type=number]::placeholder {
     color: rgba(255, 255, 255, 1);
 }
 
-.flex_button_recieve {
+.flex_button_receive {
     margin-top: 20px;
-    margin-left: 50px;
     display: flex;
+    align-content: center;
+    justify-self: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 10vh;
 }
 
 .copy_to_buffer {
-    order: 1;
     background: url('../static/copyToBuffer_p.svg') no-repeat center;
     border: 0px solid black;
     height: 60px;
     width: 60px;
-    margin-top: 0px;
-    margin-left: 55px;
     cursor: pointer;
     outline: none;
 }
@@ -1381,13 +1382,10 @@ input[type=number]::placeholder {
 }
 
 .view_on_blockchain {
-    order: 4;
     background: url('../static/viewOnBlockchain_p.svg') no-repeat center;
     border: 0px solid black;
     height: 60px;
     width: 60px;
-    margin-top: 0px;
-    margin-left: 55px;
     cursor: pointer;
     outline: none;
 }
@@ -1787,7 +1785,7 @@ input[type=number]::placeholder {
 
 .erc20Table hr {
     opacity: 0.28;
-    border: "1px solid rgba(201, 201, 201, 0.61";
+    border: "1px solid rgba(201, 201, 201, 0.61)";
     width: 896px;
 }
 

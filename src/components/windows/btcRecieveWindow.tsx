@@ -47,10 +47,8 @@ export class BtcRecieveWindow extends Component<BtcReceiveProps, BtcReceiveState
                     <img src={this.state.qrcodeAddress} className='address-qrcode'/>
                     <div className='YOURB_0ITCOIN_ADDRESS'>YOUR BITCOIN ADDRESS</div>
                     <div className='YOURB_0ITCOIN_ADDRESS_crypto'>{this.props.address}</div>
-                    <div className='flex_button_recieve'>
+                    <div className='flex_button_receive'>
                         <button className='copy_to_buffer' onClick={this.handleCopyClick}/>
-                        <button className='sent_to_print'/>
-                        <button className='sent_to_email'/>
                         <button className='view_on_blockchain' onClick={this.openUrl}/>
                     </div>
                     <Link to={'/currency-carousel'}>

@@ -71,9 +71,9 @@ interface AppState {
 }
 
 const mockState: AppState = {
-    BTCAddress: "",
-    ETHAddress: "",
-    LTCAddress: "",
+    BTCAddress: "1h3432hxh2h222agagagag32gfggafafaf",
+    ETHAddress: "0xalibababababababaagagagaggq23333",
+    LTCAddress: "1Lookoekokeagagagagagagagagf332222",
     BTCBalance: 0.02,
     ETHBalance: 0.1,
     LTCBalance: 0.3,
@@ -330,7 +330,7 @@ export default class App extends Component<any, AppState> {
 
     constructor(props: any) {
         super(props)
-        this.state = initState
+        this.state = mockState
 
         this.resetRedirect = this.resetRedirect.bind(this)
         this.redirectToTransactionsuccess = this.redirectToTransactionsuccess.bind(this)
@@ -383,9 +383,9 @@ export default class App extends Component<any, AppState> {
     }
 
     async componentDidMount() {
-        // this.setState({connection: true})
-        // this.setState({redirectToMain: true})
-        // this.setState({walletStatus: 0})
+        this.setState({connection: true})
+        this.setState({redirectToMain: true})
+        this.setState({walletStatus: 0})
         ipcRenderer.on('pcsc', async (event, message) => {
             switch (message.type) {
                 case 0: { // WALLET_STATUS_CHANGE
