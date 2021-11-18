@@ -387,8 +387,6 @@ export default class App extends Component<any, AppState> {
         // this.setState({redirectToMain: true})
         // this.setState({walletStatus: 0})
         ipcRenderer.on('pcsc', async (event, message) => {
-            console.log('ipc pcsc_status')
-            console.log(message)
             switch (message.type) {
                 case 0: { // WALLET_STATUS_CHANGE
                     this.setState({walletStatus: (message.data as WalletStatus).walletStatus})
@@ -516,13 +514,11 @@ export default class App extends Component<any, AppState> {
             data: [this.state.BTCBalance, this.state.BTCPrice, this.state.ETHBalance, this.state.ETHPrice, this.state.LTCBalance,
                 this.state.LTCPrice, this.state.XRPBalance, this.state.XRPPrice, this.state.numTransactions]
         }
-        console.log("up hw info msg to send: ", msg)
         ipcRenderer.send('pcsc', msg)
         msg = {
             type: 9,
             data: [this.state.BTCLastTx, this.state.ETHLastTx, this.state.LTCLastTx, this.state.XRPLastTx]
         }
-        console.log("upd hw info msg to send: ", msg)
         ipcRenderer.send('pcsc', msg)
     }
 

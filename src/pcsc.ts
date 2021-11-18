@@ -56,9 +56,6 @@ process.on('message', async (msg: PCSCMessage, _) => {
                 await sendTransaction(data.currency, data.paymentAddress, data.amount, data.fee, data.course, data.cryptoBalance);
                 process.send({type: PCSCMessageType.TRANSACTION_SUCCESS})
             } catch (err) {
-                console.log("send transaction error: ")
-                console.log(err.message)
-                console.log(err.stack)
                 if (err.response) { // axios error
                     process.send({type: PCSCMessageType.ERROR, data: {errorMessage: JSON.stringify(err.response.data)}})
                     return
@@ -170,7 +167,6 @@ const sendBtcChartData = async () => {
         const chartDate = `${dateN.getDate().toString()}.${mon}`
         arr[index] = {date: chartDate, pv: arrData[index]}
     }
-    console.log("sended chart, " , arr)
     process.send({type: PCSCMessageType.CHART_DATA_CHANGE, data: arr})
 }
 
@@ -190,12 +186,9 @@ const initAll = async () => {
             allowInit = false;
             await initCryptoAddresses()
             await Promise.all([getBalances(), getTransactions(), updateErc20Tokens(), sendBtcChartData()])
-            console.log("send initialized")
             process.send({type: PCSCMessageType.INITIALIZED})
         }
     } catch(err) {
-        console.log("init all error")
-        console.log(err.message)
         process.send({type: PCSCMessageType.ERROR, data: {errorMessage: err.message}})
     }
 }
@@ -204,7 +197,6 @@ const startWalletInfoPing = async () => {
     let interval = setInterval(async () => {
         try {
             const walletStatus = await getInfoPCSC()
-            console.log('Got wallet status: ', walletStatus)
             const message : PCSCMessage = {
                 type: PCSCMessageType.WALLET_STATUS_CHANGE,
                 data: {walletStatus: walletStatus}
@@ -212,11 +204,9 @@ const startWalletInfoPing = async () => {
             process.send(message)
             if (walletStatus == 0) {
                 clearInterval(interval)
-                console.log('SETTING WALLET STATUS 0')
                 await initAll()
             }
         } catch (error) {
-            console.log('GOT ERROR', error)
             clearInterval(interval)
         }
     }, 500, [])
@@ -254,8 +244,6 @@ const onReaderCallback = async (reader) => {
 };
 
 const onErrorCallback = async (err) => {
-    console.log('PCSC error', err.message)
-  
     const errMessage = String(err.message)
     const errLines = errMessage.split('\n')
     if (errLines.length > 1) {
@@ -272,11 +260,10 @@ const onErrorCallback = async (err) => {
 };
 
 const start = async () => {
+    console.log("Starting pcsc")
     pcsc = pcsclite();
     pcsc.on("reader", onReaderCallback);
     pcsc.on("error", onErrorCallback);
 };
 
-console.log('START')
 start();
-console.log("START ENDED")
