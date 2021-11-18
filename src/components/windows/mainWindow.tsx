@@ -193,16 +193,16 @@ export default class MainContent extends Component<MainContentProps, MainContent
                                     />
                                 </div>
                             </div>
-                            <div className='Block_explorer'>
-                                <div className='ex_enter_address'>
-                                    <div className={this.classActive}/>
-                                    <input type='text' className='ex_address' placeholder=' Enter address '
-                                           value={this.state.exAddress} onChange={this.handleAddressChange}/>
-                                    <button className='ex_button_find' onClick={this.ex_button}/>
-                                </div>
-                                <p className='ex_balance'>{this.state.balance}</p>
-                                <p className='ex_transactions'>{this.state.transactions}</p>
-                            </div>
+                            {/*<div className='Block_explorer'>*/}
+                            {/*    <div className='ex_enter_address'>*/}
+                            {/*        <div className={this.classActive}/>*/}
+                            {/*        <input type='text' className='ex_address' placeholder=' Enter address '*/}
+                            {/*               value={this.state.exAddress} onChange={this.handleAddressChange}/>*/}
+                            {/*        <button className='ex_button_find' onClick={this.ex_button}/>*/}
+                            {/*    </div>*/}
+                            {/*    <p className='ex_balance'>{this.state.balance}</p>*/}
+                            {/*    <p className='ex_transactions'>{this.state.transactions}</p>*/}
+                            {/*</div>*/}
                         </div>
                     </div>
                     <div className='transaction_info'>

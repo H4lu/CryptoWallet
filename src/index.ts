@@ -33,12 +33,11 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
     app.quit();
 }
 
-console.log('CREATE WINDOW')
 const createWindow = (): void => {
     // Create the browser window.
     mainWindow = new BrowserWindow({
-        width: 1366,
-        height: 821,
+        width: 1024,
+        height: 820,
         resizable: false,
         fullscreen: false,
         frame: false,
@@ -55,9 +54,6 @@ const createWindow = (): void => {
     // and load the index.html of the app.
     mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
     mainWindow.once('ready-to-show', () => {
-        console.log('PROCESS CWD:')
-        console.log(process.cwd())
-        console.log("FORK")
         const processPath = process.env.NODE_ENV == 'production' ? "resources/app/.webpack/main/pcsc.js" : ".webpack/main/pcsc.js"
         pcscProcess = fork(processPath, {
             stdio: ['ipc'],
