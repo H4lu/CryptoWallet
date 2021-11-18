@@ -13,9 +13,8 @@
 //     return result
 //   }
 // }
+
 module.exports = x =>
-   console.log("BINDINGS")
-   console.log(x)
   __non_webpack_require__(
     `${require("electron").remote.app.getAppPath()}/${x}`
   );

@@ -1,8 +1,8 @@
 import React, {FC, useState, useEffect} from 'react';
 import {DisplayTransactionCurrency, FeeTypes, toDisplayCurrencyName} from '../../api/cryptocurrencyApi/utils'
-import {sendTransaction} from "../../core/sendTransaction";
-import {remote} from "electron"
 import {Link} from "react-router-dom";
+import {ipcRenderer, remote} from 'electron'
+import {PCSCMessage} from "../../pcsc_helpers";
 
 
 interface SendProps {
@@ -46,11 +46,7 @@ export const SendWindow: FC<SendProps> = (props) => {
     }
 
     const setMax = () => {
-        let sum = (Math.floor(maxSum * 1000000)) / props.feeDivider
-        if (sum < 0) {
-            sum = 0
-        }
-     
+        const sum = Math.max(Math.floor(maxSum * 1000000)/ props.feeDivider, 0)
         setAmount(sum)
         setUsd(sum * props.course)
     }
@@ -60,13 +56,31 @@ export const SendWindow: FC<SendProps> = (props) => {
     }
 
     const handleClick = async () => {
-        try {
-            await sendTransaction(
-                props.currency, paymentAddress, amount, feeType, props.course, props.cryptoBalance
-                )
-        } catch(err) {
-            console.error(err)
-            remote.dialog.showErrorBox("Send transaction error", err.message)
+        if (paymentAddress == "") {
+            remote.dialog.showErrorBox("Error", "No address provied")
+            return
+        }
+        if (amount <= 0) {
+            remote.dialog.showErrorBox("Error", "No amount provided")
+            return
+        }
+        if (amount >= props.cryptoBalance) {
+            remote.dialog.showErrorBox("Error", "There is no available amount")
+            return
+        }
+        if (paymentAddress != '') {
+            const msg : PCSCMessage = {
+                type: 12,
+                data: {
+                    currency: props.currency,
+                    paymentAddress: paymentAddress,
+                    amount: amount,
+                    fee: feeType,
+                    course: props.course,
+                    cryptoBalance: props.cryptoBalance
+                }
+            }
+            ipcRenderer.send('pcsc', msg)
         }
     }
 
@@ -117,9 +131,7 @@ export const SendWindow: FC<SendProps> = (props) => {
                 </div>
                 <div className='buttonSendCancelFlex'>
                     <div className='buttonSendBig'>
-                        <Link to = '/main'>
-                            <button type='submit' className='button-send-transaction' onClick={handleClick}/>
-                        </Link>
+                        <button type='submit' className='button-send-transaction' onClick={handleClick}/>
                     </div>
                     <div className='buttonCancelBig'>
                         <Link to={'/currency-carousel'}>

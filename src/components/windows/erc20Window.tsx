@@ -1,6 +1,6 @@
 import React, {FC} from "react"
-import { Erc20DisplayToken } from "../../api/cryptocurrencyApi/ethereum"
 import { Erc20TokensTable } from "../erc20TokensTable"
+import {Erc20DisplayToken} from "../../api/cryptocurrencyApi/utils";
 
 
 interface Erc20TokensTableProps {
@@ -13,7 +13,7 @@ export const ERC20Window: FC<Erc20TokensTableProps> = (props: Erc20TokensTablePr
             <div className = "iconEthErc20"/>
             <p className = "erc20Text">ERC-20</p>
             <Erc20TokensTable data={props.data}/>
-        </div>  
+        </div>
     )
 }
    

@@ -8,17 +8,23 @@ const TX_INPUT_PUBKEYHASH = 107
 const TX_OUTPUT_BASE = 8 + 1
 const TX_OUTPUT_PUBKEYHASH = 25
 
+export type Erc20DisplayToken = {
+    name: string,
+    address: string,
+    amount: string
+}
+
 export enum FeeTypes {
   LOW = 1,
   MEDIUM = 2,
   HIGH = 3
 }
 
-export interface ChainSoTransactionSpent {
+export type ChainSoTransactionSpent = {
     txid: string,
     input_no: number
 }
-export interface ChainSoTransactionInput {
+export type ChainSoTransactionInput = {
     input_no: number,
     address: string,
     received_from?: {
@@ -27,14 +33,14 @@ export interface ChainSoTransactionInput {
     }
 }
 
-export interface ChainSoTransactionOutput {
+export type ChainSoTransactionOutput = {
     output_no: number,
     address: string,
     value: string,
     spent: ChainSoTransactionSpent
 }
 
-export interface ChainSoUnspentTransaction {
+export type ChainSoUnspentTransaction = {
   txid: string,
   output_no: number,
   script_asm: string,
@@ -44,7 +50,7 @@ export interface ChainSoUnspentTransaction {
   time: number
 }
 
-export interface ChainSoTransaction {
+export type ChainSoTransaction = {
     txid: string,
     block_no: number,
     confirmations: number,
@@ -63,7 +69,7 @@ export interface ChainSoTransaction {
         outputs: Array<ChainSoTransactionOutput>
     }
 }
-export interface ChainSoTransactions {
+export type ChainSoTransactions = {
     status: string,
     data: {
         network: string,
@@ -76,7 +82,7 @@ export interface ChainSoTransactions {
     }
 }
 
-export interface BlockcypherUnspentTransaction {
+export type BlockcypherUnspentTransaction = {
   tx_hash: string,
   block_height: number,
   tx_input_n: number,
@@ -89,7 +95,8 @@ export interface BlockcypherUnspentTransaction {
   double_spend: boolean,
   script: string
 }
-export interface BlockcypherUnspentTransactions {
+
+export type BlockcypherUnspentTransactions = {
   address: string,
   total_receiver: number,
   total_sent: number,
@@ -101,7 +108,8 @@ export interface BlockcypherUnspentTransactions {
   final_nt_tx: number,
   txrefs: Array<BlockcypherUnspentTransaction>
 }
-export interface BlockcypherFullTransactionInput {
+
+export type BlockcypherFullTransactionInput = {
   prev_hash: string,
   output_index: 0,
   script: string,
@@ -111,13 +119,14 @@ export interface BlockcypherFullTransactionInput {
   script_type: string,
   age: number
 }
-export interface BlockcypherFullTransactionOutput {
+
+export type BlockcypherFullTransactionOutput = {
   value: number,
   script: string,
   addresses: Array<string>,
   script_type: string
 }
-export interface BlockcypherFullTransaction {
+export type BlockcypherFullTransaction = {
   block_hash: string,
   block_height: number,
   hash: string,
@@ -140,7 +149,7 @@ export interface BlockcypherFullTransaction {
   outputs: Array<BlockcypherFullTransactionOutput>
 }
 
-export interface BlockcypherFullTransactions {
+export type BlockcypherFullTransactions = {
   address: string,
   total_received: number,
   total_sent: number,
@@ -270,10 +279,13 @@ export function btcLikeToDisplayTransaction(
   }
 }
 
-
 export function getTestnetAddressBTC(pubkey: Buffer): string {
+    console.log("generate pk from buffer", pubkey.toString("hex"))
     const keyPair = ECPair.fromPublicKeyBuffer(pubkey, networks.testnet)
-    return keyPair.getAddress()
+    console.log("generated pk", keyPair.getPublicKeyBuffer().toString("hex"))
+    const address =  keyPair.getAddress()
+    console.log("address: ", address)
+    return address
 }
 
 export function inputBytes (input: any) {

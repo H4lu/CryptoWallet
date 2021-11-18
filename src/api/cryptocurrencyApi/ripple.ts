@@ -1,5 +1,9 @@
 import {networks} from 'bitcoinjs-lib'
 import { getAddressPCSC } from '../hardwareApi/getAddress'
+import axios from 'axios'
+import {Buffer} from "buffer";
+import {DisplayTransaction} from './utils'
+
 const urlChainSo = 'https://chain.so/api/v2/send_tx/'
 const network = networks.bitcoin
 const NETWORK = 'XRP'                                          // change XRP
@@ -9,9 +13,7 @@ let myPubKey = Buffer.alloc(33)
 let balance: number
 let price: number
 
-import axios from 'axios'
-import {Buffer} from "buffer";
-import { DisplayTransaction } from './utils'
+
 
 export function setXRPBalance(bal: number) {
     balance = bal

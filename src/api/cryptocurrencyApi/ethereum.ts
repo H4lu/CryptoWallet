@@ -3,19 +3,20 @@ import {Transaction} from '@ethereumjs/tx'
 import {BN} from 'ethereumjs-util'
 import Common from '@ethereumjs/common'
 import {getSignaturePCSC} from '../hardwareApi/getSignature'
-import {remote} from "electron"
 import {getAddressPCSC} from '../hardwareApi/getAddress'
 import {Buffer} from 'buffer'
 import {keccak256} from "js-sha3";
 import axios from 'axios'
-import { DisplayTransaction, DisplayTransactionCurrency, DisplayTransactionStatus, DisplayTransactionType } from './utils'
+import {
+    DisplayTransaction,
+    DisplayTransactionCurrency,
+    DisplayTransactionStatus,
+    DisplayTransactionType,
+    Erc20DisplayToken
+} from './utils'
 
-export interface Erc20DisplayToken {
-    name: string,
-    address: string,
-    amount: string
-}
-interface EthplorerTransaction {
+
+type EthplorerTransaction = {
     timestamp: number,
     from: string,
     to: string,
@@ -45,7 +46,8 @@ enum KovanV {
     MAX = 120,
     MIN = 119
 }
-interface EthplorerErc20TokenInfo {
+
+type EthplorerErc20TokenInfo = {
     address: string,
     decimals: string,
     name: string,
@@ -58,7 +60,7 @@ interface EthplorerErc20TokenInfo {
     price: boolean
 }
 
-interface EthplorerErc20Token {
+type EthplorerErc20Token = {
     tokenInfo: EthplorerErc20TokenInfo,
     balance: number,
     rawBalance?: string
@@ -66,20 +68,20 @@ interface EthplorerErc20Token {
     totalOut: number
 }
 
-interface EthplorerEthInfo {
+type EthplorerEthInfo = {
     balance: number,
     price: boolean
 }
-interface EthplorerAddressInfo {
+type EthplorerAddressInfo = {
     address: string,
     ETH: EthplorerAddressInfo,
     countTxs: number,
     tokens?: Array<EthplorerErc20Token>
 }
 
-const NETWORK = Networks.MAIN
+const NETWORK = Networks.KOVAN
 //const ethplorerRoot = NETWORK Networks.KOVAN ? "https://kovan-api.ethplorer.io" : "https://api.ethplorer.io"
-const ethplorerRoot = "https://api.ethplorer.io"
+const ethplorerRoot = "https://kovan-api.ethplorer.io"
 const web3 = new Web3(new Web3.providers.HttpProvider(`https://${NETWORK}.infura.io/v3/960cbfb44af74f27ad0e4b070839158a`))
 
 let myAdress = ''
@@ -119,21 +121,18 @@ export function setETHPrice(priceToSet: number) {
     price = priceToSet
 }
 
-export async function initEthereumAddress() {
-    return new Promise(async (resolve) => {
-        let status = false
-        while (!status) {
-            console.log('Status', status)
-            let answer = await getAddressPCSC(1)
-            console.log('GOT MYADDR ANSWER', answer)
-            if (answer.length > 1 && answer[0].includes('ETH')) {
-                status = true
-                console.log('status after reset', status)
-                setMyPubKey(answer[1])
-                resolve(0)
-            }
+export const initEthereumAddress = async () => {
+    let status = false
+    while (!status) {
+        console.log('Status', status)
+        let answer = await getAddressPCSC(1)
+        console.log('GOT MYADDR ANSWER', answer)
+        if (answer.length > 1 && answer[0].includes('ETH')) {
+            status = true
+            console.log('status after reset', status)
+            setMyPubKey(answer[1])
         }
-    })
+    }
 }
 
 export function setMyPubKey(pubKey: Buffer) {
@@ -282,7 +281,7 @@ async function createTransaction(
             1, hashArray, paymentAdress, amount, 1, course, fee, balance
         )
         if (data[0] == undefined) {
-            throw new Error("Error from hw wallet")
+            return
         }
         if (data[0].length !== 1) {
             // FIXME: remove this kostil after 
@@ -304,14 +303,14 @@ async function createTransaction(
            
             const serTx = '0x' + tx.serialize().toString('hex');
             return web3.eth.sendSignedTransaction(serTx)
-                // .on('receipt', console.log)
-                // .on('transactionHash', (hash) => {
-                //     console.log('Transaction sended: ' + hash)
-                // })
-                // .on('error', async error => {
-                //     console.log(error)
-                //     remote.dialog.showErrorBox("Error",error.message)
-                // });
+                .on('receipt', console.log)
+                .on('transactionHash', (hash) => {
+                    console.log('Transaction sended: ' + hash)
+                })
+                .on('error', async error => {
+                    console.log(error)
+                    throw error
+                });
         }
 }
 

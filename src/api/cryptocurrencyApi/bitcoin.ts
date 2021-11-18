@@ -2,8 +2,6 @@ import {TransactionBuilder, networks, Transaction, ECPair, address, script} from
 import axios from 'axios'
 import {getSignaturePCSC} from '../hardwareApi/getSignature'
 import {getAddressPCSC} from '../hardwareApi/getAddress'
-import {remote} from "electron"
-
 import  {
     transactionBytes,
     getTestnetAddressBTC, 
@@ -52,9 +50,8 @@ interface TransactionTarget {
     value: number
 }
 
-
 const network = networks.bitcoin
-const NETWORK: Networks = Networks.MAIN
+export const NETWORK: Networks = Networks.MAIN
 
 let myAddr = ''
 let myPubKey = Buffer.alloc(33)
@@ -69,61 +66,58 @@ let numTx: number
 
 const libdll = ffi.Library('./resources/lib32.dll', {'forSign': ['void', ['string', 'int', 'string']]})
 
-export function setBTCBalance(bal: number) {
+export const setBTCBalance = (bal: number) => {
     balance = bal
 }
 
-export function getBalance() {
+export const getBalance = () => {
     return balance
 }
 
-export function setBTCPrice(priceToSet: number) {
+export const setBTCPrice = (priceToSet: number) => {
     price = priceToSet
 }
 
-export async function initBitcoinAddress() {
-    return new Promise(async resolve => {
-        let status = false
-        while (!status) {
-            const answer = await getAddressPCSC(0)
-            if (answer[0].length > 16 && answer[0].includes('BTC')) {
-                status = true
-                setMyAddress(answer[0].substring(3, answer[0].length))
-                setMyPubKey(answer[1])
-                if (NETWORK == Networks.TEST) {
-                    console.log("generate test address btc")
-                    setMyAddress(getTestnetAddressBTC(Buffer.from(answer[1])))
-                }
-                setFee()
-                resolve(0)
-            }
+export const initBitcoinAddress = async () => {
+    let status = false
+    while (!status) {
+        const result = await getAddressPCSC(0)
+        if (result[0].length > 16 && result[0].includes('BTC')) {
+            status = true
+            setMyAddress(result[0].substring(3, result[0].length))
+            setMyPubKey(result[1])
+            console.log("pubkey in hex:")
+            console.log(result[1].toString("hex"))
+            // if (NETWORK == Networks.TEST) {
+            //     console.log("generate test address btc")
+            //     setMyAddress(getTestnetAddressBTC(result[1]))
+            // }
+            await setFee()
+            console.log("Bitcoin address: ", myAddr)
         }
-    })
+    }
 }
 
-export function setMyAddress(address: string) {
+export const setMyAddress = (address: string) => {
     myAddr = address
-    console.log('MY ADDRESS BITCOIN:' + myAddr)
 }
 
-export function setMyPubKey(pubKey: Buffer) {
-
+export const setMyPubKey = (pubKey: Buffer) => {
     myPubKey[0] = 0x02 + pubKey[64] % 2
-
     for (let i = 0; i < 32; i++) {
         myPubKey[i + 1] = pubKey[i + 1]
     }
 }
 
-export function getBitcoinAddress() {
+export const getBitcoinAddress = (): string => {
     return myAddr
 }
 
-export function getBitcoinPubKey() {
+export const getBitcoinPubKey = () => {
     return myPubKey
 }
 
-async function setFee() {
+const setFee = async () => {
     const requestUrl = 'https://bitcoinfees.earn.com/api/v1/fees/recommended'
     const response = await axios.get(requestUrl)
     basicFee1 = Number(response.data.hourFee)
@@ -131,7 +125,7 @@ async function setFee() {
     basicFee3 = Number(response.data.fastestFee)
 }
 
-export function getFee(transactionFee: number): number {
+export const getFee = (transactionFee: number): number => {
     let basicFee = 25
     switch (transactionFee) {
         case 1: {
@@ -150,16 +144,15 @@ export function getFee(transactionFee: number): number {
     return (basicFee)
 }
 
-export async function getBTCBalance(): Promise<number> {
+export const getBTCBalance = async (): Promise<number> => {
     const requestUrl = `https://api.blockcypher.com/v1/btc/${NETWORK}/addrs/${myAddr}/balance`
     const response = await axios.get(requestUrl)
     return Number((response.data.balance / 100000000).toFixed(8))
 }
 
-export async function getChartBTC(end: string, start: string): Promise<Array<any>> {
+export const getChartBTC = async (end: string, start: string): Promise<Array<any>> => {
     const requestUrl = `https://api.coindesk.com/v1/bpi/historical/close.json?start=${start}&end=${end}`
     console.log(requestUrl)
-    // Делаем запрос и отдаём в виде Promise
     const response = await axios.get(requestUrl)
     const chartData = response.data.bpi
     let key: keyof typeof chartData
@@ -171,7 +164,7 @@ export async function getChartBTC(end: string, start: string): Promise<Array<any
     return arr
 }
 
-export async function getBTCBalanceTarns(address: string,): Promise<Array<any>> {
+export const getBTCBalanceTarns = async (address: string): Promise<Array<any>> => {
     const requestUrl = `https://blockchain.com/rawaddr/${address}`
     const response = await axios.get(requestUrl)
     const balance = Number(response.data.final_balance) / 100000000
@@ -179,7 +172,7 @@ export async function getBTCBalanceTarns(address: string,): Promise<Array<any>> 
     return [Number(balance.toFixed(8)), transactions]
 }
 
-function toSatoshi(BTC: number): number {
+const toSatoshi = (BTC: number): number => {
     return satoshi.toSatoshi(BTC)
 }
 
@@ -236,31 +229,27 @@ async function createTransaction(
         
         let transaction = new TransactionBuilder(network)
         for (const input of inputs) {
-            console.log("add input")
-            console.log(input)
             transaction.addInput(input.tx_hash, input.tx_output_n)
         }
         for (const out of outputs) {
-            console.log("add output")
             if (!out.address) {
                 out.address = myAddr
             }
             transaction.addOutput(out.address, out.value)
         }
         let unbuildedTx = transaction.buildIncomplete().toHex()
-        transaction.inputs.map(value => {
-            console.log('MAPPED INPUT')
-            console.log(value)
-        })
-        transaction.tx.ins.forEach(value => {
-            console.log('PROBABLY TX INPUT: ')
-            console.log(value)
-        })
+        // transaction.inputs.map(value => {
+        //     console.log('MAPPED INPUT')
+        //     console.log(value)
+        // })
+        // transaction.tx.ins.forEach(value => {
+        //     console.log('PROBABLY TX INPUT: ')
+        //     console.log(value)
+        // })
     
         let hashArray: Array<Buffer> = []
         console.log(utxos)
         let dataForHash = ReplaceAt(unbuildedTx + '01000000', '00000000ff', '00000019' + utxos[0].script + 'ff', unbuildedTx.indexOf('00000000ff', 0), unbuildedTx.indexOf('00000000ff', 0) + 50)
-        console.log('DATA FOR HASH: ', dataForHash)
     
     
         /************ lib dll *****************/
@@ -292,18 +281,14 @@ async function createTransaction(
         /************ lib dll ******************/
     
         let data = await getSignaturePCSC(0, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.inputs.length, course, fee / 100000000, balance)
-        console.log("data after pcsc")
-        console.log(data)
-        console.log(data.toString())
         if (data[0] == undefined) {
-            throw new Error("Error from hw wallet")
+            return
         }
-        if (data[0].length !== 1) {
+        if (data[0]?.length !== 1) {
             transaction.inputs.forEach((input, index) => {
                 unbuildedTx = unbuildedTx.replace('00000000ff', '000000' + data[index].toString('hex') + 'ff')
             })
             return sendTransaction(unbuildedTx)
-            //transaction.addOutput(paymentAdress, transactionAmount)
         }
 }
 
@@ -324,6 +309,13 @@ export async function handleBitcoin(
     course: number, 
     balance: number
     ) {
+        // validate address
+        try {
+            address.toOutputScript(paymentAdress)
+        } catch (err) {
+            console.log(err.meessage)
+            throw Error("Invalid address")
+        }
         const lastTx = await getUnspentTransactions(myAddr)
         const utxos = lastTx.txrefs
         amount = toSatoshi(amount)
