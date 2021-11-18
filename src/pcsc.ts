@@ -1,6 +1,5 @@
 process.on('uncaughtException', err => {
-    console.log("Uncaught exception: ")
-    console.log(err.message)
+    console.log("Uncaught exception: ", err.message)
     console.log(err.stack)
 })
 
