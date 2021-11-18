@@ -3,8 +3,6 @@ import {reader} from './reader'
 
 
 export function getInfoPCSC(): Promise<number> {
-    console.log('TRANSMITTING')
-
     return new Promise((resolve, reject) => {
         // @ts-ignore
         reader.transmit(Buffer.from([0xB0, 0x10, 0x00, 0x00, 0x00]), 4, 2, async (err, data) => {
@@ -63,12 +61,4 @@ function getRealState() {
     })
 }
 
-export function waitForConnection() {
-    let connection = false
-    while (!connection) {
-        setTimeout(() => {
-
-        }, 1000)
-    }
-}
 

@@ -12,7 +12,13 @@ import {BtcRecieveWindow} from "./components/windows/btcRecieveWindow";
 import {LtcRecieveWindow} from "./components/windows/ltcRecieveWindow";
 import {EthRecieveWindow} from "./components/windows/ethReceiveWindow";
 import {CarouselHistory} from "./components/carouselHistory";
-import {DisplayTransaction, DisplayTransactionCurrency, Erc20DisplayToken} from './api/cryptocurrencyApi/utils';
+import {
+    DisplayTransaction,
+    DisplayTransactionCurrency,
+    DisplayTransactionStatus,
+    DisplayTransactionType,
+    Erc20DisplayToken
+} from './api/cryptocurrencyApi/utils';
 import {ipcRenderer, remote} from "electron";
 import {ERC20Window} from './components/windows/erc20Window';
 import {FirmwareWindow} from './components/windows/firmwareWindow';
@@ -71,7 +77,7 @@ interface AppState {
 }
 
 const mockState: AppState = {
-    BTCAddress: "1h3432hxh2h222agagagag32gfggafafaf",
+    BTCAddress: "1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX",
     ETHAddress: "0xalibababababababaagagagaggq23333",
     LTCAddress: "1Lookoekokeagagagagagagagagf332222",
     BTCBalance: 0.02,
@@ -87,7 +93,28 @@ const mockState: AppState = {
     ETHHourChange: 2,
     LTCHourChange: 3,
     XRPHourChange: 4,
-    BTCLastTx: [],
+    BTCLastTx: [
+        {
+            dateUnix: 1113234242,
+            displayDate: "15:17 15 6 2021",
+            currency: "BTC",
+            amount: "0.001",
+            address: "1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX",
+            status: DisplayTransactionStatus.FINISHED,
+            type: DisplayTransactionType.INCOMING,
+            hash: "wkjerht390gfj39ckm3mo5hj49jghj"
+        },
+        {
+            dateUnix: 11132322242,
+            displayDate: "15:34 15 6 2021",
+            currency: "BTC",
+            amount: "0.00138736",
+            address: "bc1qc77cu5j04q4udgyc8zcx4z5vdecpw0hm9elpws",
+            status: DisplayTransactionStatus.FINISHED,
+            type: DisplayTransactionType.INCOMING,
+            hash: "wkjerht3e333fj39ckm3mo5hj49jghj"
+        }
+    ],
     LTCLastTx: [],
     ETHLastTx: [],
     XRPLastTx: [],
@@ -330,7 +357,7 @@ export default class App extends Component<any, AppState> {
 
     constructor(props: any) {
         super(props)
-        this.state = mockState
+        this.state = initState
 
         this.resetRedirect = this.resetRedirect.bind(this)
         this.redirectToTransactionsuccess = this.redirectToTransactionsuccess.bind(this)
@@ -383,9 +410,9 @@ export default class App extends Component<any, AppState> {
     }
 
     async componentDidMount() {
-        this.setState({connection: true})
-        this.setState({redirectToMain: true})
-        this.setState({walletStatus: 0})
+        // this.setState({connection: true})
+        // this.setState({redirectToMain: true})
+        // this.setState({walletStatus: 0})
         ipcRenderer.on('pcsc', async (event, message) => {
             switch (message.type) {
                 case 0: { // WALLET_STATUS_CHANGE

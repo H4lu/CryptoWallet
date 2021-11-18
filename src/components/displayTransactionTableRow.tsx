@@ -8,49 +8,21 @@ interface TableRowProps {
 
 export const TableRow: FC<TableRowProps> = (props) =>
     <tr>
-        <td>
-            <div className='numTransactoion'>#</div>
-        </td>
-        <td>
-            <div className='dateTransactoion'>{props.data.displayDate}</div>
-        </td>
-        <td>
-            <div className={props.activeCurrency + 'img'}/>
-        </td>
+        <td>#</td>
+        <td>{props.data.displayDate}</td>
+        <td><div className={props.activeCurrency + 'img'}/></td>
         {(props.data.type === 'incoming') ? (
-            <td>
-                <div className='income'/>
-            </td>
+            <td><div className='income'/></td>
         ) : (
-            <td>
-                <div className='outcome'/>
-            </td>
+            <td><div className='outcome'/></td>
         )}
-        <td>
-            <div className='addressTransaction'>{props.data.address}</div>
-        </td>
-        <td>
-            <div className='amountTransaction'>{props.data.amount}</div>
-        </td>
-        <td>
-            <div className='currencyTransaction'>{props.data.currency}</div>
-        </td>
+        <td>{props.data.address}</td>
+        <td>{props.data.amount}</td>
+        <td>{props.data.currency}</td>
         {(props.data.status === 'Finished') ? (
-            <td>
-                <div className='pointConfirmed'/>
-            </td>
+            <td><div className='pointConfirmed'/></td>
         ) : (
-            <td>
-                <div className='pointUnConfirmed'/>
-            </td>
+            <td><div className='pointUnConfirmed'/></td>
         )}
-        {(props.data.status === 'Finished') ? (
-            <td>
-                <div className='confirmedTransaction'>{props.data.status}</div>
-            </td>
-        ) : (
-            <td>
-                <div className='unconfirmedTransaction'>{props.data.status}</div>
-            </td>
-        )}
+        <td>{props.data.status}</td>
     </tr>

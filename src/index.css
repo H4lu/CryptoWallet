@@ -2,7 +2,7 @@
     background: url("../static/backgroundStart.svg") no-repeat center;
     background-size: cover;
     height: 795px;
-    width: 1366px;
+    width: 100%;
     margin-top: -23.5px;
 }
 
@@ -1553,14 +1553,31 @@ input[type=number]::placeholder {
     border-radius: 4px;
 }
 
+.transaction-history  table {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.transaction-history th, td {
+    /*width: min-content;*/
+    min-width: 5px;
+}
+
 .table_content {
     margin-left: 20px;
     margin-right: 20px;
     margin-top: 20px;
 }
 
-.dateTransactoion {
-    margin-left: 25px;
+.numTransaction {
+    width: 5px;
+}
+
+.dateTransaction {
+    /*margin-left: 25px;*/
+    width: fit-content;
 }
 
 .BTCimg {
@@ -1568,7 +1585,7 @@ input[type=number]::placeholder {
     border: 0px solid black;
     height: 29px;
     width: 29px;
-    margin-left: 25px;
+    /*margin-left: 25px;*/
     margin-top: 2px
 }
 
@@ -1577,7 +1594,7 @@ input[type=number]::placeholder {
     border: 0px solid black;
     height: 29px;
     width: 29px;
-    margin-left: 25px;
+    /*margin-left: 25px;*/
     margin-top: 2px
 }
 
@@ -1586,7 +1603,7 @@ input[type=number]::placeholder {
     border: 0px solid black;
     height: 29px;
     width: 29px;
-    margin-left: 25px;
+    /*margin-left: 25px;*/
     margin-top: 2px
 }
 
@@ -1595,7 +1612,7 @@ input[type=number]::placeholder {
     border: 0px solid black;
     height: 29px;
     width: 29px;
-    margin-left: 25px;
+    /*margin-left: 25px;*/
     margin-top: 2px
 }
 
@@ -1604,7 +1621,7 @@ input[type=number]::placeholder {
     border: 0px solid black;
     height: 12px;
     width: 14px;
-    margin-left: 25px;
+    /*margin-left: 25px;*/
 }
 
 .outcome {
@@ -1612,7 +1629,7 @@ input[type=number]::placeholder {
     border: 0px solid black;
     height: 12px;
     width: 14px;
-    margin-left: 25px;
+    /*margin-left: 25px;*/
 }
 
 .addressTransaction {
@@ -1629,7 +1646,6 @@ input[type=number]::placeholder {
 }
 
 .pointConfirmed {
-    margin-left: 25px;
     width: 6px;
     height: 6px;
     border-radius: 3px;
@@ -1637,7 +1653,6 @@ input[type=number]::placeholder {
 }
 
 .pointUnConfirmed {
-    margin-left: 25px;
     width: 6px;
     height: 6px;
     border-radius: 3px;

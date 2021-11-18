@@ -18,8 +18,6 @@ ipcMain.on('hide', () => {
 })
 
 ipcMain.on('pcsc', (event, data) => {
-    console.log("pcsc data")
-    console.log(data)
     if (pcscProcess != undefined) {
         pcscProcess.send(data)
     }
