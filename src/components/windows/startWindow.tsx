@@ -38,7 +38,7 @@ export const StartWindow: FC<StartWindowProps> = (props) => {
             {(props.connection) ? (
                 renderWalletState(props.walletStatus)
             ) : (
-                <p className='window-main-not-ready'>Please connect Runer</p>
+                <p className='window-main-not-ready'>Please connect your Crypto Wallet</p>
             )}
         </div>
     )
