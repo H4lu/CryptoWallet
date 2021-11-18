@@ -54,6 +54,7 @@ process.on('message', async (msg: PCSCMessage, _) => {
             const data = msg.data as TransactionRequest
             try {
                 await sendTransaction(data.currency, data.paymentAddress, data.amount, data.fee, data.course, data.cryptoBalance);
+                process.send({type: PCSCMessageType.TRANSACTION_SUCCESS})
             } catch (err) {
                 console.log("send transaction error: ")
                 console.log(err.message)

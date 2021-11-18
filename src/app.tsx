@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {Header} from './components/header'
-import {Redirect, Route} from 'react-router'
+import {Redirect, Route, useHistory} from 'react-router'
 import {SidebarContent} from './components/sidebarContent'
 
 import './index.css'
@@ -159,7 +159,7 @@ const initState: AppState = {
     erc20Tokens: []
 }
 
-export default class App extends Component<{}, AppState> {
+export default class App extends Component<any, AppState> {
     routes = [
         {
             path: '/main',
@@ -495,6 +495,10 @@ export default class App extends Component<{}, AppState> {
                         }
                         default: return
                     }
+                    break
+                }
+                case 14: { // TRANSACTION_SUCCESS
+                    this.redirectToTransactionsuccess()
                     break
                 }
                 default: return

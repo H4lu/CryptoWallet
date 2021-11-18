@@ -59,7 +59,8 @@ export enum PCSCMessageType {
     UPDATE = 10,
     UPDATED = 11,
     TRANSACTION_REQUEST = 12,
-    ADDRESS_CHANGE = 13
+    ADDRESS_CHANGE = 13,
+    TRANSACTION_SUCCESS = 14
 }
 
 export type PCSCMessageData = WalletStatus | ConnectionStatus | ErrorMessage | DisplayBalanceStatus | TransactionsStatus | Array<Erc20DisplayToken> | Array<ChartData> | Array<HwBalance> | Array<Array<DisplayTransaction>> | TransactionRequest | AddressChange
