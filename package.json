@@ -1,6 +1,6 @@
 {
   "name": "CryptoWallet",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "CET CryptoWallet application",
   "main": ".webpack/main/main.js",
   "scripts": {
