@@ -24,6 +24,7 @@ export interface CoinmarketCapListingQuote {
 export type ListingQuotes = {
     [key: string]: CoinmarketCapListingQuote
 }
+
 export interface CoinmarketCapListingItem {
     id: number,
     name: string,

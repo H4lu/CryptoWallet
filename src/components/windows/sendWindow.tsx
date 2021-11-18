@@ -1,4 +1,4 @@
-import React, {FC, useState, useEffect} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {DisplayTransactionCurrency, FeeTypes, toDisplayCurrencyName} from '../../api/cryptocurrencyApi/utils'
 import {Link} from "react-router-dom";
 import {ipcRenderer, remote} from 'electron'
@@ -34,19 +34,19 @@ export const SendWindow: FC<SendProps> = (props) => {
         setFeeUsd(props.course * cryptoFee)
         setMaxSum(props.cryptoBalance - cryptoFee)
     }, [feeType])
-    
+
     const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value == "") {
             setAmount(null)
         } else {
             setAmount(Number(e.target.value))
         }
-      
+
         setUsd(Number(e.target.value) * props.course)
     }
 
     const setMax = () => {
-        const sum = Math.max(Math.floor(maxSum * 1000000)/ props.feeDivider, 0)
+        const sum = Math.max(Math.floor(maxSum * 1000000) / props.feeDivider, 0)
         setAmount(sum)
         setUsd(sum * props.course)
     }
@@ -69,7 +69,7 @@ export const SendWindow: FC<SendProps> = (props) => {
             return
         }
         if (paymentAddress != '') {
-            const msg : PCSCMessage = {
+            const msg: PCSCMessage = {
                 type: 12,
                 data: {
                     currency: props.currency,
@@ -84,28 +84,28 @@ export const SendWindow: FC<SendProps> = (props) => {
         }
     }
 
-    
+
     return (
         <div className='main'>
             <div className='rectangleSR'>
-                <div className = {`iconCryptoCurrency${props.currency}`}/>
+                <div className={`iconCryptoCurrency${props.currency}`}/>
                 <div className='blockSendTransactionAddress'>
                     <div className='iconQr'/>
-                    <input 
-                        type='text' 
-                        className='payment_address' 
-                        placeholder = {`  Send to ${toDisplayCurrencyName(props.currency)} address...`}
-                        value={paymentAddress} 
+                    <input
+                        type='text'
+                        className='payment_address'
+                        placeholder={`  Send to ${toDisplayCurrencyName(props.currency)} address...`}
+                        value={paymentAddress}
                         onChange={e => setPaymentAddress(e.target.value)}
-                        />
+                    />
                 </div>
                 <div className='blockSendTransactionSum'>
-                    <div className = 'iconSum'/>
-                    <div className = {`sumField${props.currency}`}>
-                        <input type = "number" className = 'payment_sum' 
-                               placeholder = {"0.0"} defaultValue={""}
-                               value = {amount}
-                               onChange = {handleAmountChange} step = {0.0000001}/>
+                    <div className='iconSum'/>
+                    <div className={`sumField${props.currency}`}>
+                        <input type="number" className='payment_sum'
+                               placeholder={"0.0"} defaultValue={""}
+                               value={amount}
+                               onChange={handleAmountChange} step={0.0000001}/>
                         <p className='payment_sumUSD'> {(usd).toFixed(2)}</p>
                     </div>
                     <button className='setMaxSum' onClick={setMax}/>

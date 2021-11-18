@@ -1,9 +1,9 @@
 import Web3 from 'web3'
-
-const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/960cbfb44af74f27ad0e4b070839158a'))
 import {Buffer} from 'buffer'
 // @ts-ignore
 import {reader} from './reader'
+
+const web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/960cbfb44af74f27ad0e4b070839158a'))
 
 export function get() {
     return new Promise((resolve, reject) => {
@@ -13,7 +13,6 @@ export function get() {
                 console.log(err)
                 reject(err)
             } else {
-                console.log('GOT THIS DATA', data.toString('hex'))
                 resolve(data.toString('hex'))
             }
         })
@@ -26,10 +25,8 @@ export function getREALSTATUS() {
         // @ts-ignore
         reader.transmit(Buffer.from([0xB0, 0x10, 0x00, 0x00, 0x00]), 255, 2, (err, data) => {
             if (err) {
-                console.log('ERROR IN REALSTATUS', err)
                 reject(err)
             } else {
-                console.log('REALSTATUS', data.toString('hex'))
                 resolve(data)
             }
         })
@@ -73,8 +70,6 @@ export function getAddressPCSC(id: number): Promise<[string, Buffer]> {
                     ethAdr = 'ETH0x' + ethAdr.substr(26, 40)
                     resolve([ethAdr, data.slice(data[0] + 1, data[0] + 66)])
                 } else {
-                    console.log(data)
-                    console.log(Buffer.from(data).toString("hex"))
                     resolve([data.slice(1, data[0] + 1).toString(), data.slice(data[0] + 1, data[0] + 66)])
                 }
             }

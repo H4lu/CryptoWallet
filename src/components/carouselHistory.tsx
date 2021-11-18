@@ -1,8 +1,8 @@
-import React, {FC, useState, useEffect} from 'react'
+import React, {FC, useEffect} from 'react'
 import {Carousel} from './carousel'
 import {CarouselTable} from "./carouselTable";
-import { DisplayTransaction, DisplayTransactionCurrency } from '../api/cryptocurrencyApi/utils';
-import { currencyToIndex } from '../core/carouselHelper';
+import {DisplayTransaction, DisplayTransactionCurrency} from '../api/cryptocurrencyApi/utils';
+import {currencyToIndex} from '../core/carouselHelper';
 
 interface CarouselHistoryProps {
     stateSR: (arg: boolean) => void,
@@ -24,17 +24,17 @@ export const CarouselHistory: FC<CarouselHistoryProps> = (props) => {
         <div className='windowPay'>
             <div className='payWindowTable'>
                 <Carousel
-                        setActiveCurrency={props.setActiveCurrency}
-                        activeCurrencyIndex={currencyToIndex(props.activeCurrency)}
-                        />
-                <CarouselTable 
-                            activeCurrency={props.activeCurrency}
-                            refresh={props.refresh}
-                            lastTxBTC = {props.lastTxBTC}
-                            lastTxLTC = {props.lastTxLTC}
-                            lastTxETH = {props.lastTxETH}
-                            lastTxXRP = {props.lastTxXRP}
-                            />
+                    setActiveCurrency={props.setActiveCurrency}
+                    activeCurrencyIndex={currencyToIndex(props.activeCurrency)}
+                />
+                <CarouselTable
+                    activeCurrency={props.activeCurrency}
+                    refresh={props.refresh}
+                    lastTxBTC={props.lastTxBTC}
+                    lastTxLTC={props.lastTxLTC}
+                    lastTxETH={props.lastTxETH}
+                    lastTxXRP={props.lastTxXRP}
+                />
             </div>
         </div>
     )

@@ -5,8 +5,8 @@ import React, {Component} from 'react'
 // import {getLTCBalanceTrans} from "../../api/cryptocurrencyApi/ltecoin";
 // import {getXRPBalanceTrans} from "../../api/cryptocurrencyApi/ripple";
 import Chart from "../chart";
-import { DisplayTransaction, DisplayTransactionCurrency } from '../../api/cryptocurrencyApi/utils';
-import { CryptocurrencyCard } from '../cryptocurrencyCard';
+import {DisplayTransaction, DisplayTransactionCurrency} from '../../api/cryptocurrencyApi/utils';
+import {CryptocurrencyCard} from '../cryptocurrencyCard';
 
 interface MainContentState {
     exAddress: string,
@@ -39,6 +39,7 @@ interface MainContentProps {
     chartLen: number,
     activeCurrency: DisplayTransactionCurrency
 }
+
 export default class MainContent extends Component<MainContentProps, MainContentState> {
     classBTC: string;
     classETH: string;
@@ -68,11 +69,11 @@ export default class MainContent extends Component<MainContentProps, MainContent
         this.setState({exAddress: e.target.value})
     }
 
-    async ex_button(){
-        if(this.state.exAddress != '') {
+    async ex_button() {
+        if (this.state.exAddress != '') {
             switch (this.classActive) {
                 case 'ex_BTC': {
-                   // let arr = await getBTCBalanceTarns(this.state.exAddress)
+                    // let arr = await getBTCBalanceTarns(this.state.exAddress)
                     // this.setState({balance: (arr[0]).toString() + ' BTC'})
                     // this.setState({transactions: (arr[1]).toString()})
                     break
@@ -90,9 +91,9 @@ export default class MainContent extends Component<MainContentProps, MainContent
                     break
                 }
                 case 'ex_XRP': {
-               // //     let arr = await getXRPBalanceTrans(this.state.exAddress)
-               //      this.setState({balance: (arr[0]).toString() + ' LTC'})
-               //      this.setState({transactions: (arr[1]).toString()})
+                    // //     let arr = await getXRPBalanceTrans(this.state.exAddress)
+                    //      this.setState({balance: (arr[0]).toString() + ' LTC'})
+                    //      this.setState({transactions: (arr[1]).toString()})
                     break
                 }
             }
@@ -118,69 +119,79 @@ export default class MainContent extends Component<MainContentProps, MainContent
                             <header className='currencies-header'>My wallets</header>
                             <div className='cryptocurrency-container'>
                                 <div className='cryptocurrency-row'>
-                                    <CryptocurrencyCard 
-                                        currency = 'BTC'
-                                        onClick = {() => this.onCardClicked('BTC')}
-                                        cryptoBalance = {this.props.btcBalance}
-                                        fiatBalance = {this.props.btcPrice}
-                                        isActive = {this.props.activeCurrency == 'BTC'}
+                                    <CryptocurrencyCard
+                                        currency='BTC'
+                                        onClick={() => this.onCardClicked('BTC')}
+                                        cryptoBalance={this.props.btcBalance}
+                                        fiatBalance={this.props.btcPrice}
+                                        isActive={this.props.activeCurrency == 'BTC'}
                                     />
                                     <CryptocurrencyCard
-                                        currency = 'LTC'
-                                        onClick = {() => this.onCardClicked('LTC')}
-                                        cryptoBalance = {this.props.ltcBalance}
-                                        fiatBalance = {this.props.ltcPrice}
-                                        isActive = {this.props.activeCurrency == 'LTC'}
+                                        currency='LTC'
+                                        onClick={() => this.onCardClicked('LTC')}
+                                        cryptoBalance={this.props.ltcBalance}
+                                        fiatBalance={this.props.ltcPrice}
+                                        isActive={this.props.activeCurrency == 'LTC'}
                                     />
-                                </div>    
-                                <div className = 'cryptocurrency-row 2'>  
+                                </div>
+                                <div className='cryptocurrency-row 2'>
                                     <CryptocurrencyCard
-                                        currency = 'ETH'
-                                        onClick = {() => this.onCardClicked('ETH')}
-                                        cryptoBalance = {this.props.ethBalance}
+                                        currency='ETH'
+                                        onClick={() => this.onCardClicked('ETH')}
+                                        cryptoBalance={this.props.ethBalance}
                                         fiatBalance={this.props.ethPrice}
-                                        isActive = {this.props.activeCurrency == 'ETH'}
+                                        isActive={this.props.activeCurrency == 'ETH'}
                                     />
                                     <CryptocurrencyCard
-                                        currency = 'XRP'
-                                        onClick = {() => {this.onCardClicked('XRP')}}
-                                        cryptoBalance = {this.props.xrpBalance}
-                                        fiatBalance = {this.props.xrpPrice}
-                                        isActive = {this.props.activeCurrency == 'XRP'}
+                                        currency='XRP'
+                                        onClick={() => {
+                                            this.onCardClicked('XRP')
+                                        }}
+                                        cryptoBalance={this.props.xrpBalance}
+                                        fiatBalance={this.props.xrpPrice}
+                                        isActive={this.props.activeCurrency == 'XRP'}
                                     />
-                                </div>  
+                                </div>
                                 <div className='cryptocurrency-row 3'>
                                     <CryptocurrencyCard
-                                        currency = 'BCH'
-                                        onClick = {() => {this.onCardClicked("BCH")}}
-                                        cryptoBalance = {0}
-                                        fiatBalance = {0}
-                                        isActive = {this.props.activeCurrency == 'BCH'}
-                                    /> 
-                                    <CryptocurrencyCard
-                                        currency = 'DOGE'
-                                        onClick = {() => {this.onCardClicked("DOGE")}}
-                                        cryptoBalance = {0}
-                                        fiatBalance = {0}
-                                        isActive = {this.props.activeCurrency == 'DOGE'}
+                                        currency='BCH'
+                                        onClick={() => {
+                                            this.onCardClicked("BCH")
+                                        }}
+                                        cryptoBalance={0}
+                                        fiatBalance={0}
+                                        isActive={this.props.activeCurrency == 'BCH'}
                                     />
-                                </div>   
+                                    <CryptocurrencyCard
+                                        currency='DOGE'
+                                        onClick={() => {
+                                            this.onCardClicked("DOGE")
+                                        }}
+                                        cryptoBalance={0}
+                                        fiatBalance={0}
+                                        isActive={this.props.activeCurrency == 'DOGE'}
+                                    />
+                                </div>
                                 <div className='cryptocurrency-row 4'>
                                     <CryptocurrencyCard
-                                        currency = 'XCH'
-                                        onClick = {() => {this.onCardClicked("XCH")}}
-                                        cryptoBalance = {0}
-                                        fiatBalance = {0}
-                                        isActive = {this.props.activeCurrency == 'XCH'}
+                                        currency='XCH'
+                                        onClick={() => {
+                                            this.onCardClicked("XCH")
+                                        }}
+                                        cryptoBalance={0}
+                                        fiatBalance={0}
+                                        isActive={this.props.activeCurrency == 'XCH'}
                                     />
                                     <CryptocurrencyCard
-                                        currency = 'MNR'
-                                        onClick = {() => {this.onCardClicked("MNR")}}
-                                        cryptoBalance = {0}
-                                        fiatBalance = {0}
-                                        isActive = {this.props.activeCurrency == 'MNR'}
+                                        currency='MNR'
+                                        onClick={() => {
+                                            this.onCardClicked("MNR")
+                                        }}
+                                        cryptoBalance={0}
+                                        fiatBalance={0}
+                                        isActive={this.props.activeCurrency == 'MNR'}
                                     />
-                                </div> 
+                                </div>
                             </div>
                             <div className='Block_explorer'>
                                 <div className='ex_enter_address'>
@@ -207,7 +218,7 @@ export default class MainContent extends Component<MainContentProps, MainContent
                                 <p className='general_usd_balance'>{this.props.total}</p>
                             </div>
                             <div className='cryptoCurrency_chart'>
-                                <Chart chartBTC = {this.props.chartBTC}/>
+                                <Chart chartBTC={this.props.chartBTC}/>
                             </div>
                         </div>
                     </div>

@@ -1,6 +1,6 @@
-import {TransactionBuilder, networks, address} from 'bitcoinjs-lib'
+import {address, networks, TransactionBuilder} from 'bitcoinjs-lib'
 import axios from 'axios'
-import {parseBTCLikeTransactions, DisplayTransaction} from "./utils"
+import {DisplayTransaction, parseBTCLikeTransactions} from "./utils"
 import {getAddressPCSC} from '../hardwareApi/getAddress'
 import {getSignaturePCSC} from '../hardwareApi/getSignature'
 // @ts-ignore
@@ -42,11 +42,9 @@ export const initLitecoinAddress = async () => {
     let status = false
     while (!status) {
         let answer = await getAddressPCSC(2)
-        console.log('GOT MYADDR ANSWER', answer)
         if (answer.length > 1 && answer[0].includes('LTC')) {
             status = true
             setMyAddress(answer[0].substring(3, answer[0].length))
-            console.log("address LTC: ", answer[0].substring(3, answer[0].length))
             setMyPubKey(answer[1])
         }
     }
@@ -54,7 +52,6 @@ export const initLitecoinAddress = async () => {
 
 function setMyAddress(address: string) {
     myAddress = address
-    console.log('MY ADDRESS LITECOIN: ' + myAddress)
 }
 
 export function setMyPubKey(pubKey: Buffer) {
@@ -113,8 +110,6 @@ async function createTransaction(
         value: transactionAmount
     }
     let {inputs, outputs, fee} = coinSelect(utxos, targets, 23 * transactionFee)
-
-    console.log('FEE_coinSelect: ', fee)
     let transaction = new TransactionBuilder(network)
     for (let input in inputs) {
         transaction.addInput(inputs[input].txid, inputs[input].output_no)
@@ -126,17 +121,10 @@ async function createTransaction(
         transaction.addOutput(outputs[out].address, outputs[out].value)
     }
     let unbuildedTx = transaction.buildIncomplete().toHex()
-    transaction.inputs.map(value => {
-        console.log('MAPPED INPUT: ' + value)
-    })
-    transaction.tx.ins.forEach((value: any) => {
-        console.log('PROBABLY TX INPUT: ' + JSON.stringify(value))
-    })
 
     let hashArray: Array<Buffer> = []
 
     let dataForHash = ReplaceAt(unbuildedTx + '01000000', '00000000ff', '00000019' + Object(utxos[0]).script_hex + 'ff', unbuildedTx.indexOf('00000000ff', 0), unbuildedTx.indexOf('00000000ff', 0) + 50)
-    console.log('DATA FOR HASH: ', dataForHash)
 
 
     /************ lib dll *****************/
@@ -149,7 +137,6 @@ async function createTransaction(
 
     let dataOut = Buffer.alloc(numInputs * lenMess)
     libdll.forSign(dataIn as any, lenData, dataOut)
-    console.log('OUT: ', dataOut.toString('hex'))
 
     for (let j = 0; j < numInputs; j++) {
         let arr = new Array(lenMess)
@@ -160,8 +147,6 @@ async function createTransaction(
         let hh1 = num64 * 64 % 256
         let hh2 = (num64 * 64 - hh1) / 256
         let for41 = Buffer.concat([Buffer.from([LL]), Buffer.from([hh2]), Buffer.from([hh1]), Buffer.from(arr)])
-        console.log('for41 ', for41.toString('hex'))
-
         hashArray.push(for41)
     }
     /************ lib dll ******************/
@@ -179,9 +164,6 @@ async function createTransaction(
 }
 
 function ReplaceAt(input: any, search: any, replace: any, start: any, end: any) {
-    console.log('FIRST SLICE:' + input.slice(0, start))
-    console.log('SECOND SLICE ' + input.slice(start, end).replace(search, replace))
-    console.log('THIRD SLICE: ' + input.slice(end))
     return input.slice(0, start)
         + input.slice(start, end).replace(search, replace)
         + input.slice(end)

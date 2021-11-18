@@ -1,19 +1,20 @@
 import React, {Component} from 'react'
 
 interface ChooseCurrencyProps {
-  readonly currentCurrency: string
+    readonly currentCurrency: string
 }
+
 interface ChooseCurrencyState {
 
 }
 
 export class ChooseCurrency extends Component<ChooseCurrencyProps, ChooseCurrencyState> {
 
-  render() {
-    return (
-        <div>
+    render() {
+        return (
+            <div>
 
-        </div>
-    )
-  }
+            </div>
+        )
+    }
 }

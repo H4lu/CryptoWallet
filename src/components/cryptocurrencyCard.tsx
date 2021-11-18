@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import { DisplayTransactionCurrency } from '../api/cryptocurrencyApi/utils';
+import {DisplayTransactionCurrency} from '../api/cryptocurrencyApi/utils';
 
 interface CryptocurrencyCardProps {
     onClick: () => void,
@@ -16,6 +16,6 @@ export const CryptocurrencyCard: FC<CryptocurrencyCardProps> = (props) => {
                 <p className='balance'>{props.cryptoBalance}</p>
                 <p className='fiat'>{props.fiatBalance}</p>
             </div>
-        </div>    
+        </div>
     )
 }

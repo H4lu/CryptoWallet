@@ -8,20 +8,20 @@ interface Erc20TableProps {
 
 export const Erc20TokensTable: FC<Erc20TableProps> = (props) =>
     <div className="erc20Table">
-        <table >
-            <thead >
-                <tr >
-                    <th>Name</th>
-                    <th>Address</th>
-                    <th>Amount</th>
-                </tr>
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Amount</th>
+            </tr>
             </thead>
             <hr/>
             <tbody>
-                {
-                    props.data
-                        .map(element => <Erc20tokesTableRow data={element}/>)
-                }
+            {
+                props.data
+                    .map(element => <Erc20tokesTableRow data={element}/>)
+            }
             </tbody>
         </table>
     </div>

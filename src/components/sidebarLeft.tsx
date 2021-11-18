@@ -4,8 +4,8 @@ import {Link} from "react-router-dom";
 export const SidebarLeft: FC = () => {
     return (
         <div className='sidebar-Left'>
-            
-            <div className='nav-buttons-Left'> 
+
+            <div className='nav-buttons-Left'>
                 <div className='braitberry-logo'/>
                 <Link to='/main' className='but_home'/>
                 <Link to='/currency-carousel' className='but_pay'/>
@@ -15,7 +15,7 @@ export const SidebarLeft: FC = () => {
                 <Link to="/firmware-window" className='but_cpu'/>
                 <Link to="#" className='but_info'/>
                 <Link to='#' className='but_menu'/>
-            </div> 
+            </div>
         </div>
     )
 }

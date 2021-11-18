@@ -1,4 +1,5 @@
 import * as path from 'path'
+
 export const LOGO_PATH = path.resolve(__dirname, './static/backgroundStart.svg')
 export const USB_ON_PATH = path.resolve(__dirname, 'static/i_usb_connection_on.svg')
 export const USB_OFF_PATH = path.resolve(__dirname, 'static/i_usb_connection_off.svg')
@@ -12,8 +13,8 @@ export const TRANSACTION_SUCCESS = path.resolve(__dirname, 'static/Group5.svg')
 export const LOGO_SMALL = path.resolve(__dirname, 'static/logo_small.svg')
 export const BTN_MENU_PATH = path.resolve(__dirname, 'static/btn_menu.svg')
 export const BTC_ICON = path.resolve(__dirname, 'static/icon_BTC.svg')
-export const LTC_ICON  = path.resolve(__dirname, 'static/icon_LTC.svg')
-export const ETH_ICON  = path.resolve(__dirname, 'static/icon_ETH.svg')
+export const LTC_ICON = path.resolve(__dirname, 'static/icon_LTC.svg')
+export const ETH_ICON = path.resolve(__dirname, 'static/icon_ETH.svg')
 export const XRP_ICON = path.resolve(__dirname, 'static/icon_XRP.svg')
 // export const BTC_ICON = path.resolve(__dirname, 'assets/images/icon_BTC.svg')
 // export const LTC_ICON  = path.resolve(__dirname, 'assets/images/icon_LTC.svg')

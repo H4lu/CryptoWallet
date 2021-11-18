@@ -1,7 +1,7 @@
-import React, {FC, useState, useEffect} from 'react'
-import { currencyToIndex } from '../core/carouselHelper';
-import { DisplayTransactionCurrency } from '../api/cryptocurrencyApi/utils';
-import { Carousel } from './carousel'
+import React, {FC, useEffect} from 'react'
+import {currencyToIndex} from '../core/carouselHelper';
+import {DisplayTransactionCurrency} from '../api/cryptocurrencyApi/utils';
+import {Carousel} from './carousel'
 import {CarouselDesc} from "./carouselDesc";
 
 interface WalletCarouselProps {
@@ -21,20 +21,20 @@ export const WalletCarousel: FC<WalletCarouselProps> = (props) => {
         props.stateSR(false);
     }, [])
 
-    return(
+    return (
         <div className='windowPay'>
             <div className='payWindow'>
-                <Carousel 
-                    setActiveCurrency = {props.setActiveCurrency} 
-                    activeCurrencyIndex = {currencyToIndex(props.activeCurrency)}/>
-                <CarouselDesc 
-                            activeCurrency = {props.activeCurrency} 
-                            btcBalance = {props.btcBalance} 
-                            ltcBalance = {props.ltcBalance} 
-                            ethBalance = {props.ethBalance}
-                            btcPrice = {props.btcPrice} 
-                            ltcPrice = {props.ltcPrice} 
-                            ethPrice = {props.ethPrice}/>
+                <Carousel
+                    setActiveCurrency={props.setActiveCurrency}
+                    activeCurrencyIndex={currencyToIndex(props.activeCurrency)}/>
+                <CarouselDesc
+                    activeCurrency={props.activeCurrency}
+                    btcBalance={props.btcBalance}
+                    ltcBalance={props.ltcBalance}
+                    ethBalance={props.ethBalance}
+                    btcPrice={props.btcPrice}
+                    ltcPrice={props.ltcPrice}
+                    ethPrice={props.ethPrice}/>
             </div>
         </div>
     )

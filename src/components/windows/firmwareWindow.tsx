@@ -20,7 +20,7 @@ export const FirmwareWindow: FC = () => {
                 {
                     name: 'Hex Files',
                     extensions: ['hex']
-                }, 
+                },
             ],
         })
         if (file.filePaths.length > 0) {
@@ -28,7 +28,7 @@ export const FirmwareWindow: FC = () => {
             setInputValue(path.basename(filePath))
         }
     }
- 
+
     return (
         <div className="backgroundFirmware">
             <div className="iconFirmware"/>
@@ -39,13 +39,13 @@ export const FirmwareWindow: FC = () => {
                         {inputValue == "" ? "Select hex file" : inputValue}
                     </p>
                 </div>
-                <div 
-                    className="firmwareUploadBtn" 
+                <div
+                    className="firmwareUploadBtn"
                     onClick={onUpload}
                 />
-              
+
                 <button onClick={onUpdate}>Update</button>
             </div>
-        </div>    
-    )  
+        </div>
+    )
 }

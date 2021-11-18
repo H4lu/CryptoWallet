@@ -46,7 +46,7 @@ export type ErrorMessage = {
 
 // Do not change this values, they are hardcoded in app.tsx for some reason
 export enum PCSCMessageType {
-    WALLET_STATUS_CHANGE = 0 ,
+    WALLET_STATUS_CHANGE = 0,
     CONNECTION_STATUS_CHANGE = 1,
     ERROR = 2,
     BALANCE_CHANGE = 3,
@@ -63,7 +63,18 @@ export enum PCSCMessageType {
     TRANSACTION_SUCCESS = 14
 }
 
-export type PCSCMessageData = WalletStatus | ConnectionStatus | ErrorMessage | DisplayBalanceStatus | TransactionsStatus | Array<Erc20DisplayToken> | Array<ChartData> | Array<HwBalance> | Array<Array<DisplayTransaction>> | TransactionRequest | AddressChange
+export type PCSCMessageData =
+    WalletStatus
+    | ConnectionStatus
+    | ErrorMessage
+    | DisplayBalanceStatus
+    | TransactionsStatus
+    | Array<Erc20DisplayToken>
+    | Array<ChartData>
+    | Array<HwBalance>
+    | Array<Array<DisplayTransaction>>
+    | TransactionRequest
+    | AddressChange
 
 export type PCSCMessage = {
     type: PCSCMessageType

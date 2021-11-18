@@ -1,7 +1,5 @@
 import React, {PureComponent} from 'react';
-import {
-    AreaChart, Area, XAxis, YAxis,
-} from 'recharts';
+import {Area, AreaChart, XAxis, YAxis,} from 'recharts';
 
 
 export default class Chart extends PureComponent<any, any> {

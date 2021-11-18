@@ -64,7 +64,8 @@ process.on('message', async (msg: PCSCMessage, _) => {
             }
             break
         }
-        default: return
+        default:
+            return
     }
 })
 
@@ -79,7 +80,7 @@ const initCryptoAddresses = async () => {
 }
 
 const getBalances = async () => {
-    const balances = await Promise.all([getBTCBalance(), getLTCBalance(),  getETHBalance(), getXRPBalance()])
+    const balances = await Promise.all([getBTCBalance(), getLTCBalance(), getETHBalance(), getXRPBalance()])
     process.send({type: PCSCMessageType.BALANCE_CHANGE, data: {currency: 'BTC', balance: balances[0]}})
     process.send({type: PCSCMessageType.BALANCE_CHANGE, data: {currency: 'LTC', balance: balances[1]}})
     process.send({type: PCSCMessageType.BALANCE_CHANGE, data: {currency: 'ETH', balance: balances[2]}})
@@ -174,7 +175,7 @@ const updateAll = async () => {
     try {
         await Promise.all([getBalances(), getTransactions(), updateErc20Tokens(), sendBtcChartData()])
         process.send({type: PCSCMessageType.UPDATED})
-    } catch(err) {
+    } catch (err) {
         console.log(err.message)
         process.send({type: PCSCMessageType.ERROR, data: {errorMessage: err.message}})
     }
@@ -188,7 +189,7 @@ const initAll = async () => {
             await Promise.all([getBalances(), getTransactions(), updateErc20Tokens(), sendBtcChartData()])
             process.send({type: PCSCMessageType.INITIALIZED})
         }
-    } catch(err) {
+    } catch (err) {
         process.send({type: PCSCMessageType.ERROR, data: {errorMessage: err.message}})
     }
 }
@@ -197,7 +198,7 @@ const startWalletInfoPing = async () => {
     let interval = setInterval(async () => {
         try {
             const walletStatus = await getInfoPCSC()
-            const message : PCSCMessage = {
+            const message: PCSCMessage = {
                 type: PCSCMessageType.WALLET_STATUS_CHANGE,
                 data: {walletStatus: walletStatus}
             }
@@ -218,19 +219,18 @@ const onReaderCallback = async (reader) => {
         const changes = reader.state ^ status.state
         if ((changes & reader.SCARD_STATE_PRESENT) && (status.state & reader.SCARD_STATE_PRESENT)) {
             reader.connect({
-                    share_mode: reader.SCARD_SHARE_SHARED,
-                    protocol: reader.SCARD_PROTOCOL_T1
+                share_mode: reader.SCARD_SHARE_SHARED,
+                protocol: reader.SCARD_PROTOCOL_T1
             }, async (err, _) => {
                 if (err) {
                     process.send({type: PCSCMessageType.ERROR, data: err})
                     console.error(err)
                 } else {
-                    console.log("start wallet info")
                     process.send({type: PCSCMessageType.CONNECTION_STATUS_CHANGE, data: {isConnected: true}})
                     startWalletInfoPing()
                 }
-        })
-    }
+            })
+        }
     })
 
     reader.on('error', err => {

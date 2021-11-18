@@ -1,8 +1,8 @@
 import React, {PureComponent} from 'react'
 import {DisplayTransactionTable} from "./displayTransactionTable";
-import { DisplayTransaction, DisplayTransactionCurrency, toDisplayCurrencyName } from '../api/cryptocurrencyApi/utils';
+import {DisplayTransaction, DisplayTransactionCurrency, toDisplayCurrencyName} from '../api/cryptocurrencyApi/utils';
 
-export interface  CarouselTableState {
+export interface CarouselTableState {
     classNameAll: string,
     classNameSend: string,
     classNameReceive: string,
@@ -25,7 +25,8 @@ export class CarouselTable extends PureComponent<CarouselTableProps, CarouselTab
     currencyName: string
     direct: number
     shouldUpdate: boolean
-    tableData:Array<any>
+    tableData: Array<any>
+
     constructor(props: CarouselTableProps) {
         super(props)
         this.shouldUpdate = true;
@@ -52,7 +53,7 @@ export class CarouselTable extends PureComponent<CarouselTableProps, CarouselTab
 
     handleUpdateDataClick() {
         this.props.refresh()
-    } 
+    }
 
     updateProps() {
         switch (this.props.activeCurrency) {
@@ -80,7 +81,7 @@ export class CarouselTable extends PureComponent<CarouselTableProps, CarouselTab
             case "LTC": {
                 this.currencyName = toDisplayCurrencyName(this.props.activeCurrency)
                 this.setState({
-                    curTableData: this.props.lastTxLTC, 
+                    curTableData: this.props.lastTxLTC,
                     activeCur: 'LTC'
                 }, () => {
                     this.parseData()
@@ -137,11 +138,11 @@ export class CarouselTable extends PureComponent<CarouselTableProps, CarouselTab
                 })
                 break
             }
-            
+
         }
     }
 
-    allDirect() { 
+    allDirect() {
         this.setState({direct: 0}, () => {
             this.tableData = this.state.curTableData
         })
@@ -159,6 +160,7 @@ export class CarouselTable extends PureComponent<CarouselTableProps, CarouselTab
             this.tableData = this.state.curTableData.filter(curTableData => curTableData.type === "incoming")
         })
     }
+
     getData() {
         switch (this.state.direct) {
             case -1: {
@@ -167,7 +169,7 @@ export class CarouselTable extends PureComponent<CarouselTableProps, CarouselTab
             }
             case 1: {
                 this.tableData = this.state.curTableData.filter(curTableData => curTableData.type === "incoming")
-               break
+                break
             }
             case 0: {
                 this.tableData = this.state.curTableData
@@ -175,11 +177,12 @@ export class CarouselTable extends PureComponent<CarouselTableProps, CarouselTab
             }
         }
     }
+
     parseData() {
         switch (this.state.direct) {
             case -1: {
                 this.setState({
-                    classNameAll: 'AlldirectHistory_p', 
+                    classNameAll: 'AlldirectHistory_p',
                     classNameSend: 'SenddirectHistory_a',
                     classNameReceive: 'ReceivedirectHistory_p'
                 }, () => {
@@ -190,9 +193,9 @@ export class CarouselTable extends PureComponent<CarouselTableProps, CarouselTab
             case 1: {
                 this.setState({
                     classNameAll: 'AlldirectHistory_p',
-                    classNameSend: 'SenddirectHistory_p', 
+                    classNameSend: 'SenddirectHistory_p',
                     classNameReceive: 'ReceivedirectHistory_a'
-                },() => {
+                }, () => {
                     this.shouldUpdate = true
                 })
                 break
@@ -200,9 +203,9 @@ export class CarouselTable extends PureComponent<CarouselTableProps, CarouselTab
             case 0: {
                 this.setState({
                     classNameAll: 'AlldirectHistory_a',
-                    classNameSend: 'SenddirectHistory_p', 
+                    classNameSend: 'SenddirectHistory_p',
                     classNameReceive: 'ReceivedirectHistory_p'
-                },() => {
+                }, () => {
                     this.shouldUpdate = true;
                 })
                 break
@@ -225,11 +228,11 @@ export class CarouselTable extends PureComponent<CarouselTableProps, CarouselTab
                 </div>
                 <hr className='hrLine'/>
                 <div className='table_content'>
-                    <DisplayTransactionTable 
-                        data={this.tableData} 
-                        activeCurrency={this.props.activeCurrency} 
+                    <DisplayTransactionTable
+                        data={this.tableData}
+                        activeCurrency={this.props.activeCurrency}
                         type='normal'
-                        />
+                    />
                 </div>
             </div>
         )

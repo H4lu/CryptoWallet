@@ -1,26 +1,18 @@
-import {TransactionBuilder, networks, Transaction, ECPair, address, script} from 'bitcoinjs-lib'
+import {address, networks, TransactionBuilder} from 'bitcoinjs-lib'
 import axios from 'axios'
 import {getSignaturePCSC} from '../hardwareApi/getSignature'
 import {getAddressPCSC} from '../hardwareApi/getAddress'
-import  {
-    transactionBytes,
-    getTestnetAddressBTC, 
-    uintOrNaN,
-    sumOfArray, 
-    sumOrNaN,
-    inputBytes,
+import {
+    BlockcypherFullTransactions,
+    BlockcypherUnspentTransaction,
+    BlockcypherUnspentTransactions,
     dustThreshold,
     finalize,
-    DisplayTransaction,
-    parseBTCLikeTransactions,
-    BtcLikeCurrencies,
-    ChainSoTransaction,
-    ChainSoUnspentTransactions,
-    ChainSoUnspentTransaction,
-    BlockcypherUnspentTransactions,
-    BlockcypherUnspentTransaction,
-    BlockcypherFullTransactions,
-    toDisplayTransactions
+    inputBytes,
+    sumOrNaN,
+    toDisplayTransactions,
+    transactionBytes,
+    uintOrNaN
 } from './utils'
 
 // @ts-ignore
@@ -31,8 +23,9 @@ import ffi from 'ffi-napi'
 type CoindeskChartBpiItem = {
     [key: string]: number
 }
+
 interface CoindeskChartResponse {
-    bpi: CoindeskChartBpiItem, 
+    bpi: CoindeskChartBpiItem,
     disclaimer: string,
     time: {
         updated: Date,
@@ -86,14 +79,11 @@ export const initBitcoinAddress = async () => {
             status = true
             setMyAddress(result[0].substring(3, result[0].length))
             setMyPubKey(result[1])
-            console.log("pubkey in hex:")
-            console.log(result[1].toString("hex"))
             // if (NETWORK == Networks.TEST) {
             //     console.log("generate test address btc")
             //     setMyAddress(getTestnetAddressBTC(result[1]))
             // }
             await setFee()
-            console.log("Bitcoin address: ", myAddr)
         }
     }
 }
@@ -152,7 +142,6 @@ export const getBTCBalance = async (): Promise<number> => {
 
 export const getChartBTC = async (end: string, start: string): Promise<Array<any>> => {
     const requestUrl = `https://api.coindesk.com/v1/bpi/historical/close.json?start=${start}&end=${end}`
-    console.log(requestUrl)
     const response = await axios.get(requestUrl)
     const chartData = response.data.bpi
     let key: keyof typeof chartData
@@ -160,7 +149,6 @@ export const getChartBTC = async (end: string, start: string): Promise<Array<any
     for (key in chartData) {
         arr.push(chartData[key])
     }
-    console.log(arr)
     return arr
 }
 
@@ -182,9 +170,8 @@ const getUnspentTransactions = async (address: string) => {
         "includeScript": true,
         "unspentOnly": true
     }
-    const requestUrl = `https://api.blockcypher.com/v1/btc/${NETWORK}/addrs/${address}`  
+    const requestUrl = `https://api.blockcypher.com/v1/btc/${NETWORK}/addrs/${address}`
     const response = await axios.get<BlockcypherUnspentTransactions>(requestUrl, {params})
-    console.log(response)
     return response.data
 }
 
@@ -192,231 +179,209 @@ export async function getBitcoinLastTx() {
     const params = {
         "limit": 50
     }
-    const requestUrl = `https://api.blockcypher.com/v1/btc/${NETWORK}/addrs/${myAddr}/full`  
+    const requestUrl = `https://api.blockcypher.com/v1/btc/${NETWORK}/addrs/${myAddr}/full`
     const response = await axios.get<BlockcypherFullTransactions>(requestUrl, {params})
-    console.log(response)
     return toDisplayTransactions(response.data)
 }
 
 
 function ReplaceAt(
-    input: string, 
-    search: string, 
-    replace: string, 
-    start: number, 
+    input: string,
+    search: string,
+    replace: string,
+    start: number,
     end: number
-    ) {
-        return input.slice(0, start)
-            + input.slice(start, end).replace(search, replace)
-            + input.slice(end)
+) {
+    return input.slice(0, start)
+        + input.slice(start, end).replace(search, replace)
+        + input.slice(end)
 }
 
 async function createTransaction(
     paymentAdress: string,
-    transactionAmount: number, 
+    transactionAmount: number,
     transactionFee: number,
-    utxos: Array<BlockcypherUnspentTransaction>, 
-    course: number, 
+    utxos: Array<BlockcypherUnspentTransaction>,
+    course: number,
     balance: number
-    ) {
-        let targets = {
-            address: paymentAdress,
-            value: transactionAmount
-        }
-        let feeRate = getFee(transactionFee)
-    
-        let {inputs, outputs, fee} = coinSelect(utxos, targets, 25)
-        
-        let transaction = new TransactionBuilder(network)
-        for (const input of inputs) {
-            transaction.addInput(input.tx_hash, input.tx_output_n)
-        }
-        for (const out of outputs) {
-            if (!out.address) {
-                out.address = myAddr
-            }
-            transaction.addOutput(out.address, out.value)
-        }
-        let unbuildedTx = transaction.buildIncomplete().toHex()
-        // transaction.inputs.map(value => {
-        //     console.log('MAPPED INPUT')
-        //     console.log(value)
-        // })
-        // transaction.tx.ins.forEach(value => {
-        //     console.log('PROBABLY TX INPUT: ')
-        //     console.log(value)
-        // })
-    
-        let hashArray: Array<Buffer> = []
-        console.log(utxos)
-        let dataForHash = ReplaceAt(unbuildedTx + '01000000', '00000000ff', '00000019' + utxos[0].script + 'ff', unbuildedTx.indexOf('00000000ff', 0), unbuildedTx.indexOf('00000000ff', 0) + 50)
-    
-    
-        /************ lib dll *****************/
-        let dataIn = Buffer.from(dataForHash, 'hex')
-        let lenData = dataIn.length
-        let numInputs = transaction.inputs.length
-        console.log("num inputs: %s", numInputs)
-        let num64 = Math.floor(lenData / 64) - 1
-        let lenEnd = lenData - num64 * 64
-        let lenMess = 32 + lenEnd
-    
-        let dataOut = Buffer.alloc(numInputs * lenMess)
-        libdll.forSign(dataIn as any, lenData, dataOut)
-        console.log('OUT: ', dataOut.toString('hex'))
+) {
+    let targets = {
+        address: paymentAdress,
+        value: transactionAmount
+    }
+    let feeRate = getFee(transactionFee)
 
-        for (let j = 0; j < numInputs; j++) {
-            let arr = new Array(lenMess)
-            for (let i = 0; i < lenMess; i++) {
-                arr[i] = dataOut[j * lenMess + i]
-            }
-            let LL = 2 + lenMess
-            let hh1 = num64 * 64 % 256
-            let hh2 = (num64 * 64 - hh1) / 256
-            let for41 = Buffer.concat([Buffer.from([LL]), Buffer.from([hh2]), Buffer.from([hh1]), Buffer.from(arr)])
-            console.log('for41 ', for41.toString('hex'))
-    
-            hashArray.push(for41)
+    let {inputs, outputs, fee} = coinSelect(utxos, targets, 25)
+
+    let transaction = new TransactionBuilder(network)
+    for (const input of inputs) {
+        transaction.addInput(input.tx_hash, input.tx_output_n)
+    }
+    for (const out of outputs) {
+        if (!out.address) {
+            out.address = myAddr
         }
-        /************ lib dll ******************/
-    
-        let data = await getSignaturePCSC(0, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.inputs.length, course, fee / 100000000, balance)
-        if (data[0] == undefined) {
-            return
+        transaction.addOutput(out.address, out.value)
+    }
+    let unbuildedTx = transaction.buildIncomplete().toHex()
+    let hashArray: Array<Buffer> = []
+    let dataForHash = ReplaceAt(unbuildedTx + '01000000', '00000000ff', '00000019' + utxos[0].script + 'ff', unbuildedTx.indexOf('00000000ff', 0), unbuildedTx.indexOf('00000000ff', 0) + 50)
+
+
+    /************ lib dll *****************/
+    let dataIn = Buffer.from(dataForHash, 'hex')
+    let lenData = dataIn.length
+    let numInputs = transaction.inputs.length
+    let num64 = Math.floor(lenData / 64) - 1
+    let lenEnd = lenData - num64 * 64
+    let lenMess = 32 + lenEnd
+
+    let dataOut = Buffer.alloc(numInputs * lenMess)
+    libdll.forSign(dataIn as any, lenData, dataOut)
+
+    for (let j = 0; j < numInputs; j++) {
+        let arr = new Array(lenMess)
+        for (let i = 0; i < lenMess; i++) {
+            arr[i] = dataOut[j * lenMess + i]
         }
-        if (data[0]?.length !== 1) {
-            transaction.inputs.forEach((input, index) => {
-                unbuildedTx = unbuildedTx.replace('00000000ff', '000000' + data[index].toString('hex') + 'ff')
-            })
-            return sendTransaction(unbuildedTx)
-        }
+        let LL = 2 + lenMess
+        let hh1 = num64 * 64 % 256
+        let hh2 = (num64 * 64 - hh1) / 256
+        let for41 = Buffer.concat([Buffer.from([LL]), Buffer.from([hh2]), Buffer.from([hh1]), Buffer.from(arr)])
+        console.log('for41 ', for41.toString('hex'))
+
+        hashArray.push(for41)
+    }
+    /************ lib dll ******************/
+
+    let data = await getSignaturePCSC(0, hashArray, paymentAdress, satoshi.toBitcoin(transactionAmount), transaction.inputs.length, course, fee / 100000000, balance)
+    if (data[0] == undefined) {
+        return
+    }
+    if (data[0]?.length !== 1) {
+        transaction.inputs.forEach((input, index) => {
+            unbuildedTx = unbuildedTx.replace('00000000ff', '000000' + data[index].toString('hex') + 'ff')
+        })
+        return sendTransaction(unbuildedTx)
+    }
 }
 
 async function sendTransaction(transactionHex: string): Promise<void> {
-        console.log("tx hex")
-        console.log(transactionHex)
-        await axios.post(
-            `https://api.blockcypher.com/v1/btc/${NETWORK}/txs/push`,
-            {'tx': transactionHex},
-            {'headers': {'content-type': 'application/json'}}
-            )
+    await axios.post(
+        `https://api.blockcypher.com/v1/btc/${NETWORK}/txs/push`,
+        {'tx': transactionHex},
+        {'headers': {'content-type': 'application/json'}}
+    )
 }
 
 export async function handleBitcoin(
     paymentAdress: string,
-    amount: number, 
+    amount: number,
     transactionFee: number,
-    course: number, 
+    course: number,
     balance: number
-    ) {
-        // validate address
-        try {
-            address.toOutputScript(paymentAdress)
-        } catch (err) {
-            console.log(err.meessage)
-            throw Error("Invalid address")
-        }
-        const lastTx = await getUnspentTransactions(myAddr)
-        const utxos = lastTx.txrefs
-        amount = toSatoshi(amount)
-        return createTransaction(
-            paymentAdress, amount, transactionFee, utxos, course, balance
-        )
+) {
+    // validate address
+    try {
+        address.toOutputScript(paymentAdress)
+    } catch (err) {
+        console.log(err.meessage)
+        throw Error("Invalid address")
     }
+    const lastTx = await getUnspentTransactions(myAddr)
+    const utxos = lastTx.txrefs
+    amount = toSatoshi(amount)
+    return createTransaction(
+        paymentAdress, amount, transactionFee, utxos, course, balance
+    )
+}
 
 function accumulative(
-    utxos: Array<BlockcypherUnspentTransaction>, 
+    utxos: Array<BlockcypherUnspentTransaction>,
     outputs: any,
     feeRate: number
-    ) {
-        if (!isFinite(uintOrNaN(feeRate))) return {}
-        let bytesAccum = transactionBytes([], outputs)
-        console.log(`bytes accum ${bytesAccum}`)
-    
-        let inAccum = 0
-        let inputs = []
-        let outAccum = sumOrNaN(outputs)
-    
-        for (let i = 0; i < utxos.length; ++i) {
-            let utxo = utxos[i]
-            let utxoBytes = inputBytes(utxo)
-            let utxoFee = feeRate * utxoBytes
-            let utxoValue = uintOrNaN(utxo.value)
-            console.log(`utxo fee ${utxoFee}`)
-    
-            // skip detrimental input
-            if (utxoFee > uintOrNaN(utxo.value)) {
-                if (i === utxos.length - 1) return {fee: feeRate * (bytesAccum + utxoBytes)}
-                continue
-            }
-    
-            bytesAccum += utxoBytes
-            inAccum += utxoValue
-            inputs.push(utxo)
-    
-            let fee = feeRate * bytesAccum
-    
-            // go again?
-            if (inAccum < outAccum + fee) continue
-    
-            return finalize(inputs, outputs, feeRate)
+) {
+    if (!isFinite(uintOrNaN(feeRate))) return {}
+    let bytesAccum = transactionBytes([], outputs)
+
+    let inAccum = 0
+    let inputs = []
+    let outAccum = sumOrNaN(outputs)
+
+    for (let i = 0; i < utxos.length; ++i) {
+        let utxo = utxos[i]
+        let utxoBytes = inputBytes(utxo)
+        let utxoFee = feeRate * utxoBytes
+        let utxoValue = uintOrNaN(utxo.value)
+        // skip detrimental input
+        if (utxoFee > uintOrNaN(utxo.value)) {
+            if (i === utxos.length - 1) return {fee: feeRate * (bytesAccum + utxoBytes)}
+            continue
         }
-    
-        return {fee: feeRate * bytesAccum}
+
+        bytesAccum += utxoBytes
+        inAccum += utxoValue
+        inputs.push(utxo)
+
+        let fee = feeRate * bytesAccum
+
+        // go again?
+        if (inAccum < outAccum + fee) continue
+
+        return finalize(inputs, outputs, feeRate)
     }
-    
+
+    return {fee: feeRate * bytesAccum}
+}
+
 function blackjack(
-    utxos: Array<BlockcypherUnspentTransaction>, 
+    utxos: Array<BlockcypherUnspentTransaction>,
     outputs: any,
     feeRate: number
-    ) {
-        if (!isFinite(uintOrNaN(feeRate))) return {}
-    
-        let bytesAccum = transactionBytes([], outputs)
-        console.log(`bytes accum ${bytesAccum}`)
-    
-        let inAccum = 0
-        let inputs = []
-        let outAccum = sumOrNaN(outputs)
-        let threshold = dustThreshold({}, feeRate)
-    
-        for (let i = 0; i < utxos.length; ++i) {
-            let input = utxos[i]
-            let inputInBytes = inputBytes(input)
-            console.log(`input in bytes ${inputInBytes}`)
-            let fee = feeRate * (bytesAccum + inputInBytes)
-            console.log(`blackjack fee ${fee}`)
-            let inputValue = uintOrNaN(input.value)
-    
-            // would it waste value?
-            if ((inAccum + inputValue) > (outAccum + fee + threshold)) continue
-    
-            bytesAccum += inputInBytes
-            inAccum += inputValue
-            inputs.push(input)
-    
-            // go again?
-            if (inAccum < outAccum + fee) continue
-    
-            return finalize(inputs, outputs, feeRate)
-        }
-    
-        return {fee: feeRate * bytesAccum}
+) {
+    if (!isFinite(uintOrNaN(feeRate))) return {}
+
+    let bytesAccum = transactionBytes([], outputs)
+    let inAccum = 0
+    let inputs = []
+    let outAccum = sumOrNaN(outputs)
+    let threshold = dustThreshold({}, feeRate)
+
+    for (let i = 0; i < utxos.length; ++i) {
+        let input = utxos[i]
+        let inputInBytes = inputBytes(input)
+        console.log(`input in bytes ${inputInBytes}`)
+        let fee = feeRate * (bytesAccum + inputInBytes)
+        console.log(`blackjack fee ${fee}`)
+        let inputValue = uintOrNaN(input.value)
+
+        // would it waste value?
+        if ((inAccum + inputValue) > (outAccum + fee + threshold)) continue
+
+        bytesAccum += inputInBytes
+        inAccum += inputValue
+        inputs.push(input)
+
+        // go again?
+        if (inAccum < outAccum + fee) continue
+
+        return finalize(inputs, outputs, feeRate)
+    }
+
+    return {fee: feeRate * bytesAccum}
 }
-    
+
 
 export function coinSelect(
-    utxos: Array<BlockcypherUnspentTransaction>, 
+    utxos: Array<BlockcypherUnspentTransaction>,
     outputs: any,
     feeRate: number
-    ) {
-        console.log(`fee rate ${feeRate}`)
-       
-        // attempt to use the blackjack strategy first (no change output)
-        let base = blackjack(utxos, outputs, feeRate)
-        if (Object(base).inputs) return base
-    
-        // else, try the accumulative strategy
-        return Object(accumulative(utxos, outputs, feeRate))
-    }
+) {
+    // attempt to use the blackjack strategy first (no change output)
+    let base = blackjack(utxos, outputs, feeRate)
+    if (Object(base).inputs) return base
+
+    // else, try the accumulative strategy
+    return Object(accumulative(utxos, outputs, feeRate))
+}
     
