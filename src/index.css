@@ -1706,8 +1706,7 @@ input[type=number]::placeholder {
 }
 
 .backgroundERC20 {
-    background: linear-gradient(359.84deg, #090909 -4.93%, #161616 45.48%, #070707 99.87%);
-    opacity: 0.55;
+    background: linear-gradient(359.84deg, rgba(9, 9, 9, 0.55) -4.93%, rgba(22, 22, 22, 0.55) 45.48%, rgba(7, 7, 7, 0.55) 99.87%);
     margin-top: 64px;
     height: 1130px;
     width: 900px;
@@ -1805,8 +1804,7 @@ input[type=number]::placeholder {
 }
 
 .backgroundFirmware {
-    background: linear-gradient(359.84deg, #090909 -4.93%, #161616 45.48%, #070707 99.87%);
-    opacity: 0.55;
+    background: linear-gradient(359.84deg, rgba(9, 9, 9, 0.55) -4.93%, rgba(22, 22, 22, 0.55) 45.48%, rgba(7, 7, 7, 0.55) 99.87%);
     margin-top: 64px;
     height: 1130px;
     width: 900px;
@@ -1906,7 +1904,7 @@ input[type=number]::placeholder {
 }
 
 .backgroundExchange {
-    background: linear-gradient(359.84deg, #090909 -4.93%, #161616 45.48%, #070707 99.87%);
+    background: linear-gradient(359.84deg, rgba(9, 9, 9, 0.55) -4.93%, rgba(22, 22, 22, 0.55) 45.48%, rgba(7, 7, 7, 0.55) 99.87%);
     /*opacity: 0.55;*/
     height: 800px;
     width: 900px;
