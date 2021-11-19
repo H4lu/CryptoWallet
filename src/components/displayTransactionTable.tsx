@@ -32,5 +32,3 @@ export const DisplayTransactionTable: FC<TableProps> = (props) =>
             </tbody>
         </table>
     </div>
-  
-

@@ -1904,3 +1904,37 @@ input[type=number]::placeholder {
     order: 3;
     padding: 10px;
 }
+
+.backgroundExchange {
+    background: linear-gradient(359.84deg, #090909 -4.93%, #161616 45.48%, #070707 99.87%);
+    /*opacity: 0.55;*/
+    height: 800px;
+    width: 900px;
+    margin-top: 64px;
+    display: flex;
+    align-content: center;
+    flex-direction: column;
+}
+
+.exchangeIcon {
+    background: url('../static/exchange_icon.svg') no-repeat center;
+    width: 70px;
+    height: 44px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+}
+
+.backgroundExchange p {
+    font-family: Lato;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 32px;
+    line-height: 38px;
+    color: #FFFFFF;
+    opacity: 0.75 !important;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px;
+}
+

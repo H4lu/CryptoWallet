@@ -32,6 +32,7 @@ import {
     TransactionsStatus,
     WalletStatus
 } from './pcsc_helpers'
+import {ExchangeWindow} from "./components/windows/exchangeWindow";
 
 interface AppState {
     BTCAddress: string,
@@ -352,12 +353,19 @@ export default class App extends Component<any, AppState> {
             sidebar: () => <SidebarContent/>,
             sidebarLeft: SidebarLeft,
             main: FirmwareWindow,
+        },
+        {
+            path: '/exchange-window',
+            exact: true,
+            sidebar: () => <SidebarContent/>,
+            sidebarLeft: SidebarLeft,
+            main: ExchangeWindow
         }
     ]
 
     constructor(props: any) {
         super(props)
-        this.state = initState
+        this.state = mockState
 
         this.resetRedirect = this.resetRedirect.bind(this)
         this.redirectToTransactionsuccess = this.redirectToTransactionsuccess.bind(this)
@@ -410,9 +418,9 @@ export default class App extends Component<any, AppState> {
     }
 
     async componentDidMount() {
-        // this.setState({connection: true})
-        // this.setState({redirectToMain: true})
-        // this.setState({walletStatus: 0})
+        this.setState({connection: true})
+        this.setState({redirectToMain: true})
+        this.setState({walletStatus: 0})
         ipcRenderer.on('pcsc', async (event, message) => {
             switch (message.type) {
                 case 0: { // WALLET_STATUS_CHANGE
