@@ -1928,8 +1928,7 @@ input[type=number]::placeholder {
     font-weight: 300;
     font-size: 32px;
     line-height: 38px;
-    color: #FFFFFF;
-    opacity: 0.75 !important;
+    color: rgba(255, 255, 255, 0.75);
     margin-left: auto;
     margin-right: auto;
     margin-top: 40px;
@@ -1963,4 +1962,35 @@ input[type=number]::placeholder {
     color: rgba(255, 255, 255, 0.75);
     margin-left: auto;
     margin-right: auto;
+}
+
+.backgroundSettings {
+    background: linear-gradient(359.84deg, rgba(9, 9, 9, 0.55) -4.93%, rgba(22, 22, 22, 0.55) 45.48%, rgba(7, 7, 7, 0.55) 99.87%);
+    height: 800px;
+    width: 900px;
+    margin-top: 64px;
+    display: flex;
+    align-content: center;
+    flex-direction: column;
+}
+
+.settingsIcon {
+    background: url('../static/settings_icon.svg') no-repeat center;
+    width: 70px;
+    height: 70px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+}
+
+.backgroundSettings p {
+    font-family: Lato;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 32px;
+    line-height: 38px;
+    color: rgba(255, 255, 255, 0.75);
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
 }

@@ -34,6 +34,7 @@ import {
 } from './pcsc_helpers'
 import {ExchangeWindow} from "./components/windows/exchangeWindow";
 import {AboutWindow} from "./components/windows/aboutWindow";
+import {SettingsWindow} from "./components/windows/settingsWindow";
 
 interface AppState {
     BTCAddress: string,
@@ -368,6 +369,13 @@ export default class App extends Component<any, AppState> {
             sidebar: () => <SidebarContent/>,
             sidebarLeft: SidebarLeft,
             main: AboutWindow
+        },
+        {
+            path: '/settings-window',
+            exact: true,
+            sidebar: () => <SidebarContent/>,
+            sidebarLeft: SidebarLeft,
+            main: SettingsWindow
         }
     ]
 
@@ -511,7 +519,6 @@ export default class App extends Component<any, AppState> {
                     break
                 }
                 case 11: { // UPDATED
-                    console.log("GOT UPDATED SIGNAL")
                     await this.getRates()
                     await this.updateHwWalletInfo()
                     break
