@@ -13,7 +13,7 @@ export const SidebarLeft: FC = () => {
                 <Link to="/exchange-window" className='but_exchange'/>
                 <Link to="/erc20-window" className="but_erc20"/>
                 <Link to="/firmware-window" className='but_cpu'/>
-                <Link to="#" className='but_info'/>
+                <Link to="/about-window" className='but_info'/>
                 <Link to='#' className='but_menu'/>
             </div>
         </div>

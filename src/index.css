@@ -1905,7 +1905,6 @@ input[type=number]::placeholder {
 
 .backgroundExchange {
     background: linear-gradient(359.84deg, rgba(9, 9, 9, 0.55) -4.93%, rgba(22, 22, 22, 0.55) 45.48%, rgba(7, 7, 7, 0.55) 99.87%);
-    /*opacity: 0.55;*/
     height: 800px;
     width: 900px;
     margin-top: 64px;
@@ -1936,3 +1935,32 @@ input[type=number]::placeholder {
     margin-top: 40px;
 }
 
+.backgroundAbout {
+    background: linear-gradient(359.84deg, rgba(9, 9, 9, 0.55) -4.93%, rgba(22, 22, 22, 0.55) 45.48%, rgba(7, 7, 7, 0.55) 99.87%);
+    height: 800px;
+    width: 900px;
+    margin-top: 64px;
+    display: flex;
+    align-content: center;
+    flex-direction: column;
+}
+
+.aboutIcon {
+    background: url('../static/about_icon.svg') no-repeat center;
+    width: 70px;
+    height: 70px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+}
+
+.backgroundAbout p {
+    font-family: Lato;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 35px;
+    line-height: 42px;
+    color: rgba(255, 255, 255, 0.75);
+    margin-left: auto;
+    margin-right: auto;
+}

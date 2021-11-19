@@ -33,6 +33,7 @@ import {
     WalletStatus
 } from './pcsc_helpers'
 import {ExchangeWindow} from "./components/windows/exchangeWindow";
+import {AboutWindow} from "./components/windows/aboutWindow";
 
 interface AppState {
     BTCAddress: string,
@@ -360,6 +361,13 @@ export default class App extends Component<any, AppState> {
             sidebar: () => <SidebarContent/>,
             sidebarLeft: SidebarLeft,
             main: ExchangeWindow
+        },
+        {
+            path: '/about-window',
+            exact: true,
+            sidebar: () => <SidebarContent/>,
+            sidebarLeft: SidebarLeft,
+            main: AboutWindow
         }
     ]
 
