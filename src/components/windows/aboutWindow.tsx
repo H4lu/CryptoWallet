@@ -1,4 +1,5 @@
 import React, {FC} from 'react'
+import {remote} from 'electron'
 
 export const AboutWindow: FC = () => {
     return (
@@ -15,7 +16,7 @@ export const AboutWindow: FC = () => {
                 Product Crypto Wallet
             </p>
             <p style={{color: "rgba(255, 255, 255, 0.85)", fontSize: "15px", lineHeight: "18px", marginTop: "-15px"}}>
-                Version: 1.1.9
+                Version: {remote.app.getVersion()}
             </p>
             <p style={{lineHeight: "14px", fontSize: "12px", color: "rgba(222, 222, 222, 0.75)", marginTop: "30px"}}>
                 (c) Copyright Brightberry, 2021
