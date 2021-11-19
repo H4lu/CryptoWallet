@@ -1,11 +1,17 @@
 import React, {FC} from 'react'
 
 export const AboutWindow: FC = () => {
-    return(
+    return (
         <div className={"backgroundAbout"}>
             <div className={"aboutIcon"}/>
             <p style={{marginTop: "7px"}}>About</p>
-            <p style={{fontSize: "23px", color: "rgba(255, 255, 255, 1)", fontWeight: "normal", lineHeight: "28px", marginTop: "-10px"}}>
+            <p style={{
+                fontSize: "23px",
+                color: "rgba(255, 255, 255, 1)",
+                fontWeight: "normal",
+                lineHeight: "28px",
+                marginTop: "-10px"
+            }}>
                 Product Crypto Wallet
             </p>
             <p style={{color: "rgba(255, 255, 255, 0.85)", fontSize: "15px", lineHeight: "18px", marginTop: "-15px"}}>
@@ -20,4 +26,3 @@ export const AboutWindow: FC = () => {
         </div>
     )
 }
-

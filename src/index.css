@@ -1553,7 +1553,7 @@ input[type=number]::placeholder {
     border-radius: 4px;
 }
 
-.transaction-history  table {
+.transaction-history table {
     margin-left: auto;
     margin-right: auto;
     width: 100%;
